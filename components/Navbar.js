@@ -58,14 +58,54 @@ export default function Navbar() {
           : "border-bw-200/80 bg-white/80 backdrop-blur-md"
       }`}
     >
-      <div className="relative mx-auto grid h-[4.75rem] max-w-7xl grid-cols-3 items-center px-4 sm:px-6 lg:px-8">
-        {/* Sol — Giriş / Kayıt / admin */}
-        <div className="flex items-center justify-start gap-2">
+      <div className="relative mx-auto flex h-[4.5rem] max-w-7xl items-center justify-between gap-2 px-3 sm:px-6 lg:px-8">
+        {/* Sol — Favoriler */}
+        <div className="flex min-w-[5.5rem] items-center justify-start gap-1 sm:min-w-[7rem]">
+          <Link
+            href="/favoriler"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-bw-200 text-bw-600 transition hover:border-bw-300 hover:bg-bw-50 hover:text-bw-950"
+            aria-label="Favoriler"
+          >
+            <Heart className="h-4 w-4" />
+          </Link>
+          <nav className="hidden items-center gap-0.5 md:flex">
+            {[
+              { href: "/ara", label: "Keşfet" },
+              { href: "/hakkimizda", label: "Hakkında" },
+            ].map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                className={`rounded-xl px-3 py-2 text-sm font-medium transition ${
+                  pathname === l.href
+                    ? "bg-bw-100 text-bw-950"
+                    : "text-bw-500 hover:bg-bw-50 hover:text-bw-950"
+                }`}
+              >
+                {l.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+
+        {/* Orta — Logo (absolute center, overlap yok) */}
+        <div className="pointer-events-none absolute inset-x-0 flex justify-center">
+          <Link
+            href="/"
+            className="pointer-events-auto shrink-0"
+            aria-label="Mepotia ana sayfa"
+          >
+            <Logo className="h-7 sm:h-9" priority />
+          </Link>
+        </div>
+
+        {/* Sağ — Giriş / Kayıt / admin */}
+        <div className="relative z-10 flex min-w-[5.5rem] items-center justify-end gap-1.5 sm:min-w-[7rem] sm:gap-2">
           {user && isAdmin ? (
             <>
               <Link
                 href="/ilan-ver"
-                className="inline-flex items-center gap-1.5 rounded-xl bg-bw-950 px-3 py-2 text-xs font-semibold text-white transition hover:bg-bw-800 sm:px-4 sm:text-sm"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-bw-950 px-2.5 py-2 text-xs font-semibold text-white transition hover:bg-bw-800 sm:px-4 sm:text-sm"
               >
                 <PenLine className="h-3.5 w-3.5" />
                 <span className="hidden sm:inline">Paylaş</span>
@@ -89,7 +129,7 @@ export default function Navbar() {
             <button
               type="button"
               onClick={logout}
-              className="rounded-xl border border-bw-200 px-4 py-2.5 text-sm font-semibold text-bw-800 transition hover:bg-bw-50"
+              className="rounded-xl border border-bw-200 px-3 py-2 text-xs font-semibold text-bw-800 transition hover:bg-bw-50 sm:px-4 sm:text-sm"
             >
               Çıkış
             </button>
@@ -97,54 +137,18 @@ export default function Navbar() {
             <>
               <Link
                 href="/giris"
-                className="rounded-xl border border-bw-300 bg-white px-3 py-2.5 text-sm font-semibold text-bw-900 transition hover:border-bw-950 sm:px-4"
+                className="rounded-xl border border-bw-300 bg-white px-2.5 py-2 text-xs font-semibold text-bw-900 transition hover:border-bw-950 sm:px-4 sm:py-2.5 sm:text-sm"
               >
                 Giriş
               </Link>
               <Link
                 href="/kayit"
-                className="rounded-xl border border-bw-900 bg-bw-950 px-3 py-2.5 text-sm font-semibold text-white transition hover:bg-bw-800 sm:px-4"
+                className="rounded-xl border border-bw-900 bg-bw-950 px-2.5 py-2 text-xs font-semibold text-white transition hover:bg-bw-800 sm:px-4 sm:py-2.5 sm:text-sm"
               >
                 Kayıt
               </Link>
             </>
           )}
-        </div>
-
-        {/* Orta — sadece logo yazısı */}
-        <div className="flex items-center justify-center">
-          <Link href="/" className="shrink-0" aria-label="Mepotia ana sayfa">
-            <Logo className="h-8 sm:h-10" priority />
-          </Link>
-        </div>
-
-        {/* Sağ — Favoriler */}
-        <div className="flex items-center justify-end gap-1 sm:gap-2">
-          <nav className="mr-1 hidden items-center gap-0.5 md:flex">
-            {[
-              { href: "/ara", label: "Keşfet" },
-              { href: "/hakkimizda", label: "Hakkında" },
-            ].map((l) => (
-              <Link
-                key={l.href}
-                href={l.href}
-                className={`rounded-xl px-3 py-2 text-sm font-medium transition ${
-                  pathname === l.href
-                    ? "bg-bw-100 text-bw-950"
-                    : "text-bw-500 hover:bg-bw-50 hover:text-bw-950"
-                }`}
-              >
-                {l.label}
-              </Link>
-            ))}
-          </nav>
-          <Link
-            href="/favoriler"
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-bw-200 text-bw-600 transition hover:border-bw-300 hover:bg-bw-50 hover:text-bw-950"
-            aria-label="Favoriler"
-          >
-            <Heart className="h-4 w-4" />
-          </Link>
         </div>
       </div>
     </header>
