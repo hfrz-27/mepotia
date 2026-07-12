@@ -3,14 +3,13 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LogOut, PenLine, Search, Heart } from "lucide-react";
+import { LogOut, PenLine, Heart } from "lucide-react";
 import Logo from "@/components/Logo";
 import { createClient } from "@/lib/supabase";
 
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
-  const [query, setQuery] = useState("");
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -45,12 +44,6 @@ export default function Navbar() {
     return () => sub.subscription.unsubscribe();
   }, []);
 
-  const onSearch = (e) => {
-    e.preventDefault();
-    const q = query.trim();
-    router.push(q ? `/ara?q=${encodeURIComponent(q)}` : "/ara");
-  };
-
   const logout = async () => {
     await createClient().auth.signOut();
     router.push("/");
@@ -65,67 +58,23 @@ export default function Navbar() {
           : "border-bw-200/80 bg-white/80 backdrop-blur-md"
       }`}
     >
-      <div className="mx-auto flex h-[4.5rem] max-w-7xl items-center gap-4 px-4 sm:px-6 lg:px-8">
-        <Link href="/" className="shrink-0">
-          <Logo className="h-7 sm:h-8" priority />
-        </Link>
-
-        <nav className="ml-1 hidden items-center gap-1 md:flex">
-          {[
-            { href: "/", label: "Vitrin" },
-            { href: "/ara", label: "Keşfet" },
-            { href: "/hakkimizda", label: "Hakkında" },
-            { href: "/iletisim", label: "İletişim" },
-          ].map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              className={`rounded-xl px-3.5 py-2 text-sm font-medium transition ${
-                pathname === l.href
-                  ? "bg-bw-950 text-white"
-                  : "text-bw-600 hover:bg-bw-100 hover:text-bw-950"
-              }`}
-            >
-              {l.label}
-            </Link>
-          ))}
-        </nav>
-
-        <form onSubmit={onSearch} className="ml-auto hidden max-w-sm flex-1 lg:flex">
-          <div className="flex w-full items-center rounded-2xl border border-bw-200 bg-bw-50 px-3.5 transition focus-within:border-bw-400 focus-within:bg-white">
-            <Search className="h-4 w-4 text-bw-400" />
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Ürün, marka ara..."
-              className="w-full bg-transparent px-2.5 py-2.5 text-sm text-bw-900 outline-none placeholder:text-bw-400"
-            />
-          </div>
-        </form>
-
-        <div className="ml-auto flex items-center gap-2 lg:ml-0">
-          <Link
-            href="/favoriler"
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-bw-200 text-bw-600 transition hover:border-bw-300 hover:bg-bw-50 hover:text-bw-950"
-            aria-label="Favoriler"
-          >
-            <Heart className="h-4 w-4" />
-          </Link>
-
+      <div className="relative mx-auto grid h-[4.75rem] max-w-7xl grid-cols-3 items-center px-4 sm:px-6 lg:px-8">
+        {/* Sol — Giriş / admin */}
+        <div className="flex items-center justify-start gap-2">
           {isAdmin ? (
             <>
               <Link
-                href="/admin"
-                className="hidden rounded-xl px-3 py-2 text-sm font-medium text-bw-600 transition hover:bg-bw-100 hover:text-bw-950 sm:inline"
+                href="/ilan-ver"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-bw-950 px-3 py-2 text-xs font-semibold text-white transition hover:bg-bw-800 sm:px-4 sm:text-sm"
               >
-                Yönetim
+                <PenLine className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">Paylaş</span>
               </Link>
               <Link
-                href="/ilan-ver"
-                className="inline-flex items-center gap-2 rounded-xl bg-bw-950 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-bw-800"
+                href="/admin"
+                className="hidden rounded-xl px-3 py-2 text-sm font-medium text-bw-600 transition hover:bg-bw-100 hover:text-bw-950 md:inline"
               >
-                <PenLine className="h-4 w-4" />
-                Paylaş
+                Yönetim
               </Link>
               <button
                 type="button"
@@ -144,6 +93,42 @@ export default function Navbar() {
               Giriş
             </Link>
           )}
+        </div>
+
+        {/* Orta — Logo */}
+        <div className="flex items-center justify-center">
+          <Link href="/" className="shrink-0" aria-label="Mepotia ana sayfa">
+            <Logo className="h-8 sm:h-10" priority />
+          </Link>
+        </div>
+
+        {/* Sağ — Favoriler + kısa menü */}
+        <div className="flex items-center justify-end gap-1 sm:gap-2">
+          <nav className="mr-1 hidden items-center gap-0.5 md:flex">
+            {[
+              { href: "/ara", label: "Keşfet" },
+              { href: "/hakkimizda", label: "Hakkında" },
+            ].map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                className={`rounded-xl px-3 py-2 text-sm font-medium transition ${
+                  pathname === l.href
+                    ? "bg-bw-100 text-bw-950"
+                    : "text-bw-500 hover:bg-bw-50 hover:text-bw-950"
+                }`}
+              >
+                {l.label}
+              </Link>
+            ))}
+          </nav>
+          <Link
+            href="/favoriler"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-bw-200 text-bw-600 transition hover:border-bw-300 hover:bg-bw-50 hover:text-bw-950"
+            aria-label="Favoriler"
+          >
+            <Heart className="h-4 w-4" />
+          </Link>
         </div>
       </div>
     </header>

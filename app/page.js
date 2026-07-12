@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, MessageCircle, ShieldCheck, Eye, Heart } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
-import Logo from "@/components/Logo";
 import { getPublishedProducts } from "@/lib/products";
 import { getSiteSettings } from "@/lib/categories";
 
@@ -54,18 +53,15 @@ export default async function HomePage() {
           />
         </div>
 
-        <div className="relative mx-auto flex min-h-[92vh] max-w-5xl flex-col items-start justify-center px-4 py-20 sm:px-6 lg:px-8">
-          <div className="animate-fade-up">
-            <Logo className="h-12 sm:h-16" priority />
-          </div>
-          <h1 className="animate-fade-up-delay mt-10 font-display text-5xl leading-[1.02] font-semibold tracking-[0.14em] text-bw-950 uppercase sm:text-6xl lg:text-7xl">
+        <div className="relative mx-auto flex min-h-[92vh] max-w-4xl flex-col items-center justify-center px-4 py-20 text-center sm:px-6 lg:px-8">
+          <h1 className="animate-fade-up font-display text-5xl leading-[1.02] font-semibold tracking-[0.14em] text-bw-950 uppercase sm:text-6xl lg:text-7xl">
             Mepotia
           </h1>
           <p className="animate-fade-up-delay mt-6 max-w-2xl text-lg leading-relaxed text-bw-600 sm:text-xl">
             Mezopotamya&apos;dan ilham alan kişisel ikinci el vitrin. Her ürün
             tek tek seçilir — güven, şeffaflık ve emekle.
           </p>
-          <div className="animate-fade-up-delay mt-10 flex flex-wrap items-center gap-3">
+          <div className="animate-fade-up-delay mt-10 flex flex-wrap items-center justify-center gap-3">
             <a
               href="#vitrin"
               className="inline-flex items-center gap-2 rounded-2xl bg-bw-950 px-7 py-3.5 text-sm font-semibold text-white transition hover:bg-bw-800"
