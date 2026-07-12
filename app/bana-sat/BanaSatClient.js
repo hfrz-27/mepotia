@@ -28,6 +28,7 @@ export default function BanaSatClient() {
   const [done, setDone] = useState(false);
   const [waLink, setWaLink] = useState("");
   const [mailLink, setMailLink] = useState("");
+  const [savedToAdmin, setSavedToAdmin] = useState(false);
 
   const onChange = (e) => {
     const { name, value } = e.target;
@@ -53,9 +54,51 @@ export default function BanaSatClient() {
       imageUrls.length
         ? `Fotoğraflar:\n${imageUrls.join("\n")}`
         : files.length
-          ? `Fotoğraf sayısı: ${files.length}`
+          ? `Fotoğraf sayısı: ${files.length} (WhatsApp'tan da gönderebilirsin)`
           : "Fotoğraf yok",
     ].join("\n");
+  };
+
+  const finishSuccess = async (imageUrls, adminOk) => {
+    const message = buildMessage(imageUrls);
+    const wa = `https://wa.me/${OWNER_WA}?text=${encodeURIComponent(message)}`;
+    const mail = `mailto:${OWNER_EMAIL}?subject=${encodeURIComponent(
+      `Mepotia satış teklifi — ${form.title}`,
+    )}&body=${encodeURIComponent(message)}`;
+
+    try {
+      const fd = new FormData();
+      fd.append("name", form.name);
+      fd.append("phone", form.phone);
+      fd.append("title", form.title);
+      fd.append("brand", form.brand);
+      fd.append("model", form.model);
+      fd.append("condition", form.condition);
+      fd.append("price", form.price);
+      fd.append("city", form.city);
+      fd.append("description", form.description);
+      fd.append("images", imageUrls.join("\n"));
+      fd.append("_subject", `Mepotia satış teklifi — ${form.title}`);
+      fd.append("_template", "table");
+      fd.append("_captcha", "false");
+      for (let i = 0; i < files.length; i++) {
+        fd.append(`attachment${i + 1}`, files[i]);
+      }
+      await fetch(`https://formsubmit.co/ajax/${OWNER_EMAIL}`, {
+        method: "POST",
+        body: fd,
+        headers: { Accept: "application/json" },
+      });
+    } catch {
+      // e-posta opsiyonel
+    }
+
+    setWaLink(wa);
+    setMailLink(mail);
+    setSavedToAdmin(adminOk);
+    setDone(true);
+    setLoading(false);
+    window.open(wa, "_blank", "noopener,noreferrer");
   };
 
   const onSubmit = async (e) => {
@@ -83,6 +126,7 @@ export default function BanaSatClient() {
     const supabase = createClient();
     const imageUrls = [];
     const folder = `offers/${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    let adminOk = false;
 
     try {
       for (let i = 0; i < files.length; i++) {
@@ -114,51 +158,13 @@ export default function BanaSatClient() {
       ]);
 
       if (insertError) throw insertError;
+      adminOk = true;
     } catch (err) {
-      console.error(err);
-      setLoading(false);
-      setError(
-        "Teklif kaydedilemedi. Supabase'de sell_offers SQL'ini çalıştırdığından emin ol. Hata: " +
-          (err?.message || "bilinmeyen"),
-      );
-      return;
+      console.warn("sell_offers kaydı atlandı:", err?.message || err);
+      // SQL henüz çalıştırılmamış olabilir — WhatsApp / e-posta ile devam
     }
 
-    const message = buildMessage(imageUrls);
-    const wa = `https://wa.me/${OWNER_WA}?text=${encodeURIComponent(message)}`;
-    const mail = `mailto:${OWNER_EMAIL}?subject=${encodeURIComponent(
-      `Mepotia satış teklifi — ${form.title}`,
-    )}&body=${encodeURIComponent(message)}`;
-
-    try {
-      const fd = new FormData();
-      fd.append("name", form.name);
-      fd.append("phone", form.phone);
-      fd.append("title", form.title);
-      fd.append("brand", form.brand);
-      fd.append("model", form.model);
-      fd.append("condition", form.condition);
-      fd.append("price", form.price);
-      fd.append("city", form.city);
-      fd.append("description", form.description);
-      fd.append("images", imageUrls.join("\n"));
-      fd.append("_subject", `Mepotia satış teklifi — ${form.title}`);
-      fd.append("_template", "table");
-      fd.append("_captcha", "false");
-      await fetch(`https://formsubmit.co/ajax/${OWNER_EMAIL}`, {
-        method: "POST",
-        body: fd,
-        headers: { Accept: "application/json" },
-      });
-    } catch {
-      // e-posta opsiyonel
-    }
-
-    setWaLink(wa);
-    setMailLink(mail);
-    setDone(true);
-    setLoading(false);
-    window.open(wa, "_blank", "noopener,noreferrer");
+    await finishSuccess(imageUrls, adminOk);
   };
 
   const field =
@@ -173,7 +179,9 @@ export default function BanaSatClient() {
             Teklifin alındı
           </h1>
           <p className="mt-3 text-sm leading-relaxed text-bw-500">
-            Teklif admin paneline düştü. WhatsApp ile de iletebilirsin.
+            {savedToAdmin
+              ? "Teklif admin paneline düştü. WhatsApp ile de iletebilirsin."
+              : "Teklif WhatsApp / e-posta ile gönderildi. Admin paneli için Supabase’de sell_offers SQL’ini bir kez çalıştırman gerekiyor."}
           </p>
           <div className="mt-8 flex flex-col gap-3">
             <a
@@ -208,8 +216,8 @@ export default function BanaSatClient() {
         Ürününü bana sat
       </h1>
       <p className="mt-3 max-w-xl text-sm leading-relaxed text-bw-500">
-        Formu doldur. Teklif hem admin paneline düşer hem WhatsApp / e-posta ile
-        bana ulaşır.
+        Formu doldur. Teklif WhatsApp / e-posta ile bana ulaşır; SQL kurulunca
+        admin paneline de düşer.
       </p>
 
       <form

@@ -11,6 +11,7 @@ export default function AdminPage() {
   const [offers, setOffers] = useState([]);
   const [msg, setMsg] = useState("");
   const [tab, setTab] = useState("offers");
+  const [offersReady, setOffersReady] = useState(true);
 
   const load = async () => {
     const supabase = createClient();
@@ -21,10 +22,16 @@ export default function AdminPage() {
     const rows = all || [];
     setProducts(rows);
 
-    const { data: offerRows } = await supabase
+    const { data: offerRows, error: offerErr } = await supabase
       .from("sell_offers")
       .select("*")
       .order("created_at", { ascending: false });
+    if (offerErr) {
+      setOffersReady(false);
+      setOffers([]);
+    } else {
+      setOffersReady(true);
+    }
     const offersList = offerRows || [];
     setOffers(offersList);
 
@@ -132,12 +139,27 @@ export default function AdminPage() {
 
       {tab === "offers" ? (
         <div className="mt-6 space-y-4">
-          {!offers.length ? (
+          {!offersReady ? (
+            <div className="rounded-3xl border border-bw-300 bg-bw-50 px-5 py-5 text-sm leading-relaxed text-bw-700">
+              <p className="font-semibold text-bw-950">
+                sell_offers tablosu henüz yok
+              </p>
+              <p className="mt-2">
+                Supabase Dashboard → SQL Editor →{" "}
+                <code className="rounded bg-white px-1.5 py-0.5 text-xs">
+                  supabase/sell_offers.sql
+                </code>{" "}
+                dosyasının tamamını yapıştır → Run. Sonra bu sayfayı yenile.
+              </p>
+            </div>
+          ) : null}
+          {offersReady && !offers.length ? (
             <div className="rounded-3xl border border-dashed border-bw-300 bg-white px-6 py-16 text-center text-sm text-bw-500">
               Henüz satış teklifi yok. Müşteriler /bana-sat formundan gönderince
               burada görünür.
             </div>
-          ) : (
+          ) : null}
+          {offers.length ? (
             offers.map((o) => (
               <article
                 key={o.id}
@@ -229,7 +251,7 @@ export default function AdminPage() {
                 </p>
               </article>
             ))
-          )}
+          ) : null}
         </div>
       ) : (
         <div className="mt-6 overflow-x-auto rounded-3xl border border-bw-200 bg-white shadow-sm">
