@@ -16,6 +16,48 @@ import {
 
 export const dynamic = "force-dynamic";
 
+export async function generateMetadata({ params }) {
+  const { id } = await params;
+  const { data: product } = await getProductById(id);
+  if (!product || product.status !== "published") {
+    return { title: "Ürün bulunamadı — Mepotia" };
+  }
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://mepotia.com";
+  const image = getPrimaryImage(product);
+  const title = `${product.title} — Mepotia`;
+  const description =
+    product.description?.slice(0, 160) ||
+    `${product.title} · ${formatPrice(product.price)} · Mepotia`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `${siteUrl}/urun/${product.id}`,
+      siteName: "Mepotia",
+      type: "website",
+      locale: "tr_TR",
+      images: [
+        {
+          url: image,
+          width: 1200,
+          height: 630,
+          alt: product.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [image],
+    },
+  };
+}
+
 export default async function ProductPage({ params }) {
   const { id } = await params;
   const { data: product } = await getProductById(id);
@@ -109,7 +151,12 @@ export default async function ProductPage({ params }) {
             <p className="mb-2 text-xs font-semibold tracking-[0.2em] text-bw-500 uppercase">
               Bu ürünü paylaş
             </p>
-            <ShareProductButtons title={product.title} url={productUrl} />
+            <ShareProductButtons
+              title={product.title}
+              url={productUrl}
+              imageUrl={fallback}
+              price={formatPrice(product.price)}
+            />
           </div>
 
           <div className="mt-8 rounded-3xl border border-bw-200 bg-white p-6 sm:p-8">
