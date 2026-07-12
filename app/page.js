@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, MessageCircle, ShieldCheck, Eye, Heart } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
+import HeroSearch from "@/components/HeroSearch";
 import { getPublishedProducts } from "@/lib/products";
 import { getSiteSettings } from "@/lib/categories";
 
@@ -61,7 +62,8 @@ export default async function HomePage() {
             Mezopotamya&apos;dan ilham alan kişisel ikinci el vitrin. Her ürün
             tek tek seçilir — güven, şeffaflık ve emekle.
           </p>
-          <div className="animate-fade-up-delay mt-10 flex flex-wrap items-center justify-center gap-3">
+          <HeroSearch />
+          <div className="animate-fade-up-delay mt-8 flex flex-wrap items-center justify-center gap-3">
             <a
               href="#vitrin"
               className="inline-flex items-center gap-2 rounded-2xl bg-bw-950 px-7 py-3.5 text-sm font-semibold text-white transition hover:bg-bw-800"

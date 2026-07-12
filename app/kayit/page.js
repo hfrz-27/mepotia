@@ -1,6 +1,14 @@
-import { redirect } from "next/navigation";
+import { Suspense } from "react";
+import KayitClient from "./KayitClient";
 
-/** Public signup kapalı — sadece sen giriş yaparsın */
 export default function KayitPage() {
-  redirect("/giris");
+  return (
+    <Suspense
+      fallback={
+        <main className="p-10 text-center text-bw-500">Yükleniyor...</main>
+      }
+    >
+      <KayitClient />
+    </Suspense>
+  );
 }

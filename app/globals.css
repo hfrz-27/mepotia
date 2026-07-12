@@ -72,20 +72,8 @@ body {
   display: none;
 }
 
-/* Logo: black glyph on transparent — invert on dark badge/surfaces */
+/* Logo: black glyph on transparent — no badge box */
 .logo-on-dark img {
-  filter: invert(1);
-}
-
-.logo-badge {
-  background: #09090b;
-  border-radius: 0.75rem;
-  padding: 0.45rem 0.7rem;
-  display: inline-flex;
-  align-items: center;
-}
-
-.logo-badge img {
   filter: invert(1);
 }
 

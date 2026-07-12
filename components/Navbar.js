@@ -59,9 +59,9 @@ export default function Navbar() {
       }`}
     >
       <div className="relative mx-auto grid h-[4.75rem] max-w-7xl grid-cols-3 items-center px-4 sm:px-6 lg:px-8">
-        {/* Sol — Giriş / admin */}
+        {/* Sol — Giriş / Kayıt / admin */}
         <div className="flex items-center justify-start gap-2">
-          {isAdmin ? (
+          {user && isAdmin ? (
             <>
               <Link
                 href="/ilan-ver"
@@ -85,24 +85,40 @@ export default function Navbar() {
                 <LogOut className="h-4 w-4" />
               </button>
             </>
-          ) : (
-            <Link
-              href="/giris"
-              className="rounded-xl border border-bw-900 bg-bw-950 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-bw-800"
+          ) : user ? (
+            <button
+              type="button"
+              onClick={logout}
+              className="rounded-xl border border-bw-200 px-4 py-2.5 text-sm font-semibold text-bw-800 transition hover:bg-bw-50"
             >
-              Giriş
-            </Link>
+              Çıkış
+            </button>
+          ) : (
+            <>
+              <Link
+                href="/giris"
+                className="rounded-xl border border-bw-300 bg-white px-3 py-2.5 text-sm font-semibold text-bw-900 transition hover:border-bw-950 sm:px-4"
+              >
+                Giriş
+              </Link>
+              <Link
+                href="/kayit"
+                className="rounded-xl border border-bw-900 bg-bw-950 px-3 py-2.5 text-sm font-semibold text-white transition hover:bg-bw-800 sm:px-4"
+              >
+                Kayıt
+              </Link>
+            </>
           )}
         </div>
 
-        {/* Orta — Logo */}
+        {/* Orta — sadece logo yazısı */}
         <div className="flex items-center justify-center">
           <Link href="/" className="shrink-0" aria-label="Mepotia ana sayfa">
             <Logo className="h-8 sm:h-10" priority />
           </Link>
         </div>
 
-        {/* Sağ — Favoriler + kısa menü */}
+        {/* Sağ — Favoriler */}
         <div className="flex items-center justify-end gap-1 sm:gap-2">
           <nav className="mr-1 hidden items-center gap-0.5 md:flex">
             {[

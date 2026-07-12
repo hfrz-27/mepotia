@@ -2,34 +2,50 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase";
 import Logo from "@/components/Logo";
 
-export default function GirisClient() {
+export default function KayitClient() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const next = searchParams.get("next") || "/";
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [info, setInfo] = useState("");
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setInfo("");
     setLoading(true);
-    const { error: authError } = await createClient().auth.signInWithPassword({
+
+    const supabase = createClient();
+    const { data, error: authError } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: { full_name: fullName.trim() || null },
+      },
     });
+
     setLoading(false);
+
     if (authError) {
       setError(authError.message);
       return;
     }
-    router.push(next);
-    router.refresh();
+
+    if (data.session) {
+      router.push("/");
+      router.refresh();
+      return;
+    }
+
+    setInfo(
+      "Kayıt alındı. E-posta onayı açıksa gelen kutunu kontrol et, sonra giriş yap.",
+    );
   };
 
   const field =
@@ -42,12 +58,19 @@ export default function GirisClient() {
           <Logo className="h-9" />
         </div>
         <h1 className="mt-6 text-center font-display text-2xl font-semibold tracking-wide text-bw-950">
-          Giriş
+          Kayıt Ol
         </h1>
         <p className="mt-2 text-center text-sm text-bw-500">
-          Hesabınla giriş yap
+          Favori eklemek ve takip için hesap oluştur
         </p>
         <form onSubmit={onSubmit} className="mt-6 space-y-4">
+          <input
+            type="text"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            placeholder="Ad Soyad"
+            className={field}
+          />
           <input
             type="email"
             required
@@ -59,9 +82,10 @@ export default function GirisClient() {
           <input
             type="password"
             required
+            minLength={6}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="Şifre"
+            placeholder="Şifre (en az 6 karakter)"
             className={field}
           />
           {error ? (
@@ -69,18 +93,23 @@ export default function GirisClient() {
               {error}
             </p>
           ) : null}
+          {info ? (
+            <p className="rounded-2xl bg-bw-50 px-3 py-2 text-sm text-bw-700">
+              {info}
+            </p>
+          ) : null}
           <button
             type="submit"
             disabled={loading}
             className="w-full rounded-2xl bg-bw-950 py-3.5 text-sm font-semibold text-white hover:bg-bw-800 disabled:opacity-70"
           >
-            {loading ? "Giriş yapılıyor..." : "Giriş Yap"}
+            {loading ? "Kaydediliyor..." : "Kayıt Ol"}
           </button>
         </form>
         <p className="mt-4 text-center text-sm text-bw-500">
-          Hesabın yok mu?{" "}
-          <Link href="/kayit" className="font-medium text-bw-950 underline">
-            Kayıt ol
+          Hesabın var mı?{" "}
+          <Link href="/giris" className="font-medium text-bw-950 underline">
+            Giriş yap
           </Link>
         </p>
       </div>
