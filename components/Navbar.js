@@ -64,6 +64,7 @@ export default function Navbar() {
 
   const logout = async () => {
     await createClient().auth.signOut();
+    setMenuOpen(false);
     router.push("/");
     router.refresh();
   };
@@ -77,15 +78,11 @@ export default function Navbar() {
       }`}
     >
       <div className="relative mx-auto flex h-[4.5rem] max-w-7xl items-center justify-between gap-2 px-3 sm:px-6 lg:px-8">
-        {/* Sol — Favoriler + 3 çizgi menü */}
-        <div className="relative flex min-w-[5.5rem] items-center justify-start gap-1.5" ref={menuRef}>
-          <Link
-            href="/favoriler"
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-bw-200 text-bw-600 transition hover:border-bw-300 hover:bg-bw-50 hover:text-bw-950"
-            aria-label="Favoriler"
-          >
-            <Heart className="h-4 w-4" />
-          </Link>
+        {/* En sol — Menü, yanında Favoriler */}
+        <div
+          className="relative z-20 flex min-w-[5.5rem] items-center justify-start gap-1.5"
+          ref={menuRef}
+        >
           <button
             type="button"
             onClick={() => setMenuOpen((v) => !v)}
@@ -95,9 +92,16 @@ export default function Navbar() {
           >
             {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </button>
+          <Link
+            href="/favoriler"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-bw-200 text-bw-600 transition hover:border-bw-300 hover:bg-bw-50 hover:text-bw-950"
+            aria-label="Favoriler"
+          >
+            <Heart className="h-4 w-4" />
+          </Link>
 
           {menuOpen ? (
-            <div className="absolute left-0 top-[calc(100%+0.5rem)] z-50 w-56 overflow-hidden rounded-2xl border border-bw-200 bg-white shadow-[0_20px_50px_-24px_rgba(0,0,0,0.35)]">
+            <div className="absolute left-0 top-[calc(100%+0.5rem)] z-50 w-60 overflow-hidden rounded-2xl border border-bw-200 bg-white shadow-[0_20px_50px_-24px_rgba(0,0,0,0.35)]">
               <Link
                 href="/"
                 className="block px-4 py-3 text-sm font-medium text-bw-900 hover:bg-bw-50"
@@ -125,6 +129,25 @@ export default function Navbar() {
                 <MessageCircle className="h-4 w-4" />
                 0505 957 41 22
               </a>
+              <div className="border-t border-bw-100">
+                {user ? (
+                  <button
+                    type="button"
+                    onClick={logout}
+                    className="flex w-full items-center gap-2 px-4 py-3 text-left text-sm font-medium text-bw-600 hover:bg-bw-50"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    Çıkış
+                  </button>
+                ) : (
+                  <Link
+                    href="/giris"
+                    className="block px-4 py-3 text-sm font-medium text-bw-500 hover:bg-bw-50 hover:text-bw-950"
+                  >
+                    Giriş
+                  </Link>
+                )}
+              </div>
             </div>
           ) : null}
         </div>
@@ -140,8 +163,8 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Sağ — Giriş / Kayıt / admin */}
-        <div className="relative z-10 flex min-w-[5.5rem] items-center justify-end gap-1.5 sm:min-w-[7rem] sm:gap-2">
+        {/* Sağ — sadece admin kısayolları */}
+        <div className="relative z-10 flex min-w-[5.5rem] items-center justify-end gap-1.5 sm:min-w-[7rem]">
           {user && isAdmin ? (
             <>
               <Link
@@ -157,38 +180,9 @@ export default function Navbar() {
               >
                 Yönetim
               </Link>
-              <button
-                type="button"
-                onClick={logout}
-                aria-label="Çıkış"
-                className="flex h-10 w-10 items-center justify-center rounded-xl border border-bw-200 text-bw-500 hover:bg-bw-50"
-              >
-                <LogOut className="h-4 w-4" />
-              </button>
             </>
-          ) : user ? (
-            <button
-              type="button"
-              onClick={logout}
-              className="rounded-xl border border-bw-200 px-3 py-2 text-xs font-semibold text-bw-800 transition hover:bg-bw-50 sm:px-4 sm:text-sm"
-            >
-              Çıkış
-            </button>
           ) : (
-            <>
-              <Link
-                href="/giris"
-                className="rounded-xl border border-bw-300 bg-white px-2.5 py-2 text-xs font-semibold text-bw-900 transition hover:border-bw-950 sm:px-4 sm:py-2.5 sm:text-sm"
-              >
-                Giriş
-              </Link>
-              <Link
-                href="/kayit"
-                className="rounded-xl border border-bw-900 bg-bw-950 px-2.5 py-2 text-xs font-semibold text-white transition hover:bg-bw-800 sm:px-4 sm:py-2.5 sm:text-sm"
-              >
-                Kayıt
-              </Link>
-            </>
+            <span className="w-10" aria-hidden />
           )}
         </div>
       </div>

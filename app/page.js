@@ -154,6 +154,59 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Ürününü sat */}
+      <section className="border-b border-bw-200 bg-white">
+        <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8 lg:py-20">
+          <div>
+            <p className="text-xs tracking-[0.22em] text-bw-500 uppercase">
+              Satış teklifi
+            </p>
+            <h2 className="mt-3 font-display text-3xl font-semibold tracking-wide text-bw-950 sm:text-4xl lg:text-5xl">
+              Elindeki ürünü bana sat
+            </h2>
+            <p className="mt-5 max-w-lg text-base leading-relaxed text-bw-600">
+              Kullanmadığın ama değeri olan bir ürün mü var? Formu doldur,
+              fotoğraf ve açıklama ekle. Teklifin doğrudan bana ulaşır —
+              WhatsApp veya e-posta ile dönüş yaparım.
+            </p>
+            <ul className="mt-6 space-y-2 text-sm text-bw-500">
+              <li>— Ürün adı, marka, model ve durum</li>
+              <li>— Gerçek fotoğraflar</li>
+              <li>— İstediğin fiyat ve şehir</li>
+            </ul>
+            <Link
+              href="/bana-sat"
+              className="mt-8 inline-flex items-center gap-2 rounded-2xl bg-bw-950 px-7 py-3.5 text-sm font-semibold text-white transition hover:bg-bw-800"
+            >
+              Ürünümü sat
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+          <div className="relative overflow-hidden rounded-[2rem] border border-bw-200 bg-bw-50 p-8 sm:p-10">
+            <p className="font-display text-2xl font-semibold tracking-wide text-bw-950">
+              Nasıl çalışır?
+            </p>
+            <ol className="mt-6 space-y-5 text-sm leading-relaxed text-bw-600">
+              <li>
+                <span className="font-semibold text-bw-950">1.</span> Formu
+                doldur, ürününü anlat.
+              </li>
+              <li>
+                <span className="font-semibold text-bw-950">2.</span> Fotoğraf
+                ekle — net ve gerçek olsun.
+              </li>
+              <li>
+                <span className="font-semibold text-bw-950">3.</span> Gönder;
+                WhatsApp (0505 957 41 22) üzerinden konuşalım.
+              </li>
+            </ol>
+            <p className="mt-8 text-xs leading-relaxed text-bw-400">
+              Her teklif değerlendirilir. Uygun olanlar vitrine alınır.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Featured */}
       {featured?.length ? (
         <section className="border-b border-bw-200 bg-white">

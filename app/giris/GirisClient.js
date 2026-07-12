@@ -94,7 +94,7 @@ export default function GirisClient() {
           Giriş
         </h1>
         <p className="mt-2 text-center text-sm text-bw-500">
-          Google ile veya e-posta ile giriş yap
+          Site yönetimi için giriş
         </p>
 
         <div className="mt-6">
@@ -152,9 +152,8 @@ export default function GirisClient() {
         </button>
 
         <p className="mt-4 text-center text-sm text-bw-500">
-          Hesabın yok mu?{" "}
-          <Link href="/kayit" className="font-medium text-bw-950 underline">
-            Kayıt ol
+          <Link href="/" className="font-medium text-bw-950 underline">
+            Ana sayfa
           </Link>
         </p>
       </div>
