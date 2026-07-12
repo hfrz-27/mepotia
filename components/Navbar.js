@@ -12,6 +12,7 @@ export default function Navbar() {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [notifCount, setNotifCount] = useState(0);
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
@@ -43,6 +44,7 @@ export default function Navbar() {
       setUser(u);
       if (!u) {
         setIsAdmin(false);
+        setNotifCount(0);
         return;
       }
       const { data } = await supabase
@@ -50,7 +52,23 @@ export default function Navbar() {
         .select("role")
         .eq("id", u.id)
         .single();
-      setIsAdmin(data?.role === "admin");
+      const admin = data?.role === "admin";
+      setIsAdmin(admin);
+      if (!admin) {
+        setNotifCount(0);
+        return;
+      }
+      const [{ count: offerCount }, { count: reqCount }] = await Promise.all([
+        supabase
+          .from("sell_offers")
+          .select("id", { count: "exact", head: true })
+          .eq("status", "new"),
+        supabase
+          .from("product_requests")
+          .select("id", { count: "exact", head: true })
+          .eq("status", "new"),
+      ]);
+      setNotifCount((offerCount || 0) + (reqCount || 0));
     };
 
     supabase.auth.getUser().then(({ data }) => sync(data.user));
@@ -137,9 +155,9 @@ export default function Navbar() {
                 ) : (
                   <Link
                     href="/giris"
-                    className="block px-4 py-3 text-sm font-medium text-bw-500 hover:bg-bw-50 hover:text-bw-950"
+                    className="block px-4 py-3 font-display text-sm font-semibold tracking-[0.14em] text-bw-950 hover:bg-bw-50"
                   >
-                    Giriş
+                    MEPOTIA
                   </Link>
                 )}
               </div>
@@ -158,7 +176,7 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Sağ — sadece admin kısayolları */}
+        {/* Sağ — admin kısayolları */}
         <div className="relative z-10 flex min-w-[5.5rem] items-center justify-end gap-1.5 sm:min-w-[7rem]">
           {user && isAdmin ? (
             <>
@@ -171,9 +189,14 @@ export default function Navbar() {
               </Link>
               <Link
                 href="/admin"
-                className="hidden rounded-xl px-3 py-2 text-sm font-medium text-bw-600 transition hover:bg-bw-100 hover:text-bw-950 md:inline"
+                className="relative hidden items-center rounded-xl px-3 py-2 text-sm font-medium text-bw-600 transition hover:bg-bw-100 hover:text-bw-950 md:inline-flex"
               >
                 Yönetim
+                {notifCount > 0 ? (
+                  <span className="ml-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-bw-950 px-1.5 text-[10px] font-bold text-white">
+                    {notifCount}
+                  </span>
+                ) : null}
               </Link>
             </>
           ) : (

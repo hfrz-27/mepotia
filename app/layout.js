@@ -1,6 +1,4 @@
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import WhatsAppHelpButton from "@/components/WhatsAppHelpButton";
+import AppShell from "@/components/AppShell";
 import { Outfit, Cinzel } from "next/font/google";
 import "./globals.css";
 
@@ -32,10 +30,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${outfit.variable} ${cinzel.variable} flex min-h-screen flex-col bg-bw-50 text-bw-900 antialiased`}
       >
-        <Navbar />
-        <div className="flex-1">{children}</div>
-        <Footer />
-        <WhatsAppHelpButton />
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );

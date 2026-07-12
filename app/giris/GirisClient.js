@@ -4,8 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase";
-import Logo from "@/components/Logo";
-import GoogleAuthButton from "@/components/GoogleAuthButton";
 import { fixEmailTypos, isValidEmail } from "@/lib/email";
 
 export default function GirisClient() {
@@ -47,9 +45,7 @@ export default function GirisClient() {
           "E-posta henüz doğrulanmamış. Gelen kutunu (Spam) kontrol et.",
         );
       } else if (/invalid/i.test(msg)) {
-        setError(
-          "E-posta veya şifre hatalı. .coom yerine .com yazdığından emin ol.",
-        );
+        setError("E-posta veya şifre hatalı.");
       } else {
         setError(authError.message);
       }
@@ -85,29 +81,16 @@ export default function GirisClient() {
     "w-full rounded-2xl border border-bw-200 bg-white px-4 py-3 text-sm outline-none focus:border-bw-500";
 
   return (
-    <main className="mx-auto flex min-h-[70vh] max-w-md flex-col justify-center px-4 py-12">
+    <main className="mx-auto flex min-h-[70vh] max-w-md flex-col justify-center px-4 py-12 sm:px-6">
       <div className="rounded-[2rem] border border-bw-200 bg-white p-8 shadow-[0_20px_60px_-40px_rgba(0,0,0,0.3)]">
-        <div className="flex justify-center">
-          <Logo className="h-9" />
-        </div>
-        <h1 className="mt-6 text-center font-display text-2xl font-semibold tracking-wide text-bw-950">
+        <h1 className="text-center font-display text-2xl font-semibold tracking-wide text-bw-950">
           Giriş
         </h1>
         <p className="mt-2 text-center text-sm text-bw-500">
           Site yönetimi için giriş
         </p>
 
-        <div className="mt-6">
-          <GoogleAuthButton next={next} label="Google ile giriş yap" />
-        </div>
-
-        <div className="my-5 flex items-center gap-3">
-          <div className="h-px flex-1 bg-bw-200" />
-          <span className="text-xs tracking-wide text-bw-400 uppercase">veya</span>
-          <div className="h-px flex-1 bg-bw-200" />
-        </div>
-
-        <form onSubmit={onSubmit} className="space-y-4">
+        <form onSubmit={onSubmit} className="mt-8 space-y-4">
           <input
             type="email"
             required
@@ -115,6 +98,7 @@ export default function GirisClient() {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="E-posta"
             className={field}
+            autoComplete="email"
           />
           <input
             type="password"
@@ -123,6 +107,7 @@ export default function GirisClient() {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Şifre"
             className={field}
+            autoComplete="current-password"
           />
           {error ? (
             <p className="rounded-2xl bg-bw-100 px-3 py-2 text-sm text-bw-700">

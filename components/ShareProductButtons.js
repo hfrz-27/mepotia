@@ -3,7 +3,13 @@
 import { useState } from "react";
 import { Share2, Link2, MessageCircle, Check, Download } from "lucide-react";
 
-export default function ShareProductButtons({ title, url, imageUrl, price }) {
+export default function ShareProductButtons({
+  title,
+  url,
+  imageUrl,
+  price,
+  storyMode = false,
+}) {
   const [copied, setCopied] = useState(false);
   const [saving, setSaving] = useState(false);
   const shareText = `${title}${price ? ` — ${price}` : ""} — Mepotia\n${url}`;
@@ -145,7 +151,7 @@ export default function ShareProductButtons({ title, url, imageUrl, price }) {
 
   const nativeShare = async () => {
     try {
-      if (navigator.share && imageUrl) {
+      if (storyMode && navigator.share && imageUrl) {
         const canvas = await buildStoryCanvas();
         const blob = await new Promise((resolve) =>
           canvas.toBlob(resolve, "image/png"),
@@ -176,48 +182,49 @@ export default function ShareProductButtons({ title, url, imageUrl, price }) {
 
   return (
     <div className="space-y-4">
-      {/* Örnek hikaye önizlemesi */}
-      <div className="mx-auto w-full max-w-[220px]">
-        <p className="mb-2 text-center text-[10px] font-semibold tracking-[0.18em] text-bw-400 uppercase">
-          Örnek hikaye
-        </p>
-        <div className="relative aspect-[9/16] overflow-hidden rounded-[1.75rem] border border-bw-900 bg-bw-950 shadow-lg shadow-bw-950/20">
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-20"
-            style={{
-              backgroundImage:
-                "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.4) 1px, transparent 0)",
-              backgroundSize: "16px 16px",
-            }}
-          />
-          <div className="relative flex h-full flex-col px-3 pb-4 pt-5">
-            <p className="text-center font-display text-[11px] font-semibold tracking-[0.2em] text-white">
-              MEPOTIA
-            </p>
-            <div className="mt-3 flex-1 overflow-hidden rounded-2xl border border-white/15 bg-bw-800">
-              {imageUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={imageUrl}
-                  alt={title}
-                  className="h-full w-full object-cover"
-                />
-              ) : (
-                <div className="flex h-full items-center justify-center text-[10px] text-bw-400">
-                  Fotoğraf yok
-                </div>
-              )}
+      {storyMode ? (
+        <div className="mx-auto w-full max-w-[220px]">
+          <p className="mb-2 text-center text-[10px] font-semibold tracking-[0.18em] text-bw-400 uppercase">
+            Örnek hikaye
+          </p>
+          <div className="relative aspect-[9/16] overflow-hidden rounded-[1.75rem] border border-bw-900 bg-bw-950 shadow-lg shadow-bw-950/20">
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0 opacity-20"
+              style={{
+                backgroundImage:
+                  "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.4) 1px, transparent 0)",
+                backgroundSize: "16px 16px",
+              }}
+            />
+            <div className="relative flex h-full flex-col px-3 pb-4 pt-5">
+              <p className="text-center font-display text-[11px] font-semibold tracking-[0.2em] text-white">
+                MEPOTIA
+              </p>
+              <div className="mt-3 flex-1 overflow-hidden rounded-2xl border border-white/15 bg-bw-800">
+                {imageUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={imageUrl}
+                    alt={title}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center text-[10px] text-bw-400">
+                    Fotoğraf yok
+                  </div>
+                )}
+              </div>
+              <p className="mt-3 line-clamp-2 text-center text-[11px] font-semibold leading-snug text-white">
+                {title}
+              </p>
+              {price ? (
+                <p className="mt-1 text-center text-[10px] text-bw-300">{price}</p>
+              ) : null}
             </div>
-            <p className="mt-3 line-clamp-2 text-center text-[11px] font-semibold leading-snug text-white">
-              {title}
-            </p>
-            {price ? (
-              <p className="mt-1 text-center text-[10px] text-bw-300">{price}</p>
-            ) : null}
           </div>
         </div>
-      </div>
+      ) : null}
 
       <div className="flex flex-wrap gap-2">
         <button
@@ -228,15 +235,17 @@ export default function ShareProductButtons({ title, url, imageUrl, price }) {
           <Share2 className="h-4 w-4" />
           Paylaş
         </button>
-        <button
-          type="button"
-          onClick={downloadStory}
-          disabled={saving}
-          className="inline-flex items-center gap-2 rounded-2xl border border-bw-300 bg-white px-4 py-3 text-sm font-medium text-bw-800 hover:border-bw-950 disabled:opacity-60"
-        >
-          <Download className="h-4 w-4" />
-          {saving ? "Hazırlanıyor…" : "Hikaye indir"}
-        </button>
+        {storyMode ? (
+          <button
+            type="button"
+            onClick={downloadStory}
+            disabled={saving}
+            className="inline-flex items-center gap-2 rounded-2xl border border-bw-300 bg-white px-4 py-3 text-sm font-medium text-bw-800 hover:border-bw-950 disabled:opacity-60"
+          >
+            <Download className="h-4 w-4" />
+            {saving ? "Hazırlanıyor…" : "Hikaye indir"}
+          </button>
+        ) : null}
         <a
           href={wa}
           target="_blank"

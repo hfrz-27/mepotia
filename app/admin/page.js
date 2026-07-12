@@ -1,31 +1,51 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Fragment } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Bell, ShoppingBag, Search } from "lucide-react";
+import { ShoppingBag, Search } from "lucide-react";
 import { createClient } from "@/lib/supabase";
+import ShareProductButtons from "@/components/ShareProductButtons";
+
+function productImage(p) {
+  const images = p?.product_images;
+  if (Array.isArray(images) && images.length) {
+    const sorted = [...images].sort((a, b) => a.sort_order - b.sort_order);
+    return sorted[0].url;
+  }
+  return "";
+}
+
+function formatPrice(value) {
+  const num = Number(value);
+  if (Number.isNaN(num)) return "";
+  return `${num.toLocaleString("tr-TR")} ₺`;
+}
 
 export default function AdminPage() {
   const [stats, setStats] = useState({
     products: 0,
     featured: 0,
     views: 0,
-    offers: 0,
-    requests: 0,
+    offersNew: 0,
+    requestsNew: 0,
+    offersAll: 0,
+    requestsAll: 0,
   });
   const [products, setProducts] = useState([]);
   const [offers, setOffers] = useState([]);
   const [requests, setRequests] = useState([]);
   const [msg, setMsg] = useState("");
-  const [tab, setTab] = useState("inbox");
-  const [sqlHint, setSqlHint] = useState("");
+  const [tab, setTab] = useState("offers");
+  const [shareId, setShareId] = useState(null);
 
   const load = async () => {
     const supabase = createClient();
     const { data: all } = await supabase
       .from("products")
-      .select("id, title, status, is_featured, is_premium, views, created_at")
+      .select(
+        "id, title, status, is_featured, is_premium, views, created_at, product_images(url, sort_order), price",
+      )
       .order("created_at", { ascending: false });
     const rows = all || [];
     setProducts(rows);
@@ -53,8 +73,10 @@ export default function AdminPage() {
       products: rows.length,
       featured: rows.filter((p) => p.is_featured).length,
       views: rows.reduce((s, p) => s + (p.views || 0), 0),
-      offers: offersList.filter((o) => o.status === "new").length,
-      requests: reqList.filter((r) => r.status === "new").length,
+      offersNew: offersList.filter((o) => o.status === "new").length,
+      requestsNew: reqList.filter((r) => r.status === "new").length,
+      offersAll: offersList.length,
+      requestsAll: reqList.length,
     });
   };
 
@@ -81,7 +103,7 @@ export default function AdminPage() {
 
   const setOfferStatus = async (id, status) => {
     await createClient().from("sell_offers").update({ status }).eq("id", id);
-    setMsg("Bildirim güncellendi.");
+    setMsg("Satış teklifi güncellendi.");
     load();
   };
 
@@ -93,7 +115,7 @@ export default function AdminPage() {
 
   const setRequestStatus = async (id, status) => {
     await createClient().from("product_requests").update({ status }).eq("id", id);
-    setMsg("Bildirim güncellendi.");
+    setMsg("Ürün isteği güncellendi.");
     load();
   };
 
@@ -102,41 +124,6 @@ export default function AdminPage() {
     await createClient().from("product_requests").delete().eq("id", id);
     load();
   };
-
-  const newCount = stats.offers + stats.requests;
-
-  const inboxItems = [
-    ...offers.map((o) => ({
-      kind: "sell",
-      id: o.id,
-      title: o.title,
-      meta: `${o.contact_name} · ${o.phone}${o.city ? ` · ${o.city}` : ""}${
-        o.price != null ? ` · ${Number(o.price).toLocaleString("tr-TR")} ₺` : ""
-      }`,
-      description: o.description,
-      status: o.status,
-      created_at: o.created_at,
-      phone: o.phone,
-      images: o.image_urls,
-      raw: o,
-    })),
-    ...requests.map((r) => ({
-      kind: "request",
-      id: r.id,
-      title: r.title,
-      meta: `${r.phone}${
-        r.price_min != null || r.price_max != null
-          ? ` · ${r.price_min ?? "?"}–${r.price_max ?? "?"} ₺`
-          : ""
-      }`,
-      description: r.description,
-      status: r.status,
-      created_at: r.created_at,
-      phone: r.phone,
-      images: null,
-      raw: r,
-    })),
-  ].sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
@@ -155,31 +142,94 @@ export default function AdminPage() {
         </Link>
       </div>
 
-      {/* Bildirim kutusu */}
-      <button
-        type="button"
-        onClick={() => setTab("inbox")}
-        className="mt-8 flex w-full items-start gap-4 rounded-[1.75rem] border border-bw-200 bg-white p-5 text-left shadow-sm transition hover:border-bw-400 sm:p-6"
-      >
-        <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-bw-950 text-white">
-          <Bell className="h-5 w-5" />
-          {newCount > 0 ? (
-            <span className="absolute -top-1.5 -right-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-white px-1 text-[10px] font-bold text-bw-950 ring-2 ring-bw-950">
-              {newCount}
-            </span>
-          ) : null}
-        </div>
-        <div className="min-w-0 flex-1">
-          <p className="text-sm font-semibold text-bw-950">Bildirimler</p>
-          <p className="mt-1 text-sm text-bw-500">
-            {newCount > 0
-              ? `${stats.offers} satış teklifi · ${stats.requests} ürün isteği`
-              : "Yeni bildirim yok"}
+      {/* Üst sayılar — net ayrım */}
+      <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <button
+          type="button"
+          onClick={() => setTab("offers")}
+          className={`rounded-[1.75rem] border p-5 text-left transition sm:p-6 ${
+            tab === "offers"
+              ? "border-bw-950 bg-bw-950 text-white"
+              : "border-bw-200 bg-white text-bw-950 hover:border-bw-400"
+          }`}
+        >
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <span
+                className={`flex h-11 w-11 items-center justify-center rounded-2xl ${
+                  tab === "offers" ? "bg-white/10" : "bg-bw-50"
+                }`}
+              >
+                <ShoppingBag className="h-5 w-5" />
+              </span>
+              <div>
+                <p className="text-sm font-semibold">Satış teklifleri</p>
+                <p
+                  className={`mt-0.5 text-xs ${
+                    tab === "offers" ? "text-bw-300" : "text-bw-500"
+                  }`}
+                >
+                  Bana sat formundan
+                </p>
+              </div>
+            </div>
+            <p className="font-display text-4xl font-semibold tabular-nums">
+              {stats.offersNew}
+            </p>
+          </div>
+          <p
+            className={`mt-3 text-xs ${
+              tab === "offers" ? "text-bw-400" : "text-bw-400"
+            }`}
+          >
+            {stats.offersNew} yeni · toplam {stats.offersAll}
           </p>
-        </div>
-      </button>
+        </button>
 
-      <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+        <button
+          type="button"
+          onClick={() => setTab("requests")}
+          className={`rounded-[1.75rem] border p-5 text-left transition sm:p-6 ${
+            tab === "requests"
+              ? "border-bw-950 bg-bw-950 text-white"
+              : "border-bw-200 bg-white text-bw-950 hover:border-bw-400"
+          }`}
+        >
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <span
+                className={`flex h-11 w-11 items-center justify-center rounded-2xl ${
+                  tab === "requests" ? "bg-white/10" : "bg-bw-50"
+                }`}
+              >
+                <Search className="h-5 w-5" />
+              </span>
+              <div>
+                <p className="text-sm font-semibold">Ürün istekleri</p>
+                <p
+                  className={`mt-0.5 text-xs ${
+                    tab === "requests" ? "text-bw-300" : "text-bw-500"
+                  }`}
+                >
+                  Ürün iste formundan
+                </p>
+              </div>
+            </div>
+            <p className="font-display text-4xl font-semibold tabular-nums">
+              {stats.requestsNew}
+            </p>
+          </div>
+          <p
+            className={`mt-3 text-xs ${
+              tab === "requests" ? "text-bw-400" : "text-bw-400"
+            }`}
+          >
+            {stats.requestsNew} yeni · toplam {stats.requestsAll}
+          </p>
+        </button>
+      </div>
+
+      <div className="mt-4 grid grid-cols-3 gap-3">
         {[
           ["Ürün", stats.products],
           ["Öne çıkan", stats.featured],
@@ -187,25 +237,36 @@ export default function AdminPage() {
         ].map(([label, value]) => (
           <div
             key={label}
-            className="rounded-3xl border border-bw-200 bg-white p-5 shadow-sm"
+            className="rounded-3xl border border-bw-200 bg-white p-4 shadow-sm sm:p-5"
           >
-            <p className="text-3xl font-semibold text-bw-950">{value}</p>
+            <p className="text-2xl font-semibold text-bw-950 sm:text-3xl">{value}</p>
             <p className="mt-1 text-xs text-bw-500">{label}</p>
           </div>
         ))}
       </div>
 
-      <div className="mt-8 flex gap-2">
+      <div className="mt-8 flex flex-wrap gap-2">
         <button
           type="button"
-          onClick={() => setTab("inbox")}
+          onClick={() => setTab("offers")}
           className={`rounded-xl px-4 py-2 text-sm font-semibold ${
-            tab === "inbox"
+            tab === "offers"
               ? "bg-bw-950 text-white"
               : "border border-bw-200 text-bw-600"
           }`}
         >
-          Bildirimler ({inboxItems.length})
+          Satış teklifleri ({stats.offersNew})
+        </button>
+        <button
+          type="button"
+          onClick={() => setTab("requests")}
+          className={`rounded-xl px-4 py-2 text-sm font-semibold ${
+            tab === "requests"
+              ? "bg-bw-950 text-white"
+              : "border border-bw-200 text-bw-600"
+          }`}
+        >
+          Ürün istekleri ({stats.requestsNew})
         </button>
         <button
           type="button"
@@ -222,135 +283,184 @@ export default function AdminPage() {
 
       {msg ? <p className="mt-4 text-sm text-bw-500">{msg}</p> : null}
 
-      {tab === "inbox" ? (
+      {sqlHint && (tab === "offers" || tab === "requests") ? (
+        <div className="mt-6 rounded-3xl border border-bw-300 bg-bw-50 px-5 py-5 text-sm leading-relaxed text-bw-700">
+          <p className="font-semibold text-bw-950">SQL eksik</p>
+          <p className="mt-2">
+            Supabase SQL Editor’da{" "}
+            <code className="rounded bg-white px-1.5 py-0.5 text-xs">
+              supabase/{sqlHint}
+            </code>{" "}
+            çalıştır.
+          </p>
+        </div>
+      ) : null}
+
+      {tab === "offers" ? (
         <div className="mt-6 space-y-3">
-          {sqlHint ? (
-            <div className="rounded-3xl border border-bw-300 bg-bw-50 px-5 py-5 text-sm leading-relaxed text-bw-700">
-              <p className="font-semibold text-bw-950">SQL eksik</p>
-              <p className="mt-2">
-                Supabase SQL Editor’da{" "}
-                <code className="rounded bg-white px-1.5 py-0.5 text-xs">
-                  supabase/{sqlHint}
-                </code>{" "}
-                çalıştır.
-              </p>
-            </div>
-          ) : null}
-
-          {!inboxItems.length && !sqlHint ? (
+          {!offers.length ? (
             <div className="rounded-3xl border border-dashed border-bw-300 bg-white px-6 py-16 text-center text-sm text-bw-500">
-              Henüz bildirim yok. Satış teklifi ve ürün istekleri buraya düşer.
+              Henüz satış teklifi yok.
             </div>
-          ) : null}
-
-          {inboxItems.map((item) => (
-            <article
-              key={`${item.kind}-${item.id}`}
-              className={`rounded-3xl border bg-white p-5 shadow-sm sm:p-6 ${
-                item.status === "new"
-                  ? "border-bw-900"
-                  : "border-bw-200 opacity-80"
-              }`}
-            >
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <p className="flex items-center gap-2 text-xs tracking-wide text-bw-400 uppercase">
-                    {item.kind === "sell" ? (
-                      <ShoppingBag className="h-3.5 w-3.5" />
-                    ) : (
-                      <Search className="h-3.5 w-3.5" />
-                    )}
-                    {item.kind === "sell" ? "Satış teklifi" : "Ürün isteği"}
-                    {item.status === "new" ? " · Yeni" : ` · ${item.status}`}
-                  </p>
-                  <h2 className="mt-1 font-display text-xl font-semibold text-bw-950">
-                    {item.title}
-                  </h2>
-                  <p className="mt-1 text-sm text-bw-500">{item.meta}</p>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  <a
-                    href={`https://wa.me/${String(item.phone).replace(/\D/g, "")}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="rounded-xl border border-bw-200 px-3 py-2 text-xs font-semibold text-bw-800"
-                  >
-                    WhatsApp
-                  </a>
-                  {item.kind === "sell" ? (
-                    <>
-                      {item.status !== "accepted" ? (
-                        <button
-                          type="button"
-                          onClick={() => setOfferStatus(item.id, "accepted")}
-                          className="rounded-xl bg-bw-950 px-3 py-2 text-xs font-semibold text-white"
-                        >
-                          Okundu
-                        </button>
-                      ) : null}
-                      <button
-                        type="button"
-                        onClick={() => removeOffer(item.id)}
-                        className="rounded-xl px-3 py-2 text-xs text-bw-400 underline"
-                      >
-                        Sil
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      {item.status !== "done" ? (
-                        <button
-                          type="button"
-                          onClick={() => setRequestStatus(item.id, "done")}
-                          className="rounded-xl bg-bw-950 px-3 py-2 text-xs font-semibold text-white"
-                        >
-                          Okundu
-                        </button>
-                      ) : null}
-                      <button
-                        type="button"
-                        onClick={() => removeRequest(item.id)}
-                        className="rounded-xl px-3 py-2 text-xs text-bw-400 underline"
-                      >
-                        Sil
-                      </button>
-                    </>
-                  )}
-                </div>
-              </div>
-              <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-bw-500">
-                {item.description}
-              </p>
-              {Array.isArray(item.images) && item.images.length ? (
-                <div className="mt-4 flex gap-2 overflow-x-auto">
-                  {item.images.map((url) => (
+          ) : (
+            offers.map((o) => (
+              <article
+                key={o.id}
+                className={`rounded-3xl border bg-white p-5 shadow-sm sm:p-6 ${
+                  o.status === "new" ? "border-bw-900" : "border-bw-200 opacity-80"
+                }`}
+              >
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-xs tracking-wide text-bw-400 uppercase">
+                      Satış teklifi
+                      {o.status === "new" ? " · Yeni" : ` · ${o.status}`}
+                    </p>
+                    <h2 className="mt-1 font-display text-xl font-semibold text-bw-950">
+                      {o.title}
+                    </h2>
+                    <p className="mt-1 text-sm text-bw-500">
+                      {o.contact_name} · {o.phone}
+                      {o.city ? ` · ${o.city}` : ""}
+                      {o.price != null
+                        ? ` · ${Number(o.price).toLocaleString("tr-TR")} ₺`
+                        : ""}
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
                     <a
-                      key={url}
-                      href={url}
+                      href={`https://wa.me/${String(o.phone).replace(/\D/g, "")}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl border border-bw-200"
+                      className="rounded-xl border border-bw-200 px-3 py-2 text-xs font-semibold text-bw-800"
                     >
-                      <Image
-                        src={url}
-                        alt=""
-                        fill
-                        className="object-cover"
-                        sizes="96px"
-                      />
+                      WhatsApp
                     </a>
-                  ))}
+                    {o.status === "new" ? (
+                      <button
+                        type="button"
+                        onClick={() => setOfferStatus(o.id, "accepted")}
+                        className="rounded-xl bg-bw-950 px-3 py-2 text-xs font-semibold text-white"
+                      >
+                        Okundu
+                      </button>
+                    ) : null}
+                    <button
+                      type="button"
+                      onClick={() => removeOffer(o.id)}
+                      className="rounded-xl px-3 py-2 text-xs text-bw-400 underline"
+                    >
+                      Sil
+                    </button>
+                  </div>
                 </div>
-              ) : null}
-              <p className="mt-3 text-xs text-bw-400">
-                {item.created_at
-                  ? new Date(item.created_at).toLocaleString("tr-TR")
-                  : ""}
-              </p>
-            </article>
-          ))}
+                <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-bw-500">
+                  {o.description}
+                </p>
+                {Array.isArray(o.image_urls) && o.image_urls.length ? (
+                  <div className="mt-4 flex gap-2 overflow-x-auto">
+                    {o.image_urls.map((url) => (
+                      <a
+                        key={url}
+                        href={url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl border border-bw-200"
+                      >
+                        <Image
+                          src={url}
+                          alt=""
+                          fill
+                          className="object-cover"
+                          sizes="96px"
+                        />
+                      </a>
+                    ))}
+                  </div>
+                ) : null}
+                <p className="mt-3 text-xs text-bw-400">
+                  {o.created_at
+                    ? new Date(o.created_at).toLocaleString("tr-TR")
+                    : ""}
+                </p>
+              </article>
+            ))
+          )}
         </div>
-      ) : (
+      ) : null}
+
+      {tab === "requests" ? (
+        <div className="mt-6 space-y-3">
+          {!requests.length ? (
+            <div className="rounded-3xl border border-dashed border-bw-300 bg-white px-6 py-16 text-center text-sm text-bw-500">
+              Henüz ürün isteği yok.
+            </div>
+          ) : (
+            requests.map((r) => (
+              <article
+                key={r.id}
+                className={`rounded-3xl border bg-white p-5 shadow-sm sm:p-6 ${
+                  r.status === "new" ? "border-bw-900" : "border-bw-200 opacity-80"
+                }`}
+              >
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-xs tracking-wide text-bw-400 uppercase">
+                      Ürün isteği
+                      {r.status === "new" ? " · Yeni" : ` · ${r.status}`}
+                    </p>
+                    <h2 className="mt-1 font-display text-xl font-semibold text-bw-950">
+                      {r.title}
+                    </h2>
+                    <p className="mt-1 text-sm text-bw-500">
+                      {r.phone}
+                      {r.price_min != null || r.price_max != null
+                        ? ` · ${r.price_min ?? "?"}–${r.price_max ?? "?"} ₺`
+                        : ""}
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <a
+                      href={`https://wa.me/${String(r.phone).replace(/\D/g, "")}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="rounded-xl border border-bw-200 px-3 py-2 text-xs font-semibold text-bw-800"
+                    >
+                      WhatsApp
+                    </a>
+                    {r.status === "new" ? (
+                      <button
+                        type="button"
+                        onClick={() => setRequestStatus(r.id, "done")}
+                        className="rounded-xl bg-bw-950 px-3 py-2 text-xs font-semibold text-white"
+                      >
+                        Okundu
+                      </button>
+                    ) : null}
+                    <button
+                      type="button"
+                      onClick={() => removeRequest(r.id)}
+                      className="rounded-xl px-3 py-2 text-xs text-bw-400 underline"
+                    >
+                      Sil
+                    </button>
+                  </div>
+                </div>
+                <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-bw-500">
+                  {r.description}
+                </p>
+                <p className="mt-3 text-xs text-bw-400">
+                  {r.created_at
+                    ? new Date(r.created_at).toLocaleString("tr-TR")
+                    : ""}
+                </p>
+              </article>
+            ))
+          )}
+        </div>
+      ) : null}
+
+      {tab === "products" ? (
         <div className="mt-6 overflow-x-auto rounded-3xl border border-bw-200 bg-white shadow-sm">
           <table className="min-w-full text-left text-sm">
             <thead className="border-b border-bw-100 text-bw-500">
@@ -359,12 +469,14 @@ export default function AdminPage() {
                 <th className="px-4 py-3 font-medium">Durum</th>
                 <th className="px-4 py-3 font-medium">Öne çıkan</th>
                 <th className="px-4 py-3 font-medium">Premium</th>
+                <th className="px-4 py-3 font-medium">Hikaye</th>
                 <th className="px-4 py-3 font-medium">İşlem</th>
               </tr>
             </thead>
             <tbody>
               {products.map((p) => (
-                <tr key={p.id} className="border-b border-bw-50">
+                <Fragment key={p.id}>
+                <tr className="border-b border-bw-50">
                   <td className="px-4 py-3">
                     <Link
                       href={`/urun/${p.id}`}
@@ -390,6 +502,17 @@ export default function AdminPage() {
                       onClick={() => toggle(p.id, "is_premium", !p.is_premium)}
                     >
                       {p.is_premium ? "Evet" : "Hayır"}
+                    </button>
+                  </td>
+                  <td className="px-4 py-3">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setShareId(shareId === p.id ? null : p.id)
+                      }
+                      className="underline"
+                    >
+                      {shareId === p.id ? "Kapat" : "Paylaş"}
                     </button>
                   </td>
                   <td className="space-x-3 px-4 py-3">
@@ -419,11 +542,25 @@ export default function AdminPage() {
                     </button>
                   </td>
                 </tr>
+                {shareId === p.id ? (
+                  <tr className="border-b border-bw-50 bg-bw-50">
+                    <td colSpan={6} className="px-4 py-5">
+                      <ShareProductButtons
+                        title={p.title}
+                        url={`https://mepotia.com/urun/${p.id}`}
+                        imageUrl={productImage(p)}
+                        price={formatPrice(p.price)}
+                        storyMode
+                      />
+                    </td>
+                  </tr>
+                ) : null}
+                </Fragment>
               ))}
             </tbody>
           </table>
         </div>
-      )}
+      ) : null}
     </main>
   );
 }
