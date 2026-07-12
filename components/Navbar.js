@@ -3,11 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LogOut, PenLine, Heart, Menu, X, MessageCircle } from "lucide-react";
+import { LogOut, PenLine, Heart, Menu, X } from "lucide-react";
 import Logo from "@/components/Logo";
 import { createClient } from "@/lib/supabase";
-
-const WA = "https://wa.me/905059574122";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -101,40 +99,30 @@ export default function Navbar() {
           </Link>
 
           {menuOpen ? (
-            <div className="absolute left-0 top-[calc(100%+0.5rem)] z-50 w-60 overflow-hidden rounded-2xl border border-bw-200 bg-white shadow-[0_20px_50px_-24px_rgba(0,0,0,0.35)]">
-              <Link
-                href="/"
-                className="block px-4 py-3 text-sm font-medium text-bw-900 hover:bg-bw-50"
-              >
-                Vitrin
-              </Link>
-              <Link
-                href="/hakkimizda"
-                className="block border-t border-bw-100 px-4 py-3 text-sm font-medium text-bw-900 hover:bg-bw-50"
-              >
-                Hakkımızda
-              </Link>
-              <Link
-                href="/paylas"
-                className="block border-t border-bw-100 px-4 py-3 text-sm font-medium text-bw-900 hover:bg-bw-50"
-              >
-                Ürünleri paylaş
-              </Link>
-              <Link
-                href="/bana-sat"
-                className="block border-t border-bw-100 px-4 py-3 text-sm font-medium text-bw-900 hover:bg-bw-50"
-              >
-                Ürünümü sat
-              </Link>
-              <a
-                href={WA}
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center gap-2 border-t border-bw-100 px-4 py-3 text-sm font-medium text-bw-900 hover:bg-bw-50"
-              >
-                <MessageCircle className="h-4 w-4" />
-                0505 957 41 22
-              </a>
+            <div className="absolute left-0 top-[calc(100%+0.5rem)] z-50 w-64 overflow-hidden rounded-2xl border border-bw-200 bg-white shadow-[0_20px_50px_-24px_rgba(0,0,0,0.35)]">
+              <p className="px-4 py-2.5 text-[10px] font-semibold tracking-[0.2em] text-bw-400 uppercase">
+                Ana Menü
+              </p>
+              {[
+                { href: "/", label: "Anasayfa" },
+                { href: "/ara", label: "Ürünler" },
+                { href: "/kategoriler", label: "Kategoriler" },
+                { href: "/hakkimizda", label: "Hakkımızda" },
+                { href: "/bana-sat", label: "Bize Ürün Sat" },
+                { href: "/iletisim", label: "İletişim" },
+              ].map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`block border-t border-bw-100 px-4 py-3 text-sm font-medium transition hover:bg-bw-50 ${
+                    pathname === item.href
+                      ? "bg-bw-50 text-bw-950"
+                      : "text-bw-900"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              ))}
               <div className="border-t border-bw-100">
                 {user ? (
                   <button
