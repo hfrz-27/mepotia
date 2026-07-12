@@ -48,85 +48,106 @@ export default function ShareProductButtons({
     canvas.height = H;
     const ctx = canvas.getContext("2d");
 
-    // Background
+    // Base
     ctx.fillStyle = "#09090b";
     ctx.fillRect(0, 0, W, H);
 
-    // Soft vignette dots
-    ctx.fillStyle = "rgba(255,255,255,0.06)";
-    for (let y = 40; y < H; y += 48) {
-      for (let x = 40; x < W; x += 48) {
-        ctx.beginPath();
-        ctx.arc(x, y, 1.5, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-
-    // Brand
-    ctx.fillStyle = "#ffffff";
-    ctx.font = "600 42px Cinzel, Georgia, serif";
-    ctx.textAlign = "center";
-    ctx.fillText("MEPOTIA", W / 2, 140);
-
-    ctx.fillStyle = "rgba(255,255,255,0.45)";
-    ctx.font = "500 22px Outfit, system-ui, sans-serif";
-    ctx.fillText("Güvenin ve Değerin Buluşma Noktası", W / 2, 190);
-
-    // Product photo frame
-    const frameX = 90;
-    const frameY = 280;
-    const frameW = W - 180;
-    const frameH = 980;
-    const radius = 48;
-
-    ctx.save();
-    roundRect(ctx, frameX, frameY, frameW, frameH, radius);
-    ctx.clip();
-    ctx.fillStyle = "#18181b";
-    ctx.fillRect(frameX, frameY, frameW, frameH);
-
+    // Full-bleed product photo (reklam stili)
     if (imageUrl) {
       try {
         const img = await loadImage(imageUrl);
-        const scale = Math.max(frameW / img.width, frameH / img.height);
+        const scale = Math.max(W / img.width, H / img.height);
         const iw = img.width * scale;
         const ih = img.height * scale;
-        const ix = frameX + (frameW - iw) / 2;
-        const iy = frameY + (frameH - ih) / 2;
-        ctx.drawImage(img, ix, iy, iw, ih);
+        ctx.drawImage(img, (W - iw) / 2, (H - ih) / 2, iw, ih);
+
+        // Soft desaturate overlay for premium B&W feel
+        ctx.fillStyle = "rgba(9,9,11,0.18)";
+        ctx.fillRect(0, 0, W, H);
       } catch {
-        ctx.fillStyle = "#3f3f46";
-        ctx.fillRect(frameX, frameY, frameW, frameH);
+        ctx.fillStyle = "#18181b";
+        ctx.fillRect(0, 0, W, H);
       }
     }
-    ctx.restore();
 
-    // Frame border
-    ctx.strokeStyle = "rgba(255,255,255,0.18)";
-    ctx.lineWidth = 3;
-    roundRect(ctx, frameX, frameY, frameW, frameH, radius);
-    ctx.stroke();
+    // Top gradient
+    const topGrad = ctx.createLinearGradient(0, 0, 0, 520);
+    topGrad.addColorStop(0, "rgba(9,9,11,0.88)");
+    topGrad.addColorStop(0.55, "rgba(9,9,11,0.35)");
+    topGrad.addColorStop(1, "rgba(9,9,11,0)");
+    ctx.fillStyle = topGrad;
+    ctx.fillRect(0, 0, W, 520);
 
-    // Title + price
+    // Bottom gradient (ad copy area)
+    const botGrad = ctx.createLinearGradient(0, H - 780, 0, H);
+    botGrad.addColorStop(0, "rgba(9,9,11,0)");
+    botGrad.addColorStop(0.35, "rgba(9,9,11,0.72)");
+    botGrad.addColorStop(1, "rgba(9,9,11,0.96)");
+    ctx.fillStyle = botGrad;
+    ctx.fillRect(0, H - 780, W, 780);
+
+    // Brand top
     ctx.textAlign = "center";
     ctx.fillStyle = "#ffffff";
-    ctx.font = "600 48px Outfit, system-ui, sans-serif";
-    const lines = wrapText(ctx, title || "Ürün", frameW - 40);
-    let ty = frameY + frameH + 90;
+    ctx.font = "600 54px Cinzel, Georgia, serif";
+    ctx.fillText("MEPOTIA", W / 2, 130);
+
+    ctx.fillStyle = "rgba(255,255,255,0.55)";
+    ctx.font = "500 24px Outfit, system-ui, sans-serif";
+    ctx.fillText("Güvenin ve Değerin Buluşma Noktası", W / 2, 180);
+
+    // Thin brand rule
+    ctx.strokeStyle = "rgba(255,255,255,0.28)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(W / 2 - 90, 210);
+    ctx.lineTo(W / 2 + 90, 210);
+    ctx.stroke();
+
+    // Ad badge — VİTRİNDE
+    const badge = "VİTRİNDE";
+    ctx.font = "700 22px Outfit, system-ui, sans-serif";
+    const badgeW = ctx.measureText(badge).width + 48;
+    const badgeX = (W - badgeW) / 2;
+    const badgeY = H - 620;
+    roundRect(ctx, badgeX, badgeY, badgeW, 52, 26);
+    ctx.fillStyle = "#ffffff";
+    ctx.fill();
+    ctx.fillStyle = "#09090b";
+    ctx.textAlign = "center";
+    ctx.fillText(badge, W / 2, badgeY + 34);
+
+    // Title
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "600 56px Outfit, system-ui, sans-serif";
+    const lines = wrapText(ctx, title || "Ürün", W - 140);
+    let ty = badgeY + 130;
     lines.slice(0, 3).forEach((line) => {
       ctx.fillText(line, W / 2, ty);
-      ty += 58;
+      ty += 66;
     });
 
+    // Price — big ad number
     if (price) {
-      ctx.fillStyle = "#e4e4e7";
-      ctx.font = "600 40px Outfit, system-ui, sans-serif";
-      ctx.fillText(price, W / 2, ty + 20);
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "700 72px Outfit, system-ui, sans-serif";
+      ctx.fillText(price, W / 2, ty + 40);
+      ty += 90;
     }
 
-    ctx.fillStyle = "rgba(255,255,255,0.4)";
-    ctx.font = "400 26px Outfit, system-ui, sans-serif";
-    ctx.fillText("mepotia.com", W / 2, H - 120);
+    // CTA bar
+    const ctaY = H - 220;
+    roundRect(ctx, 120, ctaY, W - 240, 88, 44);
+    ctx.fillStyle = "#ffffff";
+    ctx.fill();
+    ctx.fillStyle = "#09090b";
+    ctx.font = "700 30px Outfit, system-ui, sans-serif";
+    ctx.fillText("mepotia.com  ·  İncele", W / 2, ctaY + 56);
+
+    // Footer whisper
+    ctx.fillStyle = "rgba(255,255,255,0.35)";
+    ctx.font = "400 22px Outfit, system-ui, sans-serif";
+    ctx.fillText("Kişisel ikinci el vitrin", W / 2, H - 90);
 
     return canvas;
   };
@@ -136,12 +157,12 @@ export default function ShareProductButtons({
     try {
       const canvas = await buildStoryCanvas();
       const blob = await new Promise((resolve) =>
-        canvas.toBlob(resolve, "image/png"),
+        canvas.toBlob(resolve, "image/png", 0.95),
       );
       if (!blob) return;
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
-      a.download = `mepotia-hikaye-${Date.now()}.png`;
+      a.download = `mepotia-reklam-${Date.now()}.png`;
       a.click();
       URL.revokeObjectURL(a.href);
     } finally {
@@ -151,13 +172,13 @@ export default function ShareProductButtons({
 
   const nativeShare = async () => {
     try {
-      if (storyMode && navigator.share && imageUrl) {
+      if (storyMode && navigator.share) {
         const canvas = await buildStoryCanvas();
         const blob = await new Promise((resolve) =>
-          canvas.toBlob(resolve, "image/png"),
+          canvas.toBlob(resolve, "image/png", 0.95),
         );
         if (blob && navigator.canShare) {
-          const file = new File([blob], "mepotia-hikaye.png", {
+          const file = new File([blob], "mepotia-reklam.png", {
             type: "image/png",
           });
           if (navigator.canShare({ files: [file] })) {
@@ -183,87 +204,137 @@ export default function ShareProductButtons({
   return (
     <div className="space-y-4">
       {storyMode ? (
-        <div className="mx-auto w-full max-w-[220px]">
-          <p className="mb-2 text-center text-[10px] font-semibold tracking-[0.18em] text-bw-400 uppercase">
-            Örnek hikaye
-          </p>
-          <div className="relative aspect-[9/16] overflow-hidden rounded-[1.75rem] border border-bw-900 bg-bw-950 shadow-lg shadow-bw-950/20">
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0 opacity-20"
-              style={{
-                backgroundImage:
-                  "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.4) 1px, transparent 0)",
-                backgroundSize: "16px 16px",
-              }}
-            />
-            <div className="relative flex h-full flex-col px-3 pb-4 pt-5">
-              <p className="text-center font-display text-[11px] font-semibold tracking-[0.2em] text-white">
-                MEPOTIA
-              </p>
-              <div className="mt-3 flex-1 overflow-hidden rounded-2xl border border-white/15 bg-bw-800">
-                {imageUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={imageUrl}
-                    alt={title}
-                    className="h-full w-full object-cover"
-                  />
-                ) : (
-                  <div className="flex h-full items-center justify-center text-[10px] text-bw-400">
-                    Fotoğraf yok
+        <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start sm:justify-center sm:gap-10">
+          {/* Reklam hikaye önizleme */}
+          <div className="w-full max-w-[240px] shrink-0">
+            <p className="mb-2 text-center text-[10px] font-semibold tracking-[0.18em] text-bw-400 uppercase">
+              Reklam hikaye
+            </p>
+            <div className="relative aspect-[9/16] overflow-hidden rounded-[1.75rem] border border-bw-900 bg-bw-950 shadow-[0_24px_60px_-28px_rgba(0,0,0,0.55)]">
+              {imageUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={imageUrl}
+                  alt={title}
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+              ) : (
+                <div className="absolute inset-0 bg-bw-800" />
+              )}
+              <div className="absolute inset-0 bg-gradient-to-b from-bw-950/85 via-transparent to-bw-950/95" />
+              <div className="relative flex h-full flex-col px-4 pb-5 pt-6">
+                <p className="text-center font-display text-[12px] font-semibold tracking-[0.22em] text-white">
+                  MEPOTIA
+                </p>
+                <p className="mt-1 text-center text-[8px] tracking-wide text-white/50">
+                  Güvenin ve Değerin Buluşma Noktası
+                </p>
+                <div className="mt-auto space-y-2 text-center">
+                  <span className="inline-block rounded-full bg-white px-3 py-1 text-[9px] font-bold tracking-wide text-bw-950">
+                    VİTRİNDE
+                  </span>
+                  <p className="line-clamp-2 text-[12px] font-semibold leading-snug text-white">
+                    {title}
+                  </p>
+                  {price ? (
+                    <p className="text-[16px] font-bold text-white">{price}</p>
+                  ) : null}
+                  <div className="mx-auto mt-2 rounded-full bg-white px-3 py-2 text-[9px] font-bold text-bw-950">
+                    mepotia.com · İncele
                   </div>
-                )}
+                </div>
               </div>
-              <p className="mt-3 line-clamp-2 text-center text-[11px] font-semibold leading-snug text-white">
-                {title}
-              </p>
-              {price ? (
-                <p className="mt-1 text-center text-[10px] text-bw-300">{price}</p>
-              ) : null}
+            </div>
+          </div>
+
+          <div className="max-w-sm space-y-3 text-center sm:pt-8 sm:text-left">
+            <p className="font-display text-xl font-semibold tracking-wide text-bw-950">
+              Hikaye reklamı
+            </p>
+            <p className="text-sm leading-relaxed text-bw-500">
+              Instagram / WhatsApp hikayesine koyabileceğin dikey reklam
+              görseli. İndir veya doğrudan paylaş.
+            </p>
+            <div className="flex flex-wrap justify-center gap-2 sm:justify-start">
+              <button
+                type="button"
+                onClick={downloadStory}
+                disabled={saving}
+                className="inline-flex items-center gap-2 rounded-2xl bg-bw-950 px-5 py-3.5 text-sm font-semibold text-white hover:bg-bw-800 disabled:opacity-60"
+              >
+                <Download className="h-4 w-4" />
+                {saving ? "Hazırlanıyor…" : "Reklamı indir"}
+              </button>
+              <button
+                type="button"
+                onClick={nativeShare}
+                className="inline-flex items-center gap-2 rounded-2xl border border-bw-300 bg-white px-5 py-3.5 text-sm font-medium text-bw-800 hover:border-bw-950"
+              >
+                <Share2 className="h-4 w-4" />
+                Paylaş
+              </button>
             </div>
           </div>
         </div>
       ) : null}
 
-      <div className="flex flex-wrap gap-2">
-        <button
-          type="button"
-          onClick={nativeShare}
-          className="inline-flex items-center gap-2 rounded-2xl border border-bw-300 bg-white px-4 py-3 text-sm font-medium text-bw-800 hover:border-bw-950"
-        >
-          <Share2 className="h-4 w-4" />
-          Paylaş
-        </button>
-        {storyMode ? (
+      {!storyMode ? (
+        <div className="flex flex-wrap gap-2">
           <button
             type="button"
-            onClick={downloadStory}
-            disabled={saving}
-            className="inline-flex items-center gap-2 rounded-2xl border border-bw-300 bg-white px-4 py-3 text-sm font-medium text-bw-800 hover:border-bw-950 disabled:opacity-60"
+            onClick={nativeShare}
+            className="inline-flex items-center gap-2 rounded-2xl border border-bw-300 bg-white px-4 py-3 text-sm font-medium text-bw-800 hover:border-bw-950"
           >
-            <Download className="h-4 w-4" />
-            {saving ? "Hazırlanıyor…" : "Hikaye indir"}
+            <Share2 className="h-4 w-4" />
+            Paylaş
           </button>
-        ) : null}
-        <a
-          href={wa}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex items-center gap-2 rounded-2xl border border-bw-300 bg-white px-4 py-3 text-sm font-medium text-bw-800 hover:border-bw-950"
-        >
-          <MessageCircle className="h-4 w-4" />
-          WhatsApp
-        </a>
-        <button
-          type="button"
-          onClick={copy}
-          className="inline-flex items-center gap-2 rounded-2xl border border-bw-300 bg-white px-4 py-3 text-sm font-medium text-bw-800 hover:border-bw-950"
-        >
-          {copied ? <Check className="h-4 w-4" /> : <Link2 className="h-4 w-4" />}
-          {copied ? "Kopyalandı" : "Linki kopyala"}
-        </button>
-      </div>
+          <a
+            href={wa}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 rounded-2xl border border-bw-300 bg-white px-4 py-3 text-sm font-medium text-bw-800 hover:border-bw-950"
+          >
+            <MessageCircle className="h-4 w-4" />
+            WhatsApp
+          </a>
+          <button
+            type="button"
+            onClick={copy}
+            className="inline-flex items-center gap-2 rounded-2xl border border-bw-300 bg-white px-4 py-3 text-sm font-medium text-bw-800 hover:border-bw-950"
+          >
+            {copied ? (
+              <Check className="h-4 w-4" />
+            ) : (
+              <Link2 className="h-4 w-4" />
+            )}
+            {copied ? "Kopyalandı" : "Linki kopyala"}
+          </button>
+        </div>
+      ) : (
+        <div className="flex flex-wrap justify-center gap-2 border-t border-bw-100 pt-4 sm:justify-start">
+          <a
+            href={wa}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 rounded-2xl border border-bw-300 bg-white px-4 py-3 text-sm font-medium text-bw-800 hover:border-bw-950"
+          >
+            <MessageCircle className="h-4 w-4" />
+            WhatsApp
+          </a>
+          <button
+            type="button"
+            onClick={copy}
+            className="inline-flex items-center gap-2 rounded-2xl border border-bw-300 bg-white px-4 py-3 text-sm font-medium text-bw-800 hover:border-bw-950"
+          >
+            {copied ? (
+              <Check className="h-4 w-4" />
+            ) : (
+              <Link2 className="h-4 w-4" />
+            )}
+            {copied ? "Kopyalandı" : "Linki kopyala"}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

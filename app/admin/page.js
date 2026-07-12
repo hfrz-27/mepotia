@@ -469,7 +469,7 @@ export default function AdminPage() {
                 <th className="px-4 py-3 font-medium">Durum</th>
                 <th className="px-4 py-3 font-medium">Öne çıkan</th>
                 <th className="px-4 py-3 font-medium">Premium</th>
-                <th className="px-4 py-3 font-medium">Hikaye</th>
+                <th className="px-4 py-3 font-medium">Reklam</th>
                 <th className="px-4 py-3 font-medium">İşlem</th>
               </tr>
             </thead>
@@ -512,7 +512,7 @@ export default function AdminPage() {
                       }
                       className="underline"
                     >
-                      {shareId === p.id ? "Kapat" : "Paylaş"}
+                      {shareId === p.id ? "Kapat" : "Reklam"}
                     </button>
                   </td>
                   <td className="space-x-3 px-4 py-3">
