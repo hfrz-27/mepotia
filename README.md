@@ -1,5 +1,4 @@
 # Mepotia Marketplace MVP
-
 Next.js 15 + Supabase ikinci el marketplace.
 ## Kurulum
 
