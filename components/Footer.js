@@ -8,10 +8,10 @@ export default function Footer() {
         <div className="lg:col-span-2">
           <Logo className="h-8" />
           <p className="mt-5 max-w-md text-sm leading-relaxed text-bw-500">
-            Mezopotamya&apos;dan ilham alan kişisel ikinci el vitrin. Her ürün
-            emekle seçilir — güven ve şeffaflıkla.
-          </p>
-          <p className="mt-3 text-sm text-bw-500">
+            Mepotia adını Mezopotamya&apos;dan alır. Güvenin, emeğin ve ticaretin köklü
+            geçmişinden ilham alan bu isim, bugün dürüst ve şeffaf bir ikinci el
+            alışveriş anlayışını temsil eder.
+          </p>          <p className="mt-3 text-sm text-bw-500">
             WhatsApp:{" "}
             <a
               href="https://wa.me/905059574122"
@@ -47,10 +47,9 @@ export default function Footer() {
         </div>
       </div>
       <div className="border-t border-bw-100 text-center">
-  <p className="mx-auto max-w-7xl px-4 py-5 text-xs text-bw-400 sm:px-6 lg:px-8">
-    © {new Date().getFullYear()} Mepotia. Tüm hakları saklıdır.
-  </p>
-</div>
-    </footer>
+        <p className="mx-auto max-w-7xl px-4 py-5 text-xs text-bw-400 sm:px-6 lg:px-8">
+          © {new Date().getFullYear()} Mepotia. Tüm hakları saklıdır.
+        </p>
+      </div>    </footer>
   );
 }

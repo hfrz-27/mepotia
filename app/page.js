@@ -52,13 +52,12 @@ export default async function HomePage() {
 
         <div className="relative mx-auto flex min-h-[78vh] max-w-4xl flex-col items-center justify-center px-4 pb-28 pt-16 text-center sm:px-6 lg:px-8">
           <h1 className="animate-fade-up font-display text-5xl leading-[1.02] font-semibold tracking-[0.14em] text-bw-950 uppercase sm:text-6xl lg:text-7xl">
-            Mepotia
+            MEPOTIA
           </h1>
           <p className="animate-fade-up-delay mt-6 max-w-2xl text-lg leading-relaxed text-bw-600 sm:text-xl">
-            Mezopotamya&apos;dan ilham alan kişisel ikinci el vitrin. Her ürün
-            tek tek seçilir — güven, şeffaflık ve emekle.
-          </p>
-          <HeroSearch />
+            Sadece ürün değil, güven sunuyoruz. Özenle seçilmiş ikinci el ürünlerle
+            dürüst ve şeffaf bir alışveriş deneyimi.
+          </p>          <HeroSearch />
           <div className="animate-fade-up-delay mt-8 flex flex-wrap items-center justify-center gap-3">
             <a
               href="#vitrin"
@@ -82,18 +81,17 @@ export default async function HomePage() {
             {[
               {
                 icon: ShieldCheck,
-                t: "Tek elden seçki",
-                d: "Sadece ben paylaşıyorum",
-              },
-              {
+                t: "Güvenle Al, Güvenle Sat",
+                d: "Güvenle alışveriş edebileceğiniz bir vitrin.",
+              },              {
                 icon: Eye,
                 t: "Şeffaf sunum",
                 d: "Net fiyat, net açıklama",
               },
               {
                 icon: Heart,
-                t: "Zorlu yol",
-                d: "17 yaşında başlayan vizyon",
+                t: "Dürüstlüğün Değeri",
+                d: "Zorlu Yollardan Gelen Tecrübe",
               },
             ].map((item) => (
               <div key={item.t} className="flex items-center gap-3 text-left">
@@ -121,13 +119,12 @@ export default async function HomePage() {
               Senin için
             </p>
             <h2 className="mt-3 font-display text-3xl font-semibold tracking-wide text-bw-950 sm:text-4xl">
-              Sat veya iste
+              Ürününü Sat, Aradığını Bul
             </h2>
             <p className="mt-3 text-base leading-relaxed text-bw-600">
-              Elindeki ürünü bana sat — ya da aradığın ürünü yaz, bulursam
-              haber veririm.
-            </p>
-          </div>
+              Satmak istediğin ürünü birlikte değerlendirelim. Aradığın ürünü yaz,
+              bulduğum anda seninle iletişime geçeyim.
+            </p>          </div>
 
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-5">
             {/* Sat */}
@@ -156,15 +153,14 @@ export default async function HomePage() {
                   Satış teklifi
                 </p>
                 <h3 className="mt-3 font-display text-3xl font-semibold tracking-wide sm:text-4xl">
-                  Ürününü sat
+                  Ürününü Değerlendir
                 </h3>
                 <p className="mt-4 max-w-sm text-sm leading-relaxed text-bw-300">
-                  Fotoğraf ve fiyatını yaz. Uygunsa vitrine alırım, doğrudan
-                  konuşuruz.
+                  Kullanmadığın ürünler değerini kaybetmesin. Fotoğraflarını paylaş,
+                  ürününü değerlendirelim ve doğru alıcıyla buluşturalım.
                 </p>
                 <span className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-white">
-                  Formu aç
-                  <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+                  Satış Talebi Oluştur                  <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
                 </span>
               </div>
             </Link>
@@ -183,16 +179,15 @@ export default async function HomePage() {
                   <Search className="h-5 w-5" strokeWidth={1.75} />
                 </span>
                 <p className="mt-6 text-[10px] font-semibold tracking-[0.22em] text-bw-400 uppercase">
-                  Ürün talebi
+                  Aradığını Bulalım
                 </p>
                 <h3 className="mt-3 font-display text-3xl font-semibold tracking-wide sm:text-4xl">
-                  Ürün iste
+                  Ürün Talebi Oluştur
                 </h3>
                 <p className="mt-4 max-w-sm text-sm leading-relaxed text-bw-500">
-                  Aradığın ürünü, fiyat aralığını ve kısa açıklamayı yaz.
-                  Uygun bulursam sana dönerim.
-                </p>
-                <span className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-bw-950">
+                  Aradığın ürünü bulmak bazen zaman alabilir. Talebini bırak; sana uygun
+                  bir seçenek bulduğumda ilk seni haberdar edeyim.
+                </p>                <span className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-bw-950">
                   İstek gönder
                   <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
                 </span>
@@ -217,24 +212,35 @@ export default async function HomePage() {
         <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
           <p className="text-xs tracking-[0.25em] text-bw-400 uppercase">Hikâye</p>
           <h2 className="mt-4 max-w-3xl font-display text-3xl font-semibold tracking-wide text-white sm:text-4xl lg:text-5xl">
-            Tekerlekten ilham, ikinci elden güven
+            Geçmişten Gelen Güven
           </h2>
           <p className="mt-6 max-w-2xl text-base leading-relaxed text-bw-300 sm:text-lg">
-            Mepotia adını Mezopotamya&apos;dan alır — yazının, tekerleğin ve ilk
-            şehirlerin doğduğu topraklardan. Bugün bu marka, genç yaşta başlayan
-            zorlu bir yolculuğun ürünü: sınırlı imkânlarla, adım adım kurulan
-            kişisel bir ikinci el vitrin.
+            <strong className="font-semibold text-white">Mepotia</strong>, adını insanlık
+            tarihinin en köklü medeniyetlerinden biri olan{" "}
+            <strong className="font-semibold text-white">Mezopotamya</strong>&apos;dan alır.
+            Güvenin, emeğin ve ticaretin temellerinin atıldığı bu topraklardan ilham alan
+            Mepotia; bugün dürüstlük, şeffaflık ve güven üzerine kurulan kişisel bir
+            ikinci el vitrindir.
+          </p>
+          <p className="mt-4 max-w-2xl text-base leading-relaxed text-bw-300 sm:text-lg">
+            Bu marka, büyük imkânlarla değil; genç yaşta kurulan hayaller, sabır ve emekle
+            adım adım inşa edildi. Burada yer alan her ürün özenle seçilir, tüm detayları
+            açıkça paylaşılır ve güvenle yeni sahibine ulaşması hedeflenir.
+          </p>
+          <p className="mt-4 max-w-2xl text-base leading-relaxed text-bw-300 sm:text-lg">
+            Mepotia için ikinci el sadece bir alışveriş değil; değerlere sahip çıkmanın,
+            israfı azaltmanın ve güvene dayalı bir topluluk oluşturmanın bir yoludur.
           </p>
           <p className="mt-4 max-w-2xl text-base leading-relaxed text-bw-400">
-            Amacım şimdilik net: değerini koruyan ürünleri dürüstçe paylaşmak,
-            alıcıyla doğrudan konuşmak ve güven veren bir alışveriş sunmak.
+            Amacım sadece ürün satmak değil; her alışverişte güven oluşturmak. Değerini
+            koruyan ürünleri şeffaf bir şekilde sunuyor, alıcılarla doğrudan iletişim
+            kurarak güvenilir ve samimi bir alışveriş deneyimi sunuyorum.
           </p>
           <Link
             href="/hakkimizda"
             className="mt-10 inline-flex items-center gap-2 rounded-2xl bg-white px-6 py-3.5 text-sm font-semibold text-bw-950 transition hover:bg-bw-100"
           >
-            Tüm hikâyeyi oku
-            <ArrowRight className="h-4 w-4" />
+            Mepotia&apos;yı Tanı            <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
       </section>
@@ -244,11 +250,10 @@ export default async function HomePage() {
         <section className="border-b border-bw-200 bg-white">
           <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
             <div className="mb-8">
-              <p className="text-xs tracking-[0.22em] text-bw-500 uppercase">Öne çıkan</p>
+              <p className="text-xs tracking-[0.22em] text-bw-500 uppercase">Özenle Seçilenler</p>
               <h2 className="mt-2 font-display text-3xl font-semibold tracking-wide text-bw-950 sm:text-4xl">
-                Seçtiklerim
-              </h2>
-            </div>
+                Yeni Sahibini Bekleyenler
+              </h2>            </div>
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {featured.map((p, idx) => (
                 <ProductCard key={p.id} product={p} large={idx === 0} />
@@ -264,9 +269,11 @@ export default async function HomePage() {
           <div>
             <p className="text-xs tracking-[0.22em] text-bw-500 uppercase">Vitrin</p>
             <h2 className="mt-2 font-display text-3xl font-semibold tracking-wide text-bw-950 sm:text-4xl">
-              Son paylaşılanlar
+              Özenle seçilmiş ürünler
             </h2>
-          </div>
+            <p className="mt-2 max-w-xl text-sm leading-relaxed text-bw-500">
+              Güvenle sunulan, özenle seçilmiş ikinci el ürünleri keşfedin.
+            </p>          </div>
           <Link href="/ara" className="text-sm font-medium text-bw-600 hover:text-bw-950">
             Tümü
           </Link>
@@ -330,12 +337,13 @@ export default async function HomePage() {
           <div>
             <p className="text-xs tracking-[0.22em] text-bw-500 uppercase">İletişim</p>
             <h2 className="mt-3 font-display text-3xl font-semibold tracking-wide text-bw-950">
-              Bir ürün beğendin mi?
+              Gözünü bir ürün mü aldı?
             </h2>
             <p className="mt-3 max-w-lg text-sm leading-relaxed text-bw-500">
-              Doğrudan yaz. WhatsApp: 0505 957 41 22
-            </p>
-          </div>
+              Ürün hakkında konuşmak için bana doğrudan WhatsApp&apos;tan ulaşabilirsin.
+              {" "}
+              <span className="font-medium text-bw-800">0505 957 41 22</span>
+            </p>          </div>
           <div className="flex flex-wrap gap-3">
             <a
               href={wa}
