@@ -1,0 +1,5 @@
+Contact: mailto:mepotiaa@gmail.com
+Contact: https://mepotia.com/iletisim
+Preferred-Languages: tr, en
+Canonical: https://mepotia.com/.well-known/security.txt
+Policy: https://mepotia.com/gizlilik
