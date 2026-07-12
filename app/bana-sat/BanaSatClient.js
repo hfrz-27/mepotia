@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { MessageCircle, Mail, CheckCircle2 } from "lucide-react";
+import { createClient } from "@/lib/supabase";
 
 const OWNER_EMAIL = "hay98dar@gmail.com";
 const OWNER_WA = "905059574122";
@@ -33,7 +34,7 @@ export default function BanaSatClient() {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const buildMessage = () => {
+  const buildMessage = (imageUrls = []) => {
     return [
       "Mepotia — Satış teklifi",
       "",
@@ -49,7 +50,11 @@ export default function BanaSatClient() {
       "Açıklama:",
       form.description || "-",
       "",
-      files.length ? `Fotoğraf sayısı: ${files.length}` : "Fotoğraf yok",
+      imageUrls.length
+        ? `Fotoğraflar:\n${imageUrls.join("\n")}`
+        : files.length
+          ? `Fotoğraf sayısı: ${files.length}`
+          : "Fotoğraf yok",
     ].join("\n");
   };
 
@@ -75,14 +80,56 @@ export default function BanaSatClient() {
     }
 
     setLoading(true);
+    const supabase = createClient();
+    const imageUrls = [];
+    const folder = `offers/${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
-    const message = buildMessage();
+    try {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+        const path = `${folder}/${i + 1}.${ext}`;
+        const { error: upErr } = await supabase.storage
+          .from("sell-offers")
+          .upload(path, file, { cacheControl: "3600", upsert: false });
+        if (upErr) throw upErr;
+        const { data: pub } = supabase.storage.from("sell-offers").getPublicUrl(path);
+        if (pub?.publicUrl) imageUrls.push(pub.publicUrl);
+      }
+
+      const { error: insertError } = await supabase.from("sell_offers").insert([
+        {
+          contact_name: form.name.trim(),
+          phone: form.phone.trim(),
+          title: form.title.trim(),
+          brand: form.brand.trim() || null,
+          model: form.model.trim() || null,
+          condition: form.condition,
+          price: form.price ? Number(form.price) : null,
+          city: form.city.trim() || null,
+          description: form.description.trim(),
+          image_urls: imageUrls,
+          status: "new",
+        },
+      ]);
+
+      if (insertError) throw insertError;
+    } catch (err) {
+      console.error(err);
+      setLoading(false);
+      setError(
+        "Teklif kaydedilemedi. Supabase'de sell_offers SQL'ini çalıştırdığından emin ol. Hata: " +
+          (err?.message || "bilinmeyen"),
+      );
+      return;
+    }
+
+    const message = buildMessage(imageUrls);
     const wa = `https://wa.me/${OWNER_WA}?text=${encodeURIComponent(message)}`;
     const mail = `mailto:${OWNER_EMAIL}?subject=${encodeURIComponent(
       `Mepotia satış teklifi — ${form.title}`,
     )}&body=${encodeURIComponent(message)}`;
 
-    // FormSubmit ile e-postaya gönder (fotoğraflarla)
     try {
       const fd = new FormData();
       fd.append("name", form.name);
@@ -94,26 +141,23 @@ export default function BanaSatClient() {
       fd.append("price", form.price);
       fd.append("city", form.city);
       fd.append("description", form.description);
+      fd.append("images", imageUrls.join("\n"));
       fd.append("_subject", `Mepotia satış teklifi — ${form.title}`);
       fd.append("_template", "table");
       fd.append("_captcha", "false");
-      files.forEach((file, i) => fd.append(`photo_${i + 1}`, file));
-
       await fetch(`https://formsubmit.co/ajax/${OWNER_EMAIL}`, {
         method: "POST",
         body: fd,
         headers: { Accept: "application/json" },
       });
     } catch {
-      // E-posta servisi olmasa bile WhatsApp/mailto devam eder
+      // e-posta opsiyonel
     }
 
     setWaLink(wa);
     setMailLink(mail);
     setDone(true);
     setLoading(false);
-
-    // WhatsApp'ı otomatik aç
     window.open(wa, "_blank", "noopener,noreferrer");
   };
 
@@ -126,11 +170,10 @@ export default function BanaSatClient() {
         <div className="rounded-[2rem] border border-bw-200 bg-white p-8 text-center">
           <CheckCircle2 className="mx-auto h-10 w-10 text-bw-900" />
           <h1 className="mt-4 font-display text-2xl font-semibold text-bw-950">
-            Teklifin hazır
+            Teklifin alındı
           </h1>
           <p className="mt-3 text-sm leading-relaxed text-bw-500">
-            Bilgiler WhatsApp&apos;a yönlendirildi. İstersen e-posta ile de
-            gönderebilirsin.
+            Teklif admin paneline düştü. WhatsApp ile de iletebilirsin.
           </p>
           <div className="mt-8 flex flex-col gap-3">
             <a
@@ -140,7 +183,7 @@ export default function BanaSatClient() {
               className="inline-flex items-center justify-center gap-2 rounded-2xl bg-bw-950 px-5 py-3.5 text-sm font-semibold text-white"
             >
               <MessageCircle className="h-4 w-4" />
-              WhatsApp ile gönder (0505 957 41 22)
+              WhatsApp ile gönder
             </a>
             <a
               href={mailLink}
@@ -165,12 +208,14 @@ export default function BanaSatClient() {
         Ürününü bana sat
       </h1>
       <p className="mt-3 max-w-xl text-sm leading-relaxed text-bw-500">
-        Elindeki ikinci el ürünü satmak istiyorsan formu doldur. Teklifin
-        WhatsApp (0505 957 41 22) ve e-posta (hay98dar@gmail.com) adresime
-        ulaşır.
+        Formu doldur. Teklif hem admin paneline düşer hem WhatsApp / e-posta ile
+        bana ulaşır.
       </p>
 
-      <form onSubmit={onSubmit} className="mt-8 space-y-4 rounded-[2rem] border border-bw-200 bg-white p-6 sm:p-8">
+      <form
+        onSubmit={onSubmit}
+        className="mt-8 space-y-4 rounded-[2rem] border border-bw-200 bg-white p-6 sm:p-8"
+      >
         <div className="grid gap-4 sm:grid-cols-2">
           <input
             name="name"
@@ -257,16 +302,22 @@ export default function BanaSatClient() {
             type="file"
             accept="image/*"
             multiple
-            onChange={(e) => setFiles(Array.from(e.target.files || []).slice(0, 6))}
+            onChange={(e) =>
+              setFiles(Array.from(e.target.files || []).slice(0, 6))
+            }
             className="w-full text-sm text-bw-600 file:mr-3 file:rounded-xl file:border-0 file:bg-bw-950 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white"
           />
           {files.length ? (
-            <p className="mt-2 text-xs text-bw-500">{files.length} fotoğraf seçildi</p>
+            <p className="mt-2 text-xs text-bw-500">
+              {files.length} fotoğraf seçildi
+            </p>
           ) : null}
         </div>
 
         {error ? (
-          <p className="rounded-2xl bg-bw-100 px-3 py-2 text-sm text-bw-700">{error}</p>
+          <p className="rounded-2xl bg-bw-100 px-3 py-2 text-sm text-bw-700">
+            {error}
+          </p>
         ) : null}
 
         <button
@@ -276,9 +327,6 @@ export default function BanaSatClient() {
         >
           {loading ? "Gönderiliyor..." : "Teklifi gönder"}
         </button>
-        <p className="text-center text-xs text-bw-400">
-          Gönderince WhatsApp açılır; istersen e-posta da kullanabilirsin.
-        </p>
       </form>
     </main>
   );
