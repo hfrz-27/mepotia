@@ -87,6 +87,31 @@ export default function Page() {
         Mepotia, geçmişten aldığı ilhamı geleceğin teknolojisiyle birleştirerek
         güvenilir alışveriş anlayışını büyütmeye devam edecektir.
       </p>
+
+      <h2 className="pt-4 font-display text-2xl font-semibold tracking-wide text-bw-950">
+        İletişim
+      </h2>
+      <p>
+        <strong>Mepotia</strong>
+      </p>
+      <p>
+        E-posta:{" "}
+        <a
+          href="mailto:mepotiaa@gmail.com"
+          className="font-medium text-bw-950 underline underline-offset-4"
+        >
+          mepotiaa@gmail.com
+        </a>
+      </p>
+      <p>
+        Telefon:{" "}
+        <a
+          href="tel:+905059574122"
+          className="font-medium text-bw-950 underline underline-offset-4"
+        >
+          0505 957 41 22
+        </a>
+      </p>
     </StaticPage>
   );
 }

@@ -8,8 +8,8 @@ export default function Footer() {
         <div className="lg:col-span-2">
           <Logo className="h-8" />
           <p className="mt-5 max-w-md text-sm leading-relaxed text-bw-500">
-            Mepotia kişisel bir vitrindir. Seçilmiş ürünler, sade tipografi ve
-            siyah-beyaz profesyonel sunum.
+          Siz bizim için sadece bir müşteri değilsiniz.
+          Mepotia ailesinin değerli bir parçasısınız ve her alışverişinizde bunu hissetmenizi istiyoruz.
           </p>
         </div>
         <div>
@@ -34,11 +34,11 @@ export default function Footer() {
           </ul>
         </div>
       </div>
-      <div className="border-t border-bw-100">
-        <p className="mx-auto max-w-7xl px-4 py-5 text-xs text-bw-400 sm:px-6 lg:px-8">
-          © {new Date().getFullYear()} Mepotia. Tüm hakları saklıdır.
-        </p>
-      </div>
+      <div className="border-t border-bw-100 text-center">
+  <p className="mx-auto max-w-7xl px-4 py-5 text-xs text-bw-400 sm:px-6 lg:px-8">
+    © {new Date().getFullYear()} Mepotia. Tüm hakları saklıdır.
+  </p>
+</div>
     </footer>
   );
 }
