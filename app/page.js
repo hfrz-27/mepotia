@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, MessageCircle, ShieldCheck, Eye, Heart, HandCoins, Search } from "lucide-react";
+import { ArrowRight, MessageCircle, ShieldCheck, Eye, Heart, Package, Search } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
 import HeroSearch from "@/components/HeroSearch";
 import { getPublishedProducts } from "@/lib/products";
@@ -150,7 +150,7 @@ export default async function HomePage() {
               />
               <div className="relative">
                 <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-white/20 bg-white/10">
-                  <HandCoins className="h-5 w-5" strokeWidth={1.75} />
+                  <Package className="h-5 w-5" strokeWidth={1.75} />
                 </span>
                 <p className="mt-6 text-[10px] font-semibold tracking-[0.22em] text-bw-400 uppercase">
                   Satış teklifi

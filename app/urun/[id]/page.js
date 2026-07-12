@@ -2,7 +2,6 @@ import Link from "next/link";
 import { MapPin, MessageCircle, Phone } from "lucide-react";
 import { notFound } from "next/navigation";
 import ProductCard from "@/components/ProductCard";
-import ProductCard from "@/components/ProductCard";
 import ProductGallery from "@/components/ProductGallery";
 import ShareProductButtons from "@/components/ShareProductButtons";
 import {
