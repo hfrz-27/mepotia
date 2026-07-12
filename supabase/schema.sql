@@ -165,7 +165,7 @@ create policy "subcategories_admin" on public.subcategories for all using (publi
 -- Products
 drop policy if exists "products_select" on public.products;
 create policy "products_select" on public.products for select using (
-  status = 'published'
+  status in ('published', 'sold')
   or seller_id = auth.uid()
   or public.is_admin()
 );
@@ -192,7 +192,7 @@ create policy "product_images_select" on public.product_images for select using 
   exists (
     select 1 from public.products p
     where p.id = product_id
-      and (p.status = 'published' or p.seller_id = auth.uid() or public.is_admin())
+      and (p.status in ('published', 'sold') or p.seller_id = auth.uid() or public.is_admin())
   )
 );
 

@@ -42,6 +42,7 @@ export default function IlanVerClient() {
   const [ready, setReady] = useState(false);
   const [userId, setUserId] = useState(null);
   const fileInputRef = useRef(null);
+  const cameraInputRef = useRef(null);
 
   const hasPhotos =
     files.length > 0 || (isEdit && existingImages.length > 0);
@@ -361,6 +362,16 @@ export default function IlanVerClient() {
           type="file"
           accept="image/*"
           multiple
+          className="sr-only"
+          onChange={(e) => {
+            addFiles(e.target.files);
+            e.target.value = "";
+          }}
+        />
+        <input
+          ref={cameraInputRef}
+          type="file"
+          accept="image/*"
           capture="environment"
           className="sr-only"
           onChange={(e) => {
@@ -369,19 +380,36 @@ export default function IlanVerClient() {
           }}
         />
 
-        <button
-          type="button"
-          onClick={() => fileInputRef.current?.click()}
-          className={`mt-5 flex w-full min-h-[120px] flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed px-4 py-8 text-center transition ${
-            needsPhoto
-              ? "border-white bg-white text-bw-950 hover:bg-bw-100"
-              : "border-bw-300 bg-bw-50 text-bw-950 hover:border-bw-950"
-          }`}
-        >
-          <ImagePlus className="h-12 w-12" />
-          <span className="text-lg font-bold">Fotoğraf seç / kamera</span>
-          <span className="text-sm opacity-70">Buraya dokun</span>
-        </button>
+        <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            className={`flex min-h-[100px] flex-col items-center justify-center gap-2 rounded-2xl border-2 px-4 py-6 text-center transition ${
+              needsPhoto
+                ? "border-white bg-white text-bw-950 hover:bg-bw-100"
+                : "border-bw-300 bg-bw-50 text-bw-950 hover:border-bw-950"
+            }`}
+          >
+            <ImagePlus className="h-10 w-10" />
+            <span className="text-base font-bold">Galeriden seç</span>
+            <span className="text-xs opacity-70">Telefon galerisi</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => cameraInputRef.current?.click()}
+            className={`flex min-h-[100px] flex-col items-center justify-center gap-2 rounded-2xl border-2 px-4 py-6 text-center transition ${
+              needsPhoto
+                ? "border-white/40 bg-white/10 text-white hover:bg-white/20"
+                : "border-bw-300 bg-white text-bw-950 hover:border-bw-950"
+            }`}
+          >
+            <Camera className="h-10 w-10" />
+            <span className="text-base font-bold">Kamera ile çek</span>
+            <span className={`text-xs ${needsPhoto ? "text-bw-200" : "opacity-70"}`}>
+              Anında fotoğraf
+            </span>
+          </button>
+        </div>
 
         {previews.length ? (
           <div className="mt-4">
@@ -476,8 +504,8 @@ export default function IlanVerClient() {
             }}
             className="flex w-full items-center justify-center gap-2 rounded-2xl bg-bw-950 py-4 text-sm font-bold text-white"
           >
-            <Camera className="h-5 w-5" />
-            Fotoğraf ekle (zorunlu)
+            <ImagePlus className="h-5 w-5" />
+            Galeriden fotoğraf seç
           </button>
         </div>
       ) : null}

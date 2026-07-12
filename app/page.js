@@ -6,9 +6,9 @@ import HeroSearch from "@/components/HeroSearch";
 import { getPublishedProducts } from "@/lib/products";
 import { getSiteSettings } from "@/lib/categories";
 
-export const revalidate = 60;
-
 const WA = "https://wa.me/905059574122";
+
+export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   const [settings, latestRes, featuredRes, popularRes] = await Promise.all([
