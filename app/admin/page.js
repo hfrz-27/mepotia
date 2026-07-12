@@ -38,6 +38,7 @@ export default function AdminPage() {
   const [msg, setMsg] = useState("");
   const [tab, setTab] = useState("offers");
   const [shareId, setShareId] = useState(null);
+  const [sqlHint, setSqlHint] = useState("");
 
   const load = async () => {
     const supabase = createClient();
