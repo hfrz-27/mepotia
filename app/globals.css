@@ -72,10 +72,9 @@ body {
   display: none;
 }
 
-/* Logo: dark-on-black asset → visible on light via invert in black badge, or screen on dark */
-.logo-on-dark {
-  mix-blend-mode: screen;
-  filter: brightness(1.85) contrast(1.1);
+/* Logo: black glyph on transparent — invert on dark badge/surfaces */
+.logo-on-dark img {
+  filter: invert(1);
 }
 
 .logo-badge {
@@ -87,8 +86,7 @@ body {
 }
 
 .logo-badge img {
-  mix-blend-mode: screen;
-  filter: brightness(1.9) contrast(1.1);
+  filter: invert(1);
 }
 
 @keyframes fade-up {

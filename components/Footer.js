@@ -8,8 +8,17 @@ export default function Footer() {
         <div className="lg:col-span-2">
           <Logo className="h-8" />
           <p className="mt-5 max-w-md text-sm leading-relaxed text-bw-500">
-          Siz bizim için sadece bir müşteri değilsiniz.
-          Mepotia ailesinin değerli bir parçasısınız ve her alışverişinizde bunu hissetmenizi istiyoruz.
+            Mezopotamya&apos;dan ilham alan kişisel ikinci el vitrin. Her ürün
+            emekle seçilir — güven ve şeffaflıkla.
+          </p>
+          <p className="mt-3 text-sm text-bw-500">
+            WhatsApp:{" "}
+            <a
+              href="https://wa.me/905059574122"
+              className="font-medium text-bw-900 underline underline-offset-4"
+            >
+              0505 957 41 22
+            </a>
           </p>
         </div>
         <div>
