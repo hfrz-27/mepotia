@@ -29,7 +29,9 @@ export default function Footer() {
             <li><Link href="/" className="hover:text-bw-950">Vitrin</Link></li>
             <li><Link href="/ara" className="hover:text-bw-950">Keşfet</Link></li>
             <li><Link href="/hakkimizda" className="hover:text-bw-950">Hakkında</Link></li>
+            <li><Link href="/en-cok-bakilanlar" className="hover:text-bw-950">En çok bakılanlar</Link></li>
             <li><Link href="/bana-sat" className="hover:text-bw-950">Ürünümü sat</Link></li>
+            <li><Link href="/urun-iste" className="hover:text-bw-950">Ürün iste</Link></li>
             <li><Link href="/iletisim" className="hover:text-bw-950">İletişim</Link></li>
           </ul>
         </div>

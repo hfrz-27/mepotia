@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LogOut, PenLine, Heart, Menu, X } from "lucide-react";
+import { LogOut, PenLine, Eye, Menu, X } from "lucide-react";
 import Logo from "@/components/Logo";
 import { createClient } from "@/lib/supabase";
 
@@ -76,7 +76,7 @@ export default function Navbar() {
       }`}
     >
       <div className="relative mx-auto flex h-[4.5rem] max-w-7xl items-center justify-between gap-2 px-3 sm:px-6 lg:px-8">
-        {/* En sol — Menü, yanında Favoriler */}
+        {/* En sol — Menü, yanında En çok bakılanlar */}
         <div
           className="relative z-20 flex min-w-[5.5rem] items-center justify-start gap-1.5"
           ref={menuRef}
@@ -91,11 +91,11 @@ export default function Navbar() {
             {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </button>
           <Link
-            href="/favoriler"
+            href="/en-cok-bakilanlar"
             className="flex h-10 w-10 items-center justify-center rounded-xl border border-bw-200 text-bw-600 transition hover:border-bw-300 hover:bg-bw-50 hover:text-bw-950"
-            aria-label="Favoriler"
+            aria-label="En çok bakılanlar"
           >
-            <Heart className="h-4 w-4" />
+            <Eye className="h-4 w-4" />
           </Link>
 
           {menuOpen ? (
@@ -109,6 +109,7 @@ export default function Navbar() {
                 { href: "/kategoriler", label: "Kategoriler" },
                 { href: "/hakkimizda", label: "Hakkımızda" },
                 { href: "/bana-sat", label: "Bize Ürün Sat" },
+                { href: "/urun-iste", label: "Ürün İste" },
                 { href: "/iletisim", label: "İletişim" },
               ].map((item) => (
                 <Link

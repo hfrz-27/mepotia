@@ -1,10 +1,6 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Heart, Eye, MapPin } from "lucide-react";
-import { createClient } from "@/lib/supabase";
+import { Eye, MapPin } from "lucide-react";
 
 function formatPrice(value) {
   const num = Number(value);
@@ -21,44 +17,8 @@ function getImage(product) {
   return "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=900&q=80";
 }
 
-export default function ProductCard({ product, initialFav = false, large = false }) {
-  const [fav, setFav] = useState(initialFav);
+export default function ProductCard({ product, large = false }) {
   const img = getImage(product);
-
-  useEffect(() => {
-    setFav(initialFav);
-  }, [initialFav]);
-
-  const toggleFav = async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const supabase = createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
-      window.location.href = `/giris?next=/urun/${product.id}`;
-      return;
-    }
-    try {
-      if (fav) {
-        await supabase
-          .from("favorites")
-          .delete()
-          .eq("user_id", user.id)
-          .eq("product_id", product.id);
-        setFav(false);
-      } else {
-        await supabase.from("favorites").insert({
-          user_id: user.id,
-          product_id: product.id,
-        });
-        setFav(true);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
   return (
     <article
@@ -85,16 +45,6 @@ export default function ProductCard({ product, initialFav = false, large = false
               Premium
             </span>
           ) : null}
-          <button
-            type="button"
-            onClick={toggleFav}
-            className={`absolute top-4 right-4 flex h-10 w-10 items-center justify-center rounded-xl border border-bw-200 bg-white/95 shadow-sm backdrop-blur ${
-              fav ? "text-bw-950" : "text-bw-400 hover:text-bw-950"
-            }`}
-            aria-label="Favori"
-          >
-            <Heart className="h-4 w-4" fill={fav ? "currentColor" : "none"} />
-          </button>
         </div>
       </Link>
       <div className={`p-5 ${large ? "sm:p-7" : ""}`}>

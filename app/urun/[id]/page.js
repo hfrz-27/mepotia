@@ -2,7 +2,7 @@ import Link from "next/link";
 import { MapPin, MessageCircle, Phone } from "lucide-react";
 import { notFound } from "next/navigation";
 import ProductCard from "@/components/ProductCard";
-import FavoriteButton from "@/components/FavoriteButton";
+import ProductCard from "@/components/ProductCard";
 import ProductGallery from "@/components/ProductGallery";
 import ShareProductButtons from "@/components/ShareProductButtons";
 import {
@@ -144,7 +144,6 @@ export default async function ProductPage({ params }) {
                 Ara
               </a>
             ) : null}
-            <FavoriteButton productId={product.id} />
           </div>
 
           <div className="mt-6">

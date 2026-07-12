@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { getCategoriesWithSubs } from "@/lib/categories";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export const metadata = {
   title: "Kategoriler — Mepotia",

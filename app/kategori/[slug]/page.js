@@ -4,7 +4,7 @@ import { getCategoryBySlug } from "@/lib/categories";
 import { getPublishedProducts } from "@/lib/products";
 import { notFound } from "next/navigation";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function CategoryPage({ params, searchParams }) {
   const { slug } = await params;

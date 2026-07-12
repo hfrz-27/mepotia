@@ -6,24 +6,20 @@ import HeroSearch from "@/components/HeroSearch";
 import { getPublishedProducts } from "@/lib/products";
 import { getSiteSettings } from "@/lib/categories";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 const WA = "https://wa.me/905059574122";
 
 export default async function HomePage() {
-  const settings = await getSiteSettings();
-  const { data: latest } = await getPublishedProducts({
-    limit: 8,
-    orderBy: "created_at",
-  });
-  const { data: featured } = await getPublishedProducts({
-    limit: 4,
-    featured: true,
-  });
-  const { data: popular } = await getPublishedProducts({
-    limit: 4,
-    orderBy: "views",
-  });
+  const [settings, latestRes, featuredRes, popularRes] = await Promise.all([
+    getSiteSettings(),
+    getPublishedProducts({ limit: 8, orderBy: "created_at" }),
+    getPublishedProducts({ limit: 4, featured: true }),
+    getPublishedProducts({ limit: 4, orderBy: "views" }),
+  ]);
+  const latest = latestRes.data;
+  const featured = featuredRes.data;
+  const popular = popularRes.data;
 
   const wa = settings?.whatsapp
     ? `https://wa.me/${String(settings.whatsapp).replace(/\D/g, "")}`
@@ -174,13 +170,21 @@ export default async function HomePage() {
               <li>— Gerçek fotoğraflar</li>
               <li>— İstediğin fiyat ve şehir</li>
             </ul>
-            <Link
-              href="/bana-sat"
-              className="mt-8 inline-flex items-center gap-2 rounded-2xl bg-bw-950 px-7 py-3.5 text-sm font-semibold text-white transition hover:bg-bw-800"
-            >
-              Ürünümü sat
-              <ArrowRight className="h-4 w-4" />
-            </Link>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link
+                href="/bana-sat"
+                className="inline-flex items-center gap-2 rounded-2xl bg-bw-950 px-7 py-3.5 text-sm font-semibold text-white transition hover:bg-bw-800"
+              >
+                Ürünümü sat
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link
+                href="/urun-iste"
+                className="inline-flex items-center gap-2 rounded-2xl border border-bw-300 bg-white px-7 py-3.5 text-sm font-semibold text-bw-900 transition hover:border-bw-950"
+              >
+                Ürün iste
+              </Link>
+            </div>
           </div>
           <div className="relative overflow-hidden rounded-[2rem] border border-bw-200 bg-bw-50 p-8 sm:p-10">
             <p className="font-display text-2xl font-semibold tracking-wide text-bw-950">
@@ -268,11 +272,20 @@ export default async function HomePage() {
       {popular?.length ? (
         <section className="border-t border-bw-200 bg-white">
           <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-            <div className="mb-8">
-              <p className="text-xs tracking-[0.22em] text-bw-500 uppercase">Popüler</p>
-              <h2 className="mt-2 font-display text-3xl font-semibold tracking-wide text-bw-950">
-                En çok bakılanlar
-              </h2>
+            <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <p className="text-xs tracking-[0.22em] text-bw-500 uppercase">Popüler</p>
+                <h2 className="mt-2 font-display text-3xl font-semibold tracking-wide text-bw-950">
+                  En çok bakılanlar
+                </h2>
+              </div>
+              <Link
+                href="/en-cok-bakilanlar"
+                className="inline-flex items-center gap-2 text-sm font-medium text-bw-600 hover:text-bw-950"
+              >
+                Tümü
+                <ArrowRight className="h-4 w-4" />
+              </Link>
             </div>
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {popular.map((p) => (

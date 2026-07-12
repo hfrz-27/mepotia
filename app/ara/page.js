@@ -3,7 +3,7 @@ import ProductCard from "@/components/ProductCard";
 import { getCategoriesWithSubs } from "@/lib/categories";
 import { getPublishedProducts } from "@/lib/products";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function SearchPage({ searchParams }) {
   const sp = await searchParams;

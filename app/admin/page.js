@@ -3,21 +3,29 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { Bell, ShoppingBag, Search } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 
 export default function AdminPage() {
-  const [stats, setStats] = useState({ products: 0, featured: 0, views: 0, offers: 0 });
+  const [stats, setStats] = useState({
+    products: 0,
+    featured: 0,
+    views: 0,
+    offers: 0,
+    requests: 0,
+  });
   const [products, setProducts] = useState([]);
   const [offers, setOffers] = useState([]);
+  const [requests, setRequests] = useState([]);
   const [msg, setMsg] = useState("");
-  const [tab, setTab] = useState("offers");
-  const [offersReady, setOffersReady] = useState(true);
+  const [tab, setTab] = useState("inbox");
+  const [sqlHint, setSqlHint] = useState("");
 
   const load = async () => {
     const supabase = createClient();
     const { data: all } = await supabase
       .from("products")
-      .select("*")
+      .select("id, title, status, is_featured, is_premium, views, created_at")
       .order("created_at", { ascending: false });
     const rows = all || [];
     setProducts(rows);
@@ -26,20 +34,27 @@ export default function AdminPage() {
       .from("sell_offers")
       .select("*")
       .order("created_at", { ascending: false });
-    if (offerErr) {
-      setOffersReady(false);
-      setOffers([]);
-    } else {
-      setOffersReady(true);
-    }
-    const offersList = offerRows || [];
+    const offersList = offerErr ? [] : offerRows || [];
     setOffers(offersList);
+
+    const { data: reqRows, error: reqErr } = await supabase
+      .from("product_requests")
+      .select("*")
+      .order("created_at", { ascending: false });
+    const reqList = reqErr ? [] : reqRows || [];
+    setRequests(reqList);
+
+    const hints = [];
+    if (offerErr) hints.push("sell_offers.sql");
+    if (reqErr) hints.push("product_requests.sql");
+    setSqlHint(hints.join(" + "));
 
     setStats({
       products: rows.length,
       featured: rows.filter((p) => p.is_featured).length,
       views: rows.reduce((s, p) => s + (p.views || 0), 0),
       offers: offersList.filter((o) => o.status === "new").length,
+      requests: reqList.filter((r) => r.status === "new").length,
     });
   };
 
@@ -66,15 +81,62 @@ export default function AdminPage() {
 
   const setOfferStatus = async (id, status) => {
     await createClient().from("sell_offers").update({ status }).eq("id", id);
-    setMsg("Teklif güncellendi.");
+    setMsg("Bildirim güncellendi.");
     load();
   };
 
   const removeOffer = async (id) => {
-    if (!confirm("Teklif silinsin mi?")) return;
+    if (!confirm("Silinsin mi?")) return;
     await createClient().from("sell_offers").delete().eq("id", id);
     load();
   };
+
+  const setRequestStatus = async (id, status) => {
+    await createClient().from("product_requests").update({ status }).eq("id", id);
+    setMsg("Bildirim güncellendi.");
+    load();
+  };
+
+  const removeRequest = async (id) => {
+    if (!confirm("Silinsin mi?")) return;
+    await createClient().from("product_requests").delete().eq("id", id);
+    load();
+  };
+
+  const newCount = stats.offers + stats.requests;
+
+  const inboxItems = [
+    ...offers.map((o) => ({
+      kind: "sell",
+      id: o.id,
+      title: o.title,
+      meta: `${o.contact_name} · ${o.phone}${o.city ? ` · ${o.city}` : ""}${
+        o.price != null ? ` · ${Number(o.price).toLocaleString("tr-TR")} ₺` : ""
+      }`,
+      description: o.description,
+      status: o.status,
+      created_at: o.created_at,
+      phone: o.phone,
+      images: o.image_urls,
+      raw: o,
+    })),
+    ...requests.map((r) => ({
+      kind: "request",
+      id: r.id,
+      title: r.title,
+      meta: `${r.phone}${
+        r.price_min != null || r.price_max != null
+          ? ` · ${r.price_min ?? "?"}–${r.price_max ?? "?"} ₺`
+          : ""
+      }`,
+      description: r.description,
+      status: r.status,
+      created_at: r.created_at,
+      phone: r.phone,
+      images: null,
+      raw: r,
+    })),
+  ].sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
@@ -93,9 +155,32 @@ export default function AdminPage() {
         </Link>
       </div>
 
-      <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
+      {/* Bildirim kutusu */}
+      <button
+        type="button"
+        onClick={() => setTab("inbox")}
+        className="mt-8 flex w-full items-start gap-4 rounded-[1.75rem] border border-bw-200 bg-white p-5 text-left shadow-sm transition hover:border-bw-400 sm:p-6"
+      >
+        <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-bw-950 text-white">
+          <Bell className="h-5 w-5" />
+          {newCount > 0 ? (
+            <span className="absolute -top-1.5 -right-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-white px-1 text-[10px] font-bold text-bw-950 ring-2 ring-bw-950">
+              {newCount}
+            </span>
+          ) : null}
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-semibold text-bw-950">Bildirimler</p>
+          <p className="mt-1 text-sm text-bw-500">
+            {newCount > 0
+              ? `${stats.offers} satış teklifi · ${stats.requests} ürün isteği`
+              : "Yeni bildirim yok"}
+          </p>
+        </div>
+      </button>
+
+      <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
         {[
-          ["Yeni teklif", stats.offers],
           ["Ürün", stats.products],
           ["Öne çıkan", stats.featured],
           ["Görüntülenme", stats.views],
@@ -113,14 +198,14 @@ export default function AdminPage() {
       <div className="mt-8 flex gap-2">
         <button
           type="button"
-          onClick={() => setTab("offers")}
+          onClick={() => setTab("inbox")}
           className={`rounded-xl px-4 py-2 text-sm font-semibold ${
-            tab === "offers"
+            tab === "inbox"
               ? "bg-bw-950 text-white"
               : "border border-bw-200 text-bw-600"
           }`}
         >
-          Satış teklifleri ({offers.length})
+          Bildirimler ({inboxItems.length})
         </button>
         <button
           type="button"
@@ -137,121 +222,133 @@ export default function AdminPage() {
 
       {msg ? <p className="mt-4 text-sm text-bw-500">{msg}</p> : null}
 
-      {tab === "offers" ? (
-        <div className="mt-6 space-y-4">
-          {!offersReady ? (
+      {tab === "inbox" ? (
+        <div className="mt-6 space-y-3">
+          {sqlHint ? (
             <div className="rounded-3xl border border-bw-300 bg-bw-50 px-5 py-5 text-sm leading-relaxed text-bw-700">
-              <p className="font-semibold text-bw-950">
-                sell_offers tablosu henüz yok
-              </p>
+              <p className="font-semibold text-bw-950">SQL eksik</p>
               <p className="mt-2">
-                Supabase Dashboard → SQL Editor →{" "}
+                Supabase SQL Editor’da{" "}
                 <code className="rounded bg-white px-1.5 py-0.5 text-xs">
-                  supabase/sell_offers.sql
+                  supabase/{sqlHint}
                 </code>{" "}
-                dosyasının tamamını yapıştır → Run. Sonra bu sayfayı yenile.
+                çalıştır.
               </p>
             </div>
           ) : null}
-          {offersReady && !offers.length ? (
+
+          {!inboxItems.length && !sqlHint ? (
             <div className="rounded-3xl border border-dashed border-bw-300 bg-white px-6 py-16 text-center text-sm text-bw-500">
-              Henüz satış teklifi yok. Müşteriler /bana-sat formundan gönderince
-              burada görünür.
+              Henüz bildirim yok. Satış teklifi ve ürün istekleri buraya düşer.
             </div>
           ) : null}
-          {offers.length ? (
-            offers.map((o) => (
-              <article
-                key={o.id}
-                className="rounded-3xl border border-bw-200 bg-white p-5 shadow-sm sm:p-6"
-              >
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div>
-                    <p className="text-xs tracking-wide text-bw-400 uppercase">
-                      {o.status === "new" ? "Yeni" : o.status}
-                    </p>
-                    <h2 className="mt-1 font-display text-xl font-semibold text-bw-950">
-                      {o.title}
-                    </h2>
-                    <p className="mt-1 text-sm text-bw-500">
-                      {o.contact_name} · {o.phone}
-                      {o.city ? ` · ${o.city}` : ""}
-                      {o.price != null ? ` · ${Number(o.price).toLocaleString("tr-TR")} ₺` : ""}
-                    </p>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
+
+          {inboxItems.map((item) => (
+            <article
+              key={`${item.kind}-${item.id}`}
+              className={`rounded-3xl border bg-white p-5 shadow-sm sm:p-6 ${
+                item.status === "new"
+                  ? "border-bw-900"
+                  : "border-bw-200 opacity-80"
+              }`}
+            >
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="flex items-center gap-2 text-xs tracking-wide text-bw-400 uppercase">
+                    {item.kind === "sell" ? (
+                      <ShoppingBag className="h-3.5 w-3.5" />
+                    ) : (
+                      <Search className="h-3.5 w-3.5" />
+                    )}
+                    {item.kind === "sell" ? "Satış teklifi" : "Ürün isteği"}
+                    {item.status === "new" ? " · Yeni" : ` · ${item.status}`}
+                  </p>
+                  <h2 className="mt-1 font-display text-xl font-semibold text-bw-950">
+                    {item.title}
+                  </h2>
+                  <p className="mt-1 text-sm text-bw-500">{item.meta}</p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <a
+                    href={`https://wa.me/${String(item.phone).replace(/\D/g, "")}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="rounded-xl border border-bw-200 px-3 py-2 text-xs font-semibold text-bw-800"
+                  >
+                    WhatsApp
+                  </a>
+                  {item.kind === "sell" ? (
+                    <>
+                      {item.status !== "accepted" ? (
+                        <button
+                          type="button"
+                          onClick={() => setOfferStatus(item.id, "accepted")}
+                          className="rounded-xl bg-bw-950 px-3 py-2 text-xs font-semibold text-white"
+                        >
+                          Okundu
+                        </button>
+                      ) : null}
+                      <button
+                        type="button"
+                        onClick={() => removeOffer(item.id)}
+                        className="rounded-xl px-3 py-2 text-xs text-bw-400 underline"
+                      >
+                        Sil
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      {item.status !== "done" ? (
+                        <button
+                          type="button"
+                          onClick={() => setRequestStatus(item.id, "done")}
+                          className="rounded-xl bg-bw-950 px-3 py-2 text-xs font-semibold text-white"
+                        >
+                          Okundu
+                        </button>
+                      ) : null}
+                      <button
+                        type="button"
+                        onClick={() => removeRequest(item.id)}
+                        className="rounded-xl px-3 py-2 text-xs text-bw-400 underline"
+                      >
+                        Sil
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
+              <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-bw-500">
+                {item.description}
+              </p>
+              {Array.isArray(item.images) && item.images.length ? (
+                <div className="mt-4 flex gap-2 overflow-x-auto">
+                  {item.images.map((url) => (
                     <a
-                      href={`https://wa.me/${String(o.phone).replace(/\D/g, "")}`}
+                      key={url}
+                      href={url}
                       target="_blank"
                       rel="noreferrer"
-                      className="rounded-xl border border-bw-200 px-3 py-2 text-xs font-semibold text-bw-800"
+                      className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl border border-bw-200"
                     >
-                      WhatsApp
+                      <Image
+                        src={url}
+                        alt=""
+                        fill
+                        className="object-cover"
+                        sizes="96px"
+                      />
                     </a>
-                    {o.status !== "accepted" ? (
-                      <button
-                        type="button"
-                        onClick={() => setOfferStatus(o.id, "accepted")}
-                        className="rounded-xl bg-bw-950 px-3 py-2 text-xs font-semibold text-white"
-                      >
-                        Kabul
-                      </button>
-                    ) : null}
-                    {o.status !== "rejected" ? (
-                      <button
-                        type="button"
-                        onClick={() => setOfferStatus(o.id, "rejected")}
-                        className="rounded-xl border border-bw-200 px-3 py-2 text-xs font-semibold text-bw-600"
-                      >
-                        Reddet
-                      </button>
-                    ) : null}
-                    <button
-                      type="button"
-                      onClick={() => removeOffer(o.id)}
-                      className="rounded-xl px-3 py-2 text-xs text-bw-400 underline"
-                    >
-                      Sil
-                    </button>
-                  </div>
+                  ))}
                 </div>
-                <p className="mt-3 text-sm text-bw-600">
-                  {[o.brand, o.model].filter(Boolean).join(" · ") || "Marka/model yok"}
-                  {" · "}
-                  {o.condition === "new" ? "Sıfır / az kullanılmış" : "İkinci el"}
-                </p>
-                <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-bw-500">
-                  {o.description}
-                </p>
-                {Array.isArray(o.image_urls) && o.image_urls.length ? (
-                  <div className="mt-4 flex gap-2 overflow-x-auto">
-                    {o.image_urls.map((url) => (
-                      <a
-                        key={url}
-                        href={url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl border border-bw-200"
-                      >
-                        <Image
-                          src={url}
-                          alt=""
-                          fill
-                          className="object-cover"
-                          sizes="96px"
-                        />
-                      </a>
-                    ))}
-                  </div>
-                ) : null}
-                <p className="mt-3 text-xs text-bw-400">
-                  {o.created_at
-                    ? new Date(o.created_at).toLocaleString("tr-TR")
-                    : ""}
-                </p>
-              </article>
-            ))
-          ) : null}
+              ) : null}
+              <p className="mt-3 text-xs text-bw-400">
+                {item.created_at
+                  ? new Date(item.created_at).toLocaleString("tr-TR")
+                  : ""}
+              </p>
+            </article>
+          ))}
         </div>
       ) : (
         <div className="mt-6 overflow-x-auto rounded-3xl border border-bw-200 bg-white shadow-sm">
