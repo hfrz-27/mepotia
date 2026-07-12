@@ -31,8 +31,8 @@ export default async function HomePage() {
 
   return (
     <main>
-      {/* HERO — full-bleed, brand-first */}
-      <section className="relative min-h-[92vh] overflow-hidden border-b border-bw-200">
+      {/* HERO + trust strip yukarı çekilmiş */}
+      <section className="relative overflow-hidden">
         <div className="absolute inset-0">
           <Image
             src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=2400&q=80"
@@ -54,7 +54,7 @@ export default async function HomePage() {
           />
         </div>
 
-        <div className="relative mx-auto flex min-h-[92vh] max-w-4xl flex-col items-center justify-center px-4 py-20 text-center sm:px-6 lg:px-8">
+        <div className="relative mx-auto flex min-h-[78vh] max-w-4xl flex-col items-center justify-center px-4 pb-28 pt-16 text-center sm:px-6 lg:px-8">
           <h1 className="animate-fade-up font-display text-5xl leading-[1.02] font-semibold tracking-[0.14em] text-bw-950 uppercase sm:text-6xl lg:text-7xl">
             Mepotia
           </h1>
@@ -82,42 +82,42 @@ export default async function HomePage() {
             </a>
           </div>
         </div>
-      </section>
 
-      {/* Trust */}
-      <section className="border-b border-bw-200 bg-white">
-        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 py-10 sm:grid-cols-3 sm:px-6 lg:px-8">
-          {[
-            {
-              icon: ShieldCheck,
-              t: "Tek elden seçki",
-              d: "Sadece ben paylaşıyorum — kalabalık pazar değil",
-            },
-            {
-              icon: Eye,
-              t: "Şeffaf sunum",
-              d: "Gerçek fotoğraf, net açıklama, net fiyat",
-            },
-            {
-              icon: Heart,
-              t: "Zorlu yoldan gelen marka",
-              d: "17 yaşında başlayan bir vizyonun ilk adımı",
-            },
-          ].map((item) => (
-            <div key={item.t} className="flex items-start gap-4">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-bw-200 bg-bw-50 text-bw-900">
-                <item.icon className="h-5 w-5" strokeWidth={1.75} />
+        {/* Trust strip — hero içine yukarı çekilmiş şerit */}
+        <div className="relative z-10 mx-auto -mt-16 max-w-5xl px-4 pb-10 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 gap-4 rounded-2xl border border-bw-200 bg-white/95 px-5 py-5 shadow-[0_24px_60px_-36px_rgba(0,0,0,0.4)] backdrop-blur sm:grid-cols-3 sm:gap-6 sm:px-8 sm:py-6">
+            {[
+              {
+                icon: ShieldCheck,
+                t: "Tek elden seçki",
+                d: "Sadece ben paylaşıyorum",
+              },
+              {
+                icon: Eye,
+                t: "Şeffaf sunum",
+                d: "Net fiyat, net açıklama",
+              },
+              {
+                icon: Heart,
+                t: "Zorlu yol",
+                d: "17 yaşında başlayan vizyon",
+              },
+            ].map((item) => (
+              <div key={item.t} className="flex items-center gap-3 text-left">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-bw-200 bg-bw-50 text-bw-900">
+                  <item.icon className="h-4 w-4" strokeWidth={1.75} />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-bw-950">{item.t}</p>
+                  <p className="text-xs text-bw-500">{item.d}</p>
+                </div>
               </div>
-              <div>
-                <p className="font-semibold text-bw-950">{item.t}</p>
-                <p className="mt-1 text-sm leading-relaxed text-bw-500">{item.d}</p>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Story band — replaces categories */}
+      {/* Story band */}
       <section className="relative overflow-hidden border-b border-bw-200">
         <div className="absolute inset-0 bg-bw-950" />
         <div

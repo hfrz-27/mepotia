@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase";
 import Logo from "@/components/Logo";
+import { fixEmailTypos, isValidEmail } from "@/lib/email";
 
 export default function KayitClient() {
   const router = useRouter();
@@ -19,11 +20,25 @@ export default function KayitClient() {
     e.preventDefault();
     setError("");
     setInfo("");
+
+    const { email: clean, fixed, suggestion } = fixEmailTypos(email);
+    if (fixed) {
+      setEmail(suggestion);
+      setError(
+        `E-posta düzeltilmeli: "${email}" → "${suggestion}". Tekrar dene.`,
+      );
+      return;
+    }
+    if (!isValidEmail(clean)) {
+      setError("Geçerli bir e-posta yaz (örn. isim@gmail.com).");
+      return;
+    }
+
     setLoading(true);
 
     const supabase = createClient();
     const { data, error: authError } = await supabase.auth.signUp({
-      email,
+      email: clean,
       password,
       options: {
         data: { full_name: fullName.trim() || null },
@@ -33,7 +48,14 @@ export default function KayitClient() {
     setLoading(false);
 
     if (authError) {
-      setError(authError.message);
+      const msg = authError.message || "";
+      if (/invalid/i.test(msg)) {
+        setError(
+          "E-posta geçersiz görünüyor. @gmail.com gibi doğru yazdığından emin ol (.coom değil .com).",
+        );
+      } else {
+        setError(msg);
+      }
       return;
     }
 

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase";
 import Logo from "@/components/Logo";
+import { fixEmailTypos, isValidEmail } from "@/lib/email";
 
 export default function GirisClient() {
   const router = useRouter();
@@ -18,14 +19,35 @@ export default function GirisClient() {
   const onSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
+    const { email: clean, fixed, suggestion } = fixEmailTypos(email);
+    if (fixed) {
+      setEmail(suggestion);
+      setError(
+        `E-posta düzeltilmeli: "${email}" → "${suggestion}". Tekrar dene.`,
+      );
+      return;
+    }
+    if (!isValidEmail(clean)) {
+      setError("Geçerli bir e-posta yaz (örn. isim@gmail.com).");
+      return;
+    }
+
     setLoading(true);
     const { error: authError } = await createClient().auth.signInWithPassword({
-      email,
+      email: clean,
       password,
     });
     setLoading(false);
     if (authError) {
-      setError(authError.message);
+      const msg = authError.message || "";
+      if (/invalid/i.test(msg)) {
+        setError(
+          "E-posta veya şifre hatalı. .coom yerine .com yazdığından emin ol.",
+        );
+      } else {
+        setError(msg);
+      }
       return;
     }
     router.push(next);
