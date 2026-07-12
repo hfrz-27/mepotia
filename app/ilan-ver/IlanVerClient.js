@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -41,6 +41,11 @@ export default function IlanVerClient() {
   const [loading, setLoading] = useState(false);
   const [ready, setReady] = useState(false);
   const [userId, setUserId] = useState(null);
+  const fileInputRef = useRef(null);
+
+  const hasPhotos =
+    files.length > 0 || (isEdit && existingImages.length > 0);
+  const needsPhoto = !hasPhotos;
 
   useEffect(() => {
     const supabase = createClient();
@@ -263,105 +268,155 @@ export default function IlanVerClient() {
   }
 
   return (
-    <main className="mx-auto max-w-2xl px-4 py-12 sm:px-6 lg:px-8">
+    <main className="mx-auto max-w-2xl px-4 py-12 pb-28 sm:px-6 lg:px-8">
       <p className="text-xs tracking-[0.22em] text-bw-500 uppercase">Sadece sen</p>
       <h1 className="mt-2 font-display text-4xl font-semibold tracking-wide text-bw-950">
-        {isEdit ? "Ürünü Düzenle" : "Paylaş"}
+        {isEdit ? "İlanı düzenle" : "Yeni ilan paylaş"}
       </h1>
       <p className="mt-2 text-sm text-bw-500">
-        {isEdit ? "Değişiklikler kaydedilince vitrinde güncellenir." : "Ürün anında vitrine düşer."}
+        {isEdit
+          ? "Başlık, fiyat, fotoğraf ve açıklamayı buradan güncelle."
+          : "Önce fotoğraf ekle, sonra bilgileri yaz."}
       </p>
 
-      <form onSubmit={onSubmit} className="mt-8 space-y-5 rounded-[2rem] border border-bw-200 bg-white p-6 shadow-sm sm:p-8">
-        {/* Fotoğraflar — en üstte, belirgin */}
-        <section className="rounded-2xl border-2 border-dashed border-bw-300 bg-bw-50 p-5 sm:p-6">
+      {/* ADIM 1 — Fotoğraf (formun DIŞINDA, en üstte) */}
+      <section
+        id="fotograf-alani"
+        className={`mt-8 rounded-[2rem] border-4 p-5 shadow-lg transition sm:p-7 ${
+          needsPhoto
+            ? "border-bw-950 bg-bw-950 text-white ring-4 ring-bw-950/20"
+            : "border-bw-200 bg-white"
+        }`}
+      >
+        <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="flex items-start gap-3">
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-bw-950 text-white">
-              <Camera className="h-5 w-5" />
+            <span
+              className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-lg font-bold ${
+                needsPhoto ? "bg-white text-bw-950" : "bg-bw-950 text-white"
+              }`}
+            >
+              1
             </span>
-            <div className="min-w-0 flex-1">
-              <p className="text-xs font-semibold tracking-[0.18em] text-bw-500 uppercase">
-                Ürün fotoğrafları
+            <div>
+              <p
+                className={`text-xs font-semibold tracking-[0.2em] uppercase ${
+                  needsPhoto ? "text-bw-300" : "text-bw-500"
+                }`}
+              >
+                Adım 1 — Zorunlu
               </p>
-              <h2 className="mt-1 font-display text-xl font-semibold text-bw-950">
-                {isEdit ? "Fotoğrafları yönet" : "Fotoğraf ekle *"}
+              <h2 className="mt-1 font-display text-2xl font-semibold sm:text-3xl">
+                Ürün fotoğrafı ekle
               </h2>
-              <p className="mt-1 text-sm text-bw-500">
-                Galeriden seç veya kameradan çek. Birden fazla fotoğraf ekleyebilirsin.
+              <p className={`mt-2 text-sm ${needsPhoto ? "text-bw-200" : "text-bw-500"}`}>
+                Fotoğrafsız ilan yayınlanmaz. Galeriden seç veya kameradan çek.
               </p>
             </div>
           </div>
+          <Camera className={`h-8 w-8 shrink-0 ${needsPhoto ? "text-white/70" : "text-bw-400"}`} />
+        </div>
 
-          {existingImages.length ? (
-            <div className="mt-5">
-              <p className="mb-2 text-xs font-semibold text-bw-600">Mevcut fotoğraflar</p>
-              <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
-                {existingImages.map((img) => (
-                  <div
-                    key={img.id}
-                    className="relative aspect-square overflow-hidden rounded-xl border border-bw-200 bg-white"
+        {needsPhoto ? (
+          <p className="mt-4 rounded-2xl bg-white/10 px-4 py-3 text-center text-sm font-semibold">
+            Henüz fotoğraf yok — aşağıdaki büyük butona bas
+          </p>
+        ) : (
+          <p
+            className={`mt-4 rounded-2xl px-4 py-3 text-center text-sm font-semibold ${
+              needsPhoto ? "" : "bg-bw-50 text-bw-800"
+            }`}
+          >
+            {files.length + existingImages.length} fotoğraf hazır
+          </p>
+        )}
+
+        {existingImages.length ? (
+          <div className="mt-5">
+            <p className={`mb-2 text-xs font-semibold ${needsPhoto ? "text-bw-200" : "text-bw-600"}`}>
+              Mevcut fotoğraflar
+            </p>
+            <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
+              {existingImages.map((img) => (
+                <div
+                  key={img.id}
+                  className="relative aspect-square overflow-hidden rounded-xl border border-bw-200 bg-white"
+                >
+                  <Image src={img.url} alt="" fill className="object-cover" sizes="120px" />
+                  <button
+                    type="button"
+                    onClick={() => removeExistingImage(img.id)}
+                    className="absolute top-1 right-1 flex h-7 w-7 items-center justify-center rounded-full bg-bw-950/80 text-white"
+                    aria-label="Fotoğrafı sil"
                   >
-                    <Image src={img.url} alt="" fill className="object-cover" sizes="120px" />
-                    <button
-                      type="button"
-                      onClick={() => removeExistingImage(img.id)}
-                      className="absolute top-1 right-1 flex h-7 w-7 items-center justify-center rounded-full bg-bw-950/80 text-white"
-                      aria-label="Fotoğrafı sil"
-                    >
-                      <X className="h-3.5 w-3.5" />
-                    </button>
-                  </div>
-                ))}
-              </div>
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              ))}
             </div>
-          ) : null}
+          </div>
+        ) : null}
 
-          <label className="mt-5 flex min-h-[140px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-bw-200 bg-white px-4 py-8 text-center transition hover:border-bw-950 hover:bg-bw-50">
-            <ImagePlus className="h-10 w-10 text-bw-400" />
-            <span className="mt-3 text-base font-semibold text-bw-950">
-              Fotoğraf seç veya sürükle
-            </span>
-            <span className="mt-1 text-sm text-bw-500">JPG, PNG, WEBP</span>
-            <input
-              type="file"
-              accept="image/*"
-              multiple
-              className="sr-only"
-              onChange={(e) => {
-                addFiles(e.target.files);
-                e.target.value = "";
-              }}
-            />
-          </label>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          multiple
+          capture="environment"
+          className="sr-only"
+          onChange={(e) => {
+            addFiles(e.target.files);
+            e.target.value = "";
+          }}
+        />
 
-          {previews.length ? (
-            <div className="mt-4">
-              <p className="mb-2 text-xs font-semibold text-bw-600">
-                Yeni eklenecek ({previews.length})
-              </p>
-              <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
-                {previews.map((preview, index) => (
-                  <div
-                    key={`${preview.name}-${index}`}
-                    className="relative aspect-square overflow-hidden rounded-xl border border-bw-200 bg-white"
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          className={`mt-5 flex w-full min-h-[120px] flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed px-4 py-8 text-center transition ${
+            needsPhoto
+              ? "border-white bg-white text-bw-950 hover:bg-bw-100"
+              : "border-bw-300 bg-bw-50 text-bw-950 hover:border-bw-950"
+          }`}
+        >
+          <ImagePlus className="h-12 w-12" />
+          <span className="text-lg font-bold">Fotoğraf seç / kamera</span>
+          <span className="text-sm opacity-70">Buraya dokun</span>
+        </button>
+
+        {previews.length ? (
+          <div className="mt-4">
+            <p className={`mb-2 text-xs font-semibold ${needsPhoto ? "text-bw-200" : "text-bw-600"}`}>
+              Yeni eklenecek ({previews.length})
+            </p>
+            <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
+              {previews.map((preview, index) => (
+                <div
+                  key={`${preview.name}-${index}`}
+                  className="relative aspect-square overflow-hidden rounded-xl border border-bw-200 bg-white"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={preview.url} alt="" className="h-full w-full object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => removeNewFile(index)}
+                    className="absolute top-1 right-1 flex h-7 w-7 items-center justify-center rounded-full bg-bw-950/80 text-white"
+                    aria-label="Kaldır"
                   >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={preview.url} alt="" className="h-full w-full object-cover" />
-                    <button
-                      type="button"
-                      onClick={() => removeNewFile(index)}
-                      className="absolute top-1 right-1 flex h-7 w-7 items-center justify-center rounded-full bg-bw-950/80 text-white"
-                      aria-label="Kaldır"
-                    >
-                      <X className="h-3.5 w-3.5" />
-                    </button>
-                  </div>
-                ))}
-              </div>
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              ))}
             </div>
-          ) : null}
-        </section>
+          </div>
+        ) : null}
+      </section>
 
+      {/* ADIM 2 — Bilgiler */}
+      <p className="mt-8 text-xs font-semibold tracking-[0.2em] text-bw-500 uppercase">
+        Adım 2 — Ürün bilgileri
+      </p>
+
+      <form onSubmit={onSubmit} className="mt-3 space-y-5 rounded-[2rem] border border-bw-200 bg-white p-6 shadow-sm sm:p-8">
         <input name="title" value={form.title} onChange={onChange} placeholder="Başlık *" required className={field} />
         <textarea name="description" value={form.description} onChange={onChange} rows={5} placeholder="Açıklama" className={field} />
         <div className="grid gap-4 sm:grid-cols-2">
@@ -402,10 +457,30 @@ export default function IlanVerClient() {
           />
         ) : null}
         {error ? <p className="rounded-2xl bg-bw-100 px-3 py-2 text-sm text-bw-700">{error}</p> : null}
-        <button type="submit" disabled={loading} className="w-full rounded-2xl bg-bw-950 py-3.5 text-sm font-semibold text-white hover:bg-bw-800 disabled:opacity-60">
-          {loading ? "Kaydediliyor..." : isEdit ? "Güncelle" : "Vitrine koy"}
+        <button
+          type="submit"
+          disabled={loading || needsPhoto}
+          className="w-full rounded-2xl bg-bw-950 py-4 text-base font-semibold text-white hover:bg-bw-800 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {loading ? "Kaydediliyor..." : needsPhoto ? "Önce fotoğraf ekle" : isEdit ? "İlanı güncelle" : "Vitrine koy"}
         </button>
       </form>
+
+      {needsPhoto ? (
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-bw-200 bg-white p-4 shadow-[0_-12px_40px_rgba(0,0,0,0.12)] sm:hidden">
+          <button
+            type="button"
+            onClick={() => {
+              document.getElementById("fotograf-alani")?.scrollIntoView({ behavior: "smooth" });
+              setTimeout(() => fileInputRef.current?.click(), 400);
+            }}
+            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-bw-950 py-4 text-sm font-bold text-white"
+          >
+            <Camera className="h-5 w-5" />
+            Fotoğraf ekle (zorunlu)
+          </button>
+        </div>
+      ) : null}
       <p className="mt-6 text-center text-sm">
         <Link href={isEdit ? "/admin" : "/"} className="text-bw-500 hover:text-bw-950">
           {isEdit ? "Yönetim paneli" : "Ana sayfa"}

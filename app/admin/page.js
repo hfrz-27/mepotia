@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ShoppingBag, Search } from "lucide-react";
+import { ShoppingBag, Search, Pencil } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import ShareProductButtons from "@/components/ShareProductButtons";
 
@@ -83,6 +83,11 @@ export default function AdminPage() {
 
   useEffect(() => {
     load();
+    const params = new URLSearchParams(window.location.search);
+    const t = params.get("tab");
+    if (t === "products" || t === "offers" || t === "requests") {
+      setTab(t);
+    }
   }, []);
 
   const toggle = async (id, field, value) => {
@@ -171,12 +176,20 @@ export default function AdminPage() {
             Stüdyo
           </h1>
         </div>
-        <Link
-          href="/ilan-ver"
-          className="rounded-2xl bg-bw-950 px-5 py-3 text-sm font-semibold text-white hover:bg-bw-800"
-        >
-          Yeni paylaşım
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <Link
+            href="/ilan-ver"
+            className="rounded-2xl bg-bw-950 px-5 py-3 text-sm font-semibold text-white hover:bg-bw-800"
+          >
+            + Yeni ilan
+          </Link>
+          <Link
+            href="/admin?tab=products"
+            className="rounded-2xl border border-bw-300 bg-white px-5 py-3 text-sm font-semibold text-bw-900 hover:border-bw-950"
+          >
+            İlanları düzenle
+          </Link>
+        </div>
       </div>
 
       {/* Üst sayılar — net ayrım */}
@@ -307,14 +320,17 @@ export default function AdminPage() {
         </button>
         <button
           type="button"
-          onClick={() => setTab("products")}
+          onClick={() => {
+            setTab("products");
+            window.history.replaceState(null, "", "/admin?tab=products");
+          }}
           className={`rounded-xl px-4 py-2 text-sm font-semibold ${
             tab === "products"
               ? "bg-bw-950 text-white"
               : "border border-bw-200 text-bw-600"
           }`}
         >
-          Vitrin ürünleri
+          Vitrin / ilan düzenle
         </button>
       </div>
 
@@ -499,6 +515,11 @@ export default function AdminPage() {
 
       {tab === "products" ? (
         <div className="mt-6 space-y-4">
+          <div className="rounded-2xl border border-bw-200 bg-bw-50 px-5 py-4 text-sm text-bw-600">
+            <strong className="text-bw-950">İlan düzenle:</strong> Ürünün altındaki siyah{" "}
+            <strong>İlanı düzenle</strong> butonuna bas. Başlık, fiyat, fotoğraf ve açıklama
+            değişir.
+          </div>
           {!products.length ? (
             <div className="rounded-3xl border border-dashed border-bw-300 bg-white px-6 py-16 text-center text-sm text-bw-500">
               Henüz vitrin ürünü yok.
@@ -548,9 +569,10 @@ export default function AdminPage() {
                 <div className="mt-4 flex flex-wrap gap-2">
                   <Link
                     href={`/ilan-ver?duzenle=${p.id}`}
-                    className="rounded-xl border border-bw-200 px-3 py-2 text-xs font-semibold text-bw-700 hover:border-bw-950"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-bw-950 px-4 py-3 text-sm font-semibold text-white hover:bg-bw-800 sm:w-auto"
                   >
-                    Düzenle
+                    <Pencil className="h-4 w-4" />
+                    İlanı düzenle
                   </Link>
                   <button
                     type="button"
