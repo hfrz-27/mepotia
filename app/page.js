@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, MessageCircle, ShieldCheck, Eye, Heart } from "lucide-react";
+import { ArrowRight, MessageCircle, ShieldCheck, Eye, Heart, HandCoins, Search } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
 import HeroSearch from "@/components/HeroSearch";
 import { getPublishedProducts } from "@/lib/products";
@@ -68,13 +68,10 @@ export default async function HomePage() {
               <ArrowRight className="h-4 w-4" />
             </a>
             <a
-              href={wa}
-              target="_blank"
-              rel="noreferrer"
+              href="#al-sat"
               className="inline-flex items-center gap-2 rounded-2xl border border-bw-300 bg-white/90 px-7 py-3.5 text-sm font-semibold text-bw-900 backdrop-blur transition hover:border-bw-950"
             >
-              <MessageCircle className="h-4 w-4" />
-              WhatsApp
+              Sat · İste
             </a>
           </div>
         </div>
@@ -113,6 +110,98 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Ürün sat + Ürün iste — ana ekran */}
+      <section
+        id="al-sat"
+        className="scroll-mt-28 border-b border-bw-200 bg-bw-50"
+      >
+        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-16">
+          <div className="mb-8 max-w-2xl">
+            <p className="text-xs tracking-[0.22em] text-bw-500 uppercase">
+              Senin için
+            </p>
+            <h2 className="mt-3 font-display text-3xl font-semibold tracking-wide text-bw-950 sm:text-4xl">
+              Sat veya iste
+            </h2>
+            <p className="mt-3 text-base leading-relaxed text-bw-600">
+              Elindeki ürünü bana sat — ya da aradığın ürünü yaz, bulursam
+              haber veririm.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-5">
+            {/* Sat */}
+            <Link
+              href="/bana-sat"
+              className="group relative overflow-hidden rounded-[2rem] bg-bw-950 px-7 py-9 text-white transition duration-500 hover:-translate-y-1 sm:px-10 sm:py-11"
+            >
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 opacity-20 transition duration-500 group-hover:opacity-30"
+                style={{
+                  backgroundImage:
+                    "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.45) 1px, transparent 0)",
+                  backgroundSize: "22px 22px",
+                }}
+              />
+              <div
+                aria-hidden
+                className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-white/10 blur-2xl transition duration-700 group-hover:scale-125"
+              />
+              <div className="relative">
+                <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-white/20 bg-white/10">
+                  <HandCoins className="h-5 w-5" strokeWidth={1.75} />
+                </span>
+                <p className="mt-6 text-[10px] font-semibold tracking-[0.22em] text-bw-400 uppercase">
+                  Satış teklifi
+                </p>
+                <h3 className="mt-3 font-display text-3xl font-semibold tracking-wide sm:text-4xl">
+                  Ürününü sat
+                </h3>
+                <p className="mt-4 max-w-sm text-sm leading-relaxed text-bw-300">
+                  Fotoğraf ve fiyatını yaz. Uygunsa vitrine alırım, doğrudan
+                  konuşuruz.
+                </p>
+                <span className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-white">
+                  Formu aç
+                  <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+                </span>
+              </div>
+            </Link>
+
+            {/* İste */}
+            <Link
+              href="/urun-iste"
+              className="group relative overflow-hidden rounded-[2rem] border border-bw-200 bg-white px-7 py-9 text-bw-950 transition duration-500 hover:-translate-y-1 hover:border-bw-400 sm:px-10 sm:py-11"
+            >
+              <div
+                aria-hidden
+                className="pointer-events-none absolute -bottom-20 -left-10 h-56 w-56 rounded-full bg-bw-100 blur-2xl transition duration-700 group-hover:scale-125"
+              />
+              <div className="relative">
+                <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-bw-200 bg-bw-50 text-bw-900">
+                  <Search className="h-5 w-5" strokeWidth={1.75} />
+                </span>
+                <p className="mt-6 text-[10px] font-semibold tracking-[0.22em] text-bw-400 uppercase">
+                  Ürün talebi
+                </p>
+                <h3 className="mt-3 font-display text-3xl font-semibold tracking-wide sm:text-4xl">
+                  Ürün iste
+                </h3>
+                <p className="mt-4 max-w-sm text-sm leading-relaxed text-bw-500">
+                  Aradığın ürünü, fiyat aralığını ve kısa açıklamayı yaz.
+                  Uygun bulursam sana dönerim.
+                </p>
+                <span className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-bw-950">
+                  İstek gönder
+                  <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+                </span>
+              </div>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Story band */}
       <section className="relative overflow-hidden border-b border-bw-200">
         <div className="absolute inset-0 bg-bw-950" />
@@ -147,67 +236,6 @@ export default async function HomePage() {
             Tüm hikâyeyi oku
             <ArrowRight className="h-4 w-4" />
           </Link>
-        </div>
-      </section>
-
-      {/* Ürününü sat */}
-      <section className="border-b border-bw-200 bg-white">
-        <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8 lg:py-20">
-          <div>
-            <p className="text-xs tracking-[0.22em] text-bw-500 uppercase">
-              Satış teklifi
-            </p>
-            <h2 className="mt-3 font-display text-3xl font-semibold tracking-wide text-bw-950 sm:text-4xl lg:text-5xl">
-              Elindeki ürünü bana sat
-            </h2>
-            <p className="mt-5 max-w-lg text-base leading-relaxed text-bw-600">
-              Kullanmadığın ama değeri olan bir ürün mü var? Formu doldur,
-              fotoğraf ve açıklama ekle. Teklifin doğrudan bana ulaşır —
-              WhatsApp veya e-posta ile dönüş yaparım.
-            </p>
-            <ul className="mt-6 space-y-2 text-sm text-bw-500">
-              <li>— Ürün adı, marka, model ve durum</li>
-              <li>— Gerçek fotoğraflar</li>
-              <li>— İstediğin fiyat ve şehir</li>
-            </ul>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link
-                href="/bana-sat"
-                className="inline-flex items-center gap-2 rounded-2xl bg-bw-950 px-7 py-3.5 text-sm font-semibold text-white transition hover:bg-bw-800"
-              >
-                Ürünümü sat
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link
-                href="/urun-iste"
-                className="inline-flex items-center gap-2 rounded-2xl border border-bw-300 bg-white px-7 py-3.5 text-sm font-semibold text-bw-900 transition hover:border-bw-950"
-              >
-                Ürün iste
-              </Link>
-            </div>
-          </div>
-          <div className="relative overflow-hidden rounded-[2rem] border border-bw-200 bg-bw-50 p-8 sm:p-10">
-            <p className="font-display text-2xl font-semibold tracking-wide text-bw-950">
-              Nasıl çalışır?
-            </p>
-            <ol className="mt-6 space-y-5 text-sm leading-relaxed text-bw-600">
-              <li>
-                <span className="font-semibold text-bw-950">1.</span> Formu
-                doldur, ürününü anlat.
-              </li>
-              <li>
-                <span className="font-semibold text-bw-950">2.</span> Fotoğraf
-                ekle — net ve gerçek olsun.
-              </li>
-              <li>
-                <span className="font-semibold text-bw-950">3.</span> Gönder;
-                WhatsApp (0505 957 41 22) üzerinden konuşalım.
-              </li>
-            </ol>
-            <p className="mt-8 text-xs leading-relaxed text-bw-400">
-              Her teklif değerlendirilir. Uygun olanlar vitrine alınır.
-            </p>
-          </div>
         </div>
       </section>
 
