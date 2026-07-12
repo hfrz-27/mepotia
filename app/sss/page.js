@@ -9,7 +9,7 @@ export default function Page() {
       </p>
       <p>
         <strong>Nasıl iletişime geçerim?</strong> Ürün sayfasındaki veya
-        sitedeki WhatsApp ile: 0505 957 41 22.
+        sitedeki WhatsApp üzerinden bana yazabilirsin.
       </p>
       <p>
         <strong>Ürünler kimden?</strong> Sadece benden. Çok satıcılı pazar

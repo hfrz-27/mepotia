@@ -86,12 +86,14 @@ export default function Page() {
         </a>
       </p>
       <p>
-        Telefon:{" "}
+        İletişim:{" "}
         <a
-          href="tel:+905059574122"
+          href="https://wa.me/905059574122"
+          target="_blank"
+          rel="noreferrer"
           className="font-medium text-bw-950 underline underline-offset-4"
         >
-          0505 957 41 22
+          WhatsApp ile ulaş
         </a>
       </p>
     </StaticPage>

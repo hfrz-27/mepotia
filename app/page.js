@@ -57,7 +57,8 @@ export default async function HomePage() {
           <p className="animate-fade-up-delay mt-6 max-w-2xl text-lg leading-relaxed text-bw-600 sm:text-xl">
             Sadece ürün değil, güven sunuyoruz. Özenle seçilmiş ikinci el ürünlerle
             dürüst ve şeffaf bir alışveriş deneyimi.
-          </p>          <HeroSearch />
+          </p>
+          <HeroSearch />
           <div className="animate-fade-up-delay mt-8 flex flex-wrap items-center justify-center gap-3">
             <a
               href="#vitrin"
@@ -83,7 +84,8 @@ export default async function HomePage() {
                 icon: ShieldCheck,
                 t: "Güvenle Al, Güvenle Sat",
                 d: "Güvenle alışveriş edebileceğiniz bir vitrin.",
-              },              {
+              },
+              {
                 icon: Eye,
                 t: "Şeffaf sunum",
                 d: "Net fiyat, net açıklama",
@@ -124,7 +126,8 @@ export default async function HomePage() {
             <p className="mt-3 text-base leading-relaxed text-bw-600">
               Satmak istediğin ürünü birlikte değerlendirelim. Aradığın ürünü yaz,
               bulduğum anda seninle iletişime geçeyim.
-            </p>          </div>
+            </p>
+          </div>
 
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-5">
             {/* Sat */}
@@ -160,7 +163,8 @@ export default async function HomePage() {
                   ürününü değerlendirelim ve doğru alıcıyla buluşturalım.
                 </p>
                 <span className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-white">
-                  Satış Talebi Oluştur                  <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+                  Satış Talebi Oluştur
+                  <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
                 </span>
               </div>
             </Link>
@@ -187,7 +191,8 @@ export default async function HomePage() {
                 <p className="mt-4 max-w-sm text-sm leading-relaxed text-bw-500">
                   Aradığın ürünü bulmak bazen zaman alabilir. Talebini bırak; sana uygun
                   bir seçenek bulduğumda ilk seni haberdar edeyim.
-                </p>                <span className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-bw-950">
+                </p>
+                <span className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-bw-950">
                   İstek gönder
                   <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
                 </span>
@@ -240,7 +245,8 @@ export default async function HomePage() {
             href="/hakkimizda"
             className="mt-10 inline-flex items-center gap-2 rounded-2xl bg-white px-6 py-3.5 text-sm font-semibold text-bw-950 transition hover:bg-bw-100"
           >
-            Mepotia&apos;yı Tanı            <ArrowRight className="h-4 w-4" />
+            Mepotia&apos;yı Tanı
+            <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
       </section>
@@ -253,7 +259,8 @@ export default async function HomePage() {
               <p className="text-xs tracking-[0.22em] text-bw-500 uppercase">Özenle Seçilenler</p>
               <h2 className="mt-2 font-display text-3xl font-semibold tracking-wide text-bw-950 sm:text-4xl">
                 Yeni Sahibini Bekleyenler
-              </h2>            </div>
+              </h2>
+            </div>
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {featured.map((p, idx) => (
                 <ProductCard key={p.id} product={p} large={idx === 0} />
@@ -273,7 +280,8 @@ export default async function HomePage() {
             </h2>
             <p className="mt-2 max-w-xl text-sm leading-relaxed text-bw-500">
               Güvenle sunulan, özenle seçilmiş ikinci el ürünleri keşfedin.
-            </p>          </div>
+            </p>
+          </div>
           <Link href="/ara" className="text-sm font-medium text-bw-600 hover:text-bw-950">
             Tümü
           </Link>
@@ -341,9 +349,8 @@ export default async function HomePage() {
             </h2>
             <p className="mt-3 max-w-lg text-sm leading-relaxed text-bw-500">
               Ürün hakkında konuşmak için bana doğrudan WhatsApp&apos;tan ulaşabilirsin.
-              {" "}
-              <span className="font-medium text-bw-800">0505 957 41 22</span>
-            </p>          </div>
+            </p>
+          </div>
           <div className="flex flex-wrap gap-3">
             <a
               href={wa}

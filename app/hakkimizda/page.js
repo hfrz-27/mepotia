@@ -79,14 +79,14 @@ export default function Page() {
         <strong>Mepotia</strong>
       </p>
       <p>
-        WhatsApp / Telefon:{" "}
+        WhatsApp:{" "}
         <a
           href="https://wa.me/905059574122"
           target="_blank"
           rel="noreferrer"
           className="font-medium text-bw-950 underline underline-offset-4"
         >
-          0505 957 41 22
+          WhatsApp ile yaz
         </a>
       </p>
       <p>

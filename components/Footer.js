@@ -11,13 +11,15 @@ export default function Footer() {
             Mepotia adını Mezopotamya&apos;dan alır. Güvenin, emeğin ve ticaretin köklü
             geçmişinden ilham alan bu isim, bugün dürüst ve şeffaf bir ikinci el
             alışveriş anlayışını temsil eder.
-          </p>          <p className="mt-3 text-sm text-bw-500">
-            WhatsApp:{" "}
+          </p>
+          <p className="mt-3 text-sm text-bw-500">
             <a
               href="https://wa.me/905059574122"
+              target="_blank"
+              rel="noreferrer"
               className="font-medium text-bw-900 underline underline-offset-4"
             >
-              0505 957 41 22
+              WhatsApp ile ulaş
             </a>
           </p>
         </div>
@@ -50,6 +52,7 @@ export default function Footer() {
         <p className="mx-auto max-w-7xl px-4 py-5 text-xs text-bw-400 sm:px-6 lg:px-8">
           © {new Date().getFullYear()} Mepotia. Tüm hakları saklıdır.
         </p>
-      </div>    </footer>
+      </div>
+    </footer>
   );
 }
