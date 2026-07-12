@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase";
 import Logo from "@/components/Logo";
+import GoogleAuthButton from "@/components/GoogleAuthButton";
 import { fixEmailTypos, isValidEmail } from "@/lib/email";
 
 export default function KayitClient() {
@@ -28,7 +29,9 @@ export default function KayitClient() {
       setInfo(`E-posta düzeltildi: ${suggestion}`);
     }
     if (!isValidEmail(clean)) {
-      setError("Geçerli bir e-posta yaz (örn. isim@gmail.com — .coom değil .com).");
+      setError(
+        "Geçerli bir e-posta yaz (örn. isim@gmail.com — .coom değil .com).",
+      );
       return;
     }
     if (password.length < 6) {
@@ -39,17 +42,14 @@ export default function KayitClient() {
     setLoading(true);
 
     const supabase = createClient();
-    const siteUrl =
-      typeof window !== "undefined"
-        ? window.location.origin
-        : process.env.NEXT_PUBLIC_SITE_URL || "https://mepotia.com";
+    const origin = window.location.origin;
 
     const { data, error: authError } = await supabase.auth.signUp({
       email: clean,
       password,
       options: {
         data: { full_name: fullName.trim() || null },
-        emailRedirectTo: `${siteUrl}/giris`,
+        emailRedirectTo: `${origin}/auth/callback`,
       },
     });
 
@@ -58,7 +58,11 @@ export default function KayitClient() {
     if (authError) {
       const msg = (authError.message || "").toLowerCase();
       const status = authError.status || authError.code;
-      if (status === 429 || msg.includes("rate") || msg.includes("over_request")) {
+      if (
+        status === 429 ||
+        msg.includes("rate") ||
+        msg.includes("over_request")
+      ) {
         setError(
           "Çok fazla deneme yapıldı. 2–5 dakika bekle, sonra tekrar dene.",
         );
@@ -76,7 +80,6 @@ export default function KayitClient() {
       return;
     }
 
-    // Supabase: e-posta onayı açıksa bazen "sahte" boş user döner (güvenlik)
     const identities = data.user?.identities;
     if (data.user && Array.isArray(identities) && identities.length === 0) {
       setError("Bu e-posta zaten kayıtlı. Giriş sayfasından dene.");
@@ -90,7 +93,7 @@ export default function KayitClient() {
     }
 
     setInfo(
-      "Kayıt başarılı. E-posta onayı açıksa gelen kutunu (Spam) kontrol et, onayla, sonra Giriş yap.",
+      "Kayıt alındı. E-posta adresine doğrulama linki gönderildi. Spam klasörünü de kontrol et, linke tıkla, sonra giriş yap.",
     );
   };
 
@@ -107,9 +110,20 @@ export default function KayitClient() {
           Kayıt Ol
         </h1>
         <p className="mt-2 text-center text-sm text-bw-500">
-          Favori eklemek ve takip için hesap oluştur
+          Google ile hızlı kayıt veya e-posta doğrulama
         </p>
-        <form onSubmit={onSubmit} className="mt-6 space-y-4">
+
+        <div className="mt-6">
+          <GoogleAuthButton label="Google ile kayıt ol" />
+        </div>
+
+        <div className="my-5 flex items-center gap-3">
+          <div className="h-px flex-1 bg-bw-200" />
+          <span className="text-xs tracking-wide text-bw-400 uppercase">veya</span>
+          <div className="h-px flex-1 bg-bw-200" />
+        </div>
+
+        <form onSubmit={onSubmit} className="space-y-4">
           <input
             type="text"
             value={fullName}
@@ -149,7 +163,7 @@ export default function KayitClient() {
             disabled={loading}
             className="w-full rounded-2xl bg-bw-950 py-3.5 text-sm font-semibold text-white hover:bg-bw-800 disabled:opacity-70"
           >
-            {loading ? "Kaydediliyor..." : "Kayıt Ol"}
+            {loading ? "Kaydediliyor..." : "E-posta ile kayıt ol"}
           </button>
         </form>
         <p className="mt-4 text-center text-sm text-bw-500">

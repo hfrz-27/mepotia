@@ -5,28 +5,29 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase";
 import Logo from "@/components/Logo";
+import GoogleAuthButton from "@/components/GoogleAuthButton";
 import { fixEmailTypos, isValidEmail } from "@/lib/email";
 
 export default function GirisClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const next = searchParams.get("next") || "/";
+  const urlError = searchParams.get("error");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState(urlError || "");
+  const [info, setInfo] = useState("");
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setInfo("");
 
-    const { email: clean, fixed, suggestion } = fixEmailTypos(email);
-    if (fixed) {
+    let { email: clean, fixed, suggestion } = fixEmailTypos(email);
+    if (fixed && suggestion) {
+      clean = suggestion;
       setEmail(suggestion);
-      setError(
-        `E-posta düzeltilmeli: "${email}" → "${suggestion}". Tekrar dene.`,
-      );
-      return;
     }
     if (!isValidEmail(clean)) {
       setError("Geçerli bir e-posta yaz (örn. isim@gmail.com).");
@@ -40,18 +41,44 @@ export default function GirisClient() {
     });
     setLoading(false);
     if (authError) {
-      const msg = authError.message || "";
-      if (/invalid/i.test(msg)) {
+      const msg = (authError.message || "").toLowerCase();
+      if (msg.includes("email not confirmed") || msg.includes("not confirmed")) {
+        setError(
+          "E-posta henüz doğrulanmamış. Gelen kutunu (Spam) kontrol et.",
+        );
+      } else if (/invalid/i.test(msg)) {
         setError(
           "E-posta veya şifre hatalı. .coom yerine .com yazdığından emin ol.",
         );
       } else {
-        setError(msg);
+        setError(authError.message);
       }
       return;
     }
     router.push(next);
     router.refresh();
+  };
+
+  const resendConfirm = async () => {
+    setError("");
+    setInfo("");
+    let { email: clean, suggestion, fixed } = fixEmailTypos(email);
+    if (fixed) clean = suggestion;
+    if (!isValidEmail(clean)) {
+      setError("Önce e-posta adresini yaz, sonra tekrar gönder.");
+      return;
+    }
+    const origin = window.location.origin;
+    const { error: resendError } = await createClient().auth.resend({
+      type: "signup",
+      email: clean,
+      options: { emailRedirectTo: `${origin}/auth/callback` },
+    });
+    if (resendError) {
+      setError(resendError.message);
+      return;
+    }
+    setInfo("Doğrulama maili tekrar gönderildi. Spam klasörünü de bak.");
   };
 
   const field =
@@ -67,9 +94,20 @@ export default function GirisClient() {
           Giriş
         </h1>
         <p className="mt-2 text-center text-sm text-bw-500">
-          Hesabınla giriş yap
+          Google ile veya e-posta ile giriş yap
         </p>
-        <form onSubmit={onSubmit} className="mt-6 space-y-4">
+
+        <div className="mt-6">
+          <GoogleAuthButton next={next} label="Google ile giriş yap" />
+        </div>
+
+        <div className="my-5 flex items-center gap-3">
+          <div className="h-px flex-1 bg-bw-200" />
+          <span className="text-xs tracking-wide text-bw-400 uppercase">veya</span>
+          <div className="h-px flex-1 bg-bw-200" />
+        </div>
+
+        <form onSubmit={onSubmit} className="space-y-4">
           <input
             type="email"
             required
@@ -91,6 +129,11 @@ export default function GirisClient() {
               {error}
             </p>
           ) : null}
+          {info ? (
+            <p className="rounded-2xl bg-bw-50 px-3 py-2 text-sm text-bw-700">
+              {info}
+            </p>
+          ) : null}
           <button
             type="submit"
             disabled={loading}
@@ -99,6 +142,15 @@ export default function GirisClient() {
             {loading ? "Giriş yapılıyor..." : "Giriş Yap"}
           </button>
         </form>
+
+        <button
+          type="button"
+          onClick={resendConfirm}
+          className="mt-3 w-full text-center text-xs text-bw-500 underline underline-offset-2 hover:text-bw-950"
+        >
+          Doğrulama mailini tekrar gönder
+        </button>
+
         <p className="mt-4 text-center text-sm text-bw-500">
           Hesabın yok mu?{" "}
           <Link href="/kayit" className="font-medium text-bw-950 underline">
