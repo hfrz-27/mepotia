@@ -9,7 +9,10 @@ import {
   getPrimaryImage,
   getProductById,
   getSimilarProducts,
+  hasDiscount,
   incrementViews,
+  isPublicProduct,
+  isSold,
   whatsappLink,
 } from "@/lib/products";
 
@@ -18,7 +21,7 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({ params }) {
   const { id } = await params;
   const { data: product } = await getProductById(id);
-  if (!product || product.status !== "published") {
+  if (!product || !isPublicProduct(product)) {
     return { title: "Ürün bulunamadı — Mepotia" };
   }
 
@@ -60,7 +63,10 @@ export async function generateMetadata({ params }) {
 export default async function ProductPage({ params }) {
   const { id } = await params;
   const { data: product } = await getProductById(id);
-  if (!product || product.status !== "published") notFound();
+  if (!product || !isPublicProduct(product)) notFound();
+
+  const sold = isSold(product);
+  const discount = hasDiscount(product);
 
   await incrementViews(id);
   const similar = await getSimilarProducts(product);
@@ -106,6 +112,16 @@ export default async function ProductPage({ params }) {
                 Premium
               </span>
             ) : null}
+            {discount ? (
+              <span className="rounded-lg bg-bw-950 px-2.5 py-1 text-[10px] font-bold tracking-wide text-white uppercase">
+                İndirim
+              </span>
+            ) : null}
+            {sold ? (
+              <span className="rounded-lg border border-bw-300 bg-bw-100 px-2.5 py-1 text-[10px] font-bold tracking-wide text-bw-700 uppercase">
+                Satıldı
+              </span>
+            ) : null}
             <span className="rounded-lg border border-bw-200 bg-white px-2.5 py-1 text-[10px] tracking-wide text-bw-600 uppercase">
               {product.condition === "new" ? "Sıfır" : "İkinci El"}
             </span>
@@ -114,16 +130,26 @@ export default async function ProductPage({ params }) {
           <h1 className="mt-5 font-display text-4xl font-semibold tracking-wide text-bw-950 sm:text-5xl">
             {product.title}
           </h1>
-          <p className="mt-5 text-4xl font-semibold tracking-tight text-bw-950">
+          {discount ? (
+            <p className="mt-5 text-xl text-bw-400 line-through">
+              {formatPrice(product.original_price)}
+            </p>
+          ) : null}
+          <p className={`font-semibold tracking-tight text-bw-950 ${discount ? "text-3xl" : "mt-5 text-4xl"}`}>
             {formatPrice(product.price)}
           </p>
+          {sold ? (
+            <p className="mt-4 rounded-2xl border border-bw-200 bg-bw-50 px-4 py-3 text-sm text-bw-600">
+              Bu ürün satıldı. Benzer ürünler için vitrine göz atabilirsin.
+            </p>
+          ) : null}
           <p className="mt-4 flex items-center gap-2 text-sm text-bw-500">
             <MapPin className="h-4 w-4" />
             {[product.district, product.city].filter(Boolean).join(", ") || "—"}
           </p>
 
           <div className="mt-8 flex flex-wrap gap-2">
-            {wa ? (
+            {!sold && wa ? (
               <a
                 href={wa}
                 target="_blank"
@@ -134,7 +160,7 @@ export default async function ProductPage({ params }) {
                 WhatsApp ile Yaz
               </a>
             ) : null}
-            {product.phone ? (
+            {!sold && product.phone ? (
               <a
                 href={`tel:${product.phone}`}
                 className="inline-flex items-center gap-2 rounded-2xl border border-bw-300 bg-white px-5 py-3.5 text-sm font-medium text-bw-800"

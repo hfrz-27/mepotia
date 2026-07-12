@@ -45,7 +45,7 @@ export default function AdminPage() {
     const { data: all } = await supabase
       .from("products")
       .select(
-        "id, title, status, is_featured, is_premium, views, created_at, product_images(url, sort_order), price",
+        "id, title, status, is_featured, is_premium, is_discount, original_price, views, created_at, product_images(url, sort_order), price",
       )
       .order("created_at", { ascending: false });
     const rows = all || [];
@@ -117,6 +117,42 @@ export default function AdminPage() {
   const setRequestStatus = async (id, status) => {
     await createClient().from("product_requests").update({ status }).eq("id", id);
     setMsg("Ürün isteği güncellendi.");
+    load();
+  };
+
+  const toggleSold = async (product) => {
+    const next = product.status === "sold" ? "published" : "sold";
+    await createClient().from("products").update({ status: next }).eq("id", product.id);
+    setMsg(next === "sold" ? "Satıldı olarak işaretlendi." : "Ürün tekrar vitrine alındı.");
+    load();
+  };
+
+  const toggleDiscount = async (product) => {
+    if (product.is_discount) {
+      await createClient()
+        .from("products")
+        .update({ is_discount: false, original_price: null })
+        .eq("id", product.id);
+      setMsg("İndirim kaldırıldı.");
+      load();
+      return;
+    }
+
+    const input = window.prompt(
+      "Eski fiyat (indirim öncesi) ₺",
+      String(product.original_price || product.price || ""),
+    );
+    if (input == null) return;
+    const original = Number(input);
+    if (Number.isNaN(original) || original <= 0) {
+      setMsg("Geçerli bir eski fiyat gir.");
+      return;
+    }
+    await createClient()
+      .from("products")
+      .update({ is_discount: true, original_price: original })
+      .eq("id", product.id);
+    setMsg("İndirim işaretlendi.");
     load();
   };
 
@@ -497,12 +533,47 @@ export default function AdminPage() {
                       {p.title}
                     </Link>
                     <p className="mt-1 text-sm text-bw-500">
-                      {formatPrice(p.price)} · {p.status} · {p.views || 0} görüntülenme
+                      {formatPrice(p.price)}
+                      {p.is_discount && p.original_price
+                        ? ` · eski ${formatPrice(p.original_price)}`
+                        : ""}
+                      {" · "}
+                      {p.status === "sold" ? "satıldı" : p.status}
+                      {" · "}
+                      {p.views || 0} görüntülenme
                     </p>
                   </div>
                 </div>
 
                 <div className="mt-4 flex flex-wrap gap-2">
+                  <Link
+                    href={`/ilan-ver?duzenle=${p.id}`}
+                    className="rounded-xl border border-bw-200 px-3 py-2 text-xs font-semibold text-bw-700 hover:border-bw-950"
+                  >
+                    Düzenle
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => toggleSold(p)}
+                    className={`rounded-xl px-3 py-2 text-xs font-semibold ${
+                      p.status === "sold"
+                        ? "bg-bw-950 text-white"
+                        : "border border-bw-200 text-bw-700"
+                    }`}
+                  >
+                    {p.status === "sold" ? "Satıldı ✓" : "Satıldı işaretle"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => toggleDiscount(p)}
+                    className={`rounded-xl px-3 py-2 text-xs font-semibold ${
+                      p.is_discount
+                        ? "bg-bw-950 text-white"
+                        : "border border-bw-200 text-bw-700"
+                    }`}
+                  >
+                    {p.is_discount ? "İndirim ✓" : "İndirim işaretle"}
+                  </button>
                   <button
                     type="button"
                     onClick={() => toggle(p.id, "is_featured", !p.is_featured)}

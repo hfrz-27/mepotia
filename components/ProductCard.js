@@ -1,12 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Eye, MapPin } from "lucide-react";
-
-function formatPrice(value) {
-  const num = Number(value);
-  if (Number.isNaN(num)) return "";
-  return `${num.toLocaleString("tr-TR")} ₺`;
-}
+import { formatPrice, hasDiscount, isSold } from "@/lib/products";
 
 function getImage(product) {
   const images = product?.product_images;
@@ -19,12 +14,14 @@ function getImage(product) {
 
 export default function ProductCard({ product, large = false }) {
   const img = getImage(product);
+  const sold = isSold(product);
+  const discount = hasDiscount(product);
 
   return (
     <article
       className={`group overflow-hidden rounded-3xl border border-bw-200 bg-white shadow-[0_2px_20px_-12px_rgba(0,0,0,0.15)] transition duration-300 hover:-translate-y-1.5 hover:border-bw-300 hover:shadow-[0_24px_48px_-24px_rgba(0,0,0,0.28)] ${
         large ? "sm:col-span-2" : ""
-      }`}
+      } ${sold ? "opacity-90" : ""}`}
     >
       <Link href={`/urun/${product.id}`} className="block">
         <div
@@ -37,18 +34,39 @@ export default function ProductCard({ product, large = false }) {
             alt={product.title}
             fill
             sizes={large ? "66vw" : "(max-width:768px) 100vw, 25vw"}
-            className="object-cover transition duration-700 group-hover:scale-[1.04]"
+            className={`object-cover transition duration-700 group-hover:scale-[1.04] ${
+              sold ? "grayscale" : ""
+            }`}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-bw-950/25 via-transparent to-transparent opacity-0 transition group-hover:opacity-100" />
-          {product.is_premium ? (
-            <span className="absolute top-4 left-4 rounded-lg bg-bw-950 px-2.5 py-1 text-[10px] font-bold tracking-[0.14em] text-white uppercase">
-              Premium
-            </span>
+          <div className="absolute top-4 left-4 flex flex-wrap gap-2">
+            {product.is_premium ? (
+              <span className="rounded-lg bg-bw-950 px-2.5 py-1 text-[10px] font-bold tracking-[0.14em] text-white uppercase">
+                Premium
+              </span>
+            ) : null}
+            {discount ? (
+              <span className="rounded-lg bg-white px-2.5 py-1 text-[10px] font-bold tracking-[0.14em] text-bw-950 uppercase">
+                İndirim
+              </span>
+            ) : null}
+          </div>
+          {sold ? (
+            <div className="absolute inset-0 flex items-center justify-center bg-bw-950/45">
+              <span className="rounded-xl bg-white px-4 py-2 text-xs font-bold tracking-[0.2em] text-bw-950">
+                SATILDI
+              </span>
+            </div>
           ) : null}
         </div>
       </Link>
       <div className={`p-5 ${large ? "sm:p-7" : ""}`}>
         <Link href={`/urun/${product.id}`}>
+          {discount ? (
+            <p className="text-sm text-bw-400 line-through">
+              {formatPrice(product.original_price)}
+            </p>
+          ) : null}
           <p className={`font-semibold tracking-tight text-bw-950 ${large ? "text-2xl" : "text-xl"}`}>
             {formatPrice(product.price)}
           </p>

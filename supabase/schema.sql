@@ -54,6 +54,8 @@ create table if not exists public.products (
   views int not null default 0,
   is_premium boolean not null default false,
   is_featured boolean not null default false,
+  is_discount boolean not null default false,
+  original_price numeric(12, 2) check (original_price >= 0),
   negotiable boolean not null default true,
   seller_id uuid references public.profiles(id) on delete set null,
   source text not null default 'seller' check (source in ('admin', 'seller')),
