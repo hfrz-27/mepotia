@@ -5,7 +5,7 @@ Next.js 15 + Supabase ikinci el marketplace.
 1. `npm install`
 2. 
 3. `.env.local` dosyasına ekle:
-0
+
 
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
