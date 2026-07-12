@@ -154,6 +154,7 @@ export default async function ProductPage({ params }) {
               url={productUrl}
               imageUrl={fallback}
               price={formatPrice(product.price)}
+              storyMode
             />
           </div>
 

@@ -31,14 +31,33 @@ export default function ShareProductButtons({
     return `/api/proxy-image?url=${encodeURIComponent(src)}`;
   };
 
-  const loadImage = (src) =>
-    new Promise((resolve, reject) => {
-      const img = new Image();
-      img.crossOrigin = "anonymous";
-      img.onload = () => resolve(img);
-      img.onerror = reject;
-      img.src = proxiedImage(src);
-    });
+  const loadImage = async (src) => {
+    const url = proxiedImage(src);
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("fetch failed");
+      const blob = await res.blob();
+      const objectUrl = URL.createObjectURL(blob);
+      try {
+        return await new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => resolve(img);
+          img.onerror = reject;
+          img.src = objectUrl;
+        });
+      } finally {
+        URL.revokeObjectURL(objectUrl);
+      }
+    } catch {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = url;
+      });
+    }
+  };
 
   const buildStoryCanvas = async () => {
     const W = 1080;
@@ -52,7 +71,7 @@ export default function ShareProductButtons({
     ctx.fillStyle = "#09090b";
     ctx.fillRect(0, 0, W, H);
 
-    // Full-bleed product photo (reklam stili)
+    // Full-bleed product photo
     if (imageUrl) {
       try {
         const img = await loadImage(imageUrl);
@@ -60,29 +79,25 @@ export default function ShareProductButtons({
         const iw = img.width * scale;
         const ih = img.height * scale;
         ctx.drawImage(img, (W - iw) / 2, (H - ih) / 2, iw, ih);
-
-        // Soft desaturate overlay for premium B&W feel
-        ctx.fillStyle = "rgba(9,9,11,0.18)";
-        ctx.fillRect(0, 0, W, H);
       } catch {
         ctx.fillStyle = "#18181b";
         ctx.fillRect(0, 0, W, H);
       }
     }
 
-    // Top gradient
-    const topGrad = ctx.createLinearGradient(0, 0, 0, 520);
-    topGrad.addColorStop(0, "rgba(9,9,11,0.88)");
-    topGrad.addColorStop(0.55, "rgba(9,9,11,0.35)");
+    // Top gradient — hafif, ürün görünsün
+    const topGrad = ctx.createLinearGradient(0, 0, 0, 420);
+    topGrad.addColorStop(0, "rgba(9,9,11,0.72)");
+    topGrad.addColorStop(0.5, "rgba(9,9,11,0.2)");
     topGrad.addColorStop(1, "rgba(9,9,11,0)");
     ctx.fillStyle = topGrad;
-    ctx.fillRect(0, 0, W, 520);
+    ctx.fillRect(0, 0, W, 420);
 
-    // Bottom gradient (ad copy area)
-    const botGrad = ctx.createLinearGradient(0, H - 780, 0, H);
+    // Bottom gradient — yazı alanı
+    const botGrad = ctx.createLinearGradient(0, H - 680, 0, H);
     botGrad.addColorStop(0, "rgba(9,9,11,0)");
-    botGrad.addColorStop(0.35, "rgba(9,9,11,0.72)");
-    botGrad.addColorStop(1, "rgba(9,9,11,0.96)");
+    botGrad.addColorStop(0.4, "rgba(9,9,11,0.55)");
+    botGrad.addColorStop(1, "rgba(9,9,11,0.92)");
     ctx.fillStyle = botGrad;
     ctx.fillRect(0, H - 780, W, 780);
 
@@ -214,14 +229,14 @@ export default function ShareProductButtons({
               {imageUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  src={imageUrl}
+                  src={proxiedImage(imageUrl)}
                   alt={title}
                   className="absolute inset-0 h-full w-full object-cover"
                 />
               ) : (
                 <div className="absolute inset-0 bg-bw-800" />
               )}
-              <div className="absolute inset-0 bg-gradient-to-b from-bw-950/85 via-transparent to-bw-950/95" />
+              <div className="absolute inset-0 bg-gradient-to-b from-bw-950/60 via-transparent to-bw-950/90" />
               <div className="relative flex h-full flex-col px-4 pb-5 pt-6">
                 <p className="text-center font-display text-[12px] font-semibold tracking-[0.22em] text-white">
                   MEPOTIA

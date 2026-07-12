@@ -129,17 +129,25 @@ export default function Navbar() {
                 { href: "/bana-sat", label: "Bize Ürün Sat" },
                 { href: "/urun-iste", label: "Ürün İste" },
                 { href: "/iletisim", label: "İletişim" },
+                ...(isAdmin
+                  ? [{ href: "/admin", label: "Yönetim", badge: notifCount }]
+                  : []),
               ].map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`block border-t border-bw-100 px-4 py-3 text-sm font-medium transition hover:bg-bw-50 ${
+                  className={`flex items-center justify-between border-t border-bw-100 px-4 py-3 text-sm font-medium transition hover:bg-bw-50 ${
                     pathname === item.href
                       ? "bg-bw-50 text-bw-950"
                       : "text-bw-900"
                   }`}
                 >
-                  {item.label}
+                  <span>{item.label}</span>
+                  {item.badge > 0 ? (
+                    <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-bw-950 px-1.5 text-[10px] font-bold text-white">
+                      {item.badge}
+                    </span>
+                  ) : null}
                 </Link>
               ))}
               <div className="border-t border-bw-100">
@@ -189,11 +197,11 @@ export default function Navbar() {
               </Link>
               <Link
                 href="/admin"
-                className="relative hidden items-center rounded-xl px-3 py-2 text-sm font-medium text-bw-600 transition hover:bg-bw-100 hover:text-bw-950 md:inline-flex"
+                className="relative inline-flex items-center rounded-xl px-2.5 py-2 text-xs font-medium text-bw-600 transition hover:bg-bw-100 hover:text-bw-950 sm:px-3 sm:text-sm"
               >
                 Yönetim
                 {notifCount > 0 ? (
-                  <span className="ml-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-bw-950 px-1.5 text-[10px] font-bold text-white">
+                  <span className="ml-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-bw-950 px-1.5 text-[10px] font-bold text-white">
                     {notifCount}
                   </span>
                 ) : null}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, Fragment } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ShoppingBag, Search } from "lucide-react";
@@ -462,104 +462,120 @@ export default function AdminPage() {
       ) : null}
 
       {tab === "products" ? (
-        <div className="mt-6 overflow-x-auto rounded-3xl border border-bw-200 bg-white shadow-sm">
-          <table className="min-w-full text-left text-sm">
-            <thead className="border-b border-bw-100 text-bw-500">
-              <tr>
-                <th className="px-4 py-3 font-medium">Başlık</th>
-                <th className="px-4 py-3 font-medium">Durum</th>
-                <th className="px-4 py-3 font-medium">Öne çıkan</th>
-                <th className="px-4 py-3 font-medium">Premium</th>
-                <th className="px-4 py-3 font-medium">Reklam</th>
-                <th className="px-4 py-3 font-medium">İşlem</th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.map((p) => (
-                <Fragment key={p.id}>
-                <tr className="border-b border-bw-50">
-                  <td className="px-4 py-3">
+        <div className="mt-6 space-y-4">
+          {!products.length ? (
+            <div className="rounded-3xl border border-dashed border-bw-300 bg-white px-6 py-16 text-center text-sm text-bw-500">
+              Henüz vitrin ürünü yok.
+            </div>
+          ) : (
+            products.map((p) => (
+              <article
+                key={p.id}
+                className="rounded-3xl border border-bw-200 bg-white p-4 shadow-sm sm:p-5"
+              >
+                <div className="flex gap-4">
+                  <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl border border-bw-200 bg-bw-50">
+                    {productImage(p) ? (
+                      <Image
+                        src={productImage(p)}
+                        alt={p.title}
+                        fill
+                        className="object-cover"
+                        sizes="80px"
+                      />
+                    ) : (
+                      <div className="flex h-full items-center justify-center text-xs text-bw-400">
+                        Görsel yok
+                      </div>
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1">
                     <Link
                       href={`/urun/${p.id}`}
-                      className="font-medium text-bw-950 hover:underline"
+                      className="font-display text-lg font-semibold text-bw-950 hover:underline"
                     >
                       {p.title}
                     </Link>
-                  </td>
-                  <td className="px-4 py-3 text-bw-500">{p.status}</td>
-                  <td className="px-4 py-3">
+                    <p className="mt-1 text-sm text-bw-500">
+                      {formatPrice(p.price)} · {p.status} · {p.views || 0} görüntülenme
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => toggle(p.id, "is_featured", !p.is_featured)}
+                    className={`rounded-xl px-3 py-2 text-xs font-semibold ${
+                      p.is_featured
+                        ? "bg-bw-950 text-white"
+                        : "border border-bw-200 text-bw-700"
+                    }`}
+                  >
+                    Öne çıkan: {p.is_featured ? "Evet" : "Hayır"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => toggle(p.id, "is_premium", !p.is_premium)}
+                    className={`rounded-xl px-3 py-2 text-xs font-semibold ${
+                      p.is_premium
+                        ? "bg-bw-950 text-white"
+                        : "border border-bw-200 text-bw-700"
+                    }`}
+                  >
+                    Premium: {p.is_premium ? "Evet" : "Hayır"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShareId(shareId === p.id ? null : p.id)}
+                    className={`rounded-xl px-3 py-2 text-xs font-semibold ${
+                      shareId === p.id
+                        ? "bg-bw-950 text-white"
+                        : "border border-bw-200 text-bw-700"
+                    }`}
+                  >
+                    {shareId === p.id ? "Reklamı kapat" : "Hikaye reklamı"}
+                  </button>
+                  {p.status !== "published" ? (
                     <button
                       type="button"
-                      className="underline"
-                      onClick={() => toggle(p.id, "is_featured", !p.is_featured)}
+                      onClick={() => setStatus(p.id, "published")}
+                      className="rounded-xl border border-bw-200 px-3 py-2 text-xs font-semibold text-bw-700"
                     >
-                      {p.is_featured ? "Evet" : "Hayır"}
+                      Yayınla
                     </button>
-                  </td>
-                  <td className="px-4 py-3">
+                  ) : (
                     <button
                       type="button"
-                      className="underline"
-                      onClick={() => toggle(p.id, "is_premium", !p.is_premium)}
+                      onClick={() => setStatus(p.id, "removed")}
+                      className="rounded-xl border border-bw-200 px-3 py-2 text-xs font-semibold text-bw-700"
                     >
-                      {p.is_premium ? "Evet" : "Hayır"}
+                      Kaldır
                     </button>
-                  </td>
-                  <td className="px-4 py-3">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setShareId(shareId === p.id ? null : p.id)
-                      }
-                      className="underline"
-                    >
-                      {shareId === p.id ? "Kapat" : "Reklam"}
-                    </button>
-                  </td>
-                  <td className="space-x-3 px-4 py-3">
-                    {p.status !== "published" ? (
-                      <button
-                        type="button"
-                        onClick={() => setStatus(p.id, "published")}
-                        className="underline"
-                      >
-                        Yayınla
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => setStatus(p.id, "removed")}
-                        className="underline"
-                      >
-                        Kaldır
-                      </button>
-                    )}
-                    <button
-                      type="button"
-                      onClick={() => remove(p.id)}
-                      className="text-bw-400 underline"
-                    >
-                      Sil
-                    </button>
-                  </td>
-                </tr>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => remove(p.id)}
+                    className="rounded-xl px-3 py-2 text-xs font-semibold text-bw-400 underline"
+                  >
+                    Sil
+                  </button>
+                </div>
+
                 {shareId === p.id ? (
-                  <tr className="border-b border-bw-50 bg-bw-50">
-                    <td colSpan={6} className="px-4 py-5">
-                      <ShareProductButtons
-                        title={p.title}
-                        url={`https://mepotia.com/urun/${p.id}`}
-                        imageUrl={productImage(p)}
-                        price={formatPrice(p.price)}
-                        storyMode
-                      />
-                    </td>
-                  </tr>
+                  <div className="mt-5 rounded-2xl border border-bw-200 bg-bw-50 p-4">
+                    <ShareProductButtons
+                      title={p.title}
+                      url={`https://mepotia.com/urun/${p.id}`}
+                      imageUrl={productImage(p)}
+                      price={formatPrice(p.price)}
+                      storyMode
+                    />
+                  </div>
                 ) : null}
-                </Fragment>
-              ))}
-            </tbody>
-          </table>
+              </article>
+            ))
+          )}
         </div>
       ) : null}
     </main>
