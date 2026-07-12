@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LogOut, PenLine, Heart } from "lucide-react";
+import { LogOut, PenLine, Heart, Menu, X, MessageCircle } from "lucide-react";
 import Logo from "@/components/Logo";
 import { createClient } from "@/lib/supabase";
+
+const WA = "https://wa.me/905059574122";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -13,12 +15,28 @@ export default function Navbar() {
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    const onClick = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", onClick);
+    return () => document.removeEventListener("mousedown", onClick);
   }, []);
 
   useEffect(() => {
@@ -59,8 +77,8 @@ export default function Navbar() {
       }`}
     >
       <div className="relative mx-auto flex h-[4.5rem] max-w-7xl items-center justify-between gap-2 px-3 sm:px-6 lg:px-8">
-        {/* Sol — Favoriler */}
-        <div className="flex min-w-[5.5rem] items-center justify-start gap-1 sm:min-w-[7rem]">
+        {/* Sol — Favoriler + 3 çizgi menü */}
+        <div className="relative flex min-w-[5.5rem] items-center justify-start gap-1.5" ref={menuRef}>
           <Link
             href="/favoriler"
             className="flex h-10 w-10 items-center justify-center rounded-xl border border-bw-200 text-bw-600 transition hover:border-bw-300 hover:bg-bw-50 hover:text-bw-950"
@@ -68,27 +86,50 @@ export default function Navbar() {
           >
             <Heart className="h-4 w-4" />
           </Link>
-          <nav className="hidden items-center gap-0.5 md:flex">
-            {[
-              { href: "/ara", label: "Keşfet" },
-              { href: "/hakkimizda", label: "Hakkında" },
-            ].map((l) => (
+          <button
+            type="button"
+            onClick={() => setMenuOpen((v) => !v)}
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-bw-200 text-bw-700 transition hover:bg-bw-50"
+            aria-label="Menü"
+            aria-expanded={menuOpen}
+          >
+            {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+          </button>
+
+          {menuOpen ? (
+            <div className="absolute left-0 top-[calc(100%+0.5rem)] z-50 w-56 overflow-hidden rounded-2xl border border-bw-200 bg-white shadow-[0_20px_50px_-24px_rgba(0,0,0,0.35)]">
               <Link
-                key={l.href}
-                href={l.href}
-                className={`rounded-xl px-3 py-2 text-sm font-medium transition ${
-                  pathname === l.href
-                    ? "bg-bw-100 text-bw-950"
-                    : "text-bw-500 hover:bg-bw-50 hover:text-bw-950"
-                }`}
+                href="/"
+                className="block px-4 py-3 text-sm font-medium text-bw-900 hover:bg-bw-50"
               >
-                {l.label}
+                Vitrin
               </Link>
-            ))}
-          </nav>
+              <Link
+                href="/hakkimizda"
+                className="block border-t border-bw-100 px-4 py-3 text-sm font-medium text-bw-900 hover:bg-bw-50"
+              >
+                Hakkımızda
+              </Link>
+              <Link
+                href="/bana-sat"
+                className="block border-t border-bw-100 px-4 py-3 text-sm font-medium text-bw-900 hover:bg-bw-50"
+              >
+                Ürünümü sat
+              </Link>
+              <a
+                href={WA}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-2 border-t border-bw-100 px-4 py-3 text-sm font-medium text-bw-900 hover:bg-bw-50"
+              >
+                <MessageCircle className="h-4 w-4" />
+                0505 957 41 22
+              </a>
+            </div>
+          ) : null}
         </div>
 
-        {/* Orta — Logo (absolute center, overlap yok) */}
+        {/* Orta — Logo */}
         <div className="pointer-events-none absolute inset-x-0 flex justify-center">
           <Link
             href="/"
