@@ -30,4 +30,4 @@ update public.profiles set role = 'admin' where id = 'USER_UUID';
 - Admin: dashboard, ürün ekle (direkt yayın), premium/öne çıkar
 - Auth: giriş/kayıt, panel, favoriler
 
-- 
+
