@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
+import { Camera, ImagePlus, X } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 
 const INITIAL = {
@@ -33,6 +35,8 @@ export default function IlanVerClient() {
   const [form, setForm] = useState(INITIAL);
   const [categories, setCategories] = useState([]);
   const [files, setFiles] = useState([]);
+  const [previews, setPreviews] = useState([]);
+  const [existingImages, setExistingImages] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [ready, setReady] = useState(false);
@@ -91,6 +95,13 @@ export default function IlanVerClient() {
           is_discount: Boolean(product.is_discount),
           negotiable: product.negotiable !== false,
         });
+
+        const { data: imgs } = await supabase
+          .from("product_images")
+          .select("id, url, sort_order")
+          .eq("product_id", editId)
+          .order("sort_order");
+        setExistingImages(imgs || []);
       }
 
       setReady(true);
@@ -100,6 +111,32 @@ export default function IlanVerClient() {
   const onChange = (e) => {
     const { name, value, type, checked } = e.target;
     setForm((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
+  };
+
+  const addFiles = (incoming) => {
+    const list = Array.from(incoming || []).filter((f) => f.type.startsWith("image/"));
+    if (!list.length) return;
+    setFiles((prev) => [...prev, ...list]);
+    list.forEach((file) => {
+      const url = URL.createObjectURL(file);
+      setPreviews((prev) => [...prev, { url, name: file.name }]);
+    });
+  };
+
+  const removeNewFile = (index) => {
+    setFiles((prev) => prev.filter((_, i) => i !== index));
+    setPreviews((prev) => {
+      const next = [...prev];
+      const [removed] = next.splice(index, 1);
+      if (removed?.url) URL.revokeObjectURL(removed.url);
+      return next;
+    });
+  };
+
+  const removeExistingImage = async (imageId) => {
+    const supabase = createClient();
+    await supabase.from("product_images").delete().eq("id", imageId);
+    setExistingImages((prev) => prev.filter((img) => img.id !== imageId));
   };
 
   const uploadImages = async (supabase, productId, uid) => {
@@ -135,6 +172,14 @@ export default function IlanVerClient() {
     setError("");
     if (!form.title.trim() || !form.price) {
       setError("Başlık ve fiyat zorunlu.");
+      return;
+    }
+    if (!isEdit && files.length === 0) {
+      setError("En az bir ürün fotoğrafı ekle.");
+      return;
+    }
+    if (isEdit && files.length === 0 && existingImages.length === 0) {
+      setError("En az bir ürün fotoğrafı kalmalı.");
       return;
     }
     if (form.is_discount) {
@@ -227,7 +272,96 @@ export default function IlanVerClient() {
         {isEdit ? "Değişiklikler kaydedilince vitrinde güncellenir." : "Ürün anında vitrine düşer."}
       </p>
 
-      <form onSubmit={onSubmit} className="mt-8 space-y-4 rounded-[2rem] border border-bw-200 bg-white p-6 shadow-sm sm:p-8">
+      <form onSubmit={onSubmit} className="mt-8 space-y-5 rounded-[2rem] border border-bw-200 bg-white p-6 shadow-sm sm:p-8">
+        {/* Fotoğraflar — en üstte, belirgin */}
+        <section className="rounded-2xl border-2 border-dashed border-bw-300 bg-bw-50 p-5 sm:p-6">
+          <div className="flex items-start gap-3">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-bw-950 text-white">
+              <Camera className="h-5 w-5" />
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-semibold tracking-[0.18em] text-bw-500 uppercase">
+                Ürün fotoğrafları
+              </p>
+              <h2 className="mt-1 font-display text-xl font-semibold text-bw-950">
+                {isEdit ? "Fotoğrafları yönet" : "Fotoğraf ekle *"}
+              </h2>
+              <p className="mt-1 text-sm text-bw-500">
+                Galeriden seç veya kameradan çek. Birden fazla fotoğraf ekleyebilirsin.
+              </p>
+            </div>
+          </div>
+
+          {existingImages.length ? (
+            <div className="mt-5">
+              <p className="mb-2 text-xs font-semibold text-bw-600">Mevcut fotoğraflar</p>
+              <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
+                {existingImages.map((img) => (
+                  <div
+                    key={img.id}
+                    className="relative aspect-square overflow-hidden rounded-xl border border-bw-200 bg-white"
+                  >
+                    <Image src={img.url} alt="" fill className="object-cover" sizes="120px" />
+                    <button
+                      type="button"
+                      onClick={() => removeExistingImage(img.id)}
+                      className="absolute top-1 right-1 flex h-7 w-7 items-center justify-center rounded-full bg-bw-950/80 text-white"
+                      aria-label="Fotoğrafı sil"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
+
+          <label className="mt-5 flex min-h-[140px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-bw-200 bg-white px-4 py-8 text-center transition hover:border-bw-950 hover:bg-bw-50">
+            <ImagePlus className="h-10 w-10 text-bw-400" />
+            <span className="mt-3 text-base font-semibold text-bw-950">
+              Fotoğraf seç veya sürükle
+            </span>
+            <span className="mt-1 text-sm text-bw-500">JPG, PNG, WEBP</span>
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              className="sr-only"
+              onChange={(e) => {
+                addFiles(e.target.files);
+                e.target.value = "";
+              }}
+            />
+          </label>
+
+          {previews.length ? (
+            <div className="mt-4">
+              <p className="mb-2 text-xs font-semibold text-bw-600">
+                Yeni eklenecek ({previews.length})
+              </p>
+              <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
+                {previews.map((preview, index) => (
+                  <div
+                    key={`${preview.name}-${index}`}
+                    className="relative aspect-square overflow-hidden rounded-xl border border-bw-200 bg-white"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={preview.url} alt="" className="h-full w-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => removeNewFile(index)}
+                      className="absolute top-1 right-1 flex h-7 w-7 items-center justify-center rounded-full bg-bw-950/80 text-white"
+                      aria-label="Kaldır"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
+        </section>
+
         <input name="title" value={form.title} onChange={onChange} placeholder="Başlık *" required className={field} />
         <textarea name="description" value={form.description} onChange={onChange} rows={5} placeholder="Açıklama" className={field} />
         <div className="grid gap-4 sm:grid-cols-2">
@@ -267,12 +401,6 @@ export default function IlanVerClient() {
             className={field}
           />
         ) : null}
-        <div>
-          <label className="mb-1 block text-sm text-bw-600">
-            {isEdit ? "Yeni fotoğraf ekle (isteğe bağlı)" : "Fotoğraflar"}
-          </label>
-          <input type="file" accept="image/*" multiple onChange={(e) => setFiles(Array.from(e.target.files || []))} className="block w-full text-sm" />
-        </div>
         {error ? <p className="rounded-2xl bg-bw-100 px-3 py-2 text-sm text-bw-700">{error}</p> : null}
         <button type="submit" disabled={loading} className="w-full rounded-2xl bg-bw-950 py-3.5 text-sm font-semibold text-white hover:bg-bw-800 disabled:opacity-60">
           {loading ? "Kaydediliyor..." : isEdit ? "Güncelle" : "Vitrine koy"}
