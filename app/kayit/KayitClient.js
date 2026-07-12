@@ -21,41 +21,60 @@ export default function KayitClient() {
     setError("");
     setInfo("");
 
-    const { email: clean, fixed, suggestion } = fixEmailTypos(email);
-    if (fixed) {
+    let { email: clean, fixed, suggestion } = fixEmailTypos(email);
+    if (fixed && suggestion) {
+      clean = suggestion;
       setEmail(suggestion);
-      setError(
-        `E-posta düzeltilmeli: "${email}" → "${suggestion}". Tekrar dene.`,
-      );
-      return;
+      setInfo(`E-posta düzeltildi: ${suggestion}`);
     }
     if (!isValidEmail(clean)) {
-      setError("Geçerli bir e-posta yaz (örn. isim@gmail.com).");
+      setError("Geçerli bir e-posta yaz (örn. isim@gmail.com — .coom değil .com).");
+      return;
+    }
+    if (password.length < 6) {
+      setError("Şifre en az 6 karakter olmalı.");
       return;
     }
 
     setLoading(true);
 
     const supabase = createClient();
+    const siteUrl =
+      typeof window !== "undefined"
+        ? window.location.origin
+        : process.env.NEXT_PUBLIC_SITE_URL || "https://mepotia.com";
+
     const { data, error: authError } = await supabase.auth.signUp({
       email: clean,
       password,
       options: {
         data: { full_name: fullName.trim() || null },
+        emailRedirectTo: `${siteUrl}/giris`,
       },
     });
 
     setLoading(false);
 
     if (authError) {
-      const msg = authError.message || "";
-      if (/invalid/i.test(msg)) {
+      const msg = (authError.message || "").toLowerCase();
+      if (msg.includes("already") || msg.includes("registered")) {
+        setError("Bu e-posta zaten kayıtlı. Giriş yapmayı dene.");
+      } else if (msg.includes("invalid") || msg.includes("email")) {
         setError(
-          "E-posta geçersiz görünüyor. @gmail.com gibi doğru yazdığından emin ol (.coom değil .com).",
+          "E-posta kabul edilmedi. Doğru yaz: ornek@gmail.com (.coom değil).",
         );
+      } else if (msg.includes("signup") && msg.includes("disabled")) {
+        setError("Kayıt şu an kapalı. Supabase Auth ayarlarını kontrol et.");
       } else {
-        setError(msg);
+        setError(authError.message);
       }
+      return;
+    }
+
+    // Supabase: e-posta onayı açıksa bazen "sahte" boş user döner (güvenlik)
+    const identities = data.user?.identities;
+    if (data.user && Array.isArray(identities) && identities.length === 0) {
+      setError("Bu e-posta zaten kayıtlı. Giriş sayfasından dene.");
       return;
     }
 
@@ -66,7 +85,7 @@ export default function KayitClient() {
     }
 
     setInfo(
-      "Kayıt alındı. E-posta onayı açıksa gelen kutunu kontrol et, sonra giriş yap.",
+      "Kayıt başarılı. E-posta onayı açıksa gelen kutunu (Spam) kontrol et, onayla, sonra Giriş yap.",
     );
   };
 
