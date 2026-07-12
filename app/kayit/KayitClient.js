@@ -57,7 +57,12 @@ export default function KayitClient() {
 
     if (authError) {
       const msg = (authError.message || "").toLowerCase();
-      if (msg.includes("already") || msg.includes("registered")) {
+      const status = authError.status || authError.code;
+      if (status === 429 || msg.includes("rate") || msg.includes("over_request")) {
+        setError(
+          "Çok fazla deneme yapıldı. 2–5 dakika bekle, sonra tekrar dene.",
+        );
+      } else if (msg.includes("already") || msg.includes("registered")) {
         setError("Bu e-posta zaten kayıtlı. Giriş yapmayı dene.");
       } else if (msg.includes("invalid") || msg.includes("email")) {
         setError(
