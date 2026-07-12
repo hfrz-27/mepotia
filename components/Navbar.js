@@ -115,6 +115,12 @@ export default function Navbar() {
                 Hakkımızda
               </Link>
               <Link
+                href="/paylas"
+                className="block border-t border-bw-100 px-4 py-3 text-sm font-medium text-bw-900 hover:bg-bw-50"
+              >
+                Ürünleri paylaş
+              </Link>
+              <Link
                 href="/bana-sat"
                 className="block border-t border-bw-100 px-4 py-3 text-sm font-medium text-bw-900 hover:bg-bw-50"
               >
