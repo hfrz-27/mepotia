@@ -17,10 +17,13 @@ const cinzel = Cinzel({
 });
 
 export const metadata = {
-  title: "Mepotia — Kişisel Vitrin",
+  title: "Mepotia | Güvenin ve Değerin Buluşma Noktası",
   description:
-    "Mepotia kişisel vitrin. Seçilmiş ürünler, profesyonel sunum.",
-  icons: { icon: "/favicon.png" },
+    "Mepotia — güvenin ve değerin buluşma noktası. Kişisel ikinci el vitrin.",
+  icons: {
+    icon: [{ url: "/favicon.png", type: "image/png" }],
+    apple: [{ url: "/apple-touch-icon.png" }],
+  },
 };
 
 export default function RootLayout({ children }) {
