@@ -1,7 +1,7 @@
 # Mepotia Marketplace MVP
 Next.js 15 + Supabase ikinci el marketplace.
 ## Kurulum
-
+R
 1. `npm install`
 2. 
 3. `.env.local` dosyasına ekle:
