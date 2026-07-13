@@ -195,10 +195,7 @@ export default function IlanVerClient() {
 
       order += 1;
       const { data: pub } = supabase.storage.from("product-images").getPublicUrl(path);
-      const imageUrl = pub.publicUrl.split("/").map((part, idx, arr) => {
-        if (idx < arr.length - 1) return part;
-        return encodeURIComponent(decodeURIComponent(part));
-      }).join("/");
+      const imageUrl = pub.publicUrl;
 
       const { error: dbErr } = await supabase.from("product_images").insert({
         product_id: productId,
