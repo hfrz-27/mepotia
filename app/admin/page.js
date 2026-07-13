@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ShoppingBag, Search, Pencil } from "lucide-react";
 import { createClient } from "@/lib/supabase";
+import { recoverPhotosFromStorage } from "@/lib/recoverPhotos";
 import ShareProductButtons from "@/components/ShareProductButtons";
 import TechPostsAdmin from "@/components/admin/TechPostsAdmin";
 
@@ -43,6 +44,8 @@ export default function AdminPage() {
   const [shareId, setShareId] = useState(null);
   const [sqlHint, setSqlHint] = useState("");
   const [productSqlHint, setProductSqlHint] = useState("");
+  const [recovering, setRecovering] = useState(false);
+  const [recoverDone, setRecoverDone] = useState(false);
 
   const load = async () => {
     const supabase = createClient();
@@ -135,6 +138,33 @@ export default function AdminPage() {
       setTab(t);
     }
   }, []);
+
+  const runPhotoRecovery = async (silent = false) => {
+    setRecovering(true);
+    try {
+      const supabase = createClient();
+      const { linked, productsRestored } = await recoverPhotosFromStorage(supabase);
+      setRecoverDone(true);
+      if (linked > 0 || productsRestored > 0) {
+        setMsg(
+          `${linked} fotoğraf geri bağlandı${productsRestored ? `, ${productsRestored} ilan geri yüklendi` : ""}.`,
+        );
+        await load();
+      } else if (!silent) {
+        setMsg("Tüm fotoğraflar zaten bağlı.");
+      }
+    } catch (err) {
+      if (!silent) setMsg(err.message || "Fotoğraf geri yükleme başarısız.");
+      console.error(err);
+    } finally {
+      setRecovering(false);
+    }
+  };
+
+  useEffect(() => {
+    if (recoverDone) return;
+    void runPhotoRecovery(true);
+  }, [recoverDone]);
 
   const toggle = async (id, field, value) => {
     await createClient().from("products").update({ [field]: value }).eq("id", id);
@@ -591,10 +621,20 @@ export default function AdminPage() {
               </p>
             </div>
           ) : null}
-          <div className="rounded-2xl border border-bw-200 bg-bw-50 px-5 py-4 text-sm text-bw-600">
-            <strong className="text-bw-950">İlan düzenle:</strong> Ürünün altındaki siyah{" "}
-            <strong>İlanı düzenle</strong> butonuna bas. Başlık, fiyat, fotoğraf ve açıklama
-            değişir.
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="rounded-2xl border border-bw-200 bg-bw-50 px-5 py-4 text-sm text-bw-600">
+              <strong className="text-bw-950">İlan düzenle:</strong> Ürünün altındaki siyah{" "}
+              <strong>İlanı düzenle</strong> butonuna bas. Başlık, fiyat, fotoğraf ve açıklama
+              değişir.
+            </div>
+            <button
+              type="button"
+              disabled={recovering}
+              onClick={() => runPhotoRecovery(false)}
+              className="shrink-0 rounded-xl border-2 border-bw-950 bg-bw-950 px-5 py-3 text-sm font-semibold text-white hover:bg-bw-800 disabled:opacity-60"
+            >
+              {recovering ? "Fotoğraflar yükleniyor…" : "Fotoğrafları geri yükle"}
+            </button>
           </div>
           {!products.length ? (
             <div className="rounded-3xl border border-dashed border-bw-300 bg-white px-6 py-16 text-center text-sm text-bw-500">
@@ -615,6 +655,7 @@ export default function AdminPage() {
                         fill
                         className="object-cover"
                         sizes="80px"
+                        unoptimized={productImage(p).includes("supabase.co")}
                       />
                     ) : (
                       <div className="flex h-full items-center justify-center text-xs text-bw-400">

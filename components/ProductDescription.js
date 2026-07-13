@@ -29,7 +29,7 @@ export default function ProductDescription({ text, wide = false }) {
           className={`whitespace-pre-wrap leading-relaxed text-bw-700 ${
             wide
               ? "text-base lg:columns-2 lg:gap-x-12 lg:text-[15px] lg:leading-[1.9]"
-              : "mt-3 text-sm sm:text-base"
+              : "mt-0 text-sm leading-[1.65] sm:text-base"
           }`}
         >
           {text}
@@ -45,14 +45,18 @@ export default function ProductDescription({ text, wide = false }) {
       </div>
 
       {isLong ? (
-        <div className={`flex justify-center ${wide ? "mt-6" : "mt-4"}`}>
+        <div className={`flex justify-center ${wide ? "mt-6" : "mt-3"}`}>
           <button
             type="button"
             onClick={() => setExpanded((v) => !v)}
-            className={`group inline-flex w-full max-w-sm items-center justify-center gap-2 rounded-2xl px-6 py-3.5 text-sm font-semibold transition duration-300 sm:w-auto ${
+            className={`group inline-flex w-full max-w-sm items-center justify-center gap-1.5 rounded-xl px-5 text-sm font-semibold transition duration-300 sm:w-auto ${
+              wide ? "py-3.5" : "py-2.5"
+            } ${
               expanded
-                ? "border-2 border-bw-200 bg-white text-bw-900 hover:border-bw-950 hover:bg-bw-50"
-                : "border-2 border-bw-950 bg-bw-950 text-white shadow-[0_12px_32px_-16px_rgba(0,0,0,0.55)] hover:bg-bw-800 hover:shadow-[0_16px_40px_-14px_rgba(0,0,0,0.5)] active:scale-[0.98]"
+                ? "border border-bw-200 bg-white text-bw-900 hover:border-bw-950 hover:bg-bw-50"
+                : wide
+                  ? "border-2 border-bw-950 bg-bw-950 text-white shadow-[0_12px_32px_-16px_rgba(0,0,0,0.55)] hover:bg-bw-800 hover:shadow-[0_16px_40px_-14px_rgba(0,0,0,0.5)] active:scale-[0.98]"
+                  : "border border-bw-950 bg-bw-950 text-white shadow-[0_8px_24px_-14px_rgba(0,0,0,0.45)] hover:bg-bw-800 active:scale-[0.98]"
             }`}
           >
           {expanded ? "Daha az göster" : "Daha fazla göster"}
