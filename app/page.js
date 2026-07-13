@@ -1,8 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, MessageCircle, ShieldCheck, Eye, Heart, Package, Search } from "lucide-react";
+import { ArrowRight, MessageCircle, Package, Search } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
-import HeroSearch from "@/components/HeroSearch";
+import HeroSection from "@/components/HeroSection";
 import { getPublishedProducts } from "@/lib/products";
 import { getSiteSettings } from "@/lib/categories";
 import CustomerReviews from "@/components/CustomerReviews";
@@ -29,89 +28,7 @@ export default async function HomePage() {
 
   return (
     <main>
-      {/* HERO + trust strip yukarı çekilmiş */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0">
-          <Image
-            src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=2400&q=80"
-            alt=""
-            fill
-            priority
-            className="object-cover object-center opacity-[0.14] saturate-[0.35] blur-[1px]"
-            sizes="100vw"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-white/75 via-white/92 to-bw-50" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_40%,rgba(255,255,255,0.97)_0%,rgba(255,255,255,0.72)_55%,transparent_100%)]" />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-20"
-            style={{
-              backgroundImage:
-                "radial-gradient(circle at 1px 1px, rgba(24,24,27,0.05) 1px, transparent 0)",
-              backgroundSize: "32px 32px",
-            }}
-          />
-        </div>
-
-        <div className="relative mx-auto flex min-h-[78vh] max-w-4xl flex-col items-center justify-center px-4 pb-28 pt-16 text-center sm:px-6 lg:px-8">
-          <h1 className="animate-fade-up font-display text-5xl leading-[1.02] font-semibold tracking-[0.14em] text-bw-950 uppercase drop-shadow-[0_2px_12px_rgba(255,255,255,0.95)] sm:text-6xl lg:text-7xl">
-            MEPOTIA
-          </h1>
-          <p className="animate-fade-up-delay mt-6 max-w-2xl text-lg leading-relaxed text-bw-700 drop-shadow-[0_1px_8px_rgba(255,255,255,0.9)] sm:text-xl">
-            Sadece ürün değil, güven sunuyoruz. Özenle seçilmiş ikinci el ürünlerle
-            dürüst ve şeffaf bir alışveriş deneyimi.
-          </p>
-          <HeroSearch />
-          <div className="animate-fade-up-delay mt-8 flex flex-wrap items-center justify-center gap-3">
-            <a
-              href="#vitrin"
-              className="inline-flex items-center gap-2 rounded-2xl bg-bw-950 px-7 py-3.5 text-sm font-semibold text-white transition hover:bg-bw-800"
-            >
-              Vitrine bak
-              <ArrowRight className="h-4 w-4" />
-            </a>
-            <a
-              href="#al-sat"
-              className="inline-flex items-center gap-2 rounded-2xl border border-bw-300 bg-white/90 px-7 py-3.5 text-sm font-semibold text-bw-900 backdrop-blur transition hover:border-bw-950"
-            >
-              Sat · İste
-            </a>
-          </div>
-        </div>
-
-        {/* Trust strip — hero içine yukarı çekilmiş şerit */}
-        <div className="relative z-10 mx-auto -mt-16 max-w-5xl px-4 pb-10 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-4 rounded-2xl border border-bw-200 bg-white/95 px-5 py-5 shadow-[0_24px_60px_-36px_rgba(0,0,0,0.4)] backdrop-blur sm:grid-cols-3 sm:gap-6 sm:px-8 sm:py-6">
-            {[
-              {
-                icon: ShieldCheck,
-                t: "Güvenle Al, Güvenle Sat",
-                d: "Güvenle alışveriş edebileceğiniz bir vitrin.",
-              },
-              {
-                icon: Eye,
-                t: "Şeffaf sunum",
-                d: "Net fiyat, net açıklama",
-              },
-              {
-                icon: Heart,
-                t: "Dürüstlüğün Değeri",
-                d: "Zorlu Yollardan Gelen Tecrübe",
-              },
-            ].map((item) => (
-              <div key={item.t} className="flex items-center gap-3 text-left">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-bw-200 bg-bw-50 text-bw-900">
-                  <item.icon className="h-4 w-4" strokeWidth={1.75} />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-bw-950">{item.t}</p>
-                  <p className="text-xs text-bw-500">{item.d}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <HeroSection />
 
       {/* Ürün sat + Ürün iste — ana ekran */}
       <section
