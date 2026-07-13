@@ -22,4 +22,3 @@ update public.profiles set role = 'admin' where id = 'USER_UUID';
 - İlan Ver → `pending` → Admin onay/red
 - Admin: dashboard, ürün ekle (direkt yayın), premium/öne çıkar
 - Auth: giriş/kayıt, panel, favoriler
-
