@@ -29,13 +29,13 @@ export default async function TechNewsSection() {
         <div className="max-w-2xl">
           <p className="inline-flex items-center gap-2 text-[10px] tracking-[0.28em] text-bw-400 uppercase">
             <Sparkles className="h-3 w-3 text-amber-300/90" />
-            Teknoloji · Haberler
+            Güncel Haberler
           </p>
-          <h2 className="mt-2 font-display text-2xl font-semibold tracking-wide text-white sm:text-3xl">
-            Son gelişmeler
+          <h2 className="mt-2 font-display text-2xl font-semibold tracking-wide text-white sm:text-3xl lg:text-4xl">
+            Teknoloji Dünyasından Son Gelişmeler
           </h2>
-          <p className="mt-2 text-sm leading-relaxed text-bw-400">
-            Güncel teknoloji haberleri — paylaşımlar 7 gün boyunca vitrinde kalır.
+          <p className="mt-2 text-sm leading-relaxed text-bw-400 sm:text-base">
+            Yapay zekâdan akıllı telefonlara, oyunlardan yazılıma kadar en güncel haberler.
           </p>
         </div>
 

@@ -15,13 +15,13 @@ export default async function TeknolojiPage() {
         <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
           <p className="inline-flex items-center gap-2 text-[10px] tracking-[0.28em] text-bw-400 uppercase">
             <Cpu className="h-3.5 w-3.5" />
-            Mepotia Tech
+            Güncel Haberler
           </p>
           <h1 className="mt-3 font-display text-4xl font-semibold tracking-wide text-white sm:text-5xl">
-            Teknoloji &amp; haberler
+            Teknoloji Dünyasından Son Gelişmeler
           </h1>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-bw-400 sm:text-base">
-            Güncel teknoloji haberleri, ipuçları ve paylaşımlar. Yazılar 7 gün boyunca yayında kalır.
+            Yapay zekâdan akıllı telefonlara, oyunlardan yazılıma kadar en güncel haberler.
           </p>
         </div>
       </section>
