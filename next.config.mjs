@@ -40,6 +40,8 @@ const nextConfig = {
     optimizePackageImports: ["lucide-react"],
   },
   images: {
+    loader: "custom",
+    loaderFile: "./lib/imageLoader.js",
     qualities: [75, 90, 95, 100],
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com" },

@@ -164,7 +164,8 @@ export default function IlanVerClient() {
   };
 
   const uploadImages = async (supabase, productId, uid) => {
-    if (!files.length) return;
+    if (!files.length) return { ok: true, uploaded: 0, errors: [] };
+
     const { data: existing } = await supabase
       .from("product_images")
       .select("sort_order")
@@ -173,26 +174,47 @@ export default function IlanVerClient() {
       .limit(1);
     let order = existing?.[0]?.sort_order ?? -1;
 
+    const errors = [];
+    let uploaded = 0;
+
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      const path = `${uid}/${productId}/${Date.now()}-${file.name}`;
+      const safeName = file.name.replace(/[^\w.\-()+ ]+/g, "_");
+      const path = `${uid}/${productId}/${Date.now()}-${safeName}`;
+
       const { error: upErr } = await supabase.storage.from("product-images").upload(path, file, {
         cacheControl: "31536000",
         upsert: false,
         contentType: file.type || "image/jpeg",
       });
+
       if (upErr) {
-        console.error(upErr);
+        errors.push(`Yükleme: ${safeName} — ${upErr.message}`);
         continue;
       }
+
       order += 1;
       const { data: pub } = supabase.storage.from("product-images").getPublicUrl(path);
-      await supabase.from("product_images").insert({
+      const imageUrl = pub.publicUrl.split("/").map((part, idx, arr) => {
+        if (idx < arr.length - 1) return part;
+        return encodeURIComponent(decodeURIComponent(part));
+      }).join("/");
+
+      const { error: dbErr } = await supabase.from("product_images").insert({
         product_id: productId,
-        url: pub.publicUrl,
+        url: imageUrl,
         sort_order: order,
       });
+
+      if (dbErr) {
+        errors.push(`Kayıt: ${safeName} — ${dbErr.message}`);
+        continue;
+      }
+
+      uploaded += 1;
     }
+
+    return { ok: errors.length === 0, uploaded, errors };
   };
 
   const insertProduct = async (supabase, payload, uid) => {
@@ -267,7 +289,12 @@ export default function IlanVerClient() {
         setLoading(false);
         return;
       }
-      await uploadImages(supabase, editId, userId);
+      const uploadResult = await uploadImages(supabase, editId, userId);
+      if (uploadResult.errors.length) {
+        setError(uploadResult.errors.join(" "));
+        setLoading(false);
+        return;
+      }
       await refreshVitrin();
       setLoading(false);
       router.push(`/urun/${editId}`);
@@ -283,7 +310,12 @@ export default function IlanVerClient() {
       return;
     }
 
-    await uploadImages(supabase, product.id, userId);
+    const uploadResult = await uploadImages(supabase, product.id, userId);
+    if (uploadResult.errors.length) {
+      setError(uploadResult.errors.join(" "));
+      setLoading(false);
+      return;
+    }
     await refreshVitrin();
     setLoading(false);
     router.push(`/urun/${product.id}`);
