@@ -33,30 +33,31 @@ export default async function HomePage() {
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=2400&q=80"
+            src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=2400&q=80"
             alt=""
             fill
             priority
-            className="object-cover object-center grayscale opacity-[0.28]"
+            className="object-cover object-center opacity-[0.14] saturate-[0.35] blur-[1px]"
             sizes="100vw"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-white/30 via-white/80 to-bw-50" />
+          <div className="absolute inset-0 bg-gradient-to-b from-white/75 via-white/92 to-bw-50" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_40%,rgba(255,255,255,0.97)_0%,rgba(255,255,255,0.72)_55%,transparent_100%)]" />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-35"
+            className="pointer-events-none absolute inset-0 opacity-20"
             style={{
               backgroundImage:
-                "radial-gradient(circle at 1px 1px, rgba(24,24,27,0.07) 1px, transparent 0)",
+                "radial-gradient(circle at 1px 1px, rgba(24,24,27,0.05) 1px, transparent 0)",
               backgroundSize: "32px 32px",
             }}
           />
         </div>
 
         <div className="relative mx-auto flex min-h-[78vh] max-w-4xl flex-col items-center justify-center px-4 pb-28 pt-16 text-center sm:px-6 lg:px-8">
-          <h1 className="animate-fade-up font-display text-5xl leading-[1.02] font-semibold tracking-[0.14em] text-bw-950 uppercase sm:text-6xl lg:text-7xl">
+          <h1 className="animate-fade-up font-display text-5xl leading-[1.02] font-semibold tracking-[0.14em] text-bw-950 uppercase drop-shadow-[0_2px_12px_rgba(255,255,255,0.95)] sm:text-6xl lg:text-7xl">
             MEPOTIA
           </h1>
-          <p className="animate-fade-up-delay mt-6 max-w-2xl text-lg leading-relaxed text-bw-600 sm:text-xl">
+          <p className="animate-fade-up-delay mt-6 max-w-2xl text-lg leading-relaxed text-bw-700 drop-shadow-[0_1px_8px_rgba(255,255,255,0.9)] sm:text-xl">
             Sadece ürün değil, güven sunuyoruz. Özenle seçilmiş ikinci el ürünlerle
             dürüst ve şeffaf bir alışveriş deneyimi.
           </p>
