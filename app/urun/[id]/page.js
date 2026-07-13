@@ -84,8 +84,8 @@ export default async function ProductPage({ params }) {
   const tel = phoneLink(contactPhone);
 
   return (
-    <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-      <p className="text-sm text-bw-500">
+    <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-10 lg:px-8">
+      <p className="text-xs text-bw-500 sm:text-sm">
         <Link href="/" className="hover:text-bw-950">
           Vitrin
         </Link>
@@ -102,11 +102,11 @@ export default async function ProductPage({ params }) {
         ) : null}
       </p>
 
-      <div className="mt-8 grid grid-cols-1 gap-10 lg:grid-cols-2">
+      <div className="mt-5 grid grid-cols-1 gap-6 lg:mt-8 lg:grid-cols-2 lg:gap-10">
         <ProductGallery images={galleryImages} title={product.title} />
 
-        <div>
-          <div className="flex flex-wrap gap-2">
+        <div className="lg:pt-1">
+          <div className="flex flex-wrap gap-1.5 sm:gap-2">
             {product.is_premium ? (
               <span className="rounded-lg bg-bw-950 px-2.5 py-1 text-[10px] font-bold tracking-wide text-white uppercase">
                 Premium
@@ -127,28 +127,34 @@ export default async function ProductPage({ params }) {
             </span>
           </div>
 
-          <h1 className="mt-5 font-display text-4xl font-semibold tracking-wide text-bw-950 sm:text-5xl">
-            {product.title}
-          </h1>
-          {discount ? (
-            <p className="mt-5 text-xl text-bw-400 line-through">
-              {formatPrice(product.original_price)}
+          <div className="mt-4 rounded-2xl border border-bw-200 bg-gradient-to-b from-white to-bw-50 p-4 sm:mt-5 sm:rounded-none sm:border-0 sm:bg-transparent sm:p-0">
+            <h1 className="font-display text-xl font-semibold leading-snug tracking-wide text-bw-950 sm:text-3xl sm:leading-tight lg:text-4xl xl:text-5xl">
+              {product.title}
+            </h1>
+            {discount ? (
+              <p className="mt-3 text-base text-bw-400 line-through sm:mt-5 sm:text-xl">
+                {formatPrice(product.original_price)}
+              </p>
+            ) : null}
+            <p
+              className={`font-semibold tracking-tight text-bw-950 ${
+                discount ? "mt-1 text-2xl sm:text-3xl" : "mt-3 text-2xl sm:mt-5 sm:text-4xl"
+              }`}
+            >
+              {formatPrice(product.price)}
             </p>
-          ) : null}
-          <p className={`font-semibold tracking-tight text-bw-950 ${discount ? "text-3xl" : "mt-5 text-4xl"}`}>
-            {formatPrice(product.price)}
-          </p>
-          {sold ? (
-            <p className="mt-4 rounded-2xl border border-bw-200 bg-bw-50 px-4 py-3 text-sm text-bw-600">
-              Bu ürün satıldı. Benzer ürünler için vitrine göz atabilirsin.
+            {sold ? (
+              <p className="mt-3 rounded-xl border border-bw-200 bg-bw-50 px-3 py-2.5 text-sm text-bw-600 sm:mt-4 sm:rounded-2xl sm:px-4 sm:py-3">
+                Bu ürün satıldı. Benzer ürünler için vitrine göz atabilirsin.
+              </p>
+            ) : null}
+            <p className="mt-3 flex items-center gap-2 text-xs text-bw-500 sm:mt-4 sm:text-sm">
+              <MapPin className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" />
+              {[product.district, product.city].filter(Boolean).join(", ") || "—"}
             </p>
-          ) : null}
-          <p className="mt-4 flex items-center gap-2 text-sm text-bw-500">
-            <MapPin className="h-4 w-4" />
-            {[product.district, product.city].filter(Boolean).join(", ") || "—"}
-          </p>
+          </div>
 
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-6 flex flex-wrap gap-3 sm:mt-8">
             {!sold && wa ? (
               <a
                 href={wa}
