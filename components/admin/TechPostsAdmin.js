@@ -3,7 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Camera, ImagePlus, Sparkles, Trash2, Upload, X } from "lucide-react";
+import ShareTechPostButtons from "@/components/ShareTechPostButtons";
 import { createClient } from "@/lib/supabase";
+import { absoluteUrl } from "@/lib/site";
 
 const EMPTY = {
   title: "",
@@ -21,6 +23,7 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
   const [coverPreview, setCoverPreview] = useState("");
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState("");
+  const [shareId, setShareId] = useState(null);
   const [userId, setUserId] = useState(null);
   const fileRef = useRef(null);
   const cameraRef = useRef(null);
@@ -310,8 +313,9 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
           posts.map((post) => (
             <article
               key={post.id}
-              className="flex gap-4 overflow-hidden rounded-2xl border border-bw-200 bg-white p-4 shadow-sm"
+              className="overflow-hidden rounded-2xl border border-bw-200 bg-white shadow-sm"
             >
+              <div className="flex gap-4 p-4">
               <div className="relative h-20 w-28 shrink-0 overflow-hidden rounded-xl bg-bw-100">
                 {post.cover_url ? (
                   <Image src={post.cover_url} alt="" fill className="object-cover" sizes="112px" unoptimized />
@@ -326,9 +330,16 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
                 </p>
                 <h4 className="mt-0.5 truncate font-semibold text-bw-950">{post.title}</h4>
                 {post.excerpt ? <p className="mt-1 line-clamp-2 text-sm text-bw-500">{post.excerpt}</p> : null}
-                <div className="mt-2 flex gap-2">
+                <div className="mt-2 flex flex-wrap gap-2">
                   <button type="button" onClick={() => onEdit(post)} className="text-xs font-semibold text-bw-800 underline">
                     Düzenle
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShareId(shareId === post.id ? null : post.id)}
+                    className="text-xs font-semibold text-bw-800 underline"
+                  >
+                    {shareId === post.id ? "Reklamı kapat" : "Hikaye reklamı"}
                   </button>
                   <button type="button" onClick={() => onDelete(post.id)} className="inline-flex items-center gap-1 text-xs text-red-600">
                     <Trash2 className="h-3 w-3" />
@@ -336,6 +347,18 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
                   </button>
                 </div>
               </div>
+              </div>
+              {shareId === post.id ? (
+                <div className="border-t border-bw-200 bg-bw-950 p-4 sm:p-6">
+                  <ShareTechPostButtons
+                    storyMode
+                    title={post.title}
+                    excerpt={post.excerpt || ""}
+                    url={absoluteUrl(`/teknoloji/${post.id}`)}
+                    imageUrl={post.cover_url || ""}
+                  />
+                </div>
+              ) : null}
             </article>
           ))
         )}

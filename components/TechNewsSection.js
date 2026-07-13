@@ -2,7 +2,6 @@ import Link from "next/link";
 import { ArrowRight, Cpu, Sparkles } from "lucide-react";
 import TechNewsCard from "@/components/TechNewsCard";
 import { getTechPosts } from "@/lib/techPosts";
-import { absoluteUrl } from "@/lib/site";
 
 export default async function TechNewsSection() {
   const { data: posts, error } = await getTechPosts({ limit: 3 });
@@ -40,12 +39,7 @@ export default async function TechNewsSection() {
           <>
             <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
               {posts.map((post, index) => (
-                <TechNewsCard
-                  key={post.id}
-                  post={post}
-                  index={index}
-                  postUrl={absoluteUrl(`/teknoloji/${post.id}`)}
-                />
+                <TechNewsCard key={post.id} post={post} index={index} />
               ))}
             </div>
 

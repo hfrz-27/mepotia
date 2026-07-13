@@ -3,7 +3,7 @@ import { MapPin, MessageCircle, Phone } from "lucide-react";
 import { notFound } from "next/navigation";
 import ProductCard from "@/components/ProductCard";
 import ProductGallery from "@/components/ProductGallery";
-import ProductDescription from "@/components/ProductDescription";
+import ProductDetailsBlock from "@/components/ProductDetailsBlock";
 import ShareProductButtons from "@/components/ShareProductButtons";
 import {
   formatPrice,
@@ -183,29 +183,16 @@ export default async function ProductPage({ params }) {
             />
           </div>
 
-          <div className="mt-8 rounded-3xl border border-bw-200 bg-white p-6 sm:p-8">
-            <h2 className="text-xs font-semibold tracking-[0.2em] text-bw-500 uppercase">
-              Açıklama
-            </h2>
-            <ProductDescription text={product.description} />
-            <dl className="mt-6 grid grid-cols-2 gap-3 border-t border-bw-100 pt-6 text-sm">
-              {product.brand ? (
-                <>
-                  <dt className="text-bw-400">Marka</dt>
-                  <dd className="text-bw-900">{product.brand}</dd>
-                </>
-              ) : null}
-              {product.model ? (
-                <>
-                  <dt className="text-bw-400">Model</dt>
-                  <dd className="text-bw-900">{product.model}</dd>
-                </>
-              ) : null}
-              <dt className="text-bw-400">Görüntülenme</dt>
-              <dd className="text-bw-900">{product.views}</dd>
-            </dl>
+          {/* Mobil — açıklama sağ kolonda kalır */}
+          <div className="lg:hidden">
+            <ProductDetailsBlock product={product} variant="mobile" />
           </div>
         </div>
+      </div>
+
+      {/* Masaüstü — tam genişlik premium açıklama */}
+      <div className="mt-12 hidden lg:block">
+        <ProductDetailsBlock product={product} variant="desktop" />
       </div>
 
       {similar.length ? (

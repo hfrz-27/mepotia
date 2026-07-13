@@ -3,6 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Cpu, ExternalLink } from "lucide-react";
 import ShareTechPostButtons from "@/components/ShareTechPostButtons";
+import TechPostBody from "@/components/TechPostBody";
 import { formatTechDate, getTechPostById } from "@/lib/techPosts";
 import { absoluteUrl, SITE_NAME } from "@/lib/site";
 
@@ -64,7 +65,7 @@ export default async function TechPostPage({ params }) {
           <div className="absolute inset-x-0 bottom-0 mx-auto max-w-3xl px-4 pb-10 sm:px-6">
             <p className="inline-flex items-center gap-2 text-[10px] tracking-[0.24em] text-bw-300 uppercase">
               <Cpu className="h-3.5 w-3.5" />
-              Teknoloji · {formatTechDate(post.created_at)}
+              Güncel Haber · {formatTechDate(post.created_at)}
             </p>
             <h1 className="mt-3 font-display text-3xl font-semibold tracking-wide text-white sm:text-4xl lg:text-5xl">
               {post.title}
@@ -85,7 +86,7 @@ export default async function TechPostPage({ params }) {
             </Link>
             <p className="mt-6 inline-flex items-center gap-2 text-[10px] tracking-[0.24em] text-bw-500 uppercase">
               <Cpu className="h-3.5 w-3.5" />
-              Teknoloji · {formatTechDate(post.created_at)}
+              Güncel Haber · {formatTechDate(post.created_at)}
             </p>
             <h1 className="mt-3 font-display text-3xl font-semibold tracking-wide text-bw-950 sm:text-4xl">
               {post.title}
@@ -101,25 +102,18 @@ export default async function TechPostPage({ params }) {
           </Link>
         )}
 
-        {post.excerpt ? (
-          <p className="mt-6 text-lg leading-relaxed text-bw-600">{post.excerpt}</p>
-        ) : null}
+        <div className="mt-8 overflow-hidden rounded-[2rem] border border-bw-200 bg-white shadow-[0_24px_60px_-48px_rgba(0,0,0,0.18)]">
+          {post.excerpt ? (
+            <div className="border-b border-bw-100 bg-gradient-to-r from-bw-50 to-white px-6 py-5 sm:px-8">
+              <p className="text-[10px] font-semibold tracking-[0.2em] text-bw-400 uppercase">Özet</p>
+              <p className="mt-2 text-lg leading-relaxed text-bw-700">{post.excerpt}</p>
+            </div>
+          ) : null}
 
-        <div className="mt-8 rounded-[2rem] border border-bw-200 bg-white px-6 py-8 shadow-sm sm:px-8 sm:py-10">
-          <div className="whitespace-pre-wrap text-base leading-[1.85] text-bw-700">{post.body}</div>
-        </div>
-
-        <div className="mt-10 overflow-hidden rounded-[2rem] border border-bw-800 bg-gradient-to-br from-bw-950 via-bw-900 to-bw-950 p-6 sm:p-8">
-          <p className="text-[10px] font-semibold tracking-[0.22em] text-bw-400 uppercase">
-            Mepotia reklamı
-          </p>
-          <ShareTechPostButtons
-            storyMode
-            title={post.title}
-            excerpt={post.excerpt || ""}
-            url={postUrl}
-            imageUrl={post.cover_url || ""}
-          />
+          <div className="px-6 py-8 sm:px-8 sm:py-10">
+            <p className="text-[10px] font-semibold tracking-[0.2em] text-bw-400 uppercase">Haber</p>
+            <TechPostBody text={post.body} />
+          </div>
         </div>
 
         {post.source_url ? (
@@ -133,6 +127,21 @@ export default async function TechPostPage({ params }) {
             <ExternalLink className="h-4 w-4" />
           </a>
         ) : null}
+
+        <div className="mt-12 border-t border-bw-200 pt-8">
+          <p className="text-[10px] font-semibold tracking-[0.22em] text-bw-400 uppercase">
+            Paylaş
+          </p>
+          <p className="mt-1 text-sm text-bw-500">Bu haberi arkadaşlarınla paylaş.</p>
+          <div className="mt-4">
+            <ShareTechPostButtons
+              title={post.title}
+              excerpt={post.excerpt || ""}
+              url={postUrl}
+              imageUrl={post.cover_url || ""}
+            />
+          </div>
+        </div>
       </article>
     </main>
   );

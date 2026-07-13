@@ -9,7 +9,6 @@ export default function ShareTechPostButtons({
   url,
   imageUrl,
   storyMode = false,
-  compact = false,
 }) {
   const [copied, setCopied] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -189,7 +188,7 @@ export default function ShareTechPostButtons({
 
   const nativeShare = async () => {
     try {
-      if ((storyMode || compact) && navigator.share) {
+      if (storyMode && navigator.share) {
         const canvas = await buildStoryCanvas();
         const blob = await new Promise((resolve) =>
           canvas.toBlob(resolve, "image/png", 0.95),
@@ -221,26 +220,6 @@ export default function ShareTechPostButtons({
   const btnDark = `${btn} bg-white text-bw-950 hover:bg-bw-100`;
   const btnOutline = `${btn} border border-white/20 bg-white/5 text-white hover:border-white/35 hover:bg-white/10`;
   const btnLight = `${btn} border border-bw-300 bg-white px-4 py-2.5 text-bw-800 hover:border-bw-950`;
-
-  if (compact) {
-    return (
-      <div
-        className="flex flex-wrap gap-2"
-        onClick={(e) => e.stopPropagation()}
-        onKeyDown={(e) => e.stopPropagation()}
-        role="presentation"
-      >
-        <button type="button" onClick={nativeShare} className={btnLight}>
-          <Share2 className="h-3.5 w-3.5" />
-          Paylaş
-        </button>
-        <a href={wa} target="_blank" rel="noreferrer" className={btnLight}>
-          <MessageCircle className="h-3.5 w-3.5" />
-          WhatsApp
-        </a>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-4">

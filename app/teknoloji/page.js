@@ -1,9 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Cpu } from "lucide-react";
-import ShareTechPostButtons from "@/components/ShareTechPostButtons";
 import { formatTechDate, getTechPosts } from "@/lib/techPosts";
-import { absoluteUrl } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
@@ -40,11 +38,11 @@ export default async function TeknolojiPage() {
         ) : (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {posts.map((post) => (
-              <article
+              <Link
                 key={post.id}
-                className="flex flex-col overflow-hidden rounded-[1.75rem] border border-bw-200 bg-white shadow-[0_20px_50px_-40px_rgba(0,0,0,0.35)] transition hover:-translate-y-1 hover:border-bw-300"
+                href={`/teknoloji/${post.id}`}
+                className="group overflow-hidden rounded-[1.75rem] border border-bw-200 bg-white shadow-[0_20px_50px_-40px_rgba(0,0,0,0.35)] transition hover:-translate-y-1 hover:border-bw-300"
               >
-                <Link href={`/teknoloji/${post.id}`} className="group block">
                   <div className="relative aspect-[16/10] overflow-hidden bg-bw-100">
                     {post.cover_url ? (
                       <Image
@@ -75,17 +73,7 @@ export default async function TeknolojiPage() {
                       <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />
                     </span>
                   </div>
-                </Link>
-                <div className="border-t border-bw-100 px-5 pb-5">
-                  <ShareTechPostButtons
-                    compact
-                    title={post.title}
-                    excerpt={post.excerpt || ""}
-                    url={absoluteUrl(`/teknoloji/${post.id}`)}
-                    imageUrl={post.cover_url || ""}
-                  />
-                </div>
-              </article>
+              </Link>
             ))}
           </div>
         )}
