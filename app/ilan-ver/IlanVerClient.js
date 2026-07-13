@@ -179,36 +179,25 @@ export default function IlanVerClient() {
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      const safeName = file.name.replace(/[^\w.\-()+ ]+/g, "_");
-      const path = `${uid}/${productId}/${Date.now()}-${safeName}`;
+      const body = new FormData();
+      body.append("file", file);
+      body.append("productId", productId);
 
-      const { error: upErr } = await supabase.storage.from("product-images").upload(path, file, {
-        cacheControl: "31536000",
-        upsert: false,
-        contentType: file.type || "image/jpeg",
+      const res = await fetch("/api/upload-product-image", {
+        method: "POST",
+        body,
+        credentials: "include",
       });
 
-      if (upErr) {
-        errors.push(`Yükleme: ${safeName} — ${upErr.message}`);
-        continue;
-      }
+      const data = await res.json().catch(() => ({}));
 
-      order += 1;
-      const { data: pub } = supabase.storage.from("product-images").getPublicUrl(path);
-      const imageUrl = pub.publicUrl;
-
-      const { error: dbErr } = await supabase.from("product_images").insert({
-        product_id: productId,
-        url: imageUrl,
-        sort_order: order,
-      });
-
-      if (dbErr) {
-        errors.push(`Kayıt: ${safeName} — ${dbErr.message}`);
+      if (!res.ok) {
+        errors.push(`${file.name}: ${data.error || res.statusText}`);
         continue;
       }
 
       uploaded += 1;
+      order += 1;
     }
 
     return { ok: errors.length === 0, uploaded, errors };
