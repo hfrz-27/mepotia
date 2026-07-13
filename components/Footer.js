@@ -6,8 +6,8 @@ export default function Footer() {
     <footer className="mt-auto border-t border-bw-200 bg-white">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-8">
         <div className="lg:col-span-2">
-          <Logo className="h-8" />
-          <p className="mt-5 max-w-md text-sm leading-relaxed text-bw-500">
+          <Logo className="hidden h-8 sm:block" />
+          <p className="mt-0 max-w-md text-sm leading-relaxed text-bw-500 sm:mt-5">
             Mepotia adını Mezopotamya&apos;dan alır. Güvenin, emeğin ve ticaretin köklü
             geçmişinden ilham alan bu isim, bugün dürüst ve şeffaf bir ikinci el
             alışveriş anlayışını temsil eder.

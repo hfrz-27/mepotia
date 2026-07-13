@@ -5,6 +5,7 @@ import ProductCard from "@/components/ProductCard";
 import HeroSearch from "@/components/HeroSearch";
 import { getPublishedProducts } from "@/lib/products";
 import { getSiteSettings } from "@/lib/categories";
+import CustomerReviews from "@/components/CustomerReviews";
 
 const WA = "https://wa.me/905059574122";
 
@@ -20,6 +21,7 @@ export default async function HomePage() {
   const latest = latestRes.data;
   const featured = featuredRes.data;
   const popular = popularRes.data;
+  const vitrinError = latestRes.error;
 
   const wa = settings?.whatsapp
     ? `https://wa.me/${String(settings.whatsapp).replace(/\D/g, "")}`
@@ -289,9 +291,13 @@ export default async function HomePage() {
 
         {!latest?.length ? (
           <div className="rounded-[2rem] border border-dashed border-bw-300 bg-white px-6 py-20 text-center">
-            <p className="font-display text-2xl text-bw-900">Henüz ürün yok</p>
+            <p className="font-display text-2xl text-bw-900">
+              {vitrinError ? "Vitrin yüklenemedi" : "Henüz ürün yok"}
+            </p>
             <p className="mt-2 text-sm text-bw-500">
-              Yakında vitrin dolacak. Şimdilik WhatsApp&apos;tan yazabilirsin.
+              {vitrinError
+                ? "Bağlantı sorunu olabilir. Sayfayı yenile veya biraz sonra tekrar dene."
+                : "Yakında vitrin dolacak. Şimdilik WhatsApp'tan yazabilirsin."}
             </p>
             <a
               href={wa}
@@ -338,6 +344,8 @@ export default async function HomePage() {
           </div>
         </section>
       ) : null}
+
+      <CustomerReviews />
 
       {/* Contact CTA */}
       <section className="border-t border-bw-200 bg-bw-50">

@@ -4,7 +4,15 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { Camera, ImagePlus, X } from "lucide-react";
+import {
+  Camera,
+  Check,
+  ChevronRight,
+  ImagePlus,
+  Sparkles,
+  Upload,
+  X,
+} from "lucide-react";
 import { createClient } from "@/lib/supabase";
 
 const INITIAL = {
@@ -26,6 +34,14 @@ const INITIAL = {
   negotiable: true,
 };
 
+async function refreshVitrin() {
+  try {
+    await fetch("/api/revalidate", { method: "POST" });
+  } catch {
+    // vitrin yenileme isteği başarısız olsa da devam et
+  }
+}
+
 export default function IlanVerClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -41,11 +57,12 @@ export default function IlanVerClient() {
   const [loading, setLoading] = useState(false);
   const [ready, setReady] = useState(false);
   const [userId, setUserId] = useState(null);
+  const [dragOver, setDragOver] = useState(false);
   const fileInputRef = useRef(null);
   const cameraInputRef = useRef(null);
 
-  const hasPhotos =
-    files.length > 0 || (isEdit && existingImages.length > 0);
+  const photoCount = files.length + existingImages.length;
+  const hasPhotos = photoCount > 0;
   const needsPhoto = !hasPhotos;
 
   useEffect(() => {
@@ -173,6 +190,21 @@ export default function IlanVerClient() {
     }
   };
 
+  const insertProduct = async (supabase, payload, uid) => {
+    const full = {
+      ...payload,
+      status: "published",
+      seller_id: uid,
+      source: "admin",
+    };
+    let result = await supabase.from("products").insert([full]).select().single();
+    if (result.error?.message?.includes("is_discount")) {
+      const { is_discount, original_price, ...rest } = full;
+      result = await supabase.from("products").insert([rest]).select().single();
+    }
+    return result;
+  };
+
   const onSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -231,23 +263,13 @@ export default function IlanVerClient() {
         return;
       }
       await uploadImages(supabase, editId, userId);
+      await refreshVitrin();
       setLoading(false);
       router.push(`/urun/${editId}`);
       return;
     }
 
-    const { data: product, error: insertError } = await supabase
-      .from("products")
-      .insert([
-        {
-          ...payload,
-          status: "published",
-          seller_id: userId,
-          source: "admin",
-        },
-      ])
-      .select()
-      .single();
+    const { data: product, error: insertError } = await insertProduct(supabase, payload, userId);
 
     if (insertError) {
       console.error(insertError);
@@ -257,263 +279,369 @@ export default function IlanVerClient() {
     }
 
     await uploadImages(supabase, product.id, userId);
+    await refreshVitrin();
     setLoading(false);
     router.push(`/urun/${product.id}`);
   };
 
+  const onDrop = (e) => {
+    e.preventDefault();
+    setDragOver(false);
+    addFiles(e.dataTransfer.files);
+  };
+
   const field =
-    "w-full rounded-2xl border border-bw-200 bg-white px-3.5 py-3 text-sm outline-none focus:border-bw-500";
+    "w-full rounded-xl border border-bw-200 bg-white px-4 py-3 text-sm text-bw-900 outline-none transition placeholder:text-bw-400 focus:border-bw-500 focus:ring-2 focus:ring-bw-950/5";
+  const label = "mb-1.5 block text-xs font-semibold tracking-wide text-bw-600 uppercase";
 
   if (!ready) {
-    return <main className="mx-auto max-w-2xl px-4 py-20 text-center text-bw-500">Kontrol ediliyor...</main>;
+    return (
+      <main className="flex min-h-[60vh] items-center justify-center bg-bw-50 px-4">
+        <p className="text-sm text-bw-500">Kontrol ediliyor...</p>
+      </main>
+    );
   }
 
   return (
-    <main className="mx-auto max-w-2xl px-4 py-12 pb-28 sm:px-6 lg:px-8">
-      <p className="text-xs tracking-[0.22em] text-bw-500 uppercase">Sadece sen</p>
-      <h1 className="mt-2 font-display text-4xl font-semibold tracking-wide text-bw-950">
-        {isEdit ? "İlanı düzenle" : "Yeni ilan paylaş"}
-      </h1>
-      <p className="mt-2 text-sm text-bw-500">
-        {isEdit
-          ? "Başlık, fiyat, fotoğraf ve açıklamayı buradan güncelle."
-          : "Önce fotoğraf ekle, sonra bilgileri yaz."}
-      </p>
-
-      {/* ADIM 1 — Fotoğraf (formun DIŞINDA, en üstte) */}
-      <section
-        id="fotograf-alani"
-        className={`mt-8 rounded-[2rem] border-4 p-5 shadow-lg transition sm:p-7 ${
-          needsPhoto
-            ? "border-bw-950 bg-bw-950 text-white ring-4 ring-bw-950/20"
-            : "border-bw-200 bg-white"
-        }`}
-      >
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <div className="flex items-start gap-3">
-            <span
-              className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-lg font-bold ${
-                needsPhoto ? "bg-white text-bw-950" : "bg-bw-950 text-white"
-              }`}
-            >
-              1
-            </span>
-            <div>
-              <p
-                className={`text-xs font-semibold tracking-[0.2em] uppercase ${
-                  needsPhoto ? "text-bw-300" : "text-bw-500"
-                }`}
-              >
-                Adım 1 — Zorunlu
-              </p>
-              <h2 className="mt-1 font-display text-2xl font-semibold sm:text-3xl">
-                Ürün fotoğrafı ekle
-              </h2>
-              <p className={`mt-2 text-sm ${needsPhoto ? "text-bw-200" : "text-bw-500"}`}>
-                Fotoğrafsız ilan yayınlanmaz. Galeriden seç veya kameradan çek.
-              </p>
-            </div>
-          </div>
-          <Camera className={`h-8 w-8 shrink-0 ${needsPhoto ? "text-white/70" : "text-bw-400"}`} />
+    <main className="min-h-screen bg-gradient-to-b from-bw-50 via-white to-bw-50 pb-32">
+      <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:py-14">
+        {/* Header */}
+        <div className="text-center">
+          <p className="inline-flex items-center gap-1.5 rounded-full border border-bw-200 bg-white px-3 py-1 text-[10px] font-semibold tracking-[0.2em] text-bw-500 uppercase">
+            <Sparkles className="h-3 w-3" />
+            Yönetim
+          </p>
+          <h1 className="mt-4 font-display text-4xl font-semibold tracking-wide text-bw-950 sm:text-5xl">
+            {isEdit ? "İlanı düzenle" : "Yeni ilan"}
+          </h1>
+          <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-bw-500">
+            {isEdit
+              ? "Fotoğraf ve bilgileri güncelle, vitrin anında yenilensin."
+              : "Önce görselleri ekle, ardından ürün detaylarını tamamla."}
+          </p>
         </div>
 
-        {needsPhoto ? (
-          <p className="mt-4 rounded-2xl bg-white/10 px-4 py-3 text-center text-sm font-semibold">
-            Henüz fotoğraf yok — aşağıdaki büyük butona bas
-          </p>
-        ) : (
-          <p
-            className={`mt-4 rounded-2xl px-4 py-3 text-center text-sm font-semibold ${
-              needsPhoto ? "" : "bg-bw-50 text-bw-800"
-            }`}
-          >
-            {files.length + existingImages.length} fotoğraf hazır
-          </p>
-        )}
-
-        {existingImages.length ? (
-          <div className="mt-5">
-            <p className={`mb-2 text-xs font-semibold ${needsPhoto ? "text-bw-200" : "text-bw-600"}`}>
-              Mevcut fotoğraflar
-            </p>
-            <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
-              {existingImages.map((img) => (
-                <div
-                  key={img.id}
-                  className="relative aspect-square overflow-hidden rounded-xl border border-bw-200 bg-white"
+        {/* Steps */}
+        <div className="mt-10 flex items-center justify-center gap-3">
+          {[
+            { n: 1, t: "Fotoğraf", done: hasPhotos },
+            { n: 2, t: "Bilgiler", done: Boolean(form.title && form.price) },
+          ].map((step, i) => (
+            <div key={step.n} className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <span
+                  className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold transition ${
+                    step.done
+                      ? "bg-bw-950 text-white"
+                      : "border border-bw-300 bg-white text-bw-500"
+                  }`}
                 >
-                  <Image src={img.url} alt="" fill className="object-cover" sizes="120px" />
-                  <button
-                    type="button"
-                    onClick={() => removeExistingImage(img.id)}
-                    className="absolute top-1 right-1 flex h-7 w-7 items-center justify-center rounded-full bg-bw-950/80 text-white"
-                    aria-label="Fotoğrafı sil"
-                  >
-                    <X className="h-3.5 w-3.5" />
-                  </button>
+                  {step.done ? <Check className="h-4 w-4" /> : step.n}
+                </span>
+                <span className="text-xs font-medium text-bw-600">{step.t}</span>
+              </div>
+              {i === 0 ? (
+                <ChevronRight className="h-4 w-4 text-bw-300" />
+              ) : null}
+            </div>
+          ))}
+        </div>
+
+        {/* Photos */}
+        <section
+          id="fotograf-alani"
+          className={`mt-8 overflow-hidden rounded-[2rem] border bg-white shadow-[0_24px_60px_-40px_rgba(0,0,0,0.35)] transition ${
+            needsPhoto ? "border-amber-200/80 ring-1 ring-amber-100" : "border-bw-200"
+          }`}
+        >
+          <div className="border-b border-bw-100 px-6 py-5 sm:px-8">
+            <h2 className="font-display text-xl font-semibold text-bw-950">Ürün görselleri</h2>
+            <p className="mt-1 text-sm text-bw-500">
+              En az 1 fotoğraf zorunlu. İlk görsel vitrinde kapak olur.
+            </p>
+          </div>
+
+          <div className="p-6 sm:p-8">
+            <div
+              onDragOver={(e) => {
+                e.preventDefault();
+                setDragOver(true);
+              }}
+              onDragLeave={() => setDragOver(false)}
+              onDrop={onDrop}
+              className={`relative rounded-2xl border-2 border-dashed px-6 py-10 text-center transition ${
+                dragOver
+                  ? "border-bw-950 bg-bw-50"
+                  : needsPhoto
+                    ? "border-bw-300 bg-bw-50/50"
+                    : "border-bw-200 bg-white"
+              }`}
+            >
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-bw-950 text-white">
+                <Upload className="h-6 w-6" />
+              </div>
+              <p className="mt-4 text-sm font-semibold text-bw-900">
+                {hasPhotos ? `${photoCount} fotoğraf seçildi` : "Fotoğraf ekle"}
+              </p>
+              <p className="mt-1 text-xs text-bw-500">
+                Sürükle bırak veya aşağıdaki seçenekleri kullan
+              </p>
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                multiple
+                className="sr-only"
+                onChange={(e) => {
+                  addFiles(e.target.files);
+                  e.target.value = "";
+                }}
+              />
+              <input
+                ref={cameraInputRef}
+                type="file"
+                accept="image/*"
+                capture="environment"
+                className="sr-only"
+                onChange={(e) => {
+                  addFiles(e.target.files);
+                  e.target.value = "";
+                }}
+              />
+
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="inline-flex items-center gap-2 rounded-xl bg-bw-950 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-bw-800"
+                >
+                  <ImagePlus className="h-4 w-4" />
+                  Galeriden seç
+                </button>
+                <button
+                  type="button"
+                  onClick={() => cameraInputRef.current?.click()}
+                  className="inline-flex items-center gap-2 rounded-xl border border-bw-300 bg-white px-5 py-2.5 text-sm font-semibold text-bw-900 transition hover:border-bw-950"
+                >
+                  <Camera className="h-4 w-4" />
+                  Kamera
+                </button>
+              </div>
+            </div>
+
+            {(existingImages.length > 0 || previews.length > 0) && (
+              <div className="mt-6">
+                <p className="mb-3 text-xs font-semibold tracking-wide text-bw-500 uppercase">
+                  Önizleme
+                </p>
+                <div className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory">
+                  {existingImages.map((img) => (
+                    <div
+                      key={img.id}
+                      className="relative h-28 w-28 shrink-0 snap-start overflow-hidden rounded-2xl border border-bw-200 bg-bw-100"
+                    >
+                      <Image src={img.url} alt="" fill className="object-cover" sizes="112px" />
+                      <button
+                        type="button"
+                        onClick={() => removeExistingImage(img.id)}
+                        className="absolute top-1.5 right-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-bw-950/75 text-white"
+                        aria-label="Fotoğrafı sil"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ))}
+                  {previews.map((preview, index) => (
+                    <div
+                      key={`${preview.name}-${index}`}
+                      className="relative h-28 w-28 shrink-0 snap-start overflow-hidden rounded-2xl border border-bw-200 bg-bw-100"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={preview.url} alt="" className="h-full w-full object-cover" />
+                      <button
+                        type="button"
+                        onClick={() => removeNewFile(index)}
+                        className="absolute top-1.5 right-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-bw-950/75 text-white"
+                        aria-label="Kaldır"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* Form */}
+        <form
+          onSubmit={onSubmit}
+          className="mt-6 space-y-6 rounded-[2rem] border border-bw-200 bg-white p-6 shadow-[0_24px_60px_-40px_rgba(0,0,0,0.25)] sm:p-8"
+        >
+          <div>
+            <h2 className="font-display text-xl font-semibold text-bw-950">Ürün bilgileri</h2>
+            <p className="mt-1 text-sm text-bw-500">Vitrinde görünecek başlık ve açıklama</p>
+          </div>
+
+          <div>
+            <label className={label} htmlFor="title">Başlık *</label>
+            <input
+              id="title"
+              name="title"
+              value={form.title}
+              onChange={onChange}
+              placeholder="Örn. iPhone 15 Pro 256GB"
+              required
+              className={field}
+            />
+          </div>
+
+          <div>
+            <label className={label} htmlFor="description">Açıklama</label>
+            <textarea
+              id="description"
+              name="description"
+              value={form.description}
+              onChange={onChange}
+              rows={5}
+              placeholder="Ürün durumu, aksesuarlar, garanti bilgisi..."
+              className={field}
+            />
+          </div>
+
+          <div className="grid gap-5 sm:grid-cols-2">
+            <div>
+              <label className={label} htmlFor="price">Satış fiyatı *</label>
+              <input
+                id="price"
+                name="price"
+                type="number"
+                min="0"
+                value={form.price}
+                onChange={onChange}
+                placeholder="0"
+                required
+                className={field}
+              />
+            </div>
+            <div>
+              <label className={label} htmlFor="category_id">Kategori</label>
+              <select
+                id="category_id"
+                name="category_id"
+                value={form.category_id}
+                onChange={onChange}
+                className={field}
+              >
+                <option value="">Seç</option>
+                {categories.map((c) => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className={label} htmlFor="city">Şehir</label>
+              <input id="city" name="city" value={form.city} onChange={onChange} className={field} />
+            </div>
+            <div>
+              <label className={label} htmlFor="district">İlçe</label>
+              <input id="district" name="district" value={form.district} onChange={onChange} className={field} />
+            </div>
+            <div>
+              <label className={label} htmlFor="brand">Marka</label>
+              <input id="brand" name="brand" value={form.brand} onChange={onChange} className={field} />
+            </div>
+            <div>
+              <label className={label} htmlFor="model">Model</label>
+              <input id="model" name="model" value={form.model} onChange={onChange} className={field} />
+            </div>
+            <div>
+              <label className={label} htmlFor="condition">Durum</label>
+              <select id="condition" name="condition" value={form.condition} onChange={onChange} className={field}>
+                <option value="used">İkinci el</option>
+                <option value="new">Sıfır</option>
+              </select>
+            </div>
+            <div>
+              <label className={label} htmlFor="whatsapp">WhatsApp</label>
+              <input id="whatsapp" name="whatsapp" value={form.whatsapp} onChange={onChange} className={field} />
             </div>
           </div>
-        ) : null}
 
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          multiple
-          className="sr-only"
-          onChange={(e) => {
-            addFiles(e.target.files);
-            e.target.value = "";
-          }}
-        />
-        <input
-          ref={cameraInputRef}
-          type="file"
-          accept="image/*"
-          capture="environment"
-          className="sr-only"
-          onChange={(e) => {
-            addFiles(e.target.files);
-            e.target.value = "";
-          }}
-        />
+          <div className="rounded-2xl border border-bw-100 bg-bw-50/60 p-4">
+            <p className="text-xs font-semibold tracking-wide text-bw-600 uppercase">Vitrin ayarları</p>
+            <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm text-bw-700">
+              <label className="flex items-center gap-2">
+                <input type="checkbox" name="is_featured" checked={form.is_featured} onChange={onChange} />
+                Öne çıkar
+              </label>
+              <label className="flex items-center gap-2">
+                <input type="checkbox" name="is_premium" checked={form.is_premium} onChange={onChange} />
+                Premium
+              </label>
+              <label className="flex items-center gap-2">
+                <input type="checkbox" name="is_discount" checked={form.is_discount} onChange={onChange} />
+                İndirimde
+              </label>
+              <label className="flex items-center gap-2">
+                <input type="checkbox" name="negotiable" checked={form.negotiable} onChange={onChange} />
+                Pazarlık var
+              </label>
+            </div>
+          </div>
 
-        <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {form.is_discount ? (
+            <div>
+              <label className={label} htmlFor="original_price">Eski fiyat *</label>
+              <input
+                id="original_price"
+                name="original_price"
+                type="number"
+                min="0"
+                value={form.original_price}
+                onChange={onChange}
+                required
+                className={field}
+              />
+            </div>
+          ) : null}
+
+          {error ? (
+            <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              {error}
+            </p>
+          ) : null}
+
+          <button
+            type="submit"
+            disabled={loading || needsPhoto}
+            className="w-full rounded-2xl bg-bw-950 py-4 text-sm font-semibold text-white transition hover:bg-bw-800 disabled:cursor-not-allowed disabled:opacity-45"
+          >
+            {loading ? "Kaydediliyor..." : needsPhoto ? "Önce fotoğraf ekle" : isEdit ? "İlanı güncelle" : "Vitrine yayınla"}
+          </button>
+        </form>
+
+        <p className="mt-8 text-center text-sm">
+          <Link href={isEdit ? "/admin?tab=products" : "/"} className="text-bw-500 hover:text-bw-950">
+            {isEdit ? "← Yönetim paneli" : "← Ana sayfa"}
+          </Link>
+        </p>
+      </div>
+
+      {needsPhoto ? (
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-bw-200/80 bg-white/95 p-4 backdrop-blur sm:hidden">
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className={`flex min-h-[100px] flex-col items-center justify-center gap-2 rounded-2xl border-2 px-4 py-6 text-center transition ${
-              needsPhoto
-                ? "border-white bg-white text-bw-950 hover:bg-bw-100"
-                : "border-bw-300 bg-bw-50 text-bw-950 hover:border-bw-950"
-            }`}
+            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-bw-950 py-3.5 text-sm font-semibold text-white"
           >
-            <ImagePlus className="h-10 w-10" />
-            <span className="text-base font-bold">Galeriden seç</span>
-            <span className="text-xs opacity-70">Telefon galerisi</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => cameraInputRef.current?.click()}
-            className={`flex min-h-[100px] flex-col items-center justify-center gap-2 rounded-2xl border-2 px-4 py-6 text-center transition ${
-              needsPhoto
-                ? "border-white/40 bg-white/10 text-white hover:bg-white/20"
-                : "border-bw-300 bg-white text-bw-950 hover:border-bw-950"
-            }`}
-          >
-            <Camera className="h-10 w-10" />
-            <span className="text-base font-bold">Kamera ile çek</span>
-            <span className={`text-xs ${needsPhoto ? "text-bw-200" : "opacity-70"}`}>
-              Anında fotoğraf
-            </span>
-          </button>
-        </div>
-
-        {previews.length ? (
-          <div className="mt-4">
-            <p className={`mb-2 text-xs font-semibold ${needsPhoto ? "text-bw-200" : "text-bw-600"}`}>
-              Yeni eklenecek ({previews.length})
-            </p>
-            <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
-              {previews.map((preview, index) => (
-                <div
-                  key={`${preview.name}-${index}`}
-                  className="relative aspect-square overflow-hidden rounded-xl border border-bw-200 bg-white"
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={preview.url} alt="" className="h-full w-full object-cover" />
-                  <button
-                    type="button"
-                    onClick={() => removeNewFile(index)}
-                    className="absolute top-1 right-1 flex h-7 w-7 items-center justify-center rounded-full bg-bw-950/80 text-white"
-                    aria-label="Kaldır"
-                  >
-                    <X className="h-3.5 w-3.5" />
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : null}
-      </section>
-
-      {/* ADIM 2 — Bilgiler */}
-      <p className="mt-8 text-xs font-semibold tracking-[0.2em] text-bw-500 uppercase">
-        Adım 2 — Ürün bilgileri
-      </p>
-
-      <form onSubmit={onSubmit} className="mt-3 space-y-5 rounded-[2rem] border border-bw-200 bg-white p-6 shadow-sm sm:p-8">
-        <input name="title" value={form.title} onChange={onChange} placeholder="Başlık *" required className={field} />
-        <textarea name="description" value={form.description} onChange={onChange} rows={5} placeholder="Açıklama" className={field} />
-        <div className="grid gap-4 sm:grid-cols-2">
-          <input name="price" type="number" min="0" value={form.price} onChange={onChange} placeholder="Satış fiyatı *" required className={field} />
-          <select name="category_id" value={form.category_id} onChange={onChange} className={field}>
-            <option value="">Kategori</option>
-            {categories.map((c) => (
-              <option key={c.id} value={c.id}>{c.name}</option>
-            ))}
-          </select>
-          <input name="city" value={form.city} onChange={onChange} placeholder="Şehir" className={field} />
-          <input name="district" value={form.district} onChange={onChange} placeholder="İlçe" className={field} />
-          <input name="brand" value={form.brand} onChange={onChange} placeholder="Marka" className={field} />
-          <input name="model" value={form.model} onChange={onChange} placeholder="Model" className={field} />
-          <select name="condition" value={form.condition} onChange={onChange} className={field}>
-            <option value="used">İkinci El</option>
-            <option value="new">Sıfır</option>
-          </select>
-          <input name="whatsapp" value={form.whatsapp} onChange={onChange} placeholder="WhatsApp" className={field} />
-          <input name="phone" value={form.phone} onChange={onChange} placeholder="Telefon" className={field} />
-        </div>
-        <div className="flex flex-wrap gap-4 text-sm text-bw-700">
-          <label className="flex items-center gap-2"><input type="checkbox" name="is_featured" checked={form.is_featured} onChange={onChange} />Öne çıkar</label>
-          <label className="flex items-center gap-2"><input type="checkbox" name="is_premium" checked={form.is_premium} onChange={onChange} />Premium</label>
-          <label className="flex items-center gap-2"><input type="checkbox" name="is_discount" checked={form.is_discount} onChange={onChange} />İndirimde</label>
-          <label className="flex items-center gap-2"><input type="checkbox" name="negotiable" checked={form.negotiable} onChange={onChange} />Pazarlık var</label>
-        </div>
-        {form.is_discount ? (
-          <input
-            name="original_price"
-            type="number"
-            min="0"
-            value={form.original_price}
-            onChange={onChange}
-            placeholder="Eski fiyat (indirim öncesi) *"
-            required
-            className={field}
-          />
-        ) : null}
-        {error ? <p className="rounded-2xl bg-bw-100 px-3 py-2 text-sm text-bw-700">{error}</p> : null}
-        <button
-          type="submit"
-          disabled={loading || needsPhoto}
-          className="w-full rounded-2xl bg-bw-950 py-4 text-base font-semibold text-white hover:bg-bw-800 disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          {loading ? "Kaydediliyor..." : needsPhoto ? "Önce fotoğraf ekle" : isEdit ? "İlanı güncelle" : "Vitrine koy"}
-        </button>
-      </form>
-
-      {needsPhoto ? (
-        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-bw-200 bg-white p-4 shadow-[0_-12px_40px_rgba(0,0,0,0.12)] sm:hidden">
-          <button
-            type="button"
-            onClick={() => {
-              document.getElementById("fotograf-alani")?.scrollIntoView({ behavior: "smooth" });
-              setTimeout(() => fileInputRef.current?.click(), 400);
-            }}
-            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-bw-950 py-4 text-sm font-bold text-white"
-          >
-            <ImagePlus className="h-5 w-5" />
+            <ImagePlus className="h-4 w-4" />
             Galeriden fotoğraf seç
           </button>
         </div>
       ) : null}
-      <p className="mt-6 text-center text-sm">
-        <Link href={isEdit ? "/admin" : "/"} className="text-bw-500 hover:text-bw-950">
-          {isEdit ? "Yönetim paneli" : "Ana sayfa"}
-        </Link>
-      </p>
     </main>
   );
 }

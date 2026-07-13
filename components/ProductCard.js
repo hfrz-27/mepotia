@@ -1,15 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Eye, MapPin } from "lucide-react";
-import { formatPrice, hasDiscount, isSold } from "@/lib/products";
+import { formatPrice, getPrimaryImage, hasDiscount, isSold, isSupabaseImage } from "@/lib/products";
 
 function getImage(product) {
-  const images = product?.product_images;
-  if (Array.isArray(images) && images.length) {
-    const sorted = [...images].sort((a, b) => a.sort_order - b.sort_order);
-    return sorted[0].url;
-  }
-  return "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=900&q=80";
+  return getPrimaryImage(product);
 }
 
 export default function ProductCard({ product, large = false }) {
@@ -33,6 +28,7 @@ export default function ProductCard({ product, large = false }) {
             src={img}
             alt={product.title}
             fill
+            unoptimized={isSupabaseImage(img)}
             sizes={large ? "66vw" : "(max-width:768px) 100vw, 25vw"}
             className={`object-cover transition duration-700 group-hover:scale-[1.04] ${
               sold ? "grayscale" : ""
