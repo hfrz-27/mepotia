@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import ProductImage from "@/components/ProductImage";
 import Link from "next/link";
 import Image from "next/image";
 import { ShoppingBag, Search, Pencil } from "lucide-react";
@@ -649,13 +650,12 @@ export default function AdminPage() {
                 <div className="flex gap-4">
                   <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl border border-bw-200 bg-bw-50">
                     {productImage(p) ? (
-                      <Image
+                      <ProductImage
                         src={productImage(p)}
                         alt={p.title}
                         fill
                         className="object-cover"
                         sizes="80px"
-                        unoptimized={productImage(p).includes("supabase.co")}
                       />
                     ) : (
                       <div className="flex h-full items-center justify-center text-xs text-bw-400">

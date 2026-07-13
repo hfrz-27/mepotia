@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import ProductImage from "@/components/ProductImage";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -445,7 +446,7 @@ export default function IlanVerClient() {
                       key={img.id}
                       className="relative h-28 w-28 shrink-0 snap-start overflow-hidden rounded-2xl border border-bw-200 bg-bw-100"
                     >
-                      <Image src={img.url} alt="" fill className="object-cover" sizes="112px" />
+                      <ProductImage src={img.url} alt="" fill className="object-cover" sizes="112px" />
                       <button
                         type="button"
                         onClick={() => removeExistingImage(img.id)}

@@ -1,9 +1,8 @@
 "use client";
 
+import ProductImage from "@/components/ProductImage";
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
-import { productImageProps } from "@/lib/productImage";
 
 export default function ProductGallery({ images = [], title = "" }) {
   const urls = images.length
@@ -31,7 +30,6 @@ export default function ProductGallery({ images = [], title = "" }) {
   if (!urls.length) return null;
 
   const main = urls[active] || urls[0];
-  const mainProps = productImageProps(main, { priority: true });
 
   return (
     <>
@@ -41,13 +39,13 @@ export default function ProductGallery({ images = [], title = "" }) {
           onClick={() => setOpen(true)}
           className="relative aspect-[4/3] w-full overflow-hidden rounded-[2rem] border border-bw-200 bg-bw-100 shadow-sm"
         >
-          <Image
+          <ProductImage
             src={main}
             alt={title}
             fill
             className="object-contain bg-bw-50"
             sizes="(max-width: 1024px) 100vw, 640px"
-            {...mainProps}
+            priority
           />
           <span className="absolute bottom-3 right-3 rounded-xl bg-bw-950/75 px-3 py-1.5 text-[10px] font-semibold tracking-wide text-white uppercase">
             Büyüt
@@ -67,13 +65,12 @@ export default function ProductGallery({ images = [], title = "" }) {
                   i === active ? "border-bw-950" : "border-bw-200"
                 }`}
               >
-                <Image
+                <ProductImage
                   src={url}
                   alt=""
                   fill
                   className="object-contain"
                   sizes="96px"
-                  {...productImageProps(url)}
                 />
               </button>
             ))}
@@ -128,13 +125,13 @@ export default function ProductGallery({ images = [], title = "" }) {
             className="relative h-[75vh] w-full max-w-5xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <Image
+            <ProductImage
               src={urls[active]}
               alt={title}
               fill
               className="object-contain"
               sizes="100vw"
-              {...productImageProps(urls[active])}
+              priority
             />
           </div>
         </div>

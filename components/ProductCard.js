@@ -1,7 +1,7 @@
-import Image from "next/image";
+import ProductImage from "@/components/ProductImage";
 import Link from "next/link";
 import { Eye, MapPin } from "lucide-react";
-import { formatPrice, getPrimaryImage, hasDiscount, isSold, productImageProps } from "@/lib/products";
+import { formatPrice, getPrimaryImage, hasDiscount, isSold } from "@/lib/products";
 
 export default function ProductCard({ product, large = false, prefetch = false }) {
   const img = getPrimaryImage(product);
@@ -21,13 +21,13 @@ export default function ProductCard({ product, large = false, prefetch = false }
           large ? "aspect-[16/10]" : "aspect-[4/3]"
         }`}
       >
-        <Image
+        <ProductImage
           src={img}
           alt={product.title}
           fill
           className={`object-cover ${sold ? "grayscale" : ""}`}
           sizes={large ? "66vw" : "(max-width:768px) 100vw, 25vw"}
-          {...productImageProps(img, { priority: prefetch })}
+          priority={prefetch}
         />
         <div className="absolute top-4 left-4 flex flex-wrap gap-2">
           {product.is_premium ? (
