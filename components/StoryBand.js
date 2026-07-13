@@ -21,18 +21,15 @@ const PILLARS = [
 
 export default function StoryBand() {
   return (
-    <section className="story-band relative overflow-hidden border-y border-white/10">
-      <div className="absolute inset-0 bg-bw-950" />
-      <div className="story-band-grid absolute inset-0 opacity-30" aria-hidden />
-      <div className="hero-orb hero-orb-a !h-40 !w-40 !opacity-60" aria-hidden />
-      <div className="hero-orb hero-orb-b !right-[15%] !bottom-0 !h-48 !w-48 !opacity-50" aria-hidden />
-      <div className="absolute inset-0 bg-gradient-to-r from-bw-950 via-bw-950/95 to-bw-900/90" />
+    <section className="relative overflow-hidden border-y border-white/10 bg-bw-950">
+      <div className="story-band-grid absolute inset-0 opacity-20" aria-hidden />
+      <div className="absolute inset-0 bg-gradient-to-r from-bw-950 via-bw-950/98 to-bw-900/95" />
 
       <div className="relative mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
         <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
           <div className="max-w-xl">
             <p className="text-[10px] tracking-[0.28em] text-bw-400 uppercase">Hikâye</p>
-            <h2 className="story-band-title mt-2 font-display text-2xl font-semibold tracking-wide text-white sm:text-3xl lg:text-4xl">
+            <h2 className="mt-2 font-display text-2xl font-semibold tracking-wide text-white sm:text-3xl lg:text-4xl">
               Geçmişten Gelen Güven
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-bw-300 sm:text-base">
@@ -42,7 +39,7 @@ export default function StoryBand() {
             </p>
             <Link
               href="/hakkimizda"
-              className="story-band-cta mt-5 inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-2.5 text-sm font-semibold text-white backdrop-blur transition hover:border-white/30 hover:bg-white/10"
+              className="mt-5 inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-2.5 text-sm font-semibold text-white transition hover:border-white/30 hover:bg-white/10"
             >
               Mepotia&apos;yı tanı
               <ArrowRight className="h-4 w-4" />
@@ -53,7 +50,7 @@ export default function StoryBand() {
             {PILLARS.map((item) => (
               <div
                 key={item.title}
-                className="story-pillar rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm transition hover:border-white/20 hover:bg-white/[0.08]"
+                className="rounded-2xl border border-white/10 bg-white/5 p-4 transition hover:border-white/20 hover:bg-white/[0.08]"
               >
                 <span className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white">
                   <item.icon className="h-4 w-4" strokeWidth={1.75} />

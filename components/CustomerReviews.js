@@ -63,7 +63,7 @@ function initials(name) {
 
 function ReviewCard({ review }) {
   return (
-    <article className="flex w-[260px] shrink-0 flex-col rounded-2xl border border-bw-200/80 bg-white/90 p-4 shadow-[0_12px_32px_-24px_rgba(0,0,0,0.45)] backdrop-blur-sm transition hover:border-bw-300 hover:shadow-[0_20px_40px_-20px_rgba(0,0,0,0.35)] sm:w-[280px]">
+    <article className="flex w-[260px] shrink-0 flex-col rounded-2xl border border-bw-200/80 bg-white/95 p-4 sm:w-[280px]">
       <div className="flex items-center gap-2.5">
         <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-bw-950 text-[10px] font-bold text-white">
           {initials(review.author_name)}
@@ -119,8 +119,6 @@ export default function CustomerReviews() {
       ? (reviews.reduce((s, r) => s + r.stars, 0) / reviews.length).toFixed(1)
       : null;
 
-  const marqueeItems = reviews.length > 1 ? [...reviews, ...reviews] : reviews;
-
   const onSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -170,20 +168,12 @@ export default function CustomerReviews() {
     <section className="relative overflow-hidden border-t border-bw-200 bg-bw-950 text-white">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-25"
+        className="pointer-events-none absolute inset-0 opacity-15"
         style={{
           backgroundImage:
             "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.18) 1px, transparent 0)",
           backgroundSize: "24px 24px",
         }}
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -top-24 right-0 h-48 w-48 rounded-full bg-white/5 blur-3xl"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -bottom-16 left-0 h-40 w-40 rounded-full bg-amber-400/10 blur-3xl"
       />
 
       <div className="relative mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
@@ -242,7 +232,7 @@ export default function CustomerReviews() {
           <div className="overflow-hidden">
             <form
               onSubmit={onSubmit}
-              className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-md sm:p-5"
+              className="rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-5"
             >
               <div className="grid gap-3 sm:grid-cols-[1fr_auto] sm:items-end">
                 <div className="grid gap-3 sm:grid-cols-2">
@@ -305,12 +295,12 @@ export default function CustomerReviews() {
               <ReviewCard review={reviews[0]} />
             </div>
           ) : (
-            <div className="overflow-hidden py-1">
-              <div className="review-marquee-track flex gap-4">
-                {marqueeItems.map((review, i) => (
-                  <ReviewCard key={`${review.id}-${i}`} review={review} />
-                ))}
-              </div>
+            <div className="hide-scrollbar flex gap-4 overflow-x-auto py-1 snap-x snap-mandatory">
+              {reviews.map((review) => (
+                <div key={review.id} className="snap-start">
+                  <ReviewCard review={review} />
+                </div>
+              ))}
             </div>
           )}
         </div>

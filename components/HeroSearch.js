@@ -21,10 +21,10 @@ export default function HeroSearch({ variant = "light" }) {
       className="animate-fade-up-delay mx-auto mt-8 w-full max-w-xl"
     >
       <div
-        className={`flex items-center gap-2 rounded-2xl border px-4 py-2 shadow-[0_20px_50px_-30px_rgba(0,0,0,0.45)] backdrop-blur transition focus-within:border-white/40 ${
+        className={`flex items-center gap-2 rounded-2xl border px-4 py-2 shadow-[0_20px_50px_-30px_rgba(0,0,0,0.45)] transition focus-within:border-white/40 ${
           dark
             ? "border-white/15 bg-white/10 focus-within:bg-white/15"
-            : "border-bw-300 bg-white/95 focus-within:border-bw-950"
+            : "border-bw-300 bg-white focus-within:border-bw-950"
         }`}
       >
         <Search className={`h-5 w-5 shrink-0 ${dark ? "text-bw-400" : "text-bw-400"}`} />
