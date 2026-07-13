@@ -6,6 +6,7 @@ import Image from "next/image";
 import { ShoppingBag, Search, Pencil } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import ShareProductButtons from "@/components/ShareProductButtons";
+import TechPostsAdmin from "@/components/admin/TechPostsAdmin";
 
 function productImage(p) {
   const images = p?.product_images;
@@ -35,6 +36,8 @@ export default function AdminPage() {
   const [products, setProducts] = useState([]);
   const [offers, setOffers] = useState([]);
   const [requests, setRequests] = useState([]);
+  const [techPosts, setTechPosts] = useState([]);
+  const [techSqlMissing, setTechSqlMissing] = useState(false);
   const [msg, setMsg] = useState("");
   const [tab, setTab] = useState("offers");
   const [shareId, setShareId] = useState(null);
@@ -96,6 +99,18 @@ export default function AdminPage() {
     const reqList = reqErr ? [] : reqRows || [];
     setRequests(reqList);
 
+    const { data: techRows, error: techErr } = await supabase
+      .from("tech_posts")
+      .select("id, title, excerpt, body, cover_url, source_url, published, created_at")
+      .order("created_at", { ascending: false });
+    if (techErr) {
+      setTechPosts([]);
+      setTechSqlMissing(techErr.message?.includes("tech_posts") ?? true);
+    } else {
+      setTechPosts(techRows || []);
+      setTechSqlMissing(false);
+    }
+
     const hints = [];
     if (offerErr) hints.push("sell_offers.sql");
     if (reqErr) hints.push("product_requests.sql");
@@ -116,7 +131,7 @@ export default function AdminPage() {
     load();
     const params = new URLSearchParams(window.location.search);
     const t = params.get("tab");
-    if (t === "products" || t === "offers" || t === "requests") {
+    if (t === "products" || t === "offers" || t === "requests" || t === "tech") {
       setTab(t);
     }
   }, []);
@@ -366,6 +381,20 @@ export default function AdminPage() {
           }`}
         >
           Vitrin / ilan düzenle
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setTab("tech");
+            window.history.replaceState(null, "", "/admin?tab=tech");
+          }}
+          className={`rounded-xl px-4 py-2 text-sm font-semibold ${
+            tab === "tech"
+              ? "bg-bw-950 text-white"
+              : "border border-bw-200 text-bw-600"
+          }`}
+        >
+          Teknoloji yazıları
         </button>
       </div>
 
@@ -717,6 +746,10 @@ export default function AdminPage() {
             ))
           )}
         </div>
+      ) : null}
+
+      {tab === "tech" ? (
+        <TechPostsAdmin posts={techPosts} onReload={load} sqlMissing={techSqlMissing} />
       ) : null}
     </main>
   );

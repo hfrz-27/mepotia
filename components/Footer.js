@@ -28,6 +28,7 @@ export default function Footer() {
             Keşfet
           </p>
           <ul className="mt-4 space-y-2 text-sm text-bw-500">
+            <li><Link href="/teknoloji" className="hover:text-bw-950">Teknoloji</Link></li>
             <li><Link href="/" className="hover:text-bw-950">Vitrin</Link></li>
             <li><Link href="/ara" className="hover:text-bw-950">Keşfet</Link></li>
             <li><Link href="/hakkimizda" className="hover:text-bw-950">Hakkında</Link></li>

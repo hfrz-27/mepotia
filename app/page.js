@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, MessageCircle, Package, Search } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
 import HeroSection from "@/components/HeroSection";
+import TechNewsSection from "@/components/TechNewsSection";
 import StoryBand from "@/components/StoryBand";
 import { getPublishedProducts } from "@/lib/products";
 import { getSiteSettings } from "@/lib/categories";
@@ -30,6 +31,8 @@ export default async function HomePage() {
   return (
     <main>
       <HeroSection />
+
+      <TechNewsSection />
 
       {/* Ürün sat + Ürün iste — ana ekran */}
       <section
