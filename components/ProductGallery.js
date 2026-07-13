@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
-import { productImageProps } from "@/lib/products";
+import { productImageProps } from "@/lib/productImage";
 
 export default function ProductGallery({ images = [], title = "" }) {
   const urls = images.length
