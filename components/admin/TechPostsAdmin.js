@@ -178,7 +178,9 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
           <h2 className="mt-1 font-display text-2xl font-semibold text-white">
             {editId ? "Yazıyı düzenle" : "Yeni paylaşım"}
           </h2>
-          <p className="mt-1 text-sm text-bw-400">Fotoğraf yükle, haberini ana sayfada premium vitrinde yayınla.</p>
+          <p className="mt-1 text-sm text-bw-400">
+            Fotoğraf yükle ve yayınla. Her haber 7 gün sonra otomatik silinir.
+          </p>
         </div>
 
         <div className="grid gap-8 p-6 sm:p-8 lg:grid-cols-2">

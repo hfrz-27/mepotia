@@ -21,7 +21,7 @@ export default async function TeknolojiPage() {
             Teknoloji &amp; haberler
           </h1>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-bw-400 sm:text-base">
-            Güncel teknoloji haberleri, ipuçları ve paylaşımlar.
+            Güncel teknoloji haberleri, ipuçları ve paylaşımlar. Yazılar 7 gün boyunca yayında kalır.
           </p>
         </div>
       </section>
