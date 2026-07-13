@@ -39,17 +39,48 @@ export default function AdminPage() {
   const [tab, setTab] = useState("offers");
   const [shareId, setShareId] = useState(null);
   const [sqlHint, setSqlHint] = useState("");
+  const [productSqlHint, setProductSqlHint] = useState("");
 
   const load = async () => {
     const supabase = createClient();
-    const { data: all } = await supabase
+
+    const fullSelect =
+      "id, title, status, is_featured, is_premium, is_discount, original_price, views, created_at, product_images(url, sort_order), price";
+    const minSelect =
+      "id, title, status, is_featured, is_premium, views, created_at, product_images(url, sort_order), price";
+
+    let { data: all, error: prodErr } = await supabase
       .from("products")
-      .select(
-        "id, title, status, is_featured, is_premium, is_discount, original_price, views, created_at, product_images(url, sort_order), price",
-      )
+      .select(fullSelect)
       .order("created_at", { ascending: false });
-    const rows = all || [];
+
+    if (prodErr) {
+      console.error("admin products (full):", prodErr);
+      const fallback = await supabase
+        .from("products")
+        .select(minSelect)
+        .order("created_at", { ascending: false });
+      all = fallback.data;
+      prodErr = fallback.error;
+      if (prodErr) {
+        console.error("admin products (min):", prodErr);
+      } else {
+        setProductSqlHint("product_discount.sql");
+      }
+    } else {
+      setProductSqlHint("");
+    }
+
+    const rows = (all || []).map((p) => ({
+      ...p,
+      is_discount: p.is_discount ?? false,
+      original_price: p.original_price ?? null,
+    }));
     setProducts(rows);
+
+    if (prodErr && !rows.length) {
+      setMsg(`Ürünler yüklenemedi: ${prodErr.message}`);
+    }
 
     const { data: offerRows, error: offerErr } = await supabase
       .from("sell_offers")
@@ -133,6 +164,10 @@ export default function AdminPage() {
   };
 
   const toggleDiscount = async (product) => {
+    if (productSqlHint) {
+      setMsg("Önce Supabase'de product_discount.sql çalıştır.");
+      return;
+    }
     if (product.is_discount) {
       await createClient()
         .from("products")
@@ -515,6 +550,18 @@ export default function AdminPage() {
 
       {tab === "products" ? (
         <div className="mt-6 space-y-4">
+          {productSqlHint ? (
+            <div className="rounded-3xl border border-amber-200 bg-amber-50 px-5 py-5 text-sm leading-relaxed text-amber-950">
+              <p className="font-semibold">İndirim alanları eksik</p>
+              <p className="mt-2">
+                Supabase SQL Editor&apos;da{" "}
+                <code className="rounded bg-white px-1.5 py-0.5 text-xs">
+                  supabase/{productSqlHint}
+                </code>{" "}
+                çalıştır. Ürünler şimdilik indirim özelliği olmadan listeleniyor.
+              </p>
+            </div>
+          ) : null}
           <div className="rounded-2xl border border-bw-200 bg-bw-50 px-5 py-4 text-sm text-bw-600">
             <strong className="text-bw-950">İlan düzenle:</strong> Ürünün altındaki siyah{" "}
             <strong>İlanı düzenle</strong> butonuna bas. Başlık, fiyat, fotoğraf ve açıklama

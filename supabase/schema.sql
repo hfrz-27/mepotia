@@ -83,6 +83,14 @@ create table if not exists public.favorites (
   primary key (user_id, product_id)
 );
 
+create table if not exists public.customer_reviews (
+  id uuid primary key default gen_random_uuid(),
+  author_name text not null check (char_length(trim(author_name)) >= 2),
+  stars int not null check (stars between 1 and 5),
+  body text not null check (char_length(trim(body)) >= 10),
+  created_at timestamptz not null default now()
+);
+
 create table if not exists public.site_settings (
   id int primary key default 1 check (id = 1),
   site_name text default 'Mepotia',
@@ -141,6 +149,7 @@ alter table public.subcategories enable row level security;
 alter table public.products enable row level security;
 alter table public.product_images enable row level security;
 alter table public.favorites enable row level security;
+alter table public.customer_reviews enable row level security;
 alter table public.site_settings enable row level security;
 
 -- Profiles policies
@@ -214,6 +223,20 @@ create policy "favorites_insert" on public.favorites for insert with check (auth
 
 drop policy if exists "favorites_delete" on public.favorites;
 create policy "favorites_delete" on public.favorites for delete using (auth.uid() = user_id);
+
+-- Customer reviews
+drop policy if exists "customer_reviews_select" on public.customer_reviews;
+create policy "customer_reviews_select" on public.customer_reviews for select using (true);
+
+drop policy if exists "customer_reviews_insert" on public.customer_reviews;
+create policy "customer_reviews_insert" on public.customer_reviews for insert with check (
+  char_length(trim(author_name)) >= 2
+  and char_length(trim(body)) >= 10
+  and stars between 1 and 5
+);
+
+drop policy if exists "customer_reviews_admin" on public.customer_reviews;
+create policy "customer_reviews_admin" on public.customer_reviews for all using (public.is_admin());
 
 -- Settings
 drop policy if exists "settings_select" on public.site_settings;
