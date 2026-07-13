@@ -10,7 +10,6 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 3. Supabase SQL Editor’de [`supabase/schema.sql`](supabase/schema.sql) çalıştır.
 4. Auth kullanıcısı oluştur (Kayıt Ol), sonra SQL ile admin yap:
-
 ```sql
 update public.profiles set role = 'admin' where id = 'USER_UUID';
 ```
