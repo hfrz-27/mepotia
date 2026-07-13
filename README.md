@@ -15,7 +15,6 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 update public.profiles set role = 'admin' where id = 'USER_UUID';
 ```
 5. `npm run dev` → http://localhost:3000
-
 ## Özellikler (MVP)
 
 - Ana sayfa: slider, kategoriler, son/öne çıkan/popüler ürünler, istatistik, kampanya
