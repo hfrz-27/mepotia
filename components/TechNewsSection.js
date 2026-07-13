@@ -1,115 +1,142 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Cpu, ExternalLink } from "lucide-react";
+import { ArrowRight, Cpu, Sparkles } from "lucide-react";
 import { formatTechDate, getTechPosts } from "@/lib/techPosts";
+
+function CoverImage({ src, alt, className, sizes, priority = false }) {
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      fill
+      priority={priority}
+      className={className}
+      sizes={sizes}
+      unoptimized={src.includes("supabase.co")}
+    />
+  );
+}
 
 export default async function TechNewsSection() {
   const { data: posts, error } = await getTechPosts({ limit: 4 });
+  const [featured, ...rest] = posts;
 
   return (
-    <section id="teknoloji" className="scroll-mt-28 border-b border-bw-200 bg-white">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="flex flex-wrap items-end justify-between gap-4">
+    <section id="teknoloji" className="relative scroll-mt-28 overflow-hidden border-b border-white/10 bg-bw-950">
+      <div className="story-band-grid absolute inset-0 opacity-25" aria-hidden />
+      <div className="absolute inset-0 bg-gradient-to-b from-bw-950 via-bw-900/95 to-bw-950" />
+
+      <div className="relative mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:py-16 lg:px-8">
+        <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
-            <p className="inline-flex items-center gap-2 text-[10px] tracking-[0.24em] text-bw-500 uppercase">
-              <Cpu className="h-3.5 w-3.5" />
-              Teknoloji köşesi
+            <p className="inline-flex items-center gap-2 text-[10px] tracking-[0.28em] text-bw-400 uppercase">
+              <Sparkles className="h-3 w-3 text-amber-300/90" />
+              Teknoloji · Haberler
             </p>
-            <h2 className="mt-2 font-display text-3xl font-semibold tracking-wide text-bw-950 sm:text-4xl">
-              Son haberler &amp; bilgiler
+            <h2 className="mt-3 font-display text-3xl font-semibold tracking-wide text-white sm:text-4xl lg:text-5xl">
+              Son gelişmeler
             </h2>
-            <p className="mt-2 max-w-xl text-sm text-bw-500">
-              Teknoloji dünyasından güncel haberler, ipuçları ve yeni bilgiler.
+            <p className="mt-3 max-w-xl text-sm leading-relaxed text-bw-400 sm:text-base">
+              Teknoloji dünyasından haberler, ipuçları ve yeni bilgiler — özenle seçilmiş paylaşımlar.
             </p>
           </div>
           <Link
             href="/teknoloji"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-bw-700 hover:text-bw-950"
+            className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-2.5 text-sm font-semibold text-white transition hover:border-white/30 hover:bg-white/10"
           >
-            Tümünü gör
+            Tüm yazılar
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
 
         {error ? (
-          <div className="mt-8 rounded-2xl border border-dashed border-bw-300 bg-bw-50 px-6 py-10 text-center text-sm text-bw-500">
-            Teknoloji bölümü için Supabase&apos;de{" "}
-            <code className="text-xs">supabase/tech_posts.sql</code> çalıştır.
+          <div className="mt-10 rounded-2xl border border-dashed border-white/20 bg-white/5 px-6 py-10 text-center text-sm text-bw-400">
+            Supabase&apos;de <code className="text-bw-200">tech_posts.sql</code> çalıştır.
           </div>
         ) : !posts.length ? (
-          <div className="mt-8 rounded-2xl border border-dashed border-bw-300 bg-bw-50 px-6 py-10 text-center">
-            <Cpu className="mx-auto h-8 w-8 text-bw-300" />
-            <p className="mt-3 text-sm font-medium text-bw-700">Henüz paylaşım yok</p>
-            <p className="mt-1 text-xs text-bw-500">
-              Yönetim panelinden teknoloji haberi ekleyebilirsin.
-            </p>
+          <div className="mt-10 rounded-2xl border border-dashed border-white/20 bg-white/5 px-6 py-12 text-center">
+            <Cpu className="mx-auto h-8 w-8 text-white/20" />
+            <p className="mt-3 text-sm font-medium text-bw-300">Henüz paylaşım yok</p>
+            <p className="mt-1 text-xs text-bw-500">Yönetim → Teknoloji yazıları</p>
           </div>
         ) : (
-          <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {posts.map((post, idx) => (
-              <article
-                key={post.id}
-                className={`group flex flex-col overflow-hidden rounded-3xl border border-bw-200 bg-bw-50/40 transition hover:border-bw-300 hover:shadow-[0_24px_48px_-32px_rgba(0,0,0,0.35)] ${
-                  idx === 0 ? "sm:col-span-2 lg:col-span-2" : ""
-                }`}
+          <div className="mt-10 grid grid-cols-1 gap-5 lg:grid-cols-12">
+            {featured ? (
+              <Link
+                href={`/teknoloji/${featured.id}`}
+                className="group relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 lg:col-span-7 lg:row-span-2"
               >
-                {post.cover_url ? (
-                  <div className={`relative overflow-hidden bg-bw-100 ${idx === 0 ? "aspect-[16/9]" : "aspect-[16/10]"}`}>
-                    <Image
-                      src={post.cover_url}
-                      alt=""
-                      fill
-                      className="object-cover transition duration-500 group-hover:scale-[1.03]"
-                      sizes={idx === 0 ? "50vw" : "25vw"}
-                      unoptimized={post.cover_url.includes("supabase.co")}
+                <div className="relative aspect-[16/10] lg:aspect-auto lg:min-h-[420px]">
+                  {featured.cover_url ? (
+                    <CoverImage
+                      src={featured.cover_url}
+                      alt={featured.title}
+                      className="object-cover transition duration-700 group-hover:scale-[1.03]"
+                      sizes="(max-width:1024px) 100vw, 55vw"
+                      priority
                     />
-                  </div>
-                ) : (
-                  <div
-                    className={`flex items-center justify-center bg-bw-950 ${idx === 0 ? "aspect-[16/9]" : "aspect-[16/10]"}`}
-                  >
-                    <Cpu className="h-10 w-10 text-white/30" />
-                  </div>
-                )}
-                <div className="flex flex-1 flex-col p-5">
-                  <p className="text-[10px] font-semibold tracking-[0.2em] text-bw-400 uppercase">
-                    {formatTechDate(post.created_at)}
-                  </p>
-                  <h3
-                    className={`mt-2 font-semibold text-bw-950 group-hover:text-bw-700 ${
-                      idx === 0 ? "text-xl sm:text-2xl" : "text-base line-clamp-2"
-                    }`}
-                  >
-                    {post.title}
-                  </h3>
-                  {post.excerpt ? (
-                    <p className={`mt-2 flex-1 text-sm leading-relaxed text-bw-500 ${idx === 0 ? "line-clamp-3" : "line-clamp-2"}`}>
-                      {post.excerpt}
+                  ) : (
+                    <div className="flex h-full min-h-[240px] items-center justify-center bg-bw-900">
+                      <Cpu className="h-12 w-12 text-white/20" />
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-bw-950 via-bw-950/40 to-transparent" />
+                  <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8">
+                    <p className="text-[10px] font-semibold tracking-[0.2em] text-bw-300 uppercase">
+                      Öne çıkan · {formatTechDate(featured.created_at)}
                     </p>
-                  ) : null}
-                  <div className="mt-4 flex flex-wrap items-center gap-3">
-                    <Link
-                      href={`/teknoloji/${post.id}`}
-                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-bw-950"
-                    >
-                      Oku
-                      <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />
-                    </Link>
-                    {post.source_url ? (
-                      <a
-                        href={post.source_url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1 text-xs text-bw-500 hover:text-bw-800"
-                      >
-                        Kaynak
-                        <ExternalLink className="h-3 w-3" />
-                      </a>
+                    <h3 className="mt-2 font-display text-2xl font-semibold text-white sm:text-3xl lg:text-4xl">
+                      {featured.title}
+                    </h3>
+                    {featured.excerpt ? (
+                      <p className="mt-3 line-clamp-2 max-w-2xl text-sm leading-relaxed text-bw-300 sm:text-base">
+                        {featured.excerpt}
+                      </p>
                     ) : null}
+                    <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-white">
+                      Oku
+                      <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
+                    </span>
                   </div>
                 </div>
-              </article>
-            ))}
+              </Link>
+            ) : null}
+
+            <div className="flex flex-col gap-4 lg:col-span-5">
+              {rest.map((post) => (
+                <Link
+                  key={post.id}
+                  href={`/teknoloji/${post.id}`}
+                  className="group flex gap-4 overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-3 transition hover:border-white/20 hover:bg-white/[0.08]"
+                >
+                  <div className="relative h-24 w-28 shrink-0 overflow-hidden rounded-xl bg-bw-900">
+                    {post.cover_url ? (
+                      <CoverImage
+                        src={post.cover_url}
+                        alt={post.title}
+                        className="object-cover transition duration-500 group-hover:scale-105"
+                        sizes="112px"
+                      />
+                    ) : (
+                      <div className="flex h-full items-center justify-center">
+                        <Cpu className="h-6 w-6 text-white/20" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1 py-1">
+                    <p className="text-[10px] font-semibold tracking-wide text-bw-500 uppercase">
+                      {formatTechDate(post.created_at)}
+                    </p>
+                    <h3 className="mt-1 line-clamp-2 text-sm font-semibold text-white group-hover:text-bw-200">
+                      {post.title}
+                    </h3>
+                    {post.excerpt ? (
+                      <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-bw-400">{post.excerpt}</p>
+                    ) : null}
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
         )}
       </div>

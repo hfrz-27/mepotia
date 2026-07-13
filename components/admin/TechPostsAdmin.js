@@ -1,13 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import { Camera, ImagePlus, Sparkles, Trash2, Upload, X } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 
 const EMPTY = {
   title: "",
   excerpt: "",
   body: "",
-  cover_url: "",
   source_url: "",
   published: true,
 };
@@ -15,17 +16,63 @@ const EMPTY = {
 export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
   const [form, setForm] = useState(EMPTY);
   const [editId, setEditId] = useState(null);
+  const [existingCover, setExistingCover] = useState("");
+  const [coverFile, setCoverFile] = useState(null);
+  const [coverPreview, setCoverPreview] = useState("");
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState("");
+  const [userId, setUserId] = useState(null);
+  const fileRef = useRef(null);
+  const cameraRef = useRef(null);
+
+  useEffect(() => {
+    createClient()
+      .auth.getUser()
+      .then(({ data: { user } }) => setUserId(user?.id ?? null));
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (coverPreview.startsWith("blob:")) URL.revokeObjectURL(coverPreview);
+    };
+  }, [coverPreview]);
 
   const onChange = (e) => {
     const { name, value, type, checked } = e.target;
     setForm((f) => ({ ...f, [name]: type === "checkbox" ? checked : value }));
   };
 
+  const setCover = (file) => {
+    if (!file?.type?.startsWith("image/")) return;
+    if (coverPreview.startsWith("blob:")) URL.revokeObjectURL(coverPreview);
+    setCoverFile(file);
+    setCoverPreview(URL.createObjectURL(file));
+  };
+
+  const clearCover = () => {
+    if (coverPreview.startsWith("blob:")) URL.revokeObjectURL(coverPreview);
+    setCoverFile(null);
+    setCoverPreview("");
+    setExistingCover("");
+  };
+
   const reset = () => {
     setForm(EMPTY);
     setEditId(null);
+    clearCover();
+  };
+
+  const uploadCover = async (supabase, uid) => {
+    if (!coverFile) return existingCover || null;
+    const path = `tech/${uid}/${Date.now()}-${coverFile.name.replace(/[^\w.-]+/g, "_")}`;
+    const { error } = await supabase.storage.from("product-images").upload(path, coverFile, {
+      cacheControl: "31536000",
+      upsert: false,
+      contentType: coverFile.type || "image/jpeg",
+    });
+    if (error) throw error;
+    const { data: pub } = supabase.storage.from("product-images").getPublicUrl(path);
+    return pub.publicUrl;
   };
 
   const onSubmit = async (e) => {
@@ -34,35 +81,45 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
       setMsg("Başlık zorunlu.");
       return;
     }
+    if (!coverFile && !existingCover) {
+      setMsg("Kapak fotoğrafı ekle.");
+      return;
+    }
+
     setLoading(true);
     setMsg("");
     const supabase = createClient();
-    const payload = {
-      title: form.title.trim(),
-      excerpt: form.excerpt.trim(),
-      body: form.body.trim(),
-      cover_url: form.cover_url.trim() || null,
-      source_url: form.source_url.trim() || null,
-      published: form.published,
-      updated_at: new Date().toISOString(),
-    };
 
-    const { error } = editId
-      ? await supabase.from("tech_posts").update(payload).eq("id", editId)
-      : await supabase.from("tech_posts").insert([payload]);
-
-    setLoading(false);
-    if (error) {
-      setMsg(error.message);
-      return;
-    }
-    setMsg(editId ? "Güncellendi." : "Yayınlandı.");
-    reset();
-    onReload();
     try {
-      await fetch("/api/revalidate", { method: "POST" });
-    } catch {
-      // ignore
+      const cover_url = await uploadCover(supabase, userId || "admin");
+      const payload = {
+        title: form.title.trim(),
+        excerpt: form.excerpt.trim(),
+        body: form.body.trim(),
+        cover_url,
+        source_url: form.source_url.trim() || null,
+        published: form.published,
+        updated_at: new Date().toISOString(),
+      };
+
+      const { error } = editId
+        ? await supabase.from("tech_posts").update(payload).eq("id", editId)
+        : await supabase.from("tech_posts").insert([payload]);
+
+      if (error) throw error;
+
+      setMsg(editId ? "Güncellendi." : "Yayınlandı.");
+      reset();
+      onReload();
+      try {
+        await fetch("/api/revalidate", { method: "POST" });
+      } catch {
+        // ignore
+      }
+    } catch (err) {
+      setMsg(err?.message || "Kaydedilemedi.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -72,10 +129,12 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
       title: post.title || "",
       excerpt: post.excerpt || "",
       body: post.body || "",
-      cover_url: post.cover_url || "",
       source_url: post.source_url || "",
       published: post.published !== false,
     });
+    setCoverFile(null);
+    setExistingCover(post.cover_url || "");
+    setCoverPreview(post.cover_url || "");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -87,7 +146,8 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
   };
 
   const field =
-    "w-full rounded-xl border border-bw-200 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-bw-500";
+    "w-full rounded-xl border border-bw-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-bw-500 focus:ring-2 focus:ring-bw-950/5";
+  const label = "mb-1.5 block text-[10px] font-semibold tracking-[0.18em] text-bw-500 uppercase";
 
   if (sqlMissing) {
     return (
@@ -102,66 +162,174 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
     );
   }
 
-  return (
-    <div className="mt-6 space-y-6">
-      <form onSubmit={onSubmit} className="rounded-3xl border border-bw-200 bg-white p-6 shadow-sm">
-        <h2 className="font-display text-xl font-semibold text-bw-950">
-          {editId ? "Yazıyı düzenle" : "Yeni teknoloji yazısı"}
-        </h2>
-        <p className="mt-1 text-sm text-bw-500">Ana sayfadaki teknoloji köşesine düşer.</p>
+  const previewCover = coverPreview || existingCover;
 
-        <div className="mt-5 space-y-4">
-          <input name="title" value={form.title} onChange={onChange} placeholder="Başlık *" required className={field} />
-          <input name="excerpt" value={form.excerpt} onChange={onChange} placeholder="Kısa özet (vitrinde görünür)" className={field} />
-          <textarea name="body" value={form.body} onChange={onChange} rows={8} placeholder="Tam içerik..." className={field} />
-          <input name="cover_url" value={form.cover_url} onChange={onChange} placeholder="Kapak görseli URL (opsiyonel)" className={field} />
-          <input name="source_url" value={form.source_url} onChange={onChange} placeholder="Kaynak linki (opsiyonel)" className={field} />
-          <label className="flex items-center gap-2 text-sm text-bw-700">
-            <input type="checkbox" name="published" checked={form.published} onChange={onChange} />
-            Yayında
-          </label>
+  return (
+    <div className="mt-6 space-y-8">
+      <form
+        onSubmit={onSubmit}
+        className="overflow-hidden rounded-[2rem] border border-bw-200 bg-gradient-to-b from-white to-bw-50 shadow-[0_32px_80px_-48px_rgba(0,0,0,0.45)]"
+      >
+        <div className="border-b border-bw-200 bg-bw-950 px-6 py-5 sm:px-8">
+          <p className="inline-flex items-center gap-2 text-[10px] tracking-[0.22em] text-bw-400 uppercase">
+            <Sparkles className="h-3 w-3 text-amber-300/80" />
+            Teknoloji editörü
+          </p>
+          <h2 className="mt-1 font-display text-2xl font-semibold text-white">
+            {editId ? "Yazıyı düzenle" : "Yeni paylaşım"}
+          </h2>
+          <p className="mt-1 text-sm text-bw-400">Fotoğraf yükle, haberini ana sayfada premium vitrinde yayınla.</p>
         </div>
 
-        {msg ? <p className="mt-4 text-sm text-bw-600">{msg}</p> : null}
+        <div className="grid gap-8 p-6 sm:p-8 lg:grid-cols-2">
+          {/* Kapak fotoğrafı */}
+          <div>
+            <p className={label}>Kapak fotoğrafı *</p>
+            <div className="relative overflow-hidden rounded-2xl border border-bw-200 bg-bw-100">
+              {previewCover ? (
+                <div className="relative aspect-[16/10]">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={previewCover} alt="" className="h-full w-full object-cover" />
+                  <button
+                    type="button"
+                    onClick={clearCover}
+                    className="absolute top-3 right-3 flex h-9 w-9 items-center justify-center rounded-full bg-bw-950/80 text-white"
+                    aria-label="Fotoğrafı kaldır"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              ) : (
+                <div className="flex aspect-[16/10] flex-col items-center justify-center gap-3 bg-bw-50 px-4 text-center">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-bw-950 text-white">
+                    <Upload className="h-6 w-6" />
+                  </div>
+                  <p className="text-sm font-semibold text-bw-800">Kapak fotoğrafı ekle</p>
+                  <p className="text-xs text-bw-500">Galeriden seç veya kamera ile çek</p>
+                </div>
+              )}
+            </div>
 
-        <div className="mt-5 flex flex-wrap gap-2">
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*"
+              className="sr-only"
+              onChange={(e) => {
+                setCover(e.target.files?.[0]);
+                e.target.value = "";
+              }}
+            />
+            <input
+              ref={cameraRef}
+              type="file"
+              accept="image/*"
+              capture="environment"
+              className="sr-only"
+              onChange={(e) => {
+                setCover(e.target.files?.[0]);
+                e.target.value = "";
+              }}
+            />
+
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => fileRef.current?.click()}
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-bw-950 py-2.5 text-sm font-semibold text-white hover:bg-bw-800"
+              >
+                <ImagePlus className="h-4 w-4" />
+                Galeri
+              </button>
+              <button
+                type="button"
+                onClick={() => cameraRef.current?.click()}
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-bw-300 bg-white py-2.5 text-sm font-semibold text-bw-900 hover:border-bw-950"
+              >
+                <Camera className="h-4 w-4" />
+                Kamera
+              </button>
+            </div>
+          </div>
+
+          {/* Metin alanları */}
+          <div className="space-y-4">
+            <div>
+              <label className={label} htmlFor="tech-title">Başlık</label>
+              <input id="tech-title" name="title" value={form.title} onChange={onChange} required className={field} placeholder="Örn. iPhone 17 özellikleri sızdı" />
+            </div>
+            <div>
+              <label className={label} htmlFor="tech-excerpt">Kısa özet</label>
+              <input id="tech-excerpt" name="excerpt" value={form.excerpt} onChange={onChange} className={field} placeholder="Ana sayfada görünecek 1-2 cümle" />
+            </div>
+            <div>
+              <label className={label} htmlFor="tech-body">İçerik</label>
+              <textarea id="tech-body" name="body" value={form.body} onChange={onChange} rows={7} className={field} placeholder="Haberin tam metni..." />
+            </div>
+            <div>
+              <label className={label} htmlFor="tech-source">Kaynak linki</label>
+              <input id="tech-source" name="source_url" value={form.source_url} onChange={onChange} className={field} placeholder="Opsiyonel — haber kaynağı URL" />
+            </div>
+            <label className="flex items-center gap-2 text-sm text-bw-700">
+              <input type="checkbox" name="published" checked={form.published} onChange={onChange} />
+              Ana sayfada yayınla
+            </label>
+          </div>
+        </div>
+
+        {msg ? (
+          <p className="mx-6 mb-0 rounded-xl bg-bw-100 px-4 py-2.5 text-sm text-bw-700 sm:mx-8">{msg}</p>
+        ) : null}
+
+        <div className="flex flex-wrap gap-3 border-t border-bw-200 px-6 py-5 sm:px-8">
           <button
             type="submit"
             disabled={loading}
-            className="rounded-xl bg-bw-950 px-5 py-2.5 text-sm font-semibold text-white hover:bg-bw-800 disabled:opacity-50"
+            className="rounded-xl bg-bw-950 px-6 py-3 text-sm font-semibold text-white hover:bg-bw-800 disabled:opacity-50"
           >
-            {loading ? "Kaydediliyor..." : editId ? "Güncelle" : "Yayınla"}
+            {loading ? "Yayınlanıyor..." : editId ? "Güncelle" : "Yayınla"}
           </button>
           {editId ? (
-            <button type="button" onClick={reset} className="rounded-xl border border-bw-200 px-5 py-2.5 text-sm font-semibold text-bw-700">
+            <button type="button" onClick={reset} className="rounded-xl border border-bw-300 px-6 py-3 text-sm font-semibold text-bw-700">
               İptal
             </button>
           ) : null}
         </div>
       </form>
 
-      <div className="space-y-3">
+      {/* Liste */}
+      <div className="space-y-4">
+        <h3 className="font-display text-xl font-semibold text-bw-950">Yayınlanan yazılar</h3>
         {!posts.length ? (
           <p className="rounded-2xl border border-dashed border-bw-300 bg-white px-6 py-12 text-center text-sm text-bw-500">
             Henüz teknoloji yazısı yok.
           </p>
         ) : (
           posts.map((post) => (
-            <article key={post.id} className="rounded-2xl border border-bw-200 bg-white p-5">
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div>
-                  <p className="text-xs text-bw-400">
-                    {post.published ? "Yayında" : "Taslak"} ·{" "}
-                    {post.created_at ? new Date(post.created_at).toLocaleString("tr-TR") : ""}
-                  </p>
-                  <h3 className="mt-1 font-semibold text-bw-950">{post.title}</h3>
-                  {post.excerpt ? <p className="mt-1 line-clamp-2 text-sm text-bw-500">{post.excerpt}</p> : null}
-                </div>
-                <div className="flex gap-2">
-                  <button type="button" onClick={() => onEdit(post)} className="rounded-lg border border-bw-200 px-3 py-1.5 text-xs font-semibold text-bw-800">
+            <article
+              key={post.id}
+              className="flex gap-4 overflow-hidden rounded-2xl border border-bw-200 bg-white p-4 shadow-sm"
+            >
+              <div className="relative h-20 w-28 shrink-0 overflow-hidden rounded-xl bg-bw-100">
+                {post.cover_url ? (
+                  <Image src={post.cover_url} alt="" fill className="object-cover" sizes="112px" unoptimized />
+                ) : (
+                  <div className="flex h-full items-center justify-center bg-bw-950 text-[10px] text-bw-500">Yok</div>
+                )}
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-[10px] font-semibold tracking-wide text-bw-400 uppercase">
+                  {post.published ? "Yayında" : "Taslak"} ·{" "}
+                  {post.created_at ? new Date(post.created_at).toLocaleDateString("tr-TR") : ""}
+                </p>
+                <h4 className="mt-0.5 truncate font-semibold text-bw-950">{post.title}</h4>
+                {post.excerpt ? <p className="mt-1 line-clamp-2 text-sm text-bw-500">{post.excerpt}</p> : null}
+                <div className="mt-2 flex gap-2">
+                  <button type="button" onClick={() => onEdit(post)} className="text-xs font-semibold text-bw-800 underline">
                     Düzenle
                   </button>
-                  <button type="button" onClick={() => onDelete(post.id)} className="rounded-lg px-3 py-1.5 text-xs text-bw-400 underline">
+                  <button type="button" onClick={() => onDelete(post.id)} className="inline-flex items-center gap-1 text-xs text-red-600">
+                    <Trash2 className="h-3 w-3" />
                     Sil
                   </button>
                 </div>
