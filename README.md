@@ -14,7 +14,6 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```sql
 update public.profiles set role = 'admin' where id = 'USER_UUID';
 ```
-
 5. `npm run dev` → http://localhost:3000
 
 ## Özellikler (MVP)
