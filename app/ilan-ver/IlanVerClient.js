@@ -175,7 +175,11 @@ export default function IlanVerClient() {
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       const path = `${uid}/${productId}/${Date.now()}-${file.name}`;
-      const { error: upErr } = await supabase.storage.from("product-images").upload(path, file);
+      const { error: upErr } = await supabase.storage.from("product-images").upload(path, file, {
+        cacheControl: "31536000",
+        upsert: false,
+        contentType: file.type || "image/jpeg",
+      });
       if (upErr) {
         console.error(upErr);
         continue;

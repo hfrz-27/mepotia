@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Eye, MapPin } from "lucide-react";
-import { formatPrice, getPrimaryImage, hasDiscount, isSold, isSupabaseImage } from "@/lib/products";
+import { formatPrice, getPrimaryImage, hasDiscount, isSold, productImageProps } from "@/lib/products";
 
 function getImage(product) {
   return getPrimaryImage(product);
@@ -28,11 +28,11 @@ export default function ProductCard({ product, large = false }) {
             src={img}
             alt={product.title}
             fill
-            unoptimized={isSupabaseImage(img)}
-            sizes={large ? "66vw" : "(max-width:768px) 100vw, 25vw"}
             className={`object-cover transition duration-700 group-hover:scale-[1.04] ${
               sold ? "grayscale" : ""
             }`}
+            sizes={large ? "66vw" : "(max-width:768px) 100vw, 25vw"}
+            {...productImageProps(img)}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-bw-950/25 via-transparent to-transparent opacity-0 transition group-hover:opacity-100" />
           <div className="absolute top-4 left-4 flex flex-wrap gap-2">

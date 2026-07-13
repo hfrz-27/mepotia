@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
+import { productImageProps } from "@/lib/products";
 
 export default function ProductGallery({ images = [], title = "" }) {
   const urls = images.length
@@ -30,6 +31,7 @@ export default function ProductGallery({ images = [], title = "" }) {
   if (!urls.length) return null;
 
   const main = urls[active] || urls[0];
+  const mainProps = productImageProps(main, { priority: true });
 
   return (
     <>
@@ -43,9 +45,9 @@ export default function ProductGallery({ images = [], title = "" }) {
             src={main}
             alt={title}
             fill
-            className="object-cover"
-            sizes="50vw"
-            priority
+            className="object-contain bg-bw-50"
+            sizes="(max-width: 1024px) 100vw, 640px"
+            {...mainProps}
           />
           <span className="absolute bottom-3 right-3 rounded-xl bg-bw-950/75 px-3 py-1.5 text-[10px] font-semibold tracking-wide text-white uppercase">
             Büyüt
@@ -61,11 +63,18 @@ export default function ProductGallery({ images = [], title = "" }) {
                   setActive(i);
                   setOpen(true);
                 }}
-                className={`relative h-24 w-24 shrink-0 overflow-hidden rounded-2xl border ${
+                className={`relative h-24 w-24 shrink-0 overflow-hidden rounded-2xl border bg-bw-50 ${
                   i === active ? "border-bw-950" : "border-bw-200"
                 }`}
               >
-                <Image src={url} alt="" fill className="object-cover" sizes="96px" />
+                <Image
+                  src={url}
+                  alt=""
+                  fill
+                  className="object-contain"
+                  sizes="96px"
+                  {...productImageProps(url)}
+                />
               </button>
             ))}
           </div>
@@ -125,7 +134,7 @@ export default function ProductGallery({ images = [], title = "" }) {
               fill
               className="object-contain"
               sizes="100vw"
-              priority
+              {...productImageProps(urls[active], { priority: true })}
             />
           </div>
         </div>

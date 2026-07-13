@@ -13,6 +13,7 @@ import {
   incrementViews,
   isPublicProduct,
   isSold,
+  phoneLink,
   whatsappLink,
 } from "@/lib/products";
 
@@ -77,11 +78,9 @@ export default async function ProductPage({ params }) {
   const galleryImages = images.length ? images : [{ url: fallback, id: "main" }];
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://mepotia.com";
   const productUrl = `${siteUrl}/urun/${product.id}`;
-  const wa = whatsappLink(
-    product.whatsapp || product.phone || "905059574122",
-    product.title,
-    productUrl,
-  );
+  const contactPhone = product.phone || product.whatsapp || "905059574122";
+  const wa = whatsappLink(contactPhone, product.title, productUrl);
+  const tel = phoneLink(contactPhone);
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
@@ -148,25 +147,25 @@ export default async function ProductPage({ params }) {
             {[product.district, product.city].filter(Boolean).join(", ") || "—"}
           </p>
 
-          <div className="mt-8 flex flex-wrap gap-2">
+          <div className="mt-8 flex flex-wrap gap-3">
             {!sold && wa ? (
               <a
                 href={wa}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-2xl bg-bw-950 px-5 py-3.5 text-sm font-semibold text-white hover:bg-bw-800"
+                className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl bg-bw-950 px-5 py-3.5 text-sm font-semibold text-white hover:bg-bw-800 sm:flex-none"
               >
                 <MessageCircle className="h-4 w-4" />
                 WhatsApp ile Yaz
               </a>
             ) : null}
-            {!sold && product.phone ? (
+            {!sold && tel ? (
               <a
-                href={`tel:${product.phone}`}
-                className="inline-flex items-center gap-2 rounded-2xl border border-bw-300 bg-white px-5 py-3.5 text-sm font-medium text-bw-800"
+                href={tel}
+                className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl border-2 border-bw-950 bg-white px-5 py-3.5 text-sm font-semibold text-bw-950 hover:bg-bw-50 sm:flex-none"
               >
                 <Phone className="h-4 w-4" />
-                Ara
+                Hemen Ara
               </a>
             ) : null}
           </div>
