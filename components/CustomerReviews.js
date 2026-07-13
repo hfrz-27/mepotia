@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { MessageSquareQuote, Send, Star } from "lucide-react";
+import { ChevronDown, MessageSquareQuote, PenLine, Send, Star, X } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 
 function Stars({ count, size = "sm" }) {
-  const cls = size === "lg" ? "h-5 w-5" : "h-3.5 w-3.5";
+  const cls = size === "lg" ? "h-4 w-4" : "h-3 w-3";
   return (
     <div className="flex items-center gap-0.5" aria-label={`${count} yıldız`}>
       {Array.from({ length: 5 }).map((_, i) => (
@@ -20,10 +20,11 @@ function Stars({ count, size = "sm" }) {
   );
 }
 
-function StarPicker({ value, onChange }) {
+function StarPicker({ value, onChange, compact = false }) {
   const [hover, setHover] = useState(0);
+  const starCls = compact ? "h-5 w-5" : "h-6 w-6";
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex items-center gap-0.5">
       {Array.from({ length: 5 }).map((_, i) => {
         const n = i + 1;
         const active = n <= (hover || value);
@@ -38,7 +39,7 @@ function StarPicker({ value, onChange }) {
             aria-label={`${n} yıldız`}
           >
             <Star
-              className={`h-7 w-7 ${
+              className={`${starCls} ${
                 active ? "fill-amber-400 text-amber-400" : "text-bw-300"
               }`}
             />
@@ -50,12 +51,33 @@ function StarPicker({ value, onChange }) {
 }
 
 function initials(name) {
-  return String(name || "?")
-    .trim()
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((p) => p[0]?.toUpperCase() || "")
-    .join("") || "?";
+  return (
+    String(name || "?")
+      .trim()
+      .split(/\s+/)
+      .slice(0, 2)
+      .map((p) => p[0]?.toUpperCase() || "")
+      .join("") || "?"
+  );
+}
+
+function ReviewCard({ review }) {
+  return (
+    <article className="flex w-[260px] shrink-0 flex-col rounded-2xl border border-bw-200/80 bg-white/90 p-4 shadow-[0_12px_32px_-24px_rgba(0,0,0,0.45)] backdrop-blur-sm transition hover:border-bw-300 hover:shadow-[0_20px_40px_-20px_rgba(0,0,0,0.35)] sm:w-[280px]">
+      <div className="flex items-center gap-2.5">
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-bw-950 text-[10px] font-bold text-white">
+          {initials(review.author_name)}
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-xs font-semibold text-bw-950">{review.author_name}</p>
+          <Stars count={review.stars} />
+        </div>
+      </div>
+      <p className="mt-3 line-clamp-2 text-xs leading-relaxed text-bw-600">
+        &ldquo;{review.body}&rdquo;
+      </p>
+    </article>
+  );
 }
 
 export default function CustomerReviews() {
@@ -65,6 +87,7 @@ export default function CustomerReviews() {
   const [done, setDone] = useState(false);
   const [error, setError] = useState("");
   const [tableMissing, setTableMissing] = useState(false);
+  const [formOpen, setFormOpen] = useState(false);
   const [form, setForm] = useState({ name: "", stars: 0, text: "" });
 
   const load = async () => {
@@ -74,13 +97,11 @@ export default function CustomerReviews() {
       .from("customer_reviews")
       .select("id, author_name, stars, body, created_at")
       .order("created_at", { ascending: false })
-      .limit(24);
+      .limit(16);
 
     if (err) {
       console.error(err);
-      if (err.message?.includes("customer_reviews")) {
-        setTableMissing(true);
-      }
+      if (err.message?.includes("customer_reviews")) setTableMissing(true);
       setReviews([]);
     } else {
       setReviews(data || []);
@@ -98,11 +119,13 @@ export default function CustomerReviews() {
       ? (reviews.reduce((s, r) => s + r.stars, 0) / reviews.length).toFixed(1)
       : null;
 
+  const marqueeItems = reviews.length > 1 ? [...reviews, ...reviews] : reviews;
+
   const onSubmit = async (e) => {
     e.preventDefault();
     setError("");
     if (!form.name.trim() || form.name.trim().length < 2) {
-      setError("İsmini yaz (en az 2 karakter).");
+      setError("İsmini yaz.");
       return;
     }
     if (!form.stars) {
@@ -110,7 +133,7 @@ export default function CustomerReviews() {
       return;
     }
     if (!form.text.trim() || form.text.trim().length < 10) {
-      setError("Yorum en az 10 karakter olsun.");
+      setError("Yorum en az 10 karakter.");
       return;
     }
 
@@ -129,179 +152,174 @@ export default function CustomerReviews() {
       console.error(err);
       if (err.message?.includes("customer_reviews")) {
         setTableMissing(true);
-        setError("Yorum sistemi henüz kurulmamış. Supabase'de customer_reviews.sql çalıştır.");
+        setError("Önce customer_reviews.sql çalıştır.");
       } else {
-        setError("Yorum gönderilemedi. Tekrar dene.");
+        setError("Gönderilemedi, tekrar dene.");
       }
       return;
     }
 
     setForm({ name: "", stars: 0, text: "" });
     setDone(true);
-    setTimeout(() => setDone(false), 4000);
+    setFormOpen(false);
+    setTimeout(() => setDone(false), 3000);
     load();
   };
 
   return (
-    <section className="relative overflow-hidden border-t border-bw-200 bg-gradient-to-b from-bw-50 via-white to-bw-50">
+    <section className="relative overflow-hidden border-t border-bw-200 bg-bw-950 text-white">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-30"
+        className="pointer-events-none absolute inset-0 opacity-25"
         style={{
           backgroundImage:
-            "radial-gradient(circle at 1px 1px, rgba(24,24,27,0.06) 1px, transparent 0)",
-          backgroundSize: "28px 28px",
+            "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.18) 1px, transparent 0)",
+          backgroundSize: "24px 24px",
         }}
       />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-24 right-0 h-48 w-48 rounded-full bg-white/5 blur-3xl"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -bottom-16 left-0 h-40 w-40 rounded-full bg-amber-400/10 blur-3xl"
+      />
 
-      <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-20 lg:px-8">
-        <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-2xl">
-            <p className="inline-flex items-center gap-2 text-xs tracking-[0.22em] text-bw-500 uppercase">
-              <MessageSquareQuote className="h-3.5 w-3.5" />
-              Müşteri yorumları
-            </p>
-            <h2 className="mt-3 font-display text-3xl font-semibold tracking-wide text-bw-950 sm:text-4xl lg:text-5xl">
-              Deneyimini paylaş
-            </h2>
-            <p className="mt-4 text-sm leading-relaxed text-bw-500 sm:text-base">
-              Alışveriş deneyimini yaz — sadece ismin yeterli. Gerçek yorumlar Mepotia&apos;nın
-              güvenini büyütür.
-            </p>
+      <div className="relative mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
+        {/* Header — tek satır, kompakt */}
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div>
+              <p className="flex items-center gap-1.5 text-[10px] tracking-[0.22em] text-bw-400 uppercase">
+                <MessageSquareQuote className="h-3 w-3" />
+                Müşteri yorumları
+              </p>
+              <h2 className="mt-1 font-display text-2xl font-semibold tracking-wide sm:text-3xl">
+                Güvenenlerin sesi
+              </h2>
+            </div>
+            {avg ? (
+              <div className="hidden items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-2 sm:flex">
+                <span className="font-display text-2xl font-semibold">{avg}</span>
+                <div>
+                  <Stars count={Math.round(Number(avg))} size="lg" />
+                  <p className="text-[10px] text-bw-400">{reviews.length} yorum</p>
+                </div>
+              </div>
+            ) : null}
           </div>
 
-          {avg ? (
-            <div className="shrink-0 rounded-3xl border border-bw-200 bg-white px-6 py-5 text-center shadow-[0_20px_50px_-30px_rgba(0,0,0,0.35)]">
-              <p className="font-display text-4xl font-semibold text-bw-950">{avg}</p>
-              <Stars count={Math.round(Number(avg))} size="lg" />
-              <p className="mt-2 text-xs text-bw-500">{reviews.length} yorum</p>
-            </div>
-          ) : null}
+          <button
+            type="button"
+            onClick={() => setFormOpen((o) => !o)}
+            className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-bw-950 transition hover:bg-bw-100"
+          >
+            {formOpen ? <X className="h-4 w-4" /> : <PenLine className="h-4 w-4" />}
+            {formOpen ? "Kapat" : "Yorum yaz"}
+            {!formOpen ? <ChevronDown className="h-3.5 w-3.5 opacity-50" /> : null}
+          </button>
         </div>
 
         {tableMissing ? (
-          <div className="mt-8 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-900">
-            Yorumlar için Supabase SQL Editor&apos;da{" "}
-            <code className="rounded bg-white px-1.5 py-0.5 text-xs">supabase/customer_reviews.sql</code>{" "}
-            dosyasını bir kez çalıştır.
-          </div>
+          <p className="mt-4 rounded-xl border border-amber-400/30 bg-amber-400/10 px-4 py-2 text-xs text-amber-100">
+            Supabase&apos;de <code className="text-amber-50">customer_reviews.sql</code> çalıştır.
+          </p>
         ) : null}
 
-        <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-8">
-          {/* Form */}
-          <div className="lg:col-span-5">
+        {done ? (
+          <p className="animate-soft-in mt-4 rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-4 py-2 text-xs text-emerald-100">
+            Teşekkürler! Yorumun eklendi.
+          </p>
+        ) : null}
+
+        {/* Açılır form — kompakt */}
+        <div
+          className={`grid transition-all duration-500 ease-out ${
+            formOpen ? "mt-5 grid-rows-[1fr] opacity-100" : "mt-0 grid-rows-[0fr] opacity-0"
+          }`}
+        >
+          <div className="overflow-hidden">
             <form
               onSubmit={onSubmit}
-              className="rounded-[2rem] border border-bw-200 bg-white p-6 shadow-[0_28px_70px_-40px_rgba(0,0,0,0.45)] sm:p-8"
+              className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-md sm:p-5"
             >
-              <h3 className="font-display text-xl font-semibold text-bw-950">Yorum yaz</h3>
-              <p className="mt-1 text-sm text-bw-500">İsmini belirt, yıldız ver, deneyimini anlat.</p>
-
-              <div className="mt-6">
-                <label className="mb-1.5 block text-xs font-semibold tracking-wide text-bw-600 uppercase">
-                  İsim *
-                </label>
-                <input
-                  value={form.name}
-                  onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-                  placeholder="Adın Soyadın"
-                  maxLength={80}
-                  className="w-full rounded-xl border border-bw-200 px-4 py-3 text-sm outline-none transition focus:border-bw-500 focus:ring-2 focus:ring-bw-950/5"
-                />
+              <div className="grid gap-3 sm:grid-cols-[1fr_auto] sm:items-end">
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <input
+                    value={form.name}
+                    onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+                    placeholder="İsmin"
+                    maxLength={80}
+                    className="rounded-xl border border-white/15 bg-white/10 px-3 py-2.5 text-sm text-white outline-none placeholder:text-bw-400 focus:border-white/30"
+                  />
+                  <div className="flex items-center gap-2 rounded-xl border border-white/15 bg-white/10 px-3 py-2">
+                    <span className="text-[10px] font-semibold tracking-wide text-bw-400 uppercase">
+                      Puan
+                    </span>
+                    <StarPicker
+                      compact
+                      value={form.stars}
+                      onChange={(stars) => setForm((f) => ({ ...f, stars }))}
+                    />
+                  </div>
+                </div>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-bw-950 hover:bg-bw-100 disabled:opacity-50 sm:shrink-0"
+                >
+                  <Send className="h-4 w-4" />
+                  {submitting ? "..." : "Gönder"}
+                </button>
               </div>
-
-              <div className="mt-5">
-                <label className="mb-2 block text-xs font-semibold tracking-wide text-bw-600 uppercase">
-                  Puan *
-                </label>
-                <StarPicker
-                  value={form.stars}
-                  onChange={(stars) => setForm((f) => ({ ...f, stars }))}
-                />
-              </div>
-
-              <div className="mt-5">
-                <label className="mb-1.5 block text-xs font-semibold tracking-wide text-bw-600 uppercase">
-                  Yorum *
-                </label>
-                <textarea
-                  value={form.text}
-                  onChange={(e) => setForm((f) => ({ ...f, text: e.target.value }))}
-                  rows={4}
-                  maxLength={500}
-                  placeholder="Alışveriş deneyimin nasıldı?"
-                  className="w-full resize-none rounded-xl border border-bw-200 px-4 py-3 text-sm outline-none transition focus:border-bw-500 focus:ring-2 focus:ring-bw-950/5"
-                />
-              </div>
-
-              {error ? (
-                <p className="mt-4 rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
-              ) : null}
-              {done ? (
-                <p className="mt-4 rounded-xl bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
-                  Teşekkürler! Yorumun yayınlandı.
-                </p>
-              ) : null}
-
-              <button
-                type="submit"
-                disabled={submitting}
-                className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl bg-bw-950 py-3.5 text-sm font-semibold text-white transition hover:bg-bw-800 disabled:opacity-50"
-              >
-                <Send className="h-4 w-4" />
-                {submitting ? "Gönderiliyor..." : "Yorumu gönder"}
-              </button>
+              <textarea
+                value={form.text}
+                onChange={(e) => setForm((f) => ({ ...f, text: e.target.value }))}
+                rows={2}
+                maxLength={500}
+                placeholder="Kısa yorumun..."
+                className="mt-3 w-full resize-none rounded-xl border border-white/15 bg-white/10 px-3 py-2.5 text-sm text-white outline-none placeholder:text-bw-400 focus:border-white/30"
+              />
+              {error ? <p className="mt-2 text-xs text-red-300">{error}</p> : null}
             </form>
           </div>
+        </div>
 
-          {/* List */}
-          <div className="lg:col-span-7">
-            {loading ? (
-              <div className="flex h-48 items-center justify-center rounded-[2rem] border border-dashed border-bw-300 bg-white/60">
-                <p className="text-sm text-bw-500">Yorumlar yükleniyor...</p>
-              </div>
-            ) : !reviews.length ? (
-              <div className="flex h-48 flex-col items-center justify-center rounded-[2rem] border border-dashed border-bw-300 bg-white/60 px-6 text-center">
-                <MessageSquareQuote className="h-8 w-8 text-bw-300" />
-                <p className="mt-3 text-sm font-medium text-bw-700">Henüz yorum yok</p>
-                <p className="mt-1 text-xs text-bw-500">İlk yorumu sen yaz.</p>
-              </div>
-            ) : (
-              <div className="grid max-h-[520px] grid-cols-1 gap-4 overflow-y-auto pr-1 sm:grid-cols-2">
-                {reviews.map((review) => (
-                  <article
-                    key={review.id}
-                    className="flex flex-col rounded-3xl border border-bw-200/80 bg-white p-5 shadow-[0_16px_40px_-32px_rgba(0,0,0,0.4)] transition hover:border-bw-300"
-                  >
-                    <div className="flex items-start gap-3">
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-bw-950 text-xs font-bold text-white">
-                        {initials(review.author_name)}
-                      </span>
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-semibold text-bw-950">
-                          {review.author_name}
-                        </p>
-                        <Stars count={review.stars} />
-                      </div>
-                    </div>
-                    <p className="mt-4 flex-1 text-sm leading-relaxed text-bw-600">
-                      &ldquo;{review.body}&rdquo;
-                    </p>
-                    {review.created_at ? (
-                      <p className="mt-4 text-[11px] text-bw-400">
-                        {new Date(review.created_at).toLocaleDateString("tr-TR", {
-                          day: "numeric",
-                          month: "long",
-                          year: "numeric",
-                        })}
-                      </p>
-                    ) : null}
-                  </article>
+        {/* Marquee — sabit yükseklik, büyümez */}
+        <div className="relative mt-8">
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-bw-950 to-transparent sm:w-20" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-bw-950 to-transparent sm:w-20" />
+
+          {loading ? (
+            <div className="flex h-[120px] items-center justify-center">
+              <p className="text-xs text-bw-400">Yükleniyor...</p>
+            </div>
+          ) : !reviews.length ? (
+            <div className="flex h-[120px] flex-col items-center justify-center text-center">
+              <MessageSquareQuote className="h-6 w-6 text-bw-600" />
+              <p className="mt-2 text-xs text-bw-400">Henüz yorum yok — ilk sen yaz.</p>
+            </div>
+          ) : reviews.length === 1 ? (
+            <div className="flex justify-center py-1">
+              <ReviewCard review={reviews[0]} />
+            </div>
+          ) : (
+            <div className="overflow-hidden py-1">
+              <div className="review-marquee-track flex gap-4">
+                {marqueeItems.map((review, i) => (
+                  <ReviewCard key={`${review.id}-${i}`} review={review} />
                 ))}
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
+
+        {avg ? (
+          <p className="mt-4 text-center text-[10px] text-bw-500 sm:hidden">
+            Ortalama {avg} · {reviews.length} yorum
+          </p>
+        ) : null}
       </div>
     </section>
   );

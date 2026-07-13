@@ -110,3 +110,27 @@ body {
 .animate-soft-in {
   animation: soft-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
+
+@keyframes review-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.review-marquee-track {
+  animation: review-marquee 45s linear infinite;
+  width: max-content;
+}
+
+.review-marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .review-marquee-track {
+    animation: none;
+  }
+}
