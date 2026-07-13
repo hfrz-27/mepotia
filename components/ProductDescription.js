@@ -19,38 +19,51 @@ export default function ProductDescription({ text, wide = false }) {
   const isLong = text.length > MIN_CHARS || text.split("\n").length > 5;
 
   return (
-    <div className={wide ? "" : ""}>
-      <div className={`relative ${!expanded && isLong && wide ? "max-h-[340px] overflow-hidden" : ""}`}>
+    <div>
+      <div
+        className={`relative ${!expanded && isLong && wide ? "max-h-[340px] overflow-hidden" : ""} ${
+          !expanded && isLong && !wide ? "max-h-[9.5rem] overflow-hidden sm:max-h-[10.5rem]" : ""
+        }`}
+      >
         <p
           className={`whitespace-pre-wrap leading-relaxed text-bw-700 ${
             wide
               ? "text-base lg:columns-2 lg:gap-x-12 lg:text-[15px] lg:leading-[1.9]"
               : "mt-3 text-sm sm:text-base"
-          } ${!expanded && isLong && !wide ? "line-clamp-6" : ""}`}
+          }`}
         >
           {text}
         </p>
-        {!expanded && isLong && wide ? (
+        {!expanded && isLong ? (
           <div
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-bw-50 via-bw-50/80 to-transparent"
+            className={`pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t to-transparent ${
+              wide ? "from-bw-50 via-bw-50/90" : "from-white via-white/95"
+            }`}
             aria-hidden
           />
         ) : null}
       </div>
+
       {isLong ? (
-        <button
-          type="button"
-          onClick={() => setExpanded((v) => !v)}
-          className={`inline-flex items-center gap-1.5 text-sm font-semibold text-bw-800 underline-offset-4 hover:text-bw-950 hover:underline ${
-            wide ? "mt-6" : "mt-3"
-          }`}
-        >
-          {expanded ? "Daha az göster" : "Daha fazla göster"}
-          <ChevronDown
-            className={`h-4 w-4 transition-transform ${expanded ? "rotate-180" : ""}`}
-            aria-hidden
-          />
-        </button>
+        <div className={`flex justify-center ${wide ? "mt-6" : "mt-4"}`}>
+          <button
+            type="button"
+            onClick={() => setExpanded((v) => !v)}
+            className={`group inline-flex w-full max-w-sm items-center justify-center gap-2 rounded-2xl px-6 py-3.5 text-sm font-semibold transition duration-300 sm:w-auto ${
+              expanded
+                ? "border-2 border-bw-200 bg-white text-bw-900 hover:border-bw-950 hover:bg-bw-50"
+                : "border-2 border-bw-950 bg-bw-950 text-white shadow-[0_12px_32px_-16px_rgba(0,0,0,0.55)] hover:bg-bw-800 hover:shadow-[0_16px_40px_-14px_rgba(0,0,0,0.5)] active:scale-[0.98]"
+            }`}
+          >
+            {expanded ? "Daha az göster" : "Daha fazla göster"}
+            <ChevronDown
+              className={`h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5 ${
+                expanded ? "rotate-180" : "animate-bounce"
+              }`}
+              aria-hidden
+            />
+          </button>
+        </div>
       ) : null}
     </div>
   );
