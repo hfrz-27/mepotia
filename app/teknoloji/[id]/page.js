@@ -2,7 +2,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Cpu, ExternalLink } from "lucide-react";
+import ShareTechPostButtons from "@/components/ShareTechPostButtons";
 import { formatTechDate, getTechPostById } from "@/lib/techPosts";
+import { absoluteUrl, SITE_NAME } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
@@ -10,12 +12,31 @@ export async function generateMetadata({ params }) {
   const { id } = await params;
   const { data: post } = await getTechPostById(id);
   if (!post) return { title: "Yazı bulunamadı — Mepotia" };
+
+  const pageUrl = absoluteUrl(`/teknoloji/${id}`);
+  const description = post.excerpt || post.title;
+  const ogImage = post.cover_url
+    ? [{ url: post.cover_url, width: 1200, height: 630, alt: post.title }]
+    : [{ url: absoluteUrl("/mepotia-logo.png"), width: 1200, height: 630, alt: SITE_NAME }];
+
   return {
     title: `${post.title} — Mepotia Teknoloji`,
-    description: post.excerpt || post.title,
-    openGraph: post.cover_url
-      ? { images: [{ url: post.cover_url, alt: post.title }] }
-      : undefined,
+    description,
+    openGraph: {
+      type: "article",
+      locale: "tr_TR",
+      url: pageUrl,
+      siteName: SITE_NAME,
+      title: post.title,
+      description,
+      images: ogImage,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description,
+      images: ogImage.map((img) => img.url),
+    },
   };
 }
 
@@ -23,6 +44,8 @@ export default async function TechPostPage({ params }) {
   const { id } = await params;
   const { data: post } = await getTechPostById(id);
   if (!post) notFound();
+
+  const postUrl = absoluteUrl(`/teknoloji/${id}`);
 
   return (
     <main className="min-h-screen bg-bw-50">
@@ -84,6 +107,19 @@ export default async function TechPostPage({ params }) {
 
         <div className="mt-8 rounded-[2rem] border border-bw-200 bg-white px-6 py-8 shadow-sm sm:px-8 sm:py-10">
           <div className="whitespace-pre-wrap text-base leading-[1.85] text-bw-700">{post.body}</div>
+        </div>
+
+        <div className="mt-10 overflow-hidden rounded-[2rem] border border-bw-800 bg-gradient-to-br from-bw-950 via-bw-900 to-bw-950 p-6 sm:p-8">
+          <p className="text-[10px] font-semibold tracking-[0.22em] text-bw-400 uppercase">
+            Mepotia reklamı
+          </p>
+          <ShareTechPostButtons
+            storyMode
+            title={post.title}
+            excerpt={post.excerpt || ""}
+            url={postUrl}
+            imageUrl={post.cover_url || ""}
+          />
         </div>
 
         {post.source_url ? (

@@ -1,21 +1,8 @@
 import Link from "next/link";
-import Image from "next/image";
 import { ArrowRight, Cpu, Sparkles } from "lucide-react";
-import { formatTechDate, getTechPosts } from "@/lib/techPosts";
-
-function CoverImage({ src, alt, className, sizes, priority = false }) {
-  return (
-    <Image
-      src={src}
-      alt={alt}
-      fill
-      priority={priority}
-      className={className}
-      sizes={sizes}
-      unoptimized={src.includes("supabase.co")}
-    />
-  );
-}
+import TechNewsCard from "@/components/TechNewsCard";
+import { getTechPosts } from "@/lib/techPosts";
+import { absoluteUrl } from "@/lib/site";
 
 export default async function TechNewsSection() {
   const { data: posts, error } = await getTechPosts({ limit: 3 });
@@ -53,39 +40,12 @@ export default async function TechNewsSection() {
           <>
             <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
               {posts.map((post, index) => (
-                <Link
+                <TechNewsCard
                   key={post.id}
-                  href={`/teknoloji/${post.id}`}
-                  className="group overflow-hidden rounded-2xl border border-white/10 bg-white/5 transition hover:border-white/20 hover:bg-white/[0.08]"
-                >
-                  <div className="relative aspect-[16/9] overflow-hidden bg-bw-900">
-                    {post.cover_url ? (
-                      <CoverImage
-                        src={post.cover_url}
-                        alt={post.title}
-                        className="object-cover transition duration-500 group-hover:scale-[1.03]"
-                        sizes="(max-width:640px) 100vw, 33vw"
-                        priority={index === 0}
-                      />
-                    ) : (
-                      <div className="flex h-full items-center justify-center">
-                        <Cpu className="h-8 w-8 text-white/20" />
-                      </div>
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-bw-950/80 via-transparent to-transparent" />
-                  </div>
-                  <div className="p-3.5 sm:p-4">
-                    <p className="text-[10px] font-semibold tracking-wide text-bw-500 uppercase">
-                      {formatTechDate(post.created_at)}
-                    </p>
-                    <h3 className="mt-1 line-clamp-2 text-sm font-semibold leading-snug text-white group-hover:text-bw-200">
-                      {post.title}
-                    </h3>
-                    {post.excerpt ? (
-                      <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-bw-400">{post.excerpt}</p>
-                    ) : null}
-                  </div>
-                </Link>
+                  post={post}
+                  index={index}
+                  postUrl={absoluteUrl(`/teknoloji/${post.id}`)}
+                />
               ))}
             </div>
 
