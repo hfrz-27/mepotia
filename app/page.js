@@ -10,7 +10,7 @@ import CustomerReviews from "@/components/CustomerReviews";
 
 const WA = "https://wa.me/905059574122";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function HomePage() {
   const [settings, latestRes, featuredRes, popularRes] = await Promise.all([
@@ -138,7 +138,7 @@ export default async function HomePage() {
             </div>
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {featured.map((p, idx) => (
-                <ProductCard key={p.id} product={p} large={idx === 0} />
+                <ProductCard key={p.id} product={p} large={idx === 0} prefetch={idx < 2} />
               ))}
             </div>
           </div>
@@ -185,8 +185,8 @@ export default async function HomePage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {latest.map((p) => (
-              <ProductCard key={p.id} product={p} />
+            {latest.map((p, idx) => (
+              <ProductCard key={p.id} product={p} prefetch={idx < 4} />
             ))}
           </div>
         )}
@@ -212,8 +212,8 @@ export default async function HomePage() {
               </Link>
             </div>
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {popular.map((p) => (
-                <ProductCard key={p.id} product={p} />
+              {popular.map((p, idx) => (
+                <ProductCard key={p.id} product={p} prefetch={idx < 2} />
               ))}
             </div>
           </div>

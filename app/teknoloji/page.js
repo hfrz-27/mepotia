@@ -3,10 +3,10 @@ import Image from "next/image";
 import { ArrowRight, Cpu } from "lucide-react";
 import { formatTechDate, getTechPosts } from "@/lib/techPosts";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function TeknolojiPage() {
-  const { data: posts, error } = await getTechPosts({ limit: 48 });
+  const { data: posts, error } = await getTechPosts({ limit: 18 });
 
   return (
     <main className="min-h-screen bg-bw-50">
@@ -51,7 +51,6 @@ export default async function TeknolojiPage() {
                         fill
                         className="object-cover transition duration-500 group-hover:scale-[1.04]"
                         sizes="33vw"
-                        unoptimized={post.cover_url.includes("supabase.co")}
                       />
                     ) : (
                       <div className="flex h-full items-center justify-center bg-bw-950">

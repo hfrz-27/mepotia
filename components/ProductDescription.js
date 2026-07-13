@@ -55,11 +55,9 @@ export default function ProductDescription({ text, wide = false }) {
                 : "border-2 border-bw-950 bg-bw-950 text-white shadow-[0_12px_32px_-16px_rgba(0,0,0,0.55)] hover:bg-bw-800 hover:shadow-[0_16px_40px_-14px_rgba(0,0,0,0.5)] active:scale-[0.98]"
             }`}
           >
-            {expanded ? "Daha az göster" : "Daha fazla göster"}
-            <ChevronDown
-              className={`h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5 ${
-                expanded ? "rotate-180" : "animate-bounce"
-              }`}
+          {expanded ? "Daha az göster" : "Daha fazla göster"}
+          <ChevronDown
+            className={`h-4 w-4 transition-transform duration-300 ${expanded ? "rotate-180" : ""}`}
               aria-hidden
             />
           </button>

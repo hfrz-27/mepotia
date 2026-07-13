@@ -1,13 +1,17 @@
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Cpu, ExternalLink } from "lucide-react";
-import ShareTechPostButtons from "@/components/ShareTechPostButtons";
 import TechPostBody from "@/components/TechPostBody";
 import { formatTechDate, getTechPostById } from "@/lib/techPosts";
 import { absoluteUrl, SITE_NAME } from "@/lib/site";
 
-export const dynamic = "force-dynamic";
+const ShareTechPostButtons = dynamic(() => import("@/components/ShareTechPostButtons"), {
+  loading: () => null,
+});
+
+export const revalidate = 60;
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
@@ -59,7 +63,7 @@ export default async function TechPostPage({ params }) {
             priority
             className="object-cover opacity-90"
             sizes="100vw"
-            unoptimized={post.cover_url.includes("supabase.co")}
+            quality={80}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-bw-950 via-bw-950/50 to-bw-950/20" />
           <div className="absolute inset-x-0 bottom-0 mx-auto max-w-3xl px-4 pb-10 sm:px-6">

@@ -6,5 +6,7 @@ export async function POST() {
   revalidatePath("/en-cok-bakilanlar");
   revalidatePath("/kategoriler");
   revalidatePath("/teknoloji");
+  revalidatePath("/urun", "layout");
+  revalidatePath("/teknoloji", "layout");
   return Response.json({ ok: true });
 }

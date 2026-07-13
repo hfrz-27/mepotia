@@ -36,6 +36,9 @@ const securityHeaders = [
 
 const nextConfig = {
   poweredByHeader: false,
+  experimental: {
+    optimizePackageImports: ["lucide-react"],
+  },
   images: {
     qualities: [75, 90, 95, 100],
     remotePatterns: [

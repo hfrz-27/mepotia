@@ -1,10 +1,11 @@
 import Link from "next/link";
+import dynamic from "next/dynamic";
+import { after } from "next/server";
 import { MapPin, MessageCircle, Phone } from "lucide-react";
 import { notFound } from "next/navigation";
 import ProductCard from "@/components/ProductCard";
 import ProductGallery from "@/components/ProductGallery";
 import ProductDetailsBlock from "@/components/ProductDetailsBlock";
-import ShareProductButtons from "@/components/ShareProductButtons";
 import {
   formatPrice,
   getPrimaryImage,
@@ -18,7 +19,11 @@ import {
   whatsappLink,
 } from "@/lib/products";
 
-export const dynamic = "force-dynamic";
+const ShareProductButtons = dynamic(() => import("@/components/ShareProductButtons"), {
+  loading: () => null,
+});
+
+export const revalidate = 60;
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
@@ -70,7 +75,10 @@ export default async function ProductPage({ params }) {
   const sold = isSold(product);
   const discount = hasDiscount(product);
 
-  await incrementViews(id);
+  after(() => {
+    void incrementViews(id);
+  });
+
   const similar = await getSimilarProducts(product);
   const images = [...(product.product_images || [])].sort(
     (a, b) => a.sort_order - b.sort_order,

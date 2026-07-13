@@ -134,7 +134,7 @@ export default function ProductGallery({ images = [], title = "" }) {
               fill
               className="object-contain"
               sizes="100vw"
-              {...productImageProps(urls[active], { priority: true })}
+              {...productImageProps(urls[active])}
             />
           </div>
         </div>

@@ -14,7 +14,7 @@ function CoverImage({ src, alt, className, sizes, priority = false }) {
       priority={priority}
       className={className}
       sizes={sizes}
-      unoptimized={src.includes("supabase.co")}
+      quality={80}
     />
   );
 }
@@ -23,6 +23,7 @@ export default function TechNewsCard({ post, index = 0 }) {
   return (
     <Link
       href={`/teknoloji/${post.id}`}
+      prefetch={index === 0}
       className="group overflow-hidden rounded-2xl border border-white/10 bg-white/5 transition hover:border-white/20 hover:bg-white/[0.08]"
     >
       <div className="relative aspect-[16/9] overflow-hidden bg-bw-900">
