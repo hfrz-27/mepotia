@@ -3,6 +3,7 @@ import { MapPin, MessageCircle, Phone } from "lucide-react";
 import { notFound } from "next/navigation";
 import ProductCard from "@/components/ProductCard";
 import ProductGallery from "@/components/ProductGallery";
+import ProductDescription from "@/components/ProductDescription";
 import ShareProductButtons from "@/components/ShareProductButtons";
 import {
   formatPrice,
@@ -186,9 +187,7 @@ export default async function ProductPage({ params }) {
             <h2 className="text-xs font-semibold tracking-[0.2em] text-bw-500 uppercase">
               Açıklama
             </h2>
-            <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-bw-700 sm:text-base">
-              {product.description}
-            </p>
+            <ProductDescription text={product.description} />
             <dl className="mt-6 grid grid-cols-2 gap-3 border-t border-bw-100 pt-6 text-sm">
               {product.brand ? (
                 <>
