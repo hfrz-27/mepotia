@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, MessageCircle, Package, Search } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
 import HeroSection from "@/components/HeroSection";
+import StoryBand from "@/components/StoryBand";
 import { getPublishedProducts } from "@/lib/products";
 import { getSiteSettings } from "@/lib/categories";
 import CustomerReviews from "@/components/CustomerReviews";
@@ -122,55 +123,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Story band */}
-      <section className="relative overflow-hidden border-b border-bw-200">
-        <div className="absolute inset-0 bg-bw-950" />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-20"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.35) 1px, transparent 0)",
-            backgroundSize: "28px 28px",
-          }}
-        />
-        <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-          <p className="text-xs tracking-[0.25em] text-bw-400 uppercase">Hikâye</p>
-          <h2 className="mt-4 max-w-3xl font-display text-3xl font-semibold tracking-wide text-white sm:text-4xl lg:text-5xl">
-            Geçmişten Gelen Güven
-          </h2>
-          <p className="mt-6 max-w-2xl text-base leading-relaxed text-bw-300 sm:text-lg">
-            <strong className="font-semibold text-white">Mepotia</strong>, adını insanlık
-            tarihinin en köklü medeniyetlerinden biri olan{" "}
-            <strong className="font-semibold text-white">Mezopotamya</strong>&apos;dan alır.
-            Güvenin, emeğin ve ticaretin temellerinin atıldığı bu topraklardan ilham alan
-            Mepotia; bugün dürüstlük, şeffaflık ve güven üzerine kurulan kişisel bir
-            ikinci el vitrindir.
-          </p>
-          <p className="mt-4 max-w-2xl text-base leading-relaxed text-bw-300 sm:text-lg">
-            Bu marka, büyük imkânlarla değil; genç yaşta kurulan hayaller, sabır ve emekle
-            adım adım inşa edildi. Burada yer alan her ürün özenle seçilir, tüm detayları
-            açıkça paylaşılır ve güvenle yeni sahibine ulaşması hedeflenir.
-          </p>
-          <p className="mt-4 max-w-2xl text-base leading-relaxed text-bw-300 sm:text-lg">
-            Mepotia için ikinci el sadece bir alışveriş değil; değerlere sahip çıkmanın,
-            israfı azaltmanın ve güvene dayalı bir topluluk oluşturmanın bir yoludur.
-          </p>
-          <p className="mt-4 max-w-2xl text-base leading-relaxed text-bw-400">
-            Amacım sadece ürün satmak değil; her alışverişte güven oluşturmak. Değerini
-            koruyan ürünleri şeffaf bir şekilde sunuyor, alıcılarla doğrudan iletişim
-            kurarak güvenilir ve samimi bir alışveriş deneyimi sunuyorum.
-          </p>
-          <Link
-            href="/hakkimizda"
-            className="mt-10 inline-flex items-center gap-2 rounded-2xl bg-white px-6 py-3.5 text-sm font-semibold text-bw-950 transition hover:bg-bw-100"
-          >
-            Mepotia&apos;yı Tanı
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
-      </section>
-
       {/* Featured */}
       {featured?.length ? (
         <section className="border-b border-bw-200 bg-white">
@@ -189,6 +141,8 @@ export default async function HomePage() {
           </div>
         </section>
       ) : null}
+
+      <StoryBand />
 
       {/* Latest vitrin */}
       <section id="vitrin" className="mx-auto max-w-7xl scroll-mt-28 px-4 py-16 sm:px-6 lg:px-8">
