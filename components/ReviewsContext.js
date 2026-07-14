@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { MessageSquareQuote, Star } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import { fillReviews } from "@/lib/homeDemoData";
@@ -19,7 +19,7 @@ export function ReviewsProvider({ children }) {
       .from("customer_reviews")
       .select("id, author_name, stars, body, created_at")
       .order("created_at", { ascending: false })
-      .limit(16);
+      .limit(8);
 
     if (err) {
       console.error(err);
@@ -82,7 +82,7 @@ function ReviewChip({ review, variant = "light" }) {
     <div
       className={`flex shrink-0 items-center gap-2.5 rounded-2xl px-3 py-2 ${
         dark
-          ? "border border-white/12 bg-white/[0.08] shadow-[0_8px_28px_-12px_rgba(0,0,0,0.55)] backdrop-blur-md"
+          ? "border border-white/12 bg-white/10 shadow-[0_8px_28px_-12px_rgba(0,0,0,0.55)]"
           : "border border-bw-200 bg-white shadow-[0_8px_24px_-14px_rgba(0,0,0,0.12)]"
       }`}
     >
@@ -114,22 +114,66 @@ function ReviewChip({ review, variant = "light" }) {
   );
 }
 
-function ReviewMarquee({ reviews, variant, duration = 36, pauseOnHover = true }) {
-  const loop = [...reviews, ...reviews];
+function ReviewMarquee({ reviews, variant, duration = 36, pauseOnHover = true, mobileStatic = false }) {
+  const rootRef = useRef(null);
+  const items = reviews.slice(0, 8);
+  const loop = [...items, ...items];
+
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        el.querySelectorAll(".review-marquee-track").forEach((track) => {
+          track.classList.toggle("marquee-paused", !entry.isIntersecting);
+        });
+      },
+      { rootMargin: "64px", threshold: 0.01 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const chips = (list, prefix) =>
+    list.map((review, index) => (
+      <ReviewChip
+        key={`${prefix}-${variant}-${review.id}-${index}`}
+        review={review}
+        variant={variant}
+      />
+    ));
+
+  if (mobileStatic) {
+    return (
+      <div ref={rootRef} className="overflow-hidden">
+        <div className="news-touch-scroll hide-scrollbar flex gap-3 py-0.5 sm:hidden">
+          {chips(items, "m")}
+        </div>
+        <div
+          className={`hidden overflow-hidden sm:block ${pauseOnHover ? "marquee-touch-pause" : ""}`}
+        >
+          <div
+            className={`review-marquee-track gap-3 py-0.5 ${pauseOnHover ? "" : "review-marquee-continuous"}`}
+            style={{ "--marquee-duration": `${duration}s` }}
+          >
+            {chips(loop, "d")}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="overflow-hidden">
+    <div
+      ref={rootRef}
+      className={`overflow-hidden ${pauseOnHover ? "marquee-touch-pause" : ""}`}
+    >
       <div
         className={`review-marquee-track gap-3 py-0.5 ${pauseOnHover ? "" : "review-marquee-continuous"}`}
         style={{ "--marquee-duration": `${duration}s` }}
       >
-        {loop.map((review, index) => (
-          <ReviewChip
-            key={`${variant}-${review.id}-${index}`}
-            review={review}
-            variant={variant}
-          />
-        ))}
+        {chips(loop, "a")}
       </div>
     </div>
   );
@@ -141,6 +185,7 @@ export function ReviewThinStrip({
   duration,
   showLabel = false,
   pauseOnHover = true,
+  mobileStatic = false,
 }) {
   const { reviews, loading } = useReviews();
   const dark = variant === "dark";
@@ -150,7 +195,7 @@ export function ReviewThinStrip({
     <div
       className={`relative overflow-hidden ${
         dark
-          ? "bg-bw-950/80 py-3 backdrop-blur-sm"
+          ? "bg-bw-950/80 py-3"
           : "rounded-2xl border border-bw-200 bg-gradient-to-r from-bw-50 via-white to-bw-50 py-3 shadow-[0_12px_32px_-20px_rgba(0,0,0,0.1)]"
       } ${className}`}
     >
@@ -198,6 +243,7 @@ export function ReviewThinStrip({
               variant={variant}
               duration={marqueeDuration}
               pauseOnHover={pauseOnHover}
+              mobileStatic={mobileStatic}
             />
           </>
         )}

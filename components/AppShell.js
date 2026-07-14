@@ -1,11 +1,15 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import TopTicker from "@/components/TopTicker";
 import Footer from "@/components/Footer";
 import WhatsAppHelpButton from "@/components/WhatsAppHelpButton";
-import GlobalNewsDrawer from "@/components/GlobalNewsDrawer";
+
+const GlobalNewsDrawer = dynamic(() => import("@/components/GlobalNewsDrawer"), {
+  ssr: false,
+});
 
 export default function AppShell({ children }) {
   const pathname = usePathname();

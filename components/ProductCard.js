@@ -19,7 +19,7 @@ export default function ProductCard({
 
   return (
     <article
-      className={`group block overflow-hidden rounded-2xl border border-bw-200 bg-white shadow-[0_2px_20px_-12px_rgba(0,0,0,0.15)] transition duration-200 hover:-translate-y-1 hover:border-bw-300 hover:shadow-[0_24px_48px_-24px_rgba(0,0,0,0.28)] active:scale-[0.99] sm:rounded-3xl ${
+      className={`group block overflow-hidden rounded-2xl border border-bw-200 bg-white shadow-[0_2px_20px_-12px_rgba(0,0,0,0.15)] transition duration-200 sm:rounded-3xl sm:hover:-translate-y-1 sm:hover:border-bw-300 sm:hover:shadow-[0_24px_48px_-24px_rgba(0,0,0,0.28)] ${
         large ? "sm:col-span-2" : ""
       } ${sold ? "opacity-90" : ""}`}
     >
@@ -34,7 +34,7 @@ export default function ProductCard({
           alt={product.title}
           fill
           className={`object-cover ${sold ? "grayscale" : ""}`}
-          sizes={large ? "66vw" : "(max-width:768px) 100vw, 25vw"}
+          sizes={large ? "66vw" : "(max-width: 640px) 50vw, 25vw"}
           priority={prefetch}
         />
         <div className="absolute top-2.5 left-2.5 flex flex-wrap gap-1.5 sm:top-4 sm:left-4 sm:gap-2">

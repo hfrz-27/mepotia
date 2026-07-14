@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+
 const ITEMS = [
   "Güvenle al · Güvenle sat",
   "Şeffaf fiyat · Net sunum",
@@ -9,11 +11,33 @@ const ITEMS = [
 ];
 
 export default function TopTicker() {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        el.classList.toggle("marquee-paused", !entry.isIntersecting);
+      },
+      { threshold: 0 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   const loop = [...ITEMS, ...ITEMS];
 
   return (
-    <div className="overflow-hidden border-b border-white/10 bg-bw-950 py-2">
-      <div className="review-marquee-track review-marquee-continuous gap-8 px-4" style={{ "--marquee-duration": "32s" }}>
+    <div ref={ref} className="overflow-hidden border-b border-white/10 bg-bw-950 py-2">
+      <p className="truncate px-4 text-center text-[10px] font-medium tracking-[0.16em] text-white/55 uppercase sm:hidden">
+        {ITEMS[0]}
+      </p>
+      <div
+        className="review-marquee-track review-marquee-continuous hidden gap-8 px-4 sm:flex"
+        style={{ "--marquee-duration": "40s" }}
+      >
         {loop.map((text, i) => (
           <span
             key={`${text}-${i}`}

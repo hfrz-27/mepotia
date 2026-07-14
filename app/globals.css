@@ -46,7 +46,15 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @media (min-width: 640px) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
 }
 
 body {
@@ -124,7 +132,6 @@ body {
   display: flex;
   width: max-content;
   animation: review-marquee var(--marquee-duration, 36s) linear infinite;
-  will-change: transform;
 }
 
 .review-marquee-track:hover {
@@ -133,6 +140,16 @@ body {
 
 .review-marquee-continuous:hover {
   animation-play-state: running;
+}
+
+.marquee-paused .review-marquee-track,
+.review-marquee-track.marquee-paused {
+  animation-play-state: paused;
+}
+
+.marquee-touch-pause:active .review-marquee-track,
+.marquee-touch-pause:focus-within .review-marquee-track {
+  animation-play-state: paused;
 }
 
 @media (prefers-reduced-motion: reduce) {

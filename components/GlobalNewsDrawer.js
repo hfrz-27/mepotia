@@ -16,6 +16,7 @@ export default function GlobalNewsDrawer() {
   const [loading, setLoading] = useState(false);
   const start = useRef(null);
   const fetched = useRef(false);
+  const openRef = useRef(false);
 
   const loadPosts = async () => {
     if (fetched.current || loading) return;
@@ -34,12 +35,16 @@ export default function GlobalNewsDrawer() {
 
   const openDrawer = () => {
     setOpen(true);
+    openRef.current = true;
     void loadPosts();
   };
 
   useEffect(() => {
+    openRef.current = open;
+  }, [open]);
+
+  useEffect(() => {
     const onOpen = () => openDrawer();
-    window.addEventListener(OPEN_EVENT, onOpen);
 
     const onStart = (event) => {
       if (event.touches.length !== 1) return;
@@ -57,7 +62,7 @@ export default function GlobalNewsDrawer() {
       const fromEdge = start.current.x >= window.innerWidth - EDGE_WIDTH;
       start.current = null;
 
-      if (open && deltaX >= SWIPE_DISTANCE && Math.abs(deltaX) > Math.abs(deltaY)) {
+      if (openRef.current && deltaX >= SWIPE_DISTANCE && Math.abs(deltaX) > Math.abs(deltaY)) {
         setOpen(false);
         return;
       }
@@ -67,17 +72,16 @@ export default function GlobalNewsDrawer() {
       }
     };
 
+    window.addEventListener(OPEN_EVENT, onOpen);
     window.addEventListener("touchstart", onStart, { passive: true });
     window.addEventListener("touchend", onEnd, { passive: true });
 
-    const idle = window.setTimeout(() => void loadPosts(), 1400);
     return () => {
       window.removeEventListener(OPEN_EVENT, onOpen);
       window.removeEventListener("touchstart", onStart);
       window.removeEventListener("touchend", onEnd);
-      window.clearTimeout(idle);
     };
-  }, [open]);
+  }, []);
 
   return (
     <>

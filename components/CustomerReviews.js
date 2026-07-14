@@ -191,7 +191,7 @@ export default function CustomerReviews() {
           </div>
         </div>
 
-        <ReviewThinStrip variant="light" className="mt-6" showLabel duration={34} />
+        <ReviewThinStrip variant="light" className="mt-6" showLabel duration={34} mobileStatic />
         <ReviewsAllPanel />
       </div>
     </section>

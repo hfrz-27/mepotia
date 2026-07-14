@@ -5,13 +5,14 @@ import Image from "next/image";
 import { Cpu } from "lucide-react";
 import { formatTechDate } from "@/lib/techPostUtils";
 
-function CoverImage({ src, alt, className, sizes, priority = false }) {
+function CoverImage({ src, alt, className, sizes, priority = false, loading }) {
   return (
     <Image
       src={src}
       alt={alt}
       fill
       priority={priority}
+      loading={loading}
       className={className}
       sizes={sizes}
       quality={80}
@@ -24,16 +25,17 @@ export function TechNewsCardCompact({ post, index = 0 }) {
     <Link
       href={`/teknoloji/${post.id}`}
       prefetch={index === 0}
-      className="group relative block w-[min(78vw,280px)] shrink-0 snap-start overflow-hidden rounded-[1.25rem] border border-bw-200 bg-white shadow-[0_16px_40px_-28px_rgba(0,0,0,0.3)] transition duration-300 hover:-translate-y-0.5 hover:border-bw-300"
+      className="group relative block w-[min(78vw,280px)] shrink-0 snap-start overflow-hidden rounded-[1.25rem] border border-bw-200 bg-white shadow-[0_16px_40px_-28px_rgba(0,0,0,0.3)] sm:transition sm:duration-300 sm:hover:-translate-y-0.5 sm:hover:border-bw-300"
     >
       <div className="relative aspect-[4/3] overflow-hidden bg-bw-900">
         {post.cover_url ? (
           <CoverImage
             src={post.cover_url}
             alt={post.title}
-            className="object-cover transition duration-500 group-hover:scale-[1.03]"
+            className="object-cover sm:transition sm:duration-500 sm:group-hover:scale-[1.03]"
             sizes="78vw"
             priority={index === 0}
+            loading={index === 0 ? undefined : "lazy"}
           />
         ) : (
           <div className="flex h-full items-center justify-center">
