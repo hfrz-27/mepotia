@@ -18,7 +18,7 @@ export default function PriceCompareFeatured({ products = [] }) {
     <div className="mt-5">
       <PremiumScrollRow ariaLabel="Örnek ürünler" fadeFrom="from-bw-50/35" gap="gap-3">
         {items.map((product, index) => (
-          <div key={product.id} className="w-[min(72vw,260px)] shrink-0">
+          <div key={product.id} className="w-[min(72vw,280px)] shrink-0">
             <ProductCard
               product={product}
               prefetch={index === 0}

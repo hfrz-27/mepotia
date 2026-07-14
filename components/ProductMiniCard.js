@@ -12,7 +12,7 @@ export default function ProductMiniCard({ product, prefetch = false }) {
     <Link
       href={href}
       prefetch={prefetch && !demo}
-      className="group flex w-[min(42vw,168px)] shrink-0 items-center gap-2.5 rounded-xl border border-bw-200/90 bg-white/95 px-2.5 py-2 shadow-[0_8px_24px_-16px_rgba(0,0,0,0.2)] backdrop-blur-sm transition sm:w-[168px] sm:hover:border-bw-300 sm:hover:shadow-[0_12px_28px_-14px_rgba(0,0,0,0.22)]"
+      className="group flex w-[min(42vw,200px)] shrink-0 items-center gap-2.5 rounded-xl border border-bw-200/90 bg-white/95 px-2.5 py-2 shadow-[0_8px_24px_-16px_rgba(0,0,0,0.2)] backdrop-blur-sm transition hover:border-bw-300"
     >
       <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-lg bg-bw-100">
         <ProductImage

@@ -80,7 +80,7 @@ export default function TechPriceLookupSection({
         </div>
 
         <div className="mt-8 overflow-hidden rounded-[1.75rem] border border-bw-200 bg-white p-3 shadow-[0_28px_80px_-48px_rgba(0,0,0,0.45)] sm:p-4 lg:mt-10">
-          <form onSubmit={onSearch} className="flex flex-col gap-3 sm:flex-row">
+          <form onSubmit={onSearch} className="flex flex-col gap-3">
             <div className="relative min-w-0 flex-1">
               <Search className="pointer-events-none absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-bw-500" />
               <input
