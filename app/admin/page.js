@@ -51,6 +51,13 @@ export default function AdminPage() {
   const [recovering, setRecovering] = useState(false);
   const [purging, setPurging] = useState(false);
   const [purgeMsg, setPurgeMsg] = useState("");
+  const [deployOutdated, setDeployOutdated] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/sync-tech-news", { method: "GET" })
+      .then((res) => setDeployOutdated(res.status === 404))
+      .catch(() => setDeployOutdated(true));
+  }, []);
 
   const load = async () => {
     const supabase = createClient();
@@ -312,6 +319,17 @@ export default function AdminPage() {
           </Link>
         </div>
       </div>
+
+      {deployOutdated ? (
+        <div className="mt-6 rounded-2xl border border-amber-300 bg-amber-50 px-5 py-4 text-sm text-amber-950">
+          <p className="font-semibold">Canlı site güncel değil</p>
+          <p className="mt-1">
+            Kod GitHub&apos;da hazır ama Vercel eski sürümü gösteriyor.{" "}
+            <strong>vercel.com → mepotia → Create Deployment → main</strong> ile yeni deploy al.
+            Bitince bu uyarı kaybolur.
+          </p>
+        </div>
+      ) : null}
 
       <div className="mt-6 rounded-[1.75rem] border border-red-200 bg-red-50 p-5 sm:p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
