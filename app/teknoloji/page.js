@@ -69,21 +69,30 @@ export default async function TeknolojiPage({ searchParams }) {
         <TechNewsViewSync />
       </Suspense>
 
-      <section className="relative overflow-hidden border-b border-bw-200 bg-bw-950">
-        <div className="story-band-grid absolute inset-0 opacity-20" aria-hidden />
-        <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <BackHomeLink variant="dark" className="mb-10" />
-          <div className="max-w-3xl">
-            <p className="inline-flex items-center gap-2 text-[10px] tracking-[0.28em] text-bw-400 uppercase">
-              <Cpu className="h-3.5 w-3.5" />
-              Güncel Haberler
-            </p>
-            <h1 className="mt-3 font-display text-4xl font-semibold tracking-wide text-white sm:text-5xl">
-              Teknoloji Dünyasından Son Gelişmeler
-            </h1>
-            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-bw-400 sm:text-base">
-              Yapay zekâdan akıllı telefonlara, oyunlardan yazılıma kadar en güncel haberler.
-            </p>
+      <section className="relative overflow-hidden bg-bw-50">
+        <div className="mx-auto max-w-7xl px-4 py-5 sm:px-6 sm:py-7 lg:px-8">
+          <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-bw-950 px-6 py-8 shadow-[0_32px_80px_-42px_rgba(0,0,0,0.7)] sm:px-10 sm:py-11 lg:px-12">
+            <div className="story-band-grid absolute inset-0 opacity-20" aria-hidden />
+            <div className="absolute -top-24 right-0 h-64 w-64 rounded-full bg-white/10 blur-3xl" aria-hidden />
+            <div className="absolute -bottom-32 left-1/3 h-64 w-64 rounded-full bg-bw-500/15 blur-3xl" aria-hidden />
+
+            <div className="relative">
+              <BackHomeLink variant="dark" className="mb-9" />
+              <div className="max-w-3xl border-l border-white/25 pl-4 sm:pl-5">
+                <p className="inline-flex items-center gap-2 text-[10px] font-semibold tracking-[0.28em] text-bw-400 uppercase">
+                  <span className="flex h-6 w-6 items-center justify-center rounded-lg border border-white/10 bg-white/10 text-white">
+                    <Cpu className="h-3 w-3" />
+                  </span>
+                  Güncel Haberler
+                </p>
+                <h1 className="mt-4 font-display text-4xl font-semibold tracking-wide text-white sm:text-5xl">
+                  Teknoloji Dünyasından Son Gelişmeler
+                </h1>
+                <p className="mt-4 max-w-2xl text-sm leading-relaxed text-bw-400 sm:text-base">
+                  Yapay zekâdan akıllı telefonlara, oyunlardan yazılıma kadar en güncel haberler.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>

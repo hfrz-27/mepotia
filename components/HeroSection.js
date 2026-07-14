@@ -56,26 +56,20 @@ export default function HeroSection() {
 
           <HeroSearch variant="dark" />
 
-          <div className="animate-fade-up-delay mt-8 flex flex-wrap items-center justify-center gap-3">
+          <div className="animate-fade-up-delay mt-8 grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:flex-wrap sm:items-center sm:justify-center sm:gap-3">
             <Link
               href="/fiyat-karsilastir"
-              className="group inline-flex items-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-semibold text-white transition hover:border-white/40 hover:bg-white/10"
+              className="group inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-3 py-3.5 text-xs font-semibold text-white transition hover:border-white/40 hover:bg-white/10 sm:px-7 sm:text-sm"
             >
               <BadgeDollarSign className="h-4 w-4" />
               Fiyat karşılaştır
             </Link>
             <a
               href="#vitrin"
-              className="group inline-flex items-center gap-2 rounded-2xl bg-white px-7 py-3.5 text-sm font-semibold text-bw-950 transition hover:bg-bw-100"
+              className="group inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-3 py-3.5 text-xs font-semibold text-bw-950 transition hover:bg-bw-100 sm:px-7 sm:text-sm"
             >
               Vitrine bak
               <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
-            </a>
-            <a
-              href="#al-sat"
-              className="inline-flex items-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-semibold text-white transition hover:border-white/40 hover:bg-white/10"
-            >
-              Sat · İste
             </a>
           </div>
         </div>
