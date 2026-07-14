@@ -5,6 +5,7 @@ import { useState } from "react";
 import { ArrowRight, ChevronDown, PenLine, Send, Star, X } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import { ReviewThinStrip, useReviews } from "@/components/ReviewsContext";
+import ReviewsAllPanel from "@/components/ReviewsAllPanel";
 
 const PILLARS = ["Kökler", "Dürüstlük", "Özen"];
 
@@ -112,7 +113,7 @@ export default function CustomerReviews() {
 
             <Link
               href="/hakkimizda"
-              className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-bw-950 transition hover:text-bw-600"
+              className="mt-5 inline-flex items-center gap-2.5 rounded-2xl bg-bw-950 px-5 py-3 text-sm font-semibold text-white shadow-[0_14px_36px_-14px_rgba(0,0,0,0.45)] transition hover:bg-bw-800"
             >
               Mepotia&apos;yı tanı
               <ArrowRight className="h-4 w-4" />
@@ -191,6 +192,7 @@ export default function CustomerReviews() {
         </div>
 
         <ReviewThinStrip variant="light" className="mt-6" showLabel duration={34} />
+        <ReviewsAllPanel />
       </div>
     </section>
   );

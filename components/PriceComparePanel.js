@@ -3,13 +3,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import {
-  ArrowDownRight,
-  ArrowUpRight,
   ExternalLink,
-  Minus,
   Store,
-  TrendingDown,
-  TrendingUp,
 } from "lucide-react";
 
 export function formatTry(value) {
@@ -29,45 +24,21 @@ function VerdictBanner({ comparison }) {
   const { diff, percent, verdict } = comparison;
   const absDiff = Math.abs(diff);
 
-  if (verdict === "cheaper") {
-    return (
-      <div className="flex items-start gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3.5 text-emerald-950">
-        <TrendingDown className="mt-0.5 h-5 w-5 shrink-0" />
-        <div>
-          <p className="text-sm font-semibold">Mepotia&apos;da piyasadan daha uygun</p>
-          <p className="mt-1 text-sm text-emerald-900/80">
-            En düşük piyasa fiyatına göre yaklaşık {formatTry(absDiff)} (
-            {Math.abs(percent)}%) avantajlı.
-          </p>
-        </div>
-      </div>
-    );
-  }
+  let title = "Piyasa ile yakın seviyede";
+  let detail = "Mepotia fiyatı, Epey'deki en düşük fiyata oldukça yakın.";
 
-  if (verdict === "expensive") {
-    return (
-      <div className="flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3.5 text-amber-950">
-        <TrendingUp className="mt-0.5 h-5 w-5 shrink-0" />
-        <div>
-          <p className="text-sm font-semibold">Piyasada daha düşük fiyatlar var</p>
-          <p className="mt-1 text-sm text-amber-900/80">
-            En düşük piyasa fiyatından yaklaşık {formatTry(absDiff)} ({percent}%) fark
-            görünüyor.
-          </p>
-        </div>
-      </div>
-    );
+  if (verdict === "cheaper") {
+    title = "Mepotia'da piyasadan daha uygun";
+    detail = `En düşük piyasa fiyatına göre yaklaşık ${formatTry(absDiff)} (${Math.abs(percent)}%) avantajlı.`;
+  } else if (verdict === "expensive") {
+    title = "Piyasada daha düşük fiyatlar var";
+    detail = `En düşük piyasa fiyatından yaklaşık ${formatTry(absDiff)} (${percent}%) fark görünüyor.`;
   }
 
   return (
-    <div className="flex items-start gap-3 rounded-2xl border border-bw-200 bg-bw-50 px-4 py-3.5 text-bw-800">
-      <Minus className="mt-0.5 h-5 w-5 shrink-0" />
-      <div>
-        <p className="text-sm font-semibold">Piyasa ile yakın seviyede</p>
-        <p className="mt-1 text-sm text-bw-600">
-          Mepotia fiyatı, Epey&apos;deki en düşük fiyata oldukça yakın.
-        </p>
-      </div>
+    <div className="rounded-2xl border border-bw-200 bg-bw-50 px-4 py-3.5">
+      <p className="text-sm font-semibold text-bw-950">{title}</p>
+      <p className="mt-1 text-sm text-bw-600">{detail}</p>
     </div>
   );
 }
@@ -167,18 +138,11 @@ export default function PriceComparePanel({
                 </tr>
               </thead>
               <tbody>
-                {market.offers.map((offer, index) => {
-                  const ref = mepotia?.referencePrice ?? mepotia?.summary?.min;
-                  const cheaperThanMepotia =
-                    Number.isFinite(ref) && offer.price < ref && !offer.isOutlet;
-                  const expensiveThanMepotia =
-                    Number.isFinite(ref) && offer.price > ref && !offer.isOutlet;
-
-                  return (
-                    <tr
-                      key={`${offer.store}-${offer.price}-${index}`}
-                      className={isDark ? "border-t border-white/10" : "border-t border-bw-100"}
-                    >
+                {market.offers.map((offer, index) => (
+                  <tr
+                    key={`${offer.store}-${offer.price}-${index}`}
+                    className={isDark ? "border-t border-white/10" : "border-t border-bw-100"}
+                  >
                       <td className={`px-3 py-3 ${titleClass}`}>
                         <div className="flex items-center gap-2">
                           <Store className={`h-4 w-4 ${mutedClass}`} />
@@ -197,23 +161,14 @@ export default function PriceComparePanel({
                         </div>
                       </td>
                       <td className={`px-3 py-3 font-semibold ${priceClass}`}>
-                        <div className="flex items-center gap-1.5">
-                          {formatTry(offer.price)}
-                          {cheaperThanMepotia ? (
-                            <ArrowDownRight className="h-4 w-4 text-emerald-500" aria-hidden />
-                          ) : null}
-                          {expensiveThanMepotia ? (
-                            <ArrowUpRight className="h-4 w-4 text-amber-500" aria-hidden />
-                          ) : null}
-                        </div>
+                        {formatTry(offer.price)}
                       </td>
                       <td className={`px-3 py-3 text-xs ${mutedClass}`}>
                         {offer.isOutlet ? "Outlet / 2. el" : "Perakende"}
                         {offer.freeShipping ? " · Ücretsiz kargo" : ""}
                       </td>
                     </tr>
-                  );
-                })}
+                ))}
               </tbody>
             </table>
           </div>

@@ -9,28 +9,24 @@ import { ReviewThinStrip } from "@/components/HomeReviews";
 
 export default function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-bw-950">
+    <section className="relative overflow-hidden bg-[#1a1d24]">
       <div className="absolute inset-0">
         <Image
-          src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=65"
+          src="https://images.unsplash.com/photo-1550745165-9bc0b3f77cd8?auto=format&fit=crop&w=1600&q=75"
           alt=""
           fill
           priority
-          className="object-cover object-center opacity-20"
+          className="object-cover object-center opacity-45 mix-blend-luminosity"
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-bw-950 via-bw-950/95 to-bw-900" />
-        <div className="hero-grid absolute inset-0 opacity-[0.14]" aria-hidden />
-        <div
-          className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-bw-950 to-transparent"
-          aria-hidden
-        />
+        <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-[#1a1d24]/75 to-[#12141a]" />
+        <div className="hero-grid absolute inset-0 opacity-[0.08]" aria-hidden />
       </div>
 
-      <div className="relative mx-auto max-w-4xl px-4 pt-14 pb-4 sm:px-6 sm:pt-20 lg:px-8">
+      <div className="relative mx-auto max-w-4xl px-4 pt-12 pb-4 sm:px-6 sm:pt-16 lg:px-8">
         <div className="text-center">
-          <p className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1 text-[9px] font-semibold tracking-[0.26em] text-white/55 uppercase sm:text-[10px]">
-            <Sparkles className="h-3 w-3 text-white/40" />
+          <p className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3.5 py-1 text-[9px] font-semibold tracking-[0.26em] text-white/70 uppercase backdrop-blur-sm sm:text-[10px]">
+            <Sparkles className="h-3 w-3 text-white/50" />
             Teknoloji · İkinci El · Güven
           </p>
 
@@ -38,7 +34,7 @@ export default function HeroSection() {
             Mepotia
           </h1>
 
-          <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-white/55 sm:mt-5 sm:max-w-xl sm:text-base">
+          <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-white/70 sm:mt-5 sm:max-w-xl sm:text-base">
             Özenle seçilmiş ikinci el ürünlerle dürüst ve şeffaf bir alışveriş deneyimi.
           </p>
         </div>
@@ -49,7 +45,7 @@ export default function HeroSection() {
           <div className="grid grid-cols-2 gap-2 sm:gap-3">
             <Link
               href="/fiyat-karsilastir"
-              className="inline-flex items-center justify-center gap-1.5 rounded-2xl border border-white/12 bg-white/[0.04] px-3 py-3 text-[11px] font-semibold text-white/90 transition hover:border-white/25 hover:bg-white/[0.08] sm:gap-2 sm:px-5 sm:py-3.5 sm:text-sm"
+              className="inline-flex items-center justify-center gap-1.5 rounded-2xl border border-white/20 bg-white/10 px-3 py-3 text-[11px] font-semibold text-white backdrop-blur-sm transition hover:bg-white/15 sm:gap-2 sm:px-5 sm:py-3.5 sm:text-sm"
             >
               <BadgeDollarSign className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               Fiyat karşılaştır

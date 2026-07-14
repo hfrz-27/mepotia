@@ -3,7 +3,13 @@ import Link from "next/link";
 import { BadgeDollarSign, Eye, MapPin } from "lucide-react";
 import { formatPrice, getPrimaryImage, hasDiscount, isSold } from "@/lib/products";
 
-export default function ProductCard({ product, large = false, prefetch = false }) {
+export default function ProductCard({
+  product,
+  large = false,
+  prefetch = false,
+  neutralBadges = false,
+  showCompareLink = true,
+}) {
   const img = getPrimaryImage(product);
   const sold = isSold(product);
   const discount = hasDiscount(product);
@@ -38,12 +44,35 @@ export default function ProductCard({ product, large = false, prefetch = false }
             </span>
           ) : null}
           {product.is_premium ? (
-            <span className="rounded-lg bg-bw-950 px-2 py-0.5 text-[9px] font-bold tracking-[0.14em] text-white uppercase sm:px-2.5 sm:py-1 sm:text-[10px]">
+            <span
+              className={`rounded-lg px-2 py-0.5 text-[9px] font-bold tracking-[0.14em] uppercase sm:px-2.5 sm:py-1 sm:text-[10px] ${
+                neutralBadges
+                  ? "border border-bw-300 bg-bw-950 text-white"
+                  : "bg-bw-950 text-white"
+              }`}
+            >
               Premium
             </span>
           ) : null}
+          {product.is_featured && !product.is_premium ? (
+            <span
+              className={`rounded-lg px-2 py-0.5 text-[9px] font-bold tracking-[0.14em] uppercase sm:px-2.5 sm:py-1 sm:text-[10px] ${
+                neutralBadges
+                  ? "border border-bw-300 bg-white text-bw-950"
+                  : "border border-bw-200 bg-white text-bw-950"
+              }`}
+            >
+              Öne çıkan
+            </span>
+          ) : null}
           {discount ? (
-            <span className="rounded-lg bg-white px-2 py-0.5 text-[9px] font-bold tracking-[0.14em] text-bw-950 uppercase sm:px-2.5 sm:py-1 sm:text-[10px]">
+            <span
+              className={`rounded-lg px-2 py-0.5 text-[9px] font-bold tracking-[0.14em] uppercase sm:px-2.5 sm:py-1 sm:text-[10px] ${
+                neutralBadges
+                  ? "border border-bw-300 bg-bw-100 text-bw-800"
+                  : "bg-white text-bw-950"
+              }`}
+            >
               İndirim
             </span>
           ) : null}
@@ -82,6 +111,7 @@ export default function ProductCard({ product, large = false, prefetch = false }
           </div>
         </div>
       </Link>
+      {showCompareLink ? (
       <Link
         href={compareHref}
         className="flex items-center justify-center gap-1 border-t border-bw-100 px-2 py-1.5 text-[9px] font-semibold text-bw-600 transition hover:bg-bw-50 hover:text-bw-950 sm:gap-1.5 sm:px-4 sm:py-3 sm:text-xs"
@@ -89,6 +119,7 @@ export default function ProductCard({ product, large = false, prefetch = false }
         <BadgeDollarSign className="h-3.5 w-3.5" />
         Fiyat karşılaştır
       </Link>
+      ) : null}
     </article>
   );
 }

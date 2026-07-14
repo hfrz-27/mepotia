@@ -230,7 +230,7 @@ export default async function ProductPage({ params }) {
           <h2 className="font-display text-2xl font-semibold tracking-wide text-bw-950 sm:text-3xl">
             Benzer ürünler
           </h2>
-          <div className="mt-4 grid grid-cols-1 gap-3 sm:mt-5 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4 lg:gap-5">
+          <div className="mt-4 grid grid-cols-2 gap-3 sm:mt-5 sm:gap-4 lg:grid-cols-4 lg:gap-5">
             {similar.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}
