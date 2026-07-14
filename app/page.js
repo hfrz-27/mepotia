@@ -17,7 +17,7 @@ export default async function HomePage() {
   const [settings, latestRes, featuredRes, popularRes] = await Promise.all([
     getSiteSettings(),
     getPublishedProducts({ limit: 8, orderBy: "created_at" }),
-    getPublishedProducts({ limit: 4, featured: true }),
+    getPublishedProducts({ limit: 2, featured: true }),
     getPublishedProducts({ limit: 4, orderBy: "views" }),
   ]);
   const latest = latestRes.data;
@@ -47,9 +47,9 @@ export default async function HomePage() {
                 Yeni Sahibini Bekleyenler
               </h2>
             </div>
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {featured.map((p, idx) => (
-                <ProductCard key={p.id} product={p} large={idx === 0} prefetch={idx < 2} />
+                <ProductCard key={p.id} product={p} prefetch={idx < 2} />
               ))}
             </div>
           </div>
