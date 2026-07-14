@@ -17,6 +17,7 @@ export async function GET(request) {
     parsed.hostname.endsWith("supabase.co") ||
     parsed.hostname === "images.unsplash.com" ||
     parsed.hostname === "mepotia.com" ||
+    parsed.hostname === "www.mepotia.com" ||
     parsed.hostname.endsWith(".vercel.app") ||
     parsed.hostname.endsWith(".netlify.app");
 
