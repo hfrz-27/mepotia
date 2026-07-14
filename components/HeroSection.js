@@ -2,26 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, BadgeDollarSign, ShieldCheck, Eye, Heart } from "lucide-react";
+import { ArrowRight, BadgeDollarSign } from "lucide-react";
 import HeroSearch from "@/components/HeroSearch";
-
-const TRUST = [
-  {
-    icon: ShieldCheck,
-    t: "Güvenle Al, Güvenle Sat",
-    d: "Güvenle alışveriş edebileceğiniz bir vitrin.",
-  },
-  {
-    icon: Eye,
-    t: "Şeffaf sunum",
-    d: "Net fiyat, net açıklama",
-  },
-  {
-    icon: Heart,
-    t: "Dürüstlüğün Değeri",
-    d: "Zorlu yollardan gelen tecrübe",
-  },
-];
+import TrustStrip from "@/components/TrustStrip";
 
 export default function HeroSection() {
   return (
@@ -76,19 +59,7 @@ export default function HeroSection() {
       </div>
 
       <div className="relative z-10 mx-auto -mt-20 max-w-5xl px-4 pb-10 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-4 rounded-2xl border border-bw-200 bg-white px-5 py-5 shadow-[0_32px_80px_-40px_rgba(0,0,0,0.65)] sm:grid-cols-3 sm:gap-6 sm:px-8 sm:py-6">
-          {TRUST.map((item) => (
-            <div key={item.t} className="flex items-center gap-3 text-left">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-bw-200 bg-bw-50 text-bw-900">
-                <item.icon className="h-4 w-4" strokeWidth={1.75} />
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-bw-950">{item.t}</p>
-                <p className="text-xs text-bw-500">{item.d}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+        <TrustStrip />
       </div>
     </section>
   );

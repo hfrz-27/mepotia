@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { ArrowRight, Cpu, Sparkles } from "lucide-react";
-import TechNewsCard from "@/components/TechNewsCard";
+import TechNewsCard, { TechNewsCardCompact } from "@/components/TechNewsCard";
+import TechNewsMobileScroll from "@/components/TechNewsMobileScroll";
 import { getTechPosts } from "@/lib/techPosts";
 
 export default async function TechNewsSection() {
-  const { data: posts, error } = await getTechPosts({ limit: 3 });
+  const { data: posts, error } = await getTechPosts({ limit: 6 });
 
   return (
     <section id="teknoloji" className="relative scroll-mt-28 overflow-hidden border-y border-bw-200 bg-white">
@@ -46,8 +47,10 @@ export default async function TechNewsSection() {
           </div>
         ) : (
           <>
-            <div className="mt-6 grid grid-cols-1 gap-3 sm:mt-8 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4 lg:grid-rows-2">
-              {posts.map((post, index) => (
+            <TechNewsMobileScroll posts={posts} />
+
+            <div className="mt-6 hidden grid-cols-1 gap-3 sm:mt-8 sm:grid sm:grid-cols-2 sm:gap-4 lg:grid-cols-4 lg:grid-rows-2">
+              {posts.slice(0, 3).map((post, index) => (
                 <TechNewsCard key={post.id} post={post} index={index} featured={index === 0} />
               ))}
             </div>

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, MessageCircle } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import BuySellAccordion from "@/components/BuySellAccordion";
 import ProductCard from "@/components/ProductCard";
 import HeroSection from "@/components/HeroSection";
@@ -10,15 +10,30 @@ import { getSiteSettings } from "@/lib/categories";
 import CustomerReviews from "@/components/CustomerReviews";
 
 const WA = "https://wa.me/905059574122";
+const MOBILE_PRODUCT_LIMIT = 6;
 
 export const revalidate = 60;
+
+function MoreButton({ href, label = "Daha fazla göster" }) {
+  return (
+    <div className="mt-6 flex justify-center sm:mt-8">
+      <Link
+        href={href}
+        className="inline-flex items-center gap-2 rounded-xl border border-bw-200 bg-white px-5 py-2.5 text-sm font-semibold text-bw-900 shadow-[0_12px_32px_-20px_rgba(0,0,0,0.25)] transition hover:border-bw-300 hover:bg-bw-50"
+      >
+        {label}
+        <ArrowRight className="h-4 w-4" />
+      </Link>
+    </div>
+  );
+}
 
 export default async function HomePage() {
   const [settings, latestRes, featuredRes, popularRes] = await Promise.all([
     getSiteSettings(),
-    getPublishedProducts({ limit: 8, orderBy: "created_at" }),
-    getPublishedProducts({ limit: 2, featured: true }),
-    getPublishedProducts({ limit: 4, orderBy: "views" }),
+    getPublishedProducts({ limit: MOBILE_PRODUCT_LIMIT, orderBy: "created_at" }),
+    getPublishedProducts({ limit: MOBILE_PRODUCT_LIMIT, featured: true }),
+    getPublishedProducts({ limit: MOBILE_PRODUCT_LIMIT, orderBy: "views" }),
   ]);
   const latest = latestRes.data;
   const featured = featuredRes.data;
@@ -40,35 +55,36 @@ export default async function HomePage() {
       {/* Featured */}
       {featured?.length ? (
         <section className="border-b border-bw-200 bg-white">
-          <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-            <div className="mb-8">
+          <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-16 lg:px-8">
+            <div className="mb-6 sm:mb-8">
               <p className="text-xs tracking-[0.22em] text-bw-500 uppercase">Özenle Seçilenler</p>
-              <h2 className="mt-2 font-display text-3xl font-semibold tracking-wide text-bw-950 sm:text-4xl">
+              <h2 className="mt-2 font-display text-2xl font-semibold tracking-wide text-bw-950 sm:text-4xl">
                 Yeni Sahibini Bekleyenler
               </h2>
             </div>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              {featured.map((p, idx) => (
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
+              {featured.slice(0, MOBILE_PRODUCT_LIMIT).map((p, idx) => (
                 <ProductCard key={p.id} product={p} prefetch={idx < 2} />
               ))}
             </div>
+            <MoreButton href="/ara" />
           </div>
         </section>
       ) : null}
 
       {/* Latest vitrin */}
-      <section id="vitrin" className="mx-auto max-w-7xl scroll-mt-28 px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mb-8 flex items-end justify-between gap-4">
+      <section id="vitrin" className="mx-auto max-w-7xl scroll-mt-28 px-4 py-10 sm:px-6 sm:py-16 lg:px-8">
+        <div className="mb-6 flex items-end justify-between gap-4 sm:mb-8">
           <div>
             <p className="text-xs tracking-[0.22em] text-bw-500 uppercase">Vitrin</p>
-            <h2 className="mt-2 font-display text-3xl font-semibold tracking-wide text-bw-950 sm:text-4xl">
+            <h2 className="mt-2 font-display text-2xl font-semibold tracking-wide text-bw-950 sm:text-4xl">
               Özenle seçilmiş ürünler
             </h2>
-            <p className="mt-2 max-w-xl text-sm leading-relaxed text-bw-500">
+            <p className="mt-2 hidden max-w-xl text-sm leading-relaxed text-bw-500 sm:block">
               Güvenle sunulan, özenle seçilmiş ikinci el ürünleri keşfedin.
             </p>
           </div>
-          <Link href="/ara" className="text-sm font-medium text-bw-600 hover:text-bw-950">
+          <Link href="/ara" className="hidden text-sm font-medium text-bw-600 hover:text-bw-950 sm:inline">
             Tümü
           </Link>
         </div>
@@ -93,77 +109,49 @@ export default async function HomePage() {
             </a>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {latest.map((p, idx) => (
-              <ProductCard key={p.id} product={p} prefetch={idx < 4} />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
+              {latest.slice(0, MOBILE_PRODUCT_LIMIT).map((p, idx) => (
+                <ProductCard key={p.id} product={p} prefetch={idx < 4} />
+              ))}
+            </div>
+            <MoreButton href="/ara" />
+          </>
         )}
       </section>
 
       {/* Popular */}
       {popular?.length ? (
         <section className="border-t border-bw-200 bg-white">
-          <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-            <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+          <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-16 lg:px-8">
+            <div className="mb-6 flex flex-wrap items-end justify-between gap-4 sm:mb-8">
               <div>
                 <p className="text-xs tracking-[0.22em] text-bw-500 uppercase">Popüler</p>
-                <h2 className="mt-2 font-display text-3xl font-semibold tracking-wide text-bw-950">
+                <h2 className="mt-2 font-display text-2xl font-semibold tracking-wide text-bw-950 sm:text-3xl">
                   En çok bakılanlar
                 </h2>
               </div>
               <Link
                 href="/en-cok-bakilanlar"
-                className="inline-flex items-center gap-2 text-sm font-medium text-bw-600 hover:text-bw-950"
+                className="hidden items-center gap-2 text-sm font-medium text-bw-600 hover:text-bw-950 sm:inline-flex"
               >
                 Tümü
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {popular.map((p, idx) => (
+            <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
+              {popular.slice(0, MOBILE_PRODUCT_LIMIT).map((p, idx) => (
                 <ProductCard key={p.id} product={p} prefetch={idx < 2} />
               ))}
             </div>
+            <MoreButton href="/en-cok-bakilanlar" />
           </div>
         </section>
       ) : null}
 
-      <CustomerReviews />
-
       <StoryBand />
 
-      {/* Contact CTA */}
-      <section className="border-t border-bw-200 bg-bw-50">
-        <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-8 px-4 py-16 sm:flex-row sm:items-center sm:px-6 lg:px-8">
-          <div>
-            <p className="text-xs tracking-[0.22em] text-bw-500 uppercase">İletişim</p>
-            <h2 className="mt-3 font-display text-3xl font-semibold tracking-wide text-bw-950">
-              Gözünü bir ürün mü aldı?
-            </h2>
-            <p className="mt-3 max-w-lg text-sm leading-relaxed text-bw-500">
-              Ürün hakkında konuşmak için bana doğrudan WhatsApp&apos;tan ulaşabilirsin.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <a
-              href={wa}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-2xl bg-bw-950 px-6 py-3.5 text-sm font-semibold text-white"
-            >
-              <MessageCircle className="h-4 w-4" />
-              WhatsApp
-            </a>
-            <Link
-              href="/hakkimizda"
-              className="inline-flex items-center gap-2 rounded-2xl border border-bw-300 bg-white px-6 py-3.5 text-sm font-semibold text-bw-900"
-            >
-              Hakkında
-            </Link>
-          </div>
-        </div>
-      </section>
+      <CustomerReviews />
     </main>
   );
 }

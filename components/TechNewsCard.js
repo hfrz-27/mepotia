@@ -19,6 +19,41 @@ function CoverImage({ src, alt, className, sizes, priority = false }) {
   );
 }
 
+export function TechNewsCardCompact({ post, index = 0 }) {
+  return (
+    <Link
+      href={`/teknoloji/${post.id}`}
+      prefetch={index === 0}
+      className="group relative block w-[min(78vw,280px)] shrink-0 snap-start overflow-hidden rounded-[1.25rem] border border-bw-200 bg-white shadow-[0_16px_40px_-28px_rgba(0,0,0,0.3)] transition duration-300 hover:-translate-y-0.5 hover:border-bw-300"
+    >
+      <div className="relative aspect-[4/3] overflow-hidden bg-bw-900">
+        {post.cover_url ? (
+          <CoverImage
+            src={post.cover_url}
+            alt={post.title}
+            className="object-cover transition duration-500 group-hover:scale-[1.03]"
+            sizes="78vw"
+            priority={index === 0}
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center">
+            <Cpu className="h-8 w-8 text-white/20" />
+          </div>
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-bw-950 via-bw-950/50 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 p-3.5">
+          <p className="inline-flex rounded-full border border-white/15 bg-bw-950/40 px-2 py-0.5 text-[9px] font-semibold tracking-[0.16em] text-bw-300 uppercase backdrop-blur-sm">
+            {formatTechDate(post.created_at)}
+          </p>
+          <h3 className="mt-2 line-clamp-2 text-sm font-semibold leading-snug text-white transition group-hover:text-bw-200">
+            {post.title}
+          </h3>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 export default function TechNewsCard({ post, index = 0, featured = false }) {
   return (
     <Link
