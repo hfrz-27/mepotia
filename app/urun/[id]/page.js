@@ -4,9 +4,10 @@ import { after } from "next/server";
 import { MapPin, MessageCircle, Phone } from "lucide-react";
 import { notFound } from "next/navigation";
 import ProductCard from "@/components/ProductCard";
-import BackHomeLink, { PremiumBreadcrumb } from "@/components/BackHomeLink";
+import { PremiumBreadcrumb } from "@/components/BackHomeLink";
 import ProductGallery from "@/components/ProductGallery";
 import ProductDetailsBlock from "@/components/ProductDetailsBlock";
+import ProductOfferForm from "@/components/ProductOfferForm";
 import { createClient } from "@/lib/supabase-server";
 import {
   formatPrice,
@@ -167,18 +168,17 @@ export default async function ProductPage({ params }) {
           </div>
 
           <div className="mt-6 flex flex-wrap gap-3 sm:mt-8">
-            <BackHomeLink
-              href="/#vitrin"
-              label="Vitrine dön"
-              variant="minimal"
-              className="flex-1 justify-center sm:flex-none"
+            <ProductOfferForm
+              productId={product.id}
+              title={product.title}
+              condition={product.condition}
             />
             {!sold && wa ? (
               <a
                 href={wa}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl bg-bw-950 px-5 py-3.5 text-sm font-semibold text-white hover:bg-bw-800 sm:flex-none"
+                className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-bw-950 px-3 py-2 text-xs font-semibold text-white hover:bg-bw-800 sm:flex-none"
               >
                 <MessageCircle className="h-4 w-4" />
                 WhatsApp ile Yaz
@@ -187,7 +187,7 @@ export default async function ProductPage({ params }) {
             {!sold && tel ? (
               <a
                 href={tel}
-                className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl border-2 border-bw-950 bg-white px-5 py-3.5 text-sm font-semibold text-bw-950 hover:bg-bw-50 sm:flex-none"
+                className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-bw-950 bg-white px-3 py-2 text-xs font-semibold text-bw-950 hover:bg-bw-50 sm:flex-none"
               >
                 <Phone className="h-4 w-4" />
                 Hemen Ara

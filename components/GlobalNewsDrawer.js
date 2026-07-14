@@ -54,10 +54,15 @@ export default function GlobalNewsDrawer() {
       const end = event.changedTouches[0];
       const deltaX = end.clientX - start.current.x;
       const deltaY = end.clientY - start.current.y;
-      const fromEdge = start.current.x <= EDGE_WIDTH;
+      const fromEdge = start.current.x >= window.innerWidth - EDGE_WIDTH;
       start.current = null;
 
-      if (fromEdge && deltaX >= SWIPE_DISTANCE && Math.abs(deltaX) > Math.abs(deltaY)) {
+      if (open && deltaX >= SWIPE_DISTANCE && Math.abs(deltaX) > Math.abs(deltaY)) {
+        setOpen(false);
+        return;
+      }
+
+      if (fromEdge && deltaX <= -SWIPE_DISTANCE && Math.abs(deltaX) > Math.abs(deltaY)) {
         openDrawer();
       }
     };
@@ -72,7 +77,7 @@ export default function GlobalNewsDrawer() {
       window.removeEventListener("touchend", onEnd);
       window.clearTimeout(idle);
     };
-  }, []);
+  }, [open]);
 
   return (
     <>
@@ -85,8 +90,8 @@ export default function GlobalNewsDrawer() {
       />
       <aside
         aria-label="Güncel teknoloji haberleri"
-        className={`fixed inset-y-0 left-0 z-[80] flex w-[min(88vw,400px)] flex-col border-r border-bw-200 bg-bw-50 shadow-[24px_0_70px_-34px_rgba(0,0,0,0.55)] transition-transform duration-300 ease-out ${
-          open ? "translate-x-0" : "-translate-x-full"
+        className={`fixed inset-y-0 right-0 z-[80] flex w-[min(88vw,400px)] flex-col border-l border-bw-200 bg-bw-50 shadow-[-24px_0_70px_-34px_rgba(0,0,0,0.55)] transition-transform duration-300 ease-out ${
+          open ? "translate-x-0" : "translate-x-full"
         }`}
       >
         <div className="flex items-center justify-between border-b border-bw-200 bg-white px-4 py-4">
