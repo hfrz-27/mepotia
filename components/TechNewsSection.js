@@ -49,10 +49,14 @@ export default async function TechNewsSection() {
           <>
             <TechNewsMobileScroll posts={posts} />
 
-            <div className="mt-6 hidden grid-cols-1 gap-4 sm:mt-8 sm:grid sm:grid-cols-2 sm:gap-5 lg:grid-cols-4 lg:grid-rows-2">
-              {posts.slice(0, 3).map((post, index) => (
-                <TechNewsCard key={post.id} post={post} index={index} featured={index === 0} />
-              ))}
+            <div className="mt-6 hidden gap-4 sm:mt-8 sm:grid sm:grid-cols-1 md:grid-cols-2 md:items-stretch md:gap-5">
+              <TechNewsCard post={posts[0]} index={0} featured />
+
+              <div className="grid grid-cols-2 grid-rows-2 gap-3 sm:gap-4">
+                {posts.slice(1, 5).map((post, index) => (
+                  <TechNewsCard key={post.id} post={post} index={index + 1} compact />
+                ))}
+              </div>
             </div>
 
             <div className="mt-6 flex justify-center sm:hidden">
