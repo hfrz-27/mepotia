@@ -1,6 +1,6 @@
-import TechPriceLookupSection from "@/components/TechPriceLookupSection";
-import ProductCard from "@/components/ProductCard";
 import BackHomeLink from "@/components/BackHomeLink";
+import TechPriceLookupSection from "@/components/TechPriceLookupSection";
+import PriceCompareFeatured from "@/components/PriceCompareFeatured";
 import { Sparkles } from "lucide-react";
 import { getPublishedProducts } from "@/lib/products";
 
@@ -11,53 +11,39 @@ export const metadata = {
 
 export default async function PriceComparisonPage() {
   const { data: featuredProducts } = await getPublishedProducts({
-    limit: 4,
+    limit: 8,
     featured: true,
     orderBy: "created_at",
   });
 
   return (
     <main className="min-h-screen bg-bw-50">
-      <div className="mx-auto max-w-7xl px-4 pt-6 sm:px-6 lg:px-8">
-        <BackHomeLink label="Vitrine dön" />
-      </div>
-      <TechPriceLookupSection />
-      <section className="border-b border-bw-200 bg-bw-50">
-        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <p className="inline-flex items-center gap-2 text-[10px] font-semibold tracking-[0.22em] text-bw-500 uppercase">
-                <Sparkles className="h-3.5 w-3.5" />
-                Seçilmiş ilanlar
-              </p>
-              <h2 className="mt-2 font-display text-3xl font-semibold tracking-wide text-bw-950">
-                Fırsat ürünler
-              </h2>
-              <p className="mt-2 text-sm text-bw-600">
-                Vitrinde öne çıkarılan fırsatları incele.
-              </p>
-            </div>
+      <section className="relative overflow-hidden bg-bw-50">
+        <div className="story-band-grid absolute inset-0 opacity-[0.035]" aria-hidden />
+        <div className="absolute -top-32 right-[-7rem] h-80 w-80 rounded-full bg-amber-200/40 blur-3xl" aria-hidden />
+        <div className="absolute -left-24 top-28 h-56 w-56 rounded-full bg-bw-300/30 blur-3xl" aria-hidden />
+
+        <div className="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+          <BackHomeLink variant="minimal" label="Anasayfaya dön" className="mb-6 text-bw-700" />
+
+          <div>
+            <p className="inline-flex items-center gap-2 text-[10px] font-semibold tracking-[0.22em] text-bw-500 uppercase">
+              <Sparkles className="h-3.5 w-3.5" />
+              Örnek ürünler
+            </p>
+            <h1 className="mt-2 font-display text-2xl font-semibold tracking-wide text-bw-950 sm:text-3xl">
+              Fırsat ürünler
+            </h1>
+            <p className="mt-2 text-sm text-bw-600">
+              Yana kaydırarak vitrindeki örnek ilanlara bak.
+            </p>
           </div>
 
-          {featuredProducts?.length ? (
-            <div className="mt-7 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-              {featuredProducts.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  neutralBadges
-                  showCompareLink={false}
-                />
-              ))}
-            </div>
-          ) : (
-            <p className="mt-7 rounded-2xl border border-dashed border-bw-300 bg-white px-5 py-7 text-sm text-bw-500">
-              Henüz fırsat ürünü yok. İlan verirken “Fırsat ürünü olarak göster” seçeneğini
-              işaretlediğin ürünler burada görünür.
-            </p>
-          )}
+          <PriceCompareFeatured products={featuredProducts || []} />
         </div>
       </section>
+
+      <TechPriceLookupSection />
     </main>
   );
 }

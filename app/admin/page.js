@@ -19,6 +19,7 @@ import { recoverPhotosFromStorage } from "@/lib/recoverPhotos";
 import { deleteProductFully } from "@/lib/deleteProduct";
 import ShareProductButtons from "@/components/ShareProductButtons";
 import TechPostsAdmin from "@/components/admin/TechPostsAdmin";
+import HeroBackgroundAdmin from "@/components/admin/HeroBackgroundAdmin";
 import { purgeSiteFromBrowser } from "@/lib/sitePurgeClient";
 
 function productImage(p) {
@@ -174,7 +175,8 @@ export default function AdminPage() {
       t === "offers" ||
       t === "requests" ||
       t === "tech" ||
-      t === "feedback"
+      t === "feedback" ||
+      t === "site"
     ) {
       setTab(t);
     }
@@ -573,6 +575,20 @@ export default function AdminPage() {
           }`}
         >
           Vitrin / ilan düzenle
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setTab("site");
+            window.history.replaceState(null, "", "/admin?tab=site");
+          }}
+          className={`rounded-xl px-4 py-2 text-sm font-semibold ${
+            tab === "site"
+              ? "bg-bw-950 text-white"
+              : "border border-bw-200 text-bw-600"
+          }`}
+        >
+          Ana sayfa hero
         </button>
         <button
           type="button"
@@ -1031,6 +1047,12 @@ export default function AdminPage() {
 
       {tab === "tech" ? (
         <TechPostsAdmin posts={techPosts} onReload={load} sqlMissing={techSqlMissing} />
+      ) : null}
+
+      {tab === "site" ? (
+        <div className="mt-6">
+          <HeroBackgroundAdmin />
+        </div>
       ) : null}
 
       <section className="mt-16 overflow-hidden rounded-[1.75rem] border border-bw-200 bg-white shadow-[0_24px_60px_-48px_rgba(0,0,0,0.35)]">

@@ -48,7 +48,9 @@ export default async function HomePage() {
   return (
     <HomeReviewsProvider>
       <main>
-      <HeroSection />
+      <HeroSection
+        heroImages={[settings?.hero_bg_1, settings?.hero_bg_2, settings?.hero_bg_3].filter(Boolean)}
+      />
 
       <BuySellAccordion />
 

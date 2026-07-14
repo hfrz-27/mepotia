@@ -4,16 +4,28 @@ import Link from "next/link";
 import { ArrowRight, BadgeDollarSign, Sparkles } from "lucide-react";
 import HeroSearch from "@/components/HeroSearch";
 import TrustStrip from "@/components/TrustStrip";
+import HeroBackgroundCarousel from "@/components/HeroBackgroundCarousel";
 import { ReviewThinStrip } from "@/components/HomeReviews";
 
-export default function HeroSection() {
+export default function HeroSection({ heroImages = [] }) {
+  const hasPhotos = heroImages.filter(Boolean).length > 0;
+
   return (
     <section className="relative overflow-hidden bg-[#1c1f26]">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#3a3f4b] via-[#252830] to-[#14161c]" aria-hidden />
-      <div
-        className="absolute inset-0 bg-[radial-gradient(ellipse_at_20%_0%,rgba(255,255,255,0.14)_0%,transparent_55%),radial-gradient(ellipse_at_80%_100%,rgba(255,255,255,0.06)_0%,transparent_50%)]"
-        aria-hidden
-      />
+      {hasPhotos ? (
+        <HeroBackgroundCarousel images={heroImages} />
+      ) : (
+        <>
+          <div
+            className="absolute inset-0 bg-gradient-to-br from-[#3a3f4b] via-[#252830] to-[#14161c]"
+            aria-hidden
+          />
+          <div
+            className="absolute inset-0 bg-[radial-gradient(ellipse_at_20%_0%,rgba(255,255,255,0.14)_0%,transparent_55%),radial-gradient(ellipse_at_80%_100%,rgba(255,255,255,0.06)_0%,transparent_50%)]"
+            aria-hidden
+          />
+        </>
+      )}
       <div className="hero-grid absolute inset-0 opacity-[0.07]" aria-hidden />
 
       <div className="relative mx-auto max-w-4xl px-4 pt-12 pb-4 sm:px-6 sm:pt-16 lg:px-8">

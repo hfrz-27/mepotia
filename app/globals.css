@@ -165,6 +165,29 @@ body {
   scroll-behavior: auto;
 }
 
+@keyframes hero-bg-zoom {
+  from {
+    transform: scale(1.03);
+  }
+  to {
+    transform: scale(1.1);
+  }
+}
+
+.hero-bg-slide {
+  will-change: opacity, transform;
+}
+
+.hero-bg-slide.opacity-100 {
+  animation: hero-bg-zoom 22s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-bg-slide.opacity-100 {
+    animation: none;
+  }
+}
+
 .hero-grid {
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
