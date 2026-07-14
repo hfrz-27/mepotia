@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppHelpButton from "@/components/WhatsAppHelpButton";
+import GlobalNewsDrawer from "@/components/GlobalNewsDrawer";
 
 export default function AppShell({ children }) {
   const pathname = usePathname();
@@ -17,6 +18,7 @@ export default function AppShell({ children }) {
         <>
           <Footer />
           <WhatsAppHelpButton />
+          <GlobalNewsDrawer />
         </>
       )}
     </>

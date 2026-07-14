@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Clock3, Cpu } from "lucide-react";
 import TechNewsViewSync from "@/components/TechNewsViewSync";
-import TechNewsSwipePanel from "@/components/TechNewsSwipePanel";
+import TechNewsSwipeHint from "@/components/TechNewsSwipeHint";
 import {
   getTechPosts,
   resolveTechPostsPageSize,
@@ -105,11 +105,7 @@ export default async function TeknolojiPage({ searchParams }) {
             {page > 1 ? "Bu sayfada haber yok." : "Henüz paylaşım yok."}
           </p>
         ) : (
-          <TechNewsSwipePanel
-            posts={posts}
-            previousHref={page > 1 ? buildRedirectPath(page - 1, view) : null}
-            nextHref={page < totalPages ? buildRedirectPath(page + 1, view) : null}
-          />
+          <TechNewsSwipeHint />
         )}
       </div>
     </main>
