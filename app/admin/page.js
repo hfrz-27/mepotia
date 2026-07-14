@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import ProductImage from "@/components/ProductImage";
 import Link from "next/link";
 import Image from "next/image";
-import { ShoppingBag, Search, Pencil } from "lucide-react";
+import { ShoppingBag, Search, Pencil, Rss } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import { recoverPhotosFromStorage } from "@/lib/recoverPhotos";
 import ShareProductButtons from "@/components/ShareProductButtons";
@@ -47,6 +47,8 @@ export default function AdminPage() {
   const [productSqlHint, setProductSqlHint] = useState("");
   const [recovering, setRecovering] = useState(false);
   const [recoverDone, setRecoverDone] = useState(false);
+  const [newsSyncing, setNewsSyncing] = useState(false);
+  const [newsMsg, setNewsMsg] = useState("");
 
   const load = async () => {
     const supabase = createClient();
@@ -248,6 +250,25 @@ export default function AdminPage() {
     load();
   };
 
+  const syncShiftDeleteNews = async () => {
+    setNewsSyncing(true);
+    setNewsMsg("");
+    try {
+      const res = await fetch("/api/sync-tech-news", { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Haberler çekilemedi.");
+      const parts = [`${data.imported} yeni haber eklendi.`];
+      if (data.skipped) parts.push(`${data.skipped} zaten vardı.`);
+      if (data.errors?.length) parts.push(`${data.errors.length} haber atlandı.`);
+      setNewsMsg(parts.join(" "));
+      if (data.imported > 0) await load();
+    } catch (err) {
+      setNewsMsg(err?.message || "ShiftDelete haberleri alınamadı.");
+    } finally {
+      setNewsSyncing(false);
+    }
+  };
+
   return (
     <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <div className="flex flex-wrap items-end justify-between gap-4">
@@ -270,6 +291,36 @@ export default function AdminPage() {
           >
             İlanları düzenle
           </Link>
+        </div>
+      </div>
+
+      <div className="mt-6 overflow-hidden rounded-[1.75rem] border border-amber-200/80 bg-gradient-to-r from-bw-950 via-bw-900 to-bw-950 p-5 sm:p-6">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="inline-flex items-center gap-2 text-[10px] font-semibold tracking-[0.22em] text-amber-200/90 uppercase">
+              <Rss className="h-3.5 w-3.5" />
+              ShiftDelete.Net
+            </p>
+            <p className="mt-2 text-lg font-semibold text-white">Teknoloji haberlerini otomatik çek</p>
+            <p className="mt-1 text-sm text-bw-300">
+              shiftdelete.net/teknoloji-haberleri kaynağından son haberler siteye eklenir.
+            </p>
+            {newsMsg ? <p className="mt-3 text-sm font-medium text-amber-100">{newsMsg}</p> : null}
+            {techSqlMissing ? (
+              <p className="mt-3 text-xs text-amber-200/90">
+                Önce Supabase&apos;te <code className="rounded bg-white/10 px-1">tech_posts.sql</code> çalıştır.
+              </p>
+            ) : null}
+          </div>
+          <button
+            type="button"
+            onClick={syncShiftDeleteNews}
+            disabled={newsSyncing || techSqlMissing}
+            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl bg-white px-6 py-3.5 text-sm font-semibold text-bw-950 hover:bg-bw-100 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <Rss className="h-4 w-4" />
+            {newsSyncing ? "Çekiliyor..." : "Haberleri şimdi çek"}
+          </button>
         </div>
       </div>
 
