@@ -12,11 +12,15 @@ const GlobalNewsDrawer = dynamic(() => import("@/components/GlobalNewsDrawer"), 
 
 export default function AppShell({ children }) {
   const pathname = usePathname();
-  const bare = pathname === "/giris" || pathname?.startsWith("/giris/");
+  const isAdmin = pathname === "/admin" || pathname?.startsWith("/admin/");
+  const bare =
+    pathname === "/giris" ||
+    pathname?.startsWith("/giris/") ||
+    isAdmin;
 
   return (
     <>
-      <Navbar />
+      {isAdmin ? null : <Navbar />}
       <div className="flex-1">{children}</div>
       {bare ? null : (
         <>

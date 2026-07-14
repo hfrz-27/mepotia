@@ -167,7 +167,7 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
   const previewCover = coverPreview || existingCover;
 
   return (
-    <div className="mt-6 space-y-8">
+    <div className="space-y-6">
       <div className="overflow-hidden rounded-[1.75rem] border border-amber-200/80 bg-gradient-to-r from-bw-950 via-bw-900 to-bw-950 p-5 shadow-[0_32px_80px_-48px_rgba(0,0,0,0.55)] sm:p-6">
         <div className="max-w-2xl">
           <p className="inline-flex items-center gap-2 text-[10px] font-semibold tracking-[0.22em] text-amber-200/90 uppercase">

@@ -5,13 +5,10 @@ import ProductImage from "@/components/ProductImage";
 import Link from "next/link";
 import Image from "next/image";
 import {
-  ShoppingBag,
-  Search,
   Pencil,
   Trash2,
   ChevronDown,
   AlertTriangle,
-  MessageSquare,
   Star,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase";
@@ -20,6 +17,13 @@ import { deleteProductFully } from "@/lib/deleteProduct";
 import ShareProductButtons from "@/components/ShareProductButtons";
 import TechPostsAdmin from "@/components/admin/TechPostsAdmin";
 import HeroBackgroundAdmin from "@/components/admin/HeroBackgroundAdmin";
+import AdminLayout from "@/components/admin/AdminLayout";
+import AdminToast from "@/components/admin/AdminToast";
+import AdminKpiBar from "@/components/admin/AdminKpiBar";
+import AdminEmptyState from "@/components/admin/AdminEmptyState";
+import AdminSqlAlert from "@/components/admin/AdminSqlAlert";
+import AdminRecordCard from "@/components/admin/AdminRecordCard";
+import { ADMIN_TAB_IDS, findAdminTab } from "@/components/admin/adminNav";
 import { purgeSiteFromBrowser } from "@/lib/sitePurgeClient";
 
 function productImage(p) {
@@ -170,17 +174,17 @@ export default function AdminPage() {
     load();
     const params = new URLSearchParams(window.location.search);
     const t = params.get("tab");
-    if (
-      t === "products" ||
-      t === "offers" ||
-      t === "requests" ||
-      t === "tech" ||
-      t === "feedback" ||
-      t === "site"
-    ) {
+    if (ADMIN_TAB_IDS.includes(t)) {
       setTab(t);
     }
   }, []);
+
+  const changeTab = (next) => {
+    setTab(next);
+    window.history.replaceState(null, "", `/admin?tab=${next}`);
+  };
+
+  const currentTab = findAdminTab(tab);
 
   const runPhotoRecovery = async (silent = false) => {
     setRecovering(true);
@@ -345,319 +349,85 @@ export default function AdminPage() {
     }
   };
 
+  const kpis =
+    tab === "offers"
+      ? [
+          { label: "Yeni teklif", value: stats.offersNew },
+          { label: "Toplam teklif", value: stats.offersAll },
+        ]
+      : tab === "requests"
+        ? [
+            { label: "Yeni istek", value: stats.requestsNew },
+            { label: "Toplam istek", value: stats.requestsAll },
+          ]
+        : tab === "feedback"
+          ? [
+              { label: "Yeni görüş", value: stats.feedbackNew },
+              { label: "Toplam görüş", value: stats.feedbackAll },
+            ]
+          : tab === "products"
+            ? [
+                { label: "Vitrin ürünü", value: stats.products },
+                { label: "Öne çıkan", value: stats.featured },
+                { label: "Görüntülenme", value: stats.views },
+              ]
+            : [];
+
+  const actionBtn =
+    "rounded-xl border border-bw-200 px-3 py-2 text-xs font-semibold text-bw-800 transition hover:border-bw-300";
+  const primaryBtn =
+    "rounded-xl bg-bw-950 px-3 py-2 text-xs font-semibold text-white transition hover:bg-bw-800";
+
   return (
-    <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <p className="text-xs tracking-[0.22em] text-bw-500 uppercase">Yönetim</p>
-          <h1 className="mt-2 font-display text-4xl font-semibold tracking-wide text-bw-950">
-            Stüdyo
-          </h1>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <Link
-            href="/ilan-ver"
-            className="rounded-2xl bg-bw-950 px-5 py-3 text-sm font-semibold text-white hover:bg-bw-800"
-          >
-            + Yeni ilan
-          </Link>
-          <Link
-            href="/admin?tab=products"
-            className="rounded-2xl border border-bw-300 bg-white px-5 py-3 text-sm font-semibold text-bw-900 hover:border-bw-950"
-          >
-            İlanları düzenle
-          </Link>
-        </div>
-      </div>
+    <AdminLayout
+      tab={tab}
+      stats={stats}
+      onTabChange={changeTab}
+      title={currentTab?.label || "Yönetim"}
+      subtitle={currentTab?.group || "Panel"}
+    >
+      <AdminToast message={msg} onDismiss={() => setMsg("")} />
 
       {deployOutdated ? (
-        <div className="mt-6 rounded-2xl border border-amber-300 bg-amber-50 px-5 py-4 text-sm text-amber-950">
-          <p className="font-semibold">Canlı site güncel değil</p>
-          <p className="mt-1">
-            Kod GitHub&apos;da hazır ama canli site eski surumu gosteriyor. Hosting panelinden
-            yeni deploy al veya birkaç dakika bekle.
-          </p>
-        </div>
+        <AdminSqlAlert title="Canlı site güncel değil">
+          Kod GitHub&apos;da hazır ama canlı site eski sürümü gösteriyor. Hosting panelinden yeni
+          deploy al veya birkaç dakika bekle.
+        </AdminSqlAlert>
       ) : null}
 
-      {/* Üst sayılar — net ayrım */}
-      <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        <button
-          type="button"
-          onClick={() => setTab("offers")}
-          className={`rounded-[1.75rem] border p-5 text-left transition sm:p-6 ${
-            tab === "offers"
-              ? "border-bw-950 bg-bw-950 text-white"
-              : "border-bw-200 bg-white text-bw-950 hover:border-bw-400"
-          }`}
-        >
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <span
-                className={`flex h-11 w-11 items-center justify-center rounded-2xl ${
-                  tab === "offers" ? "bg-white/10" : "bg-bw-50"
-                }`}
-              >
-                <ShoppingBag className="h-5 w-5" />
-              </span>
-              <div>
-                <p className="text-sm font-semibold">Satış teklifleri</p>
-                <p
-                  className={`mt-0.5 text-xs ${
-                    tab === "offers" ? "text-bw-300" : "text-bw-500"
-                  }`}
-                >
-                  Bana sat formundan
-                </p>
-              </div>
-            </div>
-            <p className="font-display text-4xl font-semibold tabular-nums">
-              {stats.offersNew}
-            </p>
-          </div>
-          <p
-            className={`mt-3 text-xs ${
-              tab === "offers" ? "text-bw-400" : "text-bw-400"
-            }`}
-          >
-            {stats.offersNew} yeni · toplam {stats.offersAll}
-          </p>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setTab("feedback")}
-          className={`rounded-[1.75rem] border p-5 text-left transition sm:p-6 ${
-            tab === "feedback"
-              ? "border-bw-950 bg-bw-950 text-white"
-              : "border-bw-200 bg-white text-bw-950 hover:border-bw-400"
-          }`}
-        >
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <span
-                className={`flex h-11 w-11 items-center justify-center rounded-2xl ${
-                  tab === "feedback" ? "bg-white/10" : "bg-bw-50"
-                }`}
-              >
-                <MessageSquare className="h-5 w-5" />
-              </span>
-              <div>
-                <p className="text-sm font-semibold">Şikayet & öneri</p>
-                <p
-                  className={`mt-0.5 text-xs ${
-                    tab === "feedback" ? "text-bw-300" : "text-bw-500"
-                  }`}
-                >
-                  Footer anketinden
-                </p>
-              </div>
-            </div>
-            <p className="font-display text-4xl font-semibold tabular-nums">
-              {stats.feedbackNew}
-            </p>
-          </div>
-          <p
-            className={`mt-3 text-xs ${
-              tab === "feedback" ? "text-bw-400" : "text-bw-400"
-            }`}
-          >
-            {stats.feedbackNew} yeni · toplam {stats.feedbackAll}
-          </p>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setTab("requests")}
-          className={`rounded-[1.75rem] border p-5 text-left transition sm:p-6 ${
-            tab === "requests"
-              ? "border-bw-950 bg-bw-950 text-white"
-              : "border-bw-200 bg-white text-bw-950 hover:border-bw-400"
-          }`}
-        >
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <span
-                className={`flex h-11 w-11 items-center justify-center rounded-2xl ${
-                  tab === "requests" ? "bg-white/10" : "bg-bw-50"
-                }`}
-              >
-                <Search className="h-5 w-5" />
-              </span>
-              <div>
-                <p className="text-sm font-semibold">Ürün istekleri</p>
-                <p
-                  className={`mt-0.5 text-xs ${
-                    tab === "requests" ? "text-bw-300" : "text-bw-500"
-                  }`}
-                >
-                  Ürün iste formundan
-                </p>
-              </div>
-            </div>
-            <p className="font-display text-4xl font-semibold tabular-nums">
-              {stats.requestsNew}
-            </p>
-          </div>
-          <p
-            className={`mt-3 text-xs ${
-              tab === "requests" ? "text-bw-400" : "text-bw-400"
-            }`}
-          >
-            {stats.requestsNew} yeni · toplam {stats.requestsAll}
-          </p>
-        </button>
-      </div>
-
-      <div className="mt-4 grid grid-cols-3 gap-3">
-        {[
-          ["Ürün", stats.products],
-          ["Öne çıkan", stats.featured],
-          ["Görüntülenme", stats.views],
-        ].map(([label, value]) => (
-          <div
-            key={label}
-            className="rounded-3xl border border-bw-200 bg-white p-4 shadow-sm sm:p-5"
-          >
-            <p className="text-2xl font-semibold text-bw-950 sm:text-3xl">{value}</p>
-            <p className="mt-1 text-xs text-bw-500">{label}</p>
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-8 flex flex-wrap gap-2">
-        <button
-          type="button"
-          onClick={() => setTab("offers")}
-          className={`rounded-xl px-4 py-2 text-sm font-semibold ${
-            tab === "offers"
-              ? "bg-bw-950 text-white"
-              : "border border-bw-200 text-bw-600"
-          }`}
-        >
-          Satış teklifleri ({stats.offersNew})
-        </button>
-        <button
-          type="button"
-          onClick={() => setTab("requests")}
-          className={`rounded-xl px-4 py-2 text-sm font-semibold ${
-            tab === "requests"
-              ? "bg-bw-950 text-white"
-              : "border border-bw-200 text-bw-600"
-          }`}
-        >
-          Ürün istekleri ({stats.requestsNew})
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            setTab("feedback");
-            window.history.replaceState(null, "", "/admin?tab=feedback");
-          }}
-          className={`rounded-xl px-4 py-2 text-sm font-semibold ${
-            tab === "feedback"
-              ? "bg-bw-950 text-white"
-              : "border border-bw-200 text-bw-600"
-          }`}
-        >
-          Şikayet & öneri ({stats.feedbackNew})
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            setTab("products");
-            window.history.replaceState(null, "", "/admin?tab=products");
-          }}
-          className={`rounded-xl px-4 py-2 text-sm font-semibold ${
-            tab === "products"
-              ? "bg-bw-950 text-white"
-              : "border border-bw-200 text-bw-600"
-          }`}
-        >
-          Vitrin / ilan düzenle
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            setTab("site");
-            window.history.replaceState(null, "", "/admin?tab=site");
-          }}
-          className={`rounded-xl px-4 py-2 text-sm font-semibold ${
-            tab === "site"
-              ? "bg-bw-950 text-white"
-              : "border border-bw-200 text-bw-600"
-          }`}
-        >
-          Ana sayfa hero
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            setTab("tech");
-            window.history.replaceState(null, "", "/admin?tab=tech");
-          }}
-          className={`rounded-xl px-4 py-2 text-sm font-semibold ${
-            tab === "tech"
-              ? "bg-bw-950 text-white"
-              : "border border-bw-200 text-bw-600"
-          }`}
-        >
-          Teknoloji yazıları
-        </button>
-      </div>
-
-      {msg ? <p className="mt-4 text-sm text-bw-500">{msg}</p> : null}
+      <AdminKpiBar items={kpis} />
 
       {sqlHint && (tab === "offers" || tab === "requests") ? (
-        <div className="mt-6 rounded-3xl border border-bw-300 bg-bw-50 px-5 py-5 text-sm leading-relaxed text-bw-700">
-          <p className="font-semibold text-bw-950">SQL eksik</p>
-          <p className="mt-2">
-            Supabase SQL Editor’da{" "}
-            <code className="rounded bg-white px-1.5 py-0.5 text-xs">
-              supabase/{sqlHint}
-            </code>{" "}
-            çalıştır.
-          </p>
-        </div>
+        <AdminSqlAlert title="SQL eksik">
+          Supabase SQL Editor&apos;da{" "}
+          <code className="rounded bg-white px-1.5 py-0.5 text-xs">supabase/{sqlHint}</code>{" "}
+          çalıştır.
+        </AdminSqlAlert>
       ) : null}
 
       {tab === "offers" ? (
-        <div className="mt-6 space-y-3">
+        <div className="space-y-4">
           {!offers.length ? (
-            <div className="rounded-3xl border border-dashed border-bw-300 bg-white px-6 py-16 text-center text-sm text-bw-500">
-              Henüz satış teklifi yok.
-            </div>
+            <AdminEmptyState title="Henüz satış teklifi yok." />
           ) : (
             offers.map((o) => (
-              <article
+              <AdminRecordCard
                 key={o.id}
-                className={`rounded-3xl border bg-white p-5 shadow-sm sm:p-6 ${
-                  o.status === "new" ? "border-bw-900" : "border-bw-200 opacity-80"
+                isNew={o.status === "new"}
+                eyebrow={`Satış teklifi${o.status === "new" ? " · Yeni" : ` · ${o.status}`}`}
+                title={o.title}
+                meta={`${o.contact_name} · ${o.phone}${o.city ? ` · ${o.city}` : ""}${
+                  o.price != null ? ` · ${Number(o.price).toLocaleString("tr-TR")} ₺` : ""
                 }`}
-              >
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="text-xs tracking-wide text-bw-400 uppercase">
-                      Satış teklifi
-                      {o.status === "new" ? " · Yeni" : ` · ${o.status}`}
-                    </p>
-                    <h2 className="mt-1 font-display text-xl font-semibold text-bw-950">
-                      {o.title}
-                    </h2>
-                    <p className="mt-1 text-sm text-bw-500">
-                      {o.contact_name} · {o.phone}
-                      {o.city ? ` · ${o.city}` : ""}
-                      {o.price != null
-                        ? ` · ${Number(o.price).toLocaleString("tr-TR")} ₺`
-                        : ""}
-                    </p>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
+                body={o.description}
+                footer={o.created_at ? new Date(o.created_at).toLocaleString("tr-TR") : null}
+                actions={
+                  <>
                     <a
                       href={`https://wa.me/${String(o.phone).replace(/\D/g, "")}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="rounded-xl border border-bw-200 px-3 py-2 text-xs font-semibold text-bw-800"
+                      className={actionBtn}
                     >
                       WhatsApp
                     </a>
@@ -665,7 +435,7 @@ export default function AdminPage() {
                       <button
                         type="button"
                         onClick={() => setOfferStatus(o.id, "accepted")}
-                        className="rounded-xl bg-bw-950 px-3 py-2 text-xs font-semibold text-white"
+                        className={primaryBtn}
                       >
                         Okundu
                       </button>
@@ -673,17 +443,15 @@ export default function AdminPage() {
                     <button
                       type="button"
                       onClick={() => removeOffer(o.id)}
-                      className="rounded-xl px-3 py-2 text-xs text-bw-400 underline"
+                      className="rounded-xl px-3 py-2 text-xs font-semibold text-bw-400 underline"
                     >
                       Sil
                     </button>
-                  </div>
-                </div>
-                <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-bw-500">
-                  {o.description}
-                </p>
+                  </>
+                }
+              >
                 {Array.isArray(o.image_urls) && o.image_urls.length ? (
-                  <div className="mt-4 flex gap-2 overflow-x-auto">
+                  <div className="news-touch-scroll hide-scrollbar flex gap-2 overflow-x-auto">
                     {o.image_urls.map((url) => (
                       <a
                         key={url}
@@ -692,82 +460,44 @@ export default function AdminPage() {
                         rel="noreferrer"
                         className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl border border-bw-200"
                       >
-                        <Image
-                          src={url}
-                          alt=""
-                          fill
-                          className="object-cover"
-                          sizes="96px"
-                        />
+                        <Image src={url} alt="" fill className="object-cover" sizes="96px" />
                       </a>
                     ))}
                   </div>
                 ) : null}
-                <p className="mt-3 text-xs text-bw-400">
-                  {o.created_at
-                    ? new Date(o.created_at).toLocaleString("tr-TR")
-                    : ""}
-                </p>
-              </article>
+              </AdminRecordCard>
             ))
           )}
         </div>
       ) : null}
 
       {feedbackSqlMissing && tab === "feedback" ? (
-        <div className="mt-6 rounded-3xl border border-bw-300 bg-bw-50 px-5 py-5 text-sm leading-relaxed text-bw-700">
-          <p className="font-semibold text-bw-950">SQL eksik</p>
-          <p className="mt-2">
-            Supabase SQL Editor&apos;da{" "}
-            <code className="rounded bg-white px-1.5 py-0.5 text-xs">
-              supabase/site_feedback.sql
-            </code>{" "}
-            çalıştır.
-          </p>
-        </div>
+        <AdminSqlAlert title="SQL eksik">
+          Supabase SQL Editor&apos;da{" "}
+          <code className="rounded bg-white px-1.5 py-0.5 text-xs">supabase/site_feedback.sql</code>{" "}
+          çalıştır.
+        </AdminSqlAlert>
       ) : null}
 
       {tab === "feedback" ? (
-        <div className="mt-6 space-y-3">
+        <div className="space-y-4">
           {!feedback.length ? (
-            <div className="rounded-3xl border border-dashed border-bw-300 bg-white px-6 py-16 text-center text-sm text-bw-500">
-              Henüz görüş yok.
-            </div>
+            <AdminEmptyState title="Henüz görüş yok." />
           ) : (
             feedback.map((f) => (
-              <article
+              <AdminRecordCard
                 key={f.id}
-                className={`rounded-3xl border bg-white p-5 shadow-sm sm:p-6 ${
-                  f.status === "new" ? "border-bw-900" : "border-bw-200 opacity-80"
-                }`}
-              >
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="text-xs tracking-wide text-bw-400 uppercase">
-                      {feedbackLabel(f.category)}
-                      {f.status === "new" ? " · Yeni" : ` · ${f.status}`}
-                    </p>
-                    {f.rating ? (
-                      <div className="mt-2 flex gap-0.5">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`h-4 w-4 ${
-                              i < f.rating
-                                ? "fill-amber-400 text-amber-400"
-                                : "text-bw-200"
-                            }`}
-                          />
-                        ))}
-                      </div>
-                    ) : null}
-                  </div>
-                  <div className="flex flex-wrap gap-2">
+                isNew={f.status === "new"}
+                eyebrow={`${feedbackLabel(f.category)}${f.status === "new" ? " · Yeni" : ` · ${f.status}`}`}
+                footer={f.created_at ? new Date(f.created_at).toLocaleString("tr-TR") : null}
+                body={null}
+                actions={
+                  <>
                     {f.status === "new" ? (
                       <button
                         type="button"
                         onClick={() => setFeedbackStatus(f.id, "read")}
-                        className="rounded-xl bg-bw-950 px-3 py-2 text-xs font-semibold text-white"
+                        className={primaryBtn}
                       >
                         Okundu
                       </button>
@@ -775,60 +505,57 @@ export default function AdminPage() {
                     <button
                       type="button"
                       onClick={() => removeFeedback(f.id)}
-                      className="rounded-xl px-3 py-2 text-xs text-bw-400 underline"
+                      className="rounded-xl px-3 py-2 text-xs font-semibold text-bw-400 underline"
                     >
                       Sil
                     </button>
+                  </>
+                }
+              >
+                {f.rating ? (
+                  <div className="mb-3 flex gap-0.5">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star
+                        key={i}
+                        className={`h-4 w-4 ${
+                          i < f.rating ? "fill-amber-400 text-amber-400" : "text-bw-200"
+                        }`}
+                      />
+                    ))}
                   </div>
-                </div>
-                <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-bw-600">
-                  {f.message}
-                </p>
-                <p className="mt-3 text-xs text-bw-400">
-                  {f.created_at ? new Date(f.created_at).toLocaleString("tr-TR") : ""}
-                </p>
-              </article>
+                ) : null}
+                <p className="whitespace-pre-wrap text-sm leading-relaxed text-bw-600">{f.message}</p>
+              </AdminRecordCard>
             ))
           )}
         </div>
       ) : null}
 
       {tab === "requests" ? (
-        <div className="mt-6 space-y-3">
+        <div className="space-y-4">
           {!requests.length ? (
-            <div className="rounded-3xl border border-dashed border-bw-300 bg-white px-6 py-16 text-center text-sm text-bw-500">
-              Henüz ürün isteği yok.
-            </div>
+            <AdminEmptyState title="Henüz ürün isteği yok." />
           ) : (
             requests.map((r) => (
-              <article
+              <AdminRecordCard
                 key={r.id}
-                className={`rounded-3xl border bg-white p-5 shadow-sm sm:p-6 ${
-                  r.status === "new" ? "border-bw-900" : "border-bw-200 opacity-80"
+                isNew={r.status === "new"}
+                eyebrow={`Ürün isteği${r.status === "new" ? " · Yeni" : ` · ${r.status}`}`}
+                title={r.title}
+                meta={`${r.phone}${
+                  r.price_min != null || r.price_max != null
+                    ? ` · ${r.price_min ?? "?"}–${r.price_max ?? "?"} ₺`
+                    : ""
                 }`}
-              >
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="text-xs tracking-wide text-bw-400 uppercase">
-                      Ürün isteği
-                      {r.status === "new" ? " · Yeni" : ` · ${r.status}`}
-                    </p>
-                    <h2 className="mt-1 font-display text-xl font-semibold text-bw-950">
-                      {r.title}
-                    </h2>
-                    <p className="mt-1 text-sm text-bw-500">
-                      {r.phone}
-                      {r.price_min != null || r.price_max != null
-                        ? ` · ${r.price_min ?? "?"}–${r.price_max ?? "?"} ₺`
-                        : ""}
-                    </p>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
+                body={r.description}
+                footer={r.created_at ? new Date(r.created_at).toLocaleString("tr-TR") : null}
+                actions={
+                  <>
                     <a
                       href={`https://wa.me/${String(r.phone).replace(/\D/g, "")}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="rounded-xl border border-bw-200 px-3 py-2 text-xs font-semibold text-bw-800"
+                      className={actionBtn}
                     >
                       WhatsApp
                     </a>
@@ -836,7 +563,7 @@ export default function AdminPage() {
                       <button
                         type="button"
                         onClick={() => setRequestStatus(r.id, "done")}
-                        className="rounded-xl bg-bw-950 px-3 py-2 text-xs font-semibold text-white"
+                        className={primaryBtn}
                       >
                         Okundu
                       </button>
@@ -844,65 +571,55 @@ export default function AdminPage() {
                     <button
                       type="button"
                       onClick={() => removeRequest(r.id)}
-                      className="rounded-xl px-3 py-2 text-xs text-bw-400 underline"
+                      className="rounded-xl px-3 py-2 text-xs font-semibold text-bw-400 underline"
                     >
                       Sil
                     </button>
-                  </div>
-                </div>
-                <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-bw-500">
-                  {r.description}
-                </p>
-                <p className="mt-3 text-xs text-bw-400">
-                  {r.created_at
-                    ? new Date(r.created_at).toLocaleString("tr-TR")
-                    : ""}
-                </p>
-              </article>
+                  </>
+                }
+              />
             ))
           )}
         </div>
       ) : null}
 
       {tab === "products" ? (
-        <div className="mt-6 space-y-4">
+        <div className="space-y-4">
           {productSqlHint ? (
-            <div className="rounded-3xl border border-amber-200 bg-amber-50 px-5 py-5 text-sm leading-relaxed text-amber-950">
-              <p className="font-semibold">İndirim alanları eksik</p>
-              <p className="mt-2">
-                Supabase SQL Editor&apos;da{" "}
-                <code className="rounded bg-white px-1.5 py-0.5 text-xs">
-                  supabase/{productSqlHint}
-                </code>{" "}
-                çalıştır. Ürünler şimdilik indirim özelliği olmadan listeleniyor.
-              </p>
-            </div>
+            <AdminSqlAlert title="İndirim alanları eksik">
+              Supabase SQL Editor&apos;da{" "}
+              <code className="rounded bg-white px-1.5 py-0.5 text-xs">
+                supabase/{productSqlHint}
+              </code>{" "}
+              çalıştır. Ürünler şimdilik indirim özelliği olmadan listeleniyor.
+            </AdminSqlAlert>
           ) : null}
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="rounded-2xl border border-bw-200 bg-bw-50 px-5 py-4 text-sm text-bw-600">
-              <strong className="text-bw-950">İlan düzenle:</strong> Ürünün altındaki siyah{" "}
-              <strong>İlanı düzenle</strong> butonuna bas. Başlık, fiyat, fotoğraf ve açıklama
-              değişir.
-            </div>
+          <div className="flex flex-col gap-3 rounded-2xl border border-bw-200 bg-white px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm text-bw-600">
+              <strong className="text-bw-950">İlan düzenle:</strong> Ürünün altındaki{" "}
+              <strong>İlanı düzenle</strong> ile başlık, fiyat, fotoğraf ve açıklamayı güncelle.
+            </p>
             <button
               type="button"
               disabled={recovering}
               onClick={() => runPhotoRecovery(false)}
-              className="shrink-0 rounded-xl border border-bw-300 bg-white px-5 py-3 text-sm font-semibold text-bw-800 hover:border-bw-950 disabled:opacity-60"
+              className="shrink-0 rounded-xl border border-bw-300 bg-bw-50 px-4 py-2.5 text-sm font-semibold text-bw-800 transition hover:border-bw-950 disabled:opacity-60"
             >
               {recovering ? "Fotoğraflar yükleniyor…" : "Kayıp fotoğrafları geri yükle"}
             </button>
           </div>
           {!products.length ? (
-            <div className="rounded-3xl border border-dashed border-bw-300 bg-white px-6 py-16 text-center text-sm text-bw-500">
-              Henüz vitrin ürünü yok.
-            </div>
+            <AdminEmptyState
+              title="Henüz vitrin ürünü yok."
+              description="Yeni ilan ekleyerek vitrini doldurabilirsin."
+            />
           ) : (
-            products.map((p) => (
-              <article
-                key={p.id}
-                className="rounded-3xl border border-bw-200 bg-white p-4 shadow-sm sm:p-5"
-              >
+            <div className="overflow-hidden rounded-2xl border border-bw-200 bg-white shadow-sm">
+              {products.map((p, index) => (
+                <article
+                  key={p.id}
+                  className={`px-5 py-5 sm:px-6 ${index > 0 ? "border-t border-bw-100" : ""}`}
+                >
                 <div className="flex gap-4">
                   <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl border border-bw-200 bg-bw-50">
                     {productImage(p) ? (
@@ -939,10 +656,10 @@ export default function AdminPage() {
                   </div>
                 </div>
 
-                <div className="mt-4 flex flex-wrap gap-2">
+                <div className="mt-4 flex flex-wrap gap-2 border-t border-bw-100 pt-4">
                   <Link
                     href={`/ilan-ver?duzenle=${p.id}`}
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-bw-950 px-4 py-3 text-sm font-semibold text-white hover:bg-bw-800 sm:w-auto"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-bw-950 px-4 py-2.5 text-sm font-semibold text-white hover:bg-bw-800 sm:w-auto"
                   >
                     <Pencil className="h-4 w-4" />
                     İlanı düzenle
@@ -951,9 +668,7 @@ export default function AdminPage() {
                     type="button"
                     onClick={() => toggleSold(p)}
                     className={`rounded-xl px-3 py-2 text-xs font-semibold ${
-                      p.status === "sold"
-                        ? "bg-bw-950 text-white"
-                        : "border border-bw-200 text-bw-700"
+                      p.status === "sold" ? "bg-bw-950 text-white" : actionBtn
                     }`}
                   >
                     {p.status === "sold" ? "Satıldı ✓" : "Satıldı işaretle"}
@@ -962,9 +677,7 @@ export default function AdminPage() {
                     type="button"
                     onClick={() => toggleDiscount(p)}
                     className={`rounded-xl px-3 py-2 text-xs font-semibold ${
-                      p.is_discount
-                        ? "bg-bw-950 text-white"
-                        : "border border-bw-200 text-bw-700"
+                      p.is_discount ? "bg-bw-950 text-white" : actionBtn
                     }`}
                   >
                     {p.is_discount ? "İndirim ✓" : "İndirim işaretle"}
@@ -973,9 +686,7 @@ export default function AdminPage() {
                     type="button"
                     onClick={() => toggle(p.id, "is_featured", !p.is_featured)}
                     className={`rounded-xl px-3 py-2 text-xs font-semibold ${
-                      p.is_featured
-                        ? "bg-bw-950 text-white"
-                        : "border border-bw-200 text-bw-700"
+                      p.is_featured ? "bg-bw-950 text-white" : actionBtn
                     }`}
                   >
                     Öne çıkan: {p.is_featured ? "Evet" : "Hayır"}
@@ -984,9 +695,7 @@ export default function AdminPage() {
                     type="button"
                     onClick={() => toggle(p.id, "is_premium", !p.is_premium)}
                     className={`rounded-xl px-3 py-2 text-xs font-semibold ${
-                      p.is_premium
-                        ? "bg-bw-950 text-white"
-                        : "border border-bw-200 text-bw-700"
+                      p.is_premium ? "bg-bw-950 text-white" : actionBtn
                     }`}
                   >
                     Premium: {p.is_premium ? "Evet" : "Hayır"}
@@ -995,9 +704,7 @@ export default function AdminPage() {
                     type="button"
                     onClick={() => setShareId(shareId === p.id ? null : p.id)}
                     className={`rounded-xl px-3 py-2 text-xs font-semibold ${
-                      shareId === p.id
-                        ? "bg-bw-950 text-white"
-                        : "border border-bw-200 text-bw-700"
+                      shareId === p.id ? "bg-bw-950 text-white" : actionBtn
                     }`}
                   >
                     {shareId === p.id ? "Reklamı kapat" : "Hikaye reklamı"}
@@ -1006,7 +713,7 @@ export default function AdminPage() {
                     <button
                       type="button"
                       onClick={() => setStatus(p.id, "published")}
-                      className="rounded-xl border border-bw-200 px-3 py-2 text-xs font-semibold text-bw-700"
+                      className={actionBtn}
                     >
                       Yayınla
                     </button>
@@ -1014,7 +721,7 @@ export default function AdminPage() {
                     <button
                       type="button"
                       onClick={() => setStatus(p.id, "removed")}
-                      className="rounded-xl border border-bw-200 px-3 py-2 text-xs font-semibold text-bw-700"
+                      className={actionBtn}
                     >
                       Kaldır
                     </button>
@@ -1039,8 +746,9 @@ export default function AdminPage() {
                     />
                   </div>
                 ) : null}
-              </article>
-            ))
+                </article>
+              ))}
+            </div>
           )}
         </div>
       ) : null}
@@ -1049,13 +757,9 @@ export default function AdminPage() {
         <TechPostsAdmin posts={techPosts} onReload={load} sqlMissing={techSqlMissing} />
       ) : null}
 
-      {tab === "site" ? (
-        <div className="mt-6">
-          <HeroBackgroundAdmin />
-        </div>
-      ) : null}
+      {tab === "site" ? <HeroBackgroundAdmin /> : null}
 
-      <section className="mt-16 overflow-hidden rounded-[1.75rem] border border-bw-200 bg-white shadow-[0_24px_60px_-48px_rgba(0,0,0,0.35)]">
+      <section className="mt-12 overflow-hidden rounded-2xl border border-bw-200 bg-white shadow-sm">
         <button
           type="button"
           onClick={() => setPurgeOpen((open) => !open)}
@@ -1101,6 +805,6 @@ export default function AdminPage() {
           </div>
         ) : null}
       </section>
-    </main>
+    </AdminLayout>
   );
 }

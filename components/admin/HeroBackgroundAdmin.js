@@ -223,7 +223,7 @@ export default function HeroBackgroundAdmin() {
   ).length;
 
   return (
-    <div className="rounded-3xl border border-bw-200 bg-white p-5 shadow-sm sm:p-6">
+    <div className="rounded-2xl border border-bw-200 bg-white p-5 shadow-sm sm:p-6">
       <p className="text-xs font-semibold tracking-[0.2em] text-bw-500 uppercase">Hero medya</p>
 
       <div className="mt-4 flex flex-wrap gap-2">
