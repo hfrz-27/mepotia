@@ -7,6 +7,9 @@ export default function ProductCard({ product, large = false, prefetch = false }
   const img = getPrimaryImage(product);
   const sold = isSold(product);
   const discount = hasDiscount(product);
+  const demo = Boolean(product.demo);
+  const href = demo ? "/ara" : `/urun/${product.id}`;
+  const compareHref = demo ? "/fiyat-karsilastir" : `/urun/${product.id}#piyasa-karsilastirmasi`;
 
   return (
     <article
@@ -14,7 +17,7 @@ export default function ProductCard({ product, large = false, prefetch = false }
         large ? "sm:col-span-2" : ""
       } ${sold ? "opacity-90" : ""}`}
     >
-      <Link href={`/urun/${product.id}`} prefetch={prefetch} className="block">
+      <Link href={href} prefetch={prefetch && !demo} className="block">
         <div
           className={`relative overflow-hidden bg-bw-100 ${
             large ? "aspect-[16/10]" : "aspect-[4/3]"
@@ -29,6 +32,11 @@ export default function ProductCard({ product, large = false, prefetch = false }
           priority={prefetch}
         />
         <div className="absolute top-2.5 left-2.5 flex flex-wrap gap-1.5 sm:top-4 sm:left-4 sm:gap-2">
+          {demo ? (
+            <span className="rounded-lg border border-bw-200 bg-white/90 px-2 py-0.5 text-[9px] font-bold tracking-[0.14em] text-bw-600 uppercase sm:px-2.5 sm:py-1 sm:text-[10px]">
+              Örnek
+            </span>
+          ) : null}
           {product.is_premium ? (
             <span className="rounded-lg bg-bw-950 px-2 py-0.5 text-[9px] font-bold tracking-[0.14em] text-white uppercase sm:px-2.5 sm:py-1 sm:text-[10px]">
               Premium
@@ -75,7 +83,7 @@ export default function ProductCard({ product, large = false, prefetch = false }
         </div>
       </Link>
       <Link
-        href={`/urun/${product.id}#piyasa-karsilastirmasi`}
+        href={compareHref}
         className="flex items-center justify-center gap-1 border-t border-bw-100 px-2 py-1.5 text-[9px] font-semibold text-bw-600 transition hover:bg-bw-50 hover:text-bw-950 sm:gap-1.5 sm:px-4 sm:py-3 sm:text-xs"
       >
         <BadgeDollarSign className="h-3.5 w-3.5" />

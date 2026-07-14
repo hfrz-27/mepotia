@@ -1,28 +1,31 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ChevronDown, MessageSquareQuote, PenLine, Send, Star, X } from "lucide-react";
+import { ArrowRight, ChevronDown, PenLine, Send, Star, X } from "lucide-react";
 import { createClient } from "@/lib/supabase";
+import { fillReviews } from "@/lib/homeDemoData";
+import PremiumScrollRow from "@/components/PremiumScrollRow";
 
-function Stars({ count, size = "sm" }) {
-  const cls = size === "lg" ? "h-4 w-4" : "h-3 w-3";
+const PILLARS = ["Kökler", "Dürüstlük", "Özen"];
+
+function MiniStars({ count }) {
   return (
-    <div className="flex items-center gap-0.5" aria-label={`${count} yıldız`}>
+    <span className="inline-flex items-center gap-px" aria-label={`${count} yıldız`}>
       {Array.from({ length: 5 }).map((_, i) => (
         <Star
           key={i}
-          className={`${cls} ${
+          className={`h-2.5 w-2.5 ${
             i < count ? "fill-amber-400 text-amber-400" : "text-bw-200"
           }`}
         />
       ))}
-    </div>
+    </span>
   );
 }
 
-function StarPicker({ value, onChange, compact = false }) {
+function StarPicker({ value, onChange }) {
   const [hover, setHover] = useState(0);
-  const starCls = compact ? "h-5 w-5" : "h-6 w-6";
   return (
     <div className="flex items-center gap-0.5">
       {Array.from({ length: 5 }).map((_, i) => {
@@ -35,11 +38,11 @@ function StarPicker({ value, onChange, compact = false }) {
             onMouseEnter={() => setHover(n)}
             onMouseLeave={() => setHover(0)}
             onClick={() => onChange(n)}
-            className="rounded p-0.5 transition hover:scale-110"
+            className="rounded p-0.5"
             aria-label={`${n} yıldız`}
           >
             <Star
-              className={`${starCls} ${
+              className={`h-5 w-5 ${
                 active ? "fill-amber-400 text-amber-400" : "text-bw-300"
               }`}
             />
@@ -50,33 +53,15 @@ function StarPicker({ value, onChange, compact = false }) {
   );
 }
 
-function initials(name) {
+function ReviewChip({ review }) {
   return (
-    String(name || "?")
-      .trim()
-      .split(/\s+/)
-      .slice(0, 2)
-      .map((p) => p[0]?.toUpperCase() || "")
-      .join("") || "?"
-  );
-}
-
-function ReviewCard({ review }) {
-  return (
-    <article className="flex w-[260px] shrink-0 flex-col rounded-2xl border border-bw-200/80 bg-white/95 p-4 sm:w-[280px]">
-      <div className="flex items-center gap-2.5">
-        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-bw-950 text-[10px] font-bold text-white">
-          {initials(review.author_name)}
-        </span>
-        <div className="min-w-0 flex-1">
-          <p className="truncate text-xs font-semibold text-bw-950">{review.author_name}</p>
-          <Stars count={review.stars} />
-        </div>
-      </div>
-      <p className="mt-3 line-clamp-2 text-xs leading-relaxed text-bw-600">
+    <div className="flex shrink-0 snap-start items-center gap-2.5 rounded-full border border-bw-200 bg-bw-50 px-3 py-1.5 shadow-[0_4px_16px_-10px_rgba(0,0,0,0.12)]">
+      <MiniStars count={review.stars} />
+      <p className="max-w-[52vw] truncate text-[11px] text-bw-600 sm:max-w-xs">
         &ldquo;{review.body}&rdquo;
       </p>
-    </article>
+      <span className="shrink-0 text-[10px] font-medium text-bw-400">— {review.author_name}</span>
+    </div>
   );
 }
 
@@ -102,9 +87,9 @@ export default function CustomerReviews() {
     if (err) {
       console.error(err);
       if (err.message?.includes("customer_reviews")) setTableMissing(true);
-      setReviews([]);
+      setReviews(fillReviews([]));
     } else {
-      setReviews(data || []);
+      setReviews(fillReviews(data || []));
       setTableMissing(false);
     }
     setLoading(false);
@@ -113,11 +98,6 @@ export default function CustomerReviews() {
   useEffect(() => {
     load();
   }, []);
-
-  const avg =
-    reviews.length > 0
-      ? (reviews.reduce((s, r) => s + r.stars, 0) / reviews.length).toFixed(1)
-      : null;
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -165,45 +145,43 @@ export default function CustomerReviews() {
   };
 
   return (
-    <section className="relative overflow-hidden border-t border-bw-200 bg-bw-950 text-white">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-15"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.18) 1px, transparent 0)",
-          backgroundSize: "24px 24px",
-        }}
-      />
+    <section className="border-t border-bw-200 bg-white">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div className="max-w-xl">
+            <p className="text-[10px] tracking-[0.28em] text-bw-500 uppercase">Hikâye</p>
+            <h2 className="mt-1.5 font-display text-xl font-semibold tracking-wide text-bw-950 sm:text-2xl">
+              Geçmişten Gelen Güven
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-bw-600">
+              <strong className="text-bw-950">Mepotia</strong>, Mezopotamya&apos;dan ilham alır. Emek,
+              sabır ve şeffaflıkla büyüyen kişisel bir ikinci el vitrin.
+            </p>
 
-      <div className="relative mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
-        {/* Header — tek satır, kompakt */}
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div>
-              <p className="flex items-center gap-1.5 text-[10px] tracking-[0.22em] text-bw-400 uppercase">
-                <MessageSquareQuote className="h-3 w-3" />
-                Müşteri yorumları
-              </p>
-              <h2 className="mt-1 font-display text-2xl font-semibold tracking-wide sm:text-3xl">
-                Güvenenlerin sesi
-              </h2>
+            <div className="hide-scrollbar mt-3 flex gap-2 overflow-x-auto">
+              {PILLARS.map((item) => (
+                <span
+                  key={item}
+                  className="shrink-0 rounded-full border border-bw-200 bg-bw-50 px-3 py-1 text-[11px] font-medium text-bw-600"
+                >
+                  {item}
+                </span>
+              ))}
             </div>
-            {avg ? (
-              <div className="hidden items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-2 sm:flex">
-                <span className="font-display text-2xl font-semibold">{avg}</span>
-                <div>
-                  <Stars count={Math.round(Number(avg))} size="lg" />
-                  <p className="text-[10px] text-bw-400">{reviews.length} yorum</p>
-                </div>
-              </div>
-            ) : null}
+
+            <Link
+              href="/hakkimizda"
+              className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-bw-950 transition hover:text-bw-600"
+            >
+              Mepotia&apos;yı tanı
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
 
           <button
             type="button"
             onClick={() => setFormOpen((o) => !o)}
-            className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-bw-950 transition hover:bg-bw-100"
+            className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-bw-200 bg-white px-4 py-2 text-sm font-semibold text-bw-900 shadow-[0_8px_20px_-14px_rgba(0,0,0,0.2)] transition hover:border-bw-300"
           >
             {formOpen ? <X className="h-4 w-4" /> : <PenLine className="h-4 w-4" />}
             {formOpen ? "Kapat" : "Yorum yaz"}
@@ -212,27 +190,26 @@ export default function CustomerReviews() {
         </div>
 
         {tableMissing ? (
-          <p className="mt-4 rounded-xl border border-amber-400/30 bg-amber-400/10 px-4 py-2 text-xs text-amber-100">
-            Supabase&apos;de <code className="text-amber-50">customer_reviews.sql</code> çalıştır.
+          <p className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2 text-xs text-amber-800">
+            Supabase&apos;de <code>customer_reviews.sql</code> çalıştır.
           </p>
         ) : null}
 
         {done ? (
-          <p className="animate-soft-in mt-4 rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-4 py-2 text-xs text-emerald-100">
+          <p className="animate-soft-in mt-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2 text-xs text-emerald-800">
             Teşekkürler! Yorumun eklendi.
           </p>
         ) : null}
 
-        {/* Açılır form — kompakt */}
         <div
           className={`grid transition-all duration-500 ease-out ${
-            formOpen ? "mt-5 grid-rows-[1fr] opacity-100" : "mt-0 grid-rows-[0fr] opacity-0"
+            formOpen ? "mt-4 grid-rows-[1fr] opacity-100" : "mt-0 grid-rows-[0fr] opacity-0"
           }`}
         >
           <div className="overflow-hidden">
             <form
               onSubmit={onSubmit}
-              className="rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-5"
+              className="rounded-2xl border border-bw-200 bg-bw-50 p-4"
             >
               <div className="grid gap-3 sm:grid-cols-[1fr_auto] sm:items-end">
                 <div className="grid gap-3 sm:grid-cols-2">
@@ -241,14 +218,13 @@ export default function CustomerReviews() {
                     onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
                     placeholder="İsmin"
                     maxLength={80}
-                    className="rounded-xl border border-white/15 bg-white/10 px-3 py-2.5 text-sm text-white outline-none placeholder:text-bw-400 focus:border-white/30"
+                    className="rounded-xl border border-bw-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-bw-400"
                   />
-                  <div className="flex items-center gap-2 rounded-xl border border-white/15 bg-white/10 px-3 py-2">
-                    <span className="text-[10px] font-semibold tracking-wide text-bw-400 uppercase">
+                  <div className="flex items-center gap-2 rounded-xl border border-bw-200 bg-white px-3 py-2">
+                    <span className="text-[10px] font-semibold tracking-wide text-bw-500 uppercase">
                       Puan
                     </span>
                     <StarPicker
-                      compact
                       value={form.stars}
                       onChange={(stars) => setForm((f) => ({ ...f, stars }))}
                     />
@@ -257,7 +233,7 @@ export default function CustomerReviews() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-bw-950 hover:bg-bw-100 disabled:opacity-50 sm:shrink-0"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-bw-950 px-5 py-2.5 text-sm font-semibold text-white hover:bg-bw-800 disabled:opacity-50"
                 >
                   <Send className="h-4 w-4" />
                   {submitting ? "..." : "Gönder"}
@@ -269,47 +245,30 @@ export default function CustomerReviews() {
                 rows={2}
                 maxLength={500}
                 placeholder="Kısa yorumun..."
-                className="mt-3 w-full resize-none rounded-xl border border-white/15 bg-white/10 px-3 py-2.5 text-sm text-white outline-none placeholder:text-bw-400 focus:border-white/30"
+                className="mt-3 w-full resize-none rounded-xl border border-bw-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-bw-400"
               />
-              {error ? <p className="mt-2 text-xs text-red-300">{error}</p> : null}
+              {error ? <p className="mt-2 text-xs text-red-600">{error}</p> : null}
             </form>
           </div>
         </div>
 
-        {/* Marquee — sabit yükseklik, büyümez */}
-        <div className="relative mt-8">
-          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-bw-950 to-transparent sm:w-20" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-bw-950 to-transparent sm:w-20" />
-
+        <div className="relative mt-5 overflow-hidden rounded-full border border-bw-100 bg-bw-50/80 py-2">
           {loading ? (
-            <div className="flex h-[120px] items-center justify-center">
-              <p className="text-xs text-bw-400">Yükleniyor...</p>
-            </div>
-          ) : !reviews.length ? (
-            <div className="flex h-[120px] flex-col items-center justify-center text-center">
-              <MessageSquareQuote className="h-6 w-6 text-bw-600" />
-              <p className="mt-2 text-xs text-bw-400">Henüz yorum yok — ilk sen yaz.</p>
-            </div>
-          ) : reviews.length === 1 ? (
-            <div className="flex justify-center py-1">
-              <ReviewCard review={reviews[0]} />
-            </div>
+            <p className="px-4 text-center text-[11px] text-bw-400">Yükleniyor...</p>
           ) : (
-            <div className="hide-scrollbar flex gap-4 overflow-x-auto py-1 snap-x snap-mandatory">
+            <PremiumScrollRow
+              ariaLabel="Müşteri yorumları"
+              fadeFrom="from-bw-50"
+              gap="gap-2"
+              speed={0.35}
+              className="px-1"
+            >
               {reviews.map((review) => (
-                <div key={review.id} className="snap-start">
-                  <ReviewCard review={review} />
-                </div>
+                <ReviewChip key={review.id} review={review} />
               ))}
-            </div>
+            </PremiumScrollRow>
           )}
         </div>
-
-        {avg ? (
-          <p className="mt-4 text-center text-[10px] text-bw-500 sm:hidden">
-            Ortalama {avg} · {reviews.length} yorum
-          </p>
-        ) : null}
       </div>
     </section>
   );

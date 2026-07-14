@@ -8,8 +8,8 @@ import TrustStrip from "@/components/TrustStrip";
 
 export default function HeroSection() {
   return (
-    <section className="relative overflow-hidden">
-      <div className="absolute inset-0 bg-bw-950">
+    <section className="relative overflow-hidden bg-bw-950">
+      <div className="absolute inset-0">
         <Image
           src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=65"
           alt=""
@@ -22,7 +22,7 @@ export default function HeroSection() {
         <div className="hero-grid absolute inset-0 opacity-20" aria-hidden />
       </div>
 
-      <div className="relative mx-auto flex min-h-[82vh] max-w-4xl flex-col items-center justify-center px-4 pb-32 pt-20 text-center sm:px-6 lg:px-8">
+      <div className="relative mx-auto flex min-h-[72vh] max-w-4xl flex-col items-center justify-center px-4 pb-28 pt-20 text-center sm:min-h-[78vh] sm:px-6 sm:pb-32 lg:px-8">
         <div className="animate-fade-up w-full max-w-3xl rounded-[2rem] border border-white/10 bg-white/[0.06] px-6 py-10 shadow-[0_40px_100px_-40px_rgba(0,0,0,0.85)] sm:px-10 sm:py-12">
           <p className="inline-flex rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-[10px] font-semibold tracking-[0.24em] text-bw-300 uppercase">
             Teknoloji · İkinci El · Güven
@@ -58,7 +58,7 @@ export default function HeroSection() {
         </div>
       </div>
 
-      <div className="relative z-10 mx-auto -mt-20 max-w-5xl px-4 pb-10 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto -mt-20 max-w-5xl bg-white px-4 pb-6 sm:px-6 sm:pb-8 lg:px-8">
         <TrustStrip />
       </div>
     </section>

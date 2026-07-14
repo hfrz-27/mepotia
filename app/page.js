@@ -4,9 +4,9 @@ import BuySellAccordion from "@/components/BuySellAccordion";
 import ProductCard from "@/components/ProductCard";
 import HeroSection from "@/components/HeroSection";
 import TechNewsSection from "@/components/TechNewsSection";
-import StoryBand from "@/components/StoryBand";
 import { getPublishedProducts } from "@/lib/products";
 import { getSiteSettings } from "@/lib/categories";
+import { fillFeatured, fillProducts } from "@/lib/homeDemoData";
 import CustomerReviews from "@/components/CustomerReviews";
 
 const WA = "https://wa.me/905059574122";
@@ -35,9 +35,9 @@ export default async function HomePage() {
     getPublishedProducts({ limit: MOBILE_PRODUCT_LIMIT, featured: true }),
     getPublishedProducts({ limit: MOBILE_PRODUCT_LIMIT, orderBy: "views" }),
   ]);
-  const latest = latestRes.data;
-  const featured = featuredRes.data;
-  const popular = popularRes.data;
+  const latest = fillProducts(latestRes.data, MOBILE_PRODUCT_LIMIT);
+  const featured = fillFeatured(featuredRes.data, MOBILE_PRODUCT_LIMIT);
+  const popular = fillProducts(popularRes.data, MOBILE_PRODUCT_LIMIT);
   const vitrinError = latestRes.error;
 
   const wa = settings?.whatsapp
@@ -53,7 +53,7 @@ export default async function HomePage() {
       <TechNewsSection />
 
       {/* Featured */}
-      {featured?.length ? (
+      {featured.length ? (
         <section className="border-b border-bw-200 bg-white">
           <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-16 lg:px-8">
             <div className="mb-6 sm:mb-8">
@@ -89,7 +89,7 @@ export default async function HomePage() {
           </Link>
         </div>
 
-        {!latest?.length ? (
+        {!latest.length ? (
           <div className="rounded-[2rem] border border-dashed border-bw-300 bg-white px-6 py-20 text-center">
             <p className="font-display text-2xl text-bw-900">
               {vitrinError ? "Vitrin yüklenemedi" : "Henüz ürün yok"}
@@ -121,7 +121,7 @@ export default async function HomePage() {
       </section>
 
       {/* Popular */}
-      {popular?.length ? (
+      {popular.length ? (
         <section className="border-t border-bw-200 bg-white">
           <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-16 lg:px-8">
             <div className="mb-6 flex flex-wrap items-end justify-between gap-4 sm:mb-8">
@@ -148,8 +148,6 @@ export default async function HomePage() {
           </div>
         </section>
       ) : null}
-
-      <StoryBand />
 
       <CustomerReviews />
     </main>
