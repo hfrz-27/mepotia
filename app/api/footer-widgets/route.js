@@ -34,7 +34,7 @@ export async function GET() {
     fetchJson("https://api.frankfurter.app/latest?from=EUR&to=TRY"),
     fetchJson("https://api.genelpara.com/embed/altin.json"),
     fetchJson(
-      "https://api.open-meteo.com/v1/forecast?latitude=38.42&longitude=27.14&current=temperature_2m,weather_code&timezone=Europe%2FIstanbul",
+      "https://api.open-meteo.com/v1/forecast?latitude=41.01&longitude=28.98&current=temperature_2m,weather_code&timezone=Europe%2FIstanbul",
     ),
   ]);
 
@@ -56,7 +56,7 @@ export async function GET() {
     eur,
     gold,
     weather: Number.isFinite(temp)
-      ? { temp: Math.round(temp), label: weatherLabel, city: "İzmir" }
+      ? { temp: Math.round(temp), label: weatherLabel, city: "İstanbul" }
       : null,
     updatedAt: new Date().toISOString(),
   });
