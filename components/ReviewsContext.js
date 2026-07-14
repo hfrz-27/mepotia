@@ -147,8 +147,18 @@ function ReviewMarquee({ reviews, variant, duration = 36, pauseOnHover = true, m
   if (mobileStatic) {
     return (
       <div ref={rootRef} className="overflow-hidden">
-        <div className="news-touch-scroll hide-scrollbar flex gap-3 py-0.5">
+        <div className="news-touch-scroll hide-scrollbar flex gap-3 py-0.5 sm:hidden">
           {chips(items, "m")}
+        </div>
+        <div
+          className={`hidden overflow-hidden sm:block ${pauseOnHover ? "marquee-touch-pause" : ""}`}
+        >
+          <div
+            className={`review-marquee-track gap-3 py-0.5 ${pauseOnHover ? "" : "review-marquee-continuous"}`}
+            style={{ "--marquee-duration": `${duration}s` }}
+          >
+            {chips(loop, "d")}
+          </div>
         </div>
       </div>
     );
@@ -217,13 +227,13 @@ export function ReviewThinStrip({
         ) : (
           <>
             <div
-              className={`pointer-events-none absolute inset-y-0 left-0 z-10 hidden w-5 bg-gradient-to-r ${
+              className={`pointer-events-none absolute inset-y-0 left-0 z-10 hidden w-5 bg-gradient-to-r sm:block ${
                 dark ? "from-bw-950/40" : "from-white/35"
               } to-transparent`}
               aria-hidden
             />
             <div
-              className={`pointer-events-none absolute inset-y-0 right-0 z-10 hidden w-5 bg-gradient-to-l ${
+              className={`pointer-events-none absolute inset-y-0 right-0 z-10 hidden w-5 bg-gradient-to-l sm:block ${
                 dark ? "from-bw-950/40" : "from-white/35"
               } to-transparent`}
               aria-hidden

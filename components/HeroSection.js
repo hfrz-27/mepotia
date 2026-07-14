@@ -32,23 +32,23 @@ export default function HeroSection({ heroImages = [], heroVideo = "" }) {
       )}
       <div className="hero-grid absolute inset-0 opacity-[0.07]" aria-hidden />
 
-      <div className="relative mx-auto max-w-4xl px-4 pt-12 pb-4 sm:px-6 sm:pt-16 lg:px-8">
+      <div className="relative mx-auto max-w-5xl px-4 pt-12 pb-4 sm:px-6 sm:pt-20 lg:px-8 lg:pt-24">
         <div className="text-center">
           <p className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3.5 py-1 text-[9px] font-semibold tracking-[0.26em] text-white/70 uppercase sm:text-[10px]">
             <Sparkles className="h-3 w-3 text-white/50" />
             Teknoloji · İkinci El · Güven
           </p>
 
-          <h1 className="mt-5 font-display text-[2.65rem] leading-none font-semibold tracking-[0.22em] text-white uppercase">
+          <h1 className="mt-5 font-display text-[2.65rem] leading-none font-semibold tracking-[0.22em] text-white uppercase sm:mt-6 sm:text-6xl lg:text-7xl">
             MEPOTIA
           </h1>
 
-          <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-white/70">
+          <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-white/70 sm:mt-5 sm:max-w-xl sm:text-base lg:text-lg">
             Özenle seçilmiş ikinci el ürünlerle dürüst ve şeffaf bir alışveriş deneyimi.
           </p>
         </div>
 
-        <div className="mx-auto mt-6 max-w-xl space-y-3 sm:mt-8">
+        <div className="mx-auto mt-6 max-w-2xl space-y-3 sm:mt-10 lg:max-w-3xl">
           <HeroSearch variant="dark" />
 
           <div className="grid grid-cols-2 gap-2 sm:gap-3">
@@ -70,11 +70,11 @@ export default function HeroSection({ heroImages = [], heroVideo = "" }) {
         </div>
       </div>
 
-      <div className="relative z-10 mt-5">
+      <div className="relative z-10 mt-5 md:hidden">
         <ReviewThinStrip variant="dark" showLabel mobileStatic duration={22} />
       </div>
 
-      <div className="relative z-10 mx-auto -mt-1 max-w-5xl rounded-t-[2rem] bg-white px-4 pt-5 pb-6 shadow-[0_-24px_48px_-20px_rgba(0,0,0,0.35)] sm:px-6 sm:pt-6 sm:pb-8 lg:px-8">
+      <div className="relative z-10 mx-auto -mt-1 max-w-6xl rounded-t-[2rem] bg-white px-4 pt-5 pb-6 shadow-[0_-24px_48px_-20px_rgba(0,0,0,0.35)] sm:-mt-16 sm:rounded-t-[2.5rem] sm:px-6 sm:pt-8 sm:pb-10 lg:px-10">
         <TrustStrip />
       </div>
     </section>

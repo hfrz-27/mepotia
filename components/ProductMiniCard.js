@@ -2,7 +2,7 @@ import Link from "next/link";
 import ProductImage from "@/components/ProductImage";
 import { formatPrice, getPrimaryImage, isSold } from "@/lib/productDisplay";
 
-export default function ProductMiniCard({ product, prefetch = false }) {
+export default function ProductMiniCard({ product, prefetch = false, className = "" }) {
   const img = getPrimaryImage(product);
   const sold = isSold(product);
   const demo = Boolean(product.demo);
@@ -12,7 +12,7 @@ export default function ProductMiniCard({ product, prefetch = false }) {
     <Link
       href={href}
       prefetch={prefetch && !demo}
-      className="group flex w-[min(42vw,200px)] shrink-0 items-center gap-2.5 rounded-xl border border-bw-200/90 bg-white/95 px-2.5 py-2 shadow-[0_8px_24px_-16px_rgba(0,0,0,0.2)] backdrop-blur-sm transition hover:border-bw-300"
+      className={`group flex shrink-0 items-center gap-2.5 rounded-xl border border-bw-200/90 bg-white/95 px-2.5 py-2 shadow-[0_8px_24px_-16px_rgba(0,0,0,0.2)] backdrop-blur-sm transition hover:border-bw-300 sm:hover:shadow-[0_12px_28px_-14px_rgba(0,0,0,0.22)] w-[min(42vw,168px)] sm:w-[168px] ${className}`}
     >
       <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-lg bg-bw-100">
         <ProductImage

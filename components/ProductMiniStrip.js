@@ -13,11 +13,25 @@ export default function ProductMiniStrip({ products = [], className = "" }) {
       <p className="mb-2 text-[9px] font-semibold tracking-[0.2em] text-bw-500 uppercase">
         Vitrinden öne çıkanlar
       </p>
-      <HybridAutoScrollRow ariaLabel="Öne çıkan ürünler" gap="gap-2.5">
-        {items.map((product, index) => (
-          <ProductMiniCard key={product.id} product={product} prefetch={index === 0} />
+
+      <div className="md:hidden">
+        <HybridAutoScrollRow ariaLabel="Öne çıkan ürünler" gap="gap-2.5">
+          {items.map((product, index) => (
+            <ProductMiniCard key={product.id} product={product} prefetch={index === 0} />
+          ))}
+        </HybridAutoScrollRow>
+      </div>
+
+      <div className="hidden gap-3 md:grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+        {items.slice(0, 5).map((product, index) => (
+          <ProductMiniCard
+            key={product.id}
+            product={product}
+            prefetch={index === 0}
+            className="w-full"
+          />
         ))}
-      </HybridAutoScrollRow>
+      </div>
     </div>
   );
 }

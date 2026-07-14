@@ -70,7 +70,7 @@ export default function PriceComparePanel({
     <div className="space-y-4">
       {comparison ? <VerdictBanner comparison={comparison} /> : null}
 
-      <div className="grid gap-3">
+      <div className="grid gap-3 sm:grid-cols-2">
         <div className={cardShell}>
           <p className={`text-[10px] font-semibold tracking-[0.18em] uppercase ${mutedClass}`}>
             {mepotiaLabel}

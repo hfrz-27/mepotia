@@ -27,11 +27,11 @@ export default function TechNewsPageHero({ count = 0, products = [] }) {
             <Sparkles className="h-3.5 w-3.5 text-bw-600" />
             Güncel haberler
           </p>
-          <h1 className="mt-3 font-display text-3xl font-semibold tracking-wide text-bw-950">
+          <h1 className="mt-3 font-display text-3xl font-semibold tracking-wide text-bw-950 sm:text-4xl lg:text-5xl">
             Teknoloji Dünyasından
             <span className="mt-1 block text-bw-700">Son Gelişmeler</span>
           </h1>
-          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-bw-600">
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-bw-600 sm:text-base">
             Yapay zekâdan akıllı telefonlara, oyunlardan yazılıma kadar en güncel haberler ve
             Mepotia vitrininden seçilmiş fırsatlar.
           </p>

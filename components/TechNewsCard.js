@@ -25,7 +25,7 @@ export function TechNewsCardCompact({ post, index = 0 }) {
     <Link
       href={`/teknoloji/${post.id}`}
       prefetch={index === 0}
-      className="group relative block w-[min(78vw,320px)] shrink-0 overflow-hidden rounded-[1.25rem] border border-bw-200 bg-white shadow-[0_16px_40px_-28px_rgba(0,0,0,0.3)] transition hover:border-bw-300"
+      className="group relative block w-[min(78vw,280px)] shrink-0 overflow-hidden rounded-[1.25rem] border border-bw-200 bg-white shadow-[0_16px_40px_-28px_rgba(0,0,0,0.3)] sm:transition sm:duration-300 sm:hover:-translate-y-0.5 sm:hover:border-bw-300"
     >
       <div className="relative aspect-[4/3] overflow-hidden bg-bw-900">
         {post.cover_url ? (

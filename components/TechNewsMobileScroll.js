@@ -5,7 +5,7 @@ export default function TechNewsMobileScroll({ posts }) {
   if (!items.length) return null;
 
   return (
-    <div className="mt-5">
+    <div className="mt-5 sm:hidden">
       <TechNewsHybridScroll posts={items} />
     </div>
   );

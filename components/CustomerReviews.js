@@ -150,8 +150,9 @@ export default function CustomerReviews() {
         >
           <div className="overflow-hidden">
             <form onSubmit={onSubmit} className="rounded-2xl border border-bw-200 bg-bw-50 p-4">
-              <div className="grid gap-3">
-                <input
+              <div className="grid gap-3 sm:grid-cols-[1fr_auto] sm:items-end">
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <input
                     value={form.name}
                     onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
                     placeholder="İsmin"
@@ -167,6 +168,7 @@ export default function CustomerReviews() {
                       onChange={(stars) => setForm((f) => ({ ...f, stars }))}
                     />
                   </div>
+                </div>
                 <button
                   type="submit"
                   disabled={submitting}

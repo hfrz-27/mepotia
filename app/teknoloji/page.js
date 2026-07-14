@@ -67,7 +67,7 @@ export default async function TeknolojiPage({ searchParams }) {
 
       <TechNewsPageHero count={count || 0} products={featuredProducts || []} />
 
-      <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
         {error ? (
           <p className="rounded-2xl border border-dashed border-bw-300 bg-white px-6 py-12 text-center text-sm text-bw-500">
             Supabase&apos;de <code>tech_posts.sql</code> çalıştır.
@@ -81,7 +81,7 @@ export default async function TeknolojiPage({ searchParams }) {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 gap-3">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
               {posts.map((post, index) => (
                 <TechNewsCard key={post.id} post={post} index={index} />
               ))}
