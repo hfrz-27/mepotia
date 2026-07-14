@@ -58,17 +58,22 @@ export default function Navbar() {
         setNotifCount(0);
         return;
       }
-      const [{ count: offerCount }, { count: reqCount }] = await Promise.all([
-        supabase
-          .from("sell_offers")
-          .select("id", { count: "exact", head: true })
-          .eq("status", "new"),
-        supabase
-          .from("product_requests")
-          .select("id", { count: "exact", head: true })
-          .eq("status", "new"),
-      ]);
-      setNotifCount((offerCount || 0) + (reqCount || 0));
+      const [{ count: offerCount }, { count: reqCount }, { count: fbCount }] =
+        await Promise.all([
+          supabase
+            .from("sell_offers")
+            .select("id", { count: "exact", head: true })
+            .eq("status", "new"),
+          supabase
+            .from("product_requests")
+            .select("id", { count: "exact", head: true })
+            .eq("status", "new"),
+          supabase
+            .from("site_feedback")
+            .select("id", { count: "exact", head: true })
+            .eq("status", "new"),
+        ]);
+      setNotifCount((offerCount || 0) + (reqCount || 0) + (fbCount || 0));
     };
 
     supabase.auth.getUser().then(({ data }) => sync(data.user));

@@ -4,7 +4,16 @@ import { useEffect, useState } from "react";
 import ProductImage from "@/components/ProductImage";
 import Link from "next/link";
 import Image from "next/image";
-import { ShoppingBag, Search, Pencil, Trash2, ChevronDown, AlertTriangle } from "lucide-react";
+import {
+  ShoppingBag,
+  Search,
+  Pencil,
+  Trash2,
+  ChevronDown,
+  AlertTriangle,
+  MessageSquare,
+  Star,
+} from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import { recoverPhotosFromStorage } from "@/lib/recoverPhotos";
 import { deleteProductFully } from "@/lib/deleteProduct";
@@ -34,12 +43,16 @@ export default function AdminPage() {
     views: 0,
     offersNew: 0,
     requestsNew: 0,
+    feedbackNew: 0,
     offersAll: 0,
     requestsAll: 0,
+    feedbackAll: 0,
   });
   const [products, setProducts] = useState([]);
   const [offers, setOffers] = useState([]);
   const [requests, setRequests] = useState([]);
+  const [feedback, setFeedback] = useState([]);
+  const [feedbackSqlMissing, setFeedbackSqlMissing] = useState(false);
   const [techPosts, setTechPosts] = useState([]);
   const [techSqlMissing, setTechSqlMissing] = useState(false);
   const [msg, setMsg] = useState("");
@@ -114,6 +127,14 @@ export default function AdminPage() {
     const reqList = reqErr ? [] : reqRows || [];
     setRequests(reqList);
 
+    const { data: fbRows, error: fbErr } = await supabase
+      .from("site_feedback")
+      .select("*")
+      .order("created_at", { ascending: false });
+    const fbList = fbErr ? [] : fbRows || [];
+    setFeedback(fbList);
+    setFeedbackSqlMissing(fbErr?.message?.includes("site_feedback") ?? false);
+
     const { data: techRows, error: techErr } = await supabase
       .from("tech_posts")
       .select("id, title, excerpt, body, cover_url, source_url, published, created_at")
@@ -137,8 +158,10 @@ export default function AdminPage() {
       views: rows.reduce((s, p) => s + (p.views || 0), 0),
       offersNew: offersList.filter((o) => o.status === "new").length,
       requestsNew: reqList.filter((r) => r.status === "new").length,
+      feedbackNew: fbList.filter((f) => f.status === "new").length,
       offersAll: offersList.length,
       requestsAll: reqList.length,
+      feedbackAll: fbList.length,
     });
   };
 
@@ -146,7 +169,13 @@ export default function AdminPage() {
     load();
     const params = new URLSearchParams(window.location.search);
     const t = params.get("tab");
-    if (t === "products" || t === "offers" || t === "requests" || t === "tech") {
+    if (
+      t === "products" ||
+      t === "offers" ||
+      t === "requests" ||
+      t === "tech" ||
+      t === "feedback"
+    ) {
       setTab(t);
     }
   }, []);
@@ -257,6 +286,25 @@ export default function AdminPage() {
     load();
   };
 
+  const setFeedbackStatus = async (id, status) => {
+    await createClient().from("site_feedback").update({ status }).eq("id", id);
+    setMsg("Görüş güncellendi.");
+    load();
+  };
+
+  const removeFeedback = async (id) => {
+    if (!confirm("Silinsin mi?")) return;
+    await createClient().from("site_feedback").delete().eq("id", id);
+    load();
+  };
+
+  const feedbackLabel = (category) => {
+    if (category === "satisfaction") return "Memnuniyet";
+    if (category === "problem") return "Sorun";
+    if (category === "suggestion") return "Öneri";
+    return category;
+  };
+
   const purgeSite = async () => {
     if (
       !confirm(
@@ -331,7 +379,7 @@ export default function AdminPage() {
       ) : null}
 
       {/* Üst sayılar — net ayrım */}
-      <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
+      <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         <button
           type="button"
           onClick={() => setTab("offers")}
@@ -371,6 +419,48 @@ export default function AdminPage() {
             }`}
           >
             {stats.offersNew} yeni · toplam {stats.offersAll}
+          </p>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setTab("feedback")}
+          className={`rounded-[1.75rem] border p-5 text-left transition sm:p-6 ${
+            tab === "feedback"
+              ? "border-bw-950 bg-bw-950 text-white"
+              : "border-bw-200 bg-white text-bw-950 hover:border-bw-400"
+          }`}
+        >
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <span
+                className={`flex h-11 w-11 items-center justify-center rounded-2xl ${
+                  tab === "feedback" ? "bg-white/10" : "bg-bw-50"
+                }`}
+              >
+                <MessageSquare className="h-5 w-5" />
+              </span>
+              <div>
+                <p className="text-sm font-semibold">Şikayet & öneri</p>
+                <p
+                  className={`mt-0.5 text-xs ${
+                    tab === "feedback" ? "text-bw-300" : "text-bw-500"
+                  }`}
+                >
+                  Footer anketinden
+                </p>
+              </div>
+            </div>
+            <p className="font-display text-4xl font-semibold tabular-nums">
+              {stats.feedbackNew}
+            </p>
+          </div>
+          <p
+            className={`mt-3 text-xs ${
+              tab === "feedback" ? "text-bw-400" : "text-bw-400"
+            }`}
+          >
+            {stats.feedbackNew} yeni · toplam {stats.feedbackAll}
           </p>
         </button>
 
@@ -455,6 +545,20 @@ export default function AdminPage() {
           }`}
         >
           Ürün istekleri ({stats.requestsNew})
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setTab("feedback");
+            window.history.replaceState(null, "", "/admin?tab=feedback");
+          }}
+          className={`rounded-xl px-4 py-2 text-sm font-semibold ${
+            tab === "feedback"
+              ? "bg-bw-950 text-white"
+              : "border border-bw-200 text-bw-600"
+          }`}
+        >
+          Şikayet & öneri ({stats.feedbackNew})
         </button>
         <button
           type="button"
@@ -587,6 +691,85 @@ export default function AdminPage() {
                   {o.created_at
                     ? new Date(o.created_at).toLocaleString("tr-TR")
                     : ""}
+                </p>
+              </article>
+            ))
+          )}
+        </div>
+      ) : null}
+
+      {feedbackSqlMissing && tab === "feedback" ? (
+        <div className="mt-6 rounded-3xl border border-bw-300 bg-bw-50 px-5 py-5 text-sm leading-relaxed text-bw-700">
+          <p className="font-semibold text-bw-950">SQL eksik</p>
+          <p className="mt-2">
+            Supabase SQL Editor&apos;da{" "}
+            <code className="rounded bg-white px-1.5 py-0.5 text-xs">
+              supabase/site_feedback.sql
+            </code>{" "}
+            çalıştır.
+          </p>
+        </div>
+      ) : null}
+
+      {tab === "feedback" ? (
+        <div className="mt-6 space-y-3">
+          {!feedback.length ? (
+            <div className="rounded-3xl border border-dashed border-bw-300 bg-white px-6 py-16 text-center text-sm text-bw-500">
+              Henüz görüş yok.
+            </div>
+          ) : (
+            feedback.map((f) => (
+              <article
+                key={f.id}
+                className={`rounded-3xl border bg-white p-5 shadow-sm sm:p-6 ${
+                  f.status === "new" ? "border-bw-900" : "border-bw-200 opacity-80"
+                }`}
+              >
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-xs tracking-wide text-bw-400 uppercase">
+                      {feedbackLabel(f.category)}
+                      {f.status === "new" ? " · Yeni" : ` · ${f.status}`}
+                    </p>
+                    {f.rating ? (
+                      <div className="mt-2 flex gap-0.5">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`h-4 w-4 ${
+                              i < f.rating
+                                ? "fill-amber-400 text-amber-400"
+                                : "text-bw-200"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    ) : null}
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {f.status === "new" ? (
+                      <button
+                        type="button"
+                        onClick={() => setFeedbackStatus(f.id, "read")}
+                        className="rounded-xl bg-bw-950 px-3 py-2 text-xs font-semibold text-white"
+                      >
+                        Okundu
+                      </button>
+                    ) : null}
+                    <button
+                      type="button"
+                      onClick={() => removeFeedback(f.id)}
+                      className="rounded-xl px-3 py-2 text-xs text-bw-400 underline"
+                    >
+                      Sil
+                    </button>
+                  </div>
+                </div>
+                <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-bw-600">
+                  {f.message}
+                </p>
+                <p className="mt-3 text-xs text-bw-400">
+                  {f.created_at ? new Date(f.created_at).toLocaleString("tr-TR") : ""}
                 </p>
               </article>
             ))

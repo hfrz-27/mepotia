@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, BadgeDollarSign, Sparkles } from "lucide-react";
 import HeroSearch from "@/components/HeroSearch";
@@ -9,19 +8,13 @@ import { ReviewThinStrip } from "@/components/HomeReviews";
 
 export default function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-[#1a1d24]">
-      <div className="absolute inset-0">
-        <Image
-          src="https://images.unsplash.com/photo-1550745165-9bc0b3f77cd8?auto=format&fit=crop&w=1600&q=75"
-          alt=""
-          fill
-          priority
-          className="object-cover object-center opacity-45 mix-blend-luminosity"
-          sizes="100vw"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-[#1a1d24]/75 to-[#12141a]" />
-        <div className="hero-grid absolute inset-0 opacity-[0.08]" aria-hidden />
-      </div>
+    <section className="relative overflow-hidden bg-[#1c1f26]">
+      <div className="absolute inset-0 bg-gradient-to-br from-[#3a3f4b] via-[#252830] to-[#14161c]" aria-hidden />
+      <div
+        className="absolute inset-0 bg-[radial-gradient(ellipse_at_20%_0%,rgba(255,255,255,0.14)_0%,transparent_55%),radial-gradient(ellipse_at_80%_100%,rgba(255,255,255,0.06)_0%,transparent_50%)]"
+        aria-hidden
+      />
+      <div className="hero-grid absolute inset-0 opacity-[0.07]" aria-hidden />
 
       <div className="relative mx-auto max-w-4xl px-4 pt-12 pb-4 sm:px-6 sm:pt-16 lg:px-8">
         <div className="text-center">
@@ -30,8 +23,8 @@ export default function HeroSection() {
             Teknoloji · İkinci El · Güven
           </p>
 
-          <h1 className="mt-5 font-display text-[2.65rem] leading-none font-semibold tracking-[0.2em] text-white uppercase sm:mt-6 sm:text-6xl lg:text-7xl">
-            Mepotia
+          <h1 className="mt-5 font-display text-[2.65rem] leading-none font-semibold tracking-[0.22em] text-white uppercase sm:mt-6 sm:text-6xl lg:text-7xl">
+            MEPOTIA
           </h1>
 
           <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-white/70 sm:mt-5 sm:max-w-xl sm:text-base">

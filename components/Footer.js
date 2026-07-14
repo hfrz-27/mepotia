@@ -4,6 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 import Logo from "@/components/Logo";
+import FooterSurvey from "@/components/FooterSurvey";
+import FooterWidgets from "@/components/FooterWidgets";
 
 const EXPLORE_LINKS = [
   { href: "/teknoloji", label: "Teknoloji" },
@@ -20,6 +22,7 @@ const LEGAL_LINKS = [
   { href: "/gizlilik", label: "Gizlilik" },
   { href: "/kvkk", label: "KVKK" },
   { href: "/kullanim-sartlari", label: "Kullanım Şartları" },
+  { href: "/sikayet", label: "Şikayet" },
 ];
 
 function FooterGroup({ title, links }) {
@@ -62,20 +65,17 @@ export default function Footer() {
             geçmişinden ilham alan bu isim, bugün dürüst ve şeffaf bir ikinci el
             alışveriş anlayışını temsil eder.
           </p>
-          <p className="mt-3 text-sm text-bw-500">
-            <a
-              href="https://wa.me/905059574122"
-              target="_blank"
-              rel="noreferrer"
-              className="font-medium text-bw-900 underline underline-offset-4"
-            >
-              WhatsApp ile ulaş
-            </a>
-          </p>
         </div>
         <FooterGroup title="Keşfet" links={EXPLORE_LINKS} />
         <FooterGroup title="Yasal" links={LEGAL_LINKS} />
       </div>
+
+      <div className="mx-auto max-w-7xl px-4 pb-8 sm:px-6 lg:px-8">
+        <FooterSurvey />
+      </div>
+
+      <FooterWidgets />
+
       <div className="border-t border-bw-100 text-center">
         <p className="mx-auto max-w-7xl px-4 py-5 text-xs text-bw-400 sm:px-6 lg:px-8">
           © {new Date().getFullYear()} Mepotia. Tüm hakları saklıdır.
