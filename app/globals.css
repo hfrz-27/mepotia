@@ -160,9 +160,23 @@ body {
 
 .news-touch-scroll {
   -webkit-overflow-scrolling: touch;
-  touch-action: pan-x;
   overscroll-behavior-x: contain;
   scroll-behavior: auto;
+  overflow-y: hidden;
+}
+
+@media (max-width: 639px) {
+  .review-marquee-track {
+    animation: none !important;
+  }
+
+  .hero-bg-slide.opacity-100 {
+    animation: none;
+  }
+
+  .hero-bg-slide {
+    will-change: auto;
+  }
 }
 
 @keyframes hero-bg-zoom {

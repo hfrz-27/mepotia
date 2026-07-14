@@ -185,7 +185,7 @@ export function ReviewThinStrip({
   duration,
   showLabel = false,
   pauseOnHover = true,
-  mobileStatic = false,
+  mobileStatic = true,
 }) {
   const { reviews, loading } = useReviews();
   const dark = variant === "dark";
@@ -227,13 +227,13 @@ export function ReviewThinStrip({
         ) : (
           <>
             <div
-              className={`pointer-events-none absolute inset-y-0 left-0 z-10 w-5 bg-gradient-to-r ${
+              className={`pointer-events-none absolute inset-y-0 left-0 z-10 hidden w-5 bg-gradient-to-r sm:block ${
                 dark ? "from-bw-950/40" : "from-white/35"
               } to-transparent`}
               aria-hidden
             />
             <div
-              className={`pointer-events-none absolute inset-y-0 right-0 z-10 w-5 bg-gradient-to-l ${
+              className={`pointer-events-none absolute inset-y-0 right-0 z-10 hidden w-5 bg-gradient-to-l sm:block ${
                 dark ? "from-bw-950/40" : "from-white/35"
               } to-transparent`}
               aria-hidden

@@ -71,7 +71,7 @@ export default function HeroSection({ heroImages = [], heroVideo = "" }) {
       </div>
 
       <div className="relative z-10 mt-5 md:hidden">
-        <ReviewThinStrip variant="dark" showLabel pauseOnHover={false} duration={22} />
+        <ReviewThinStrip variant="dark" showLabel mobileStatic duration={22} />
       </div>
 
       <div className="relative z-10 mx-auto -mt-1 max-w-5xl rounded-t-[2rem] bg-white px-4 pt-5 pb-6 shadow-[0_-24px_48px_-20px_rgba(0,0,0,0.35)] sm:-mt-16 sm:rounded-t-[2.5rem] sm:px-6 sm:pt-6 sm:pb-8 lg:px-8">

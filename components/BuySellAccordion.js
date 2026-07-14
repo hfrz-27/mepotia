@@ -27,7 +27,7 @@ function ActionCard({ action, compact = false }) {
   return (
     <Link
       href={action.href}
-      className={`group/item block shrink-0 snap-start rounded-2xl border border-bw-200 bg-white transition hover:border-bw-400 hover:shadow-[0_20px_48px_-32px_rgba(0,0,0,0.25)] ${
+      className={`group/item block shrink-0 rounded-2xl border border-bw-200 bg-white transition sm:hover:border-bw-400 sm:hover:shadow-[0_20px_48px_-32px_rgba(0,0,0,0.25)] ${
         compact ? "w-[min(82vw,300px)] p-4" : "p-5"
       }`}
     >

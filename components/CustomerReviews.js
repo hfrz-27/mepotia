@@ -100,7 +100,7 @@ export default function CustomerReviews() {
               sabır ve şeffaflıkla büyüyen kişisel bir ikinci el vitrin.
             </p>
 
-            <div className="hide-scrollbar mt-3 flex gap-2 overflow-x-auto">
+            <div className="news-touch-scroll hide-scrollbar mt-3 flex gap-2 overflow-x-auto">
               {PILLARS.map((item) => (
                 <span
                   key={item}

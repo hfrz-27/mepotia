@@ -23,7 +23,7 @@ const TRUST = [
 
 function TrustCard({ item }) {
   return (
-    <div className="flex w-[min(74vw,260px)] shrink-0 snap-start items-center gap-3 rounded-2xl border border-bw-100 bg-bw-50/80 px-3.5 py-3">
+    <div className="flex w-[min(74vw,260px)] shrink-0 items-center gap-3 rounded-2xl border border-bw-100 bg-bw-50/80 px-3.5 py-3">
       <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-bw-950 text-white">
         <item.icon className="h-4 w-4" strokeWidth={1.75} />
       </div>

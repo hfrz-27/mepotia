@@ -47,6 +47,7 @@ export default function GlobalNewsDrawer() {
     const onOpen = () => openDrawer();
 
     const onStart = (event) => {
+      if (window.innerWidth < 640) return;
       if (event.touches.length !== 1) return;
       start.current = {
         x: event.touches[0].clientX,
@@ -55,6 +56,7 @@ export default function GlobalNewsDrawer() {
     };
 
     const onEnd = (event) => {
+      if (window.innerWidth < 640) return;
       if (!start.current) return;
       const end = event.changedTouches[0];
       const deltaX = end.clientX - start.current.x;
