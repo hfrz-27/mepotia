@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LogOut, PenLine, Eye, Menu, X } from "lucide-react";
+import { BadgeDollarSign, LogOut, PenLine, Eye, Menu, X } from "lucide-react";
 import Logo from "@/components/Logo";
 import { createClient } from "@/lib/supabase";
 
@@ -175,13 +175,19 @@ export default function Navbar() {
 
         {/* Orta — Logo */}
         <div className="pointer-events-none absolute inset-x-0 flex justify-center">
-          <Link
-            href="/"
-            className="pointer-events-auto shrink-0"
-            aria-label="Mepotia ana sayfa"
-          >
-            <Logo className="h-7 sm:h-9" priority />
-          </Link>
+          <div className="pointer-events-auto flex items-center gap-1.5">
+            <Link href="/" className="shrink-0" aria-label="Mepotia ana sayfa">
+              <Logo className="h-7 sm:h-9" priority />
+            </Link>
+            <Link
+              href="/#fiyat-sorgula"
+              className="inline-flex h-7 w-7 items-center justify-center rounded-lg border border-bw-200 bg-white text-bw-600 shadow-[0_10px_24px_-18px_rgba(0,0,0,0.35)] transition hover:border-bw-300 hover:bg-bw-50 hover:text-bw-950 sm:h-8 sm:w-8"
+              aria-label="Fiyat karşılaştır"
+              title="Fiyat karşılaştır"
+            >
+              <BadgeDollarSign className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+            </Link>
+          </div>
         </div>
 
         {/* Sağ — admin kısayolları */}

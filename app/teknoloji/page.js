@@ -72,23 +72,23 @@ export default async function TeknolojiPage({ searchParams }) {
       <section className="relative overflow-hidden border-b border-bw-200 bg-bw-950">
         <div className="story-band-grid absolute inset-0 opacity-20" aria-hidden />
         <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+          <BackHomeLink variant="dark" className="mb-10" />
           <div className="max-w-3xl">
-              <p className="inline-flex items-center gap-2 text-[10px] tracking-[0.28em] text-bw-400 uppercase">
-                <Cpu className="h-3.5 w-3.5" />
-                Güncel Haberler
-              </p>
-              <h1 className="mt-3 font-display text-4xl font-semibold tracking-wide text-white sm:text-5xl">
-                Teknoloji Dünyasından Son Gelişmeler
-              </h1>
-              <p className="mt-4 max-w-2xl text-sm leading-relaxed text-bw-400 sm:text-base">
-                Yapay zekâdan akıllı telefonlara, oyunlardan yazılıma kadar en güncel haberler.
-              </p>
+            <p className="inline-flex items-center gap-2 text-[10px] tracking-[0.28em] text-bw-400 uppercase">
+              <Cpu className="h-3.5 w-3.5" />
+              Güncel Haberler
+            </p>
+            <h1 className="mt-3 font-display text-4xl font-semibold tracking-wide text-white sm:text-5xl">
+              Teknoloji Dünyasından Son Gelişmeler
+            </h1>
+            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-bw-400 sm:text-base">
+              Yapay zekâdan akıllı telefonlara, oyunlardan yazılıma kadar en güncel haberler.
+            </p>
           </div>
         </div>
       </section>
 
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <BackHomeLink className="mb-8" />
         {error ? (
           <p className="rounded-2xl border border-dashed border-bw-300 bg-white px-6 py-12 text-center text-sm text-bw-500">
             Supabase&apos;de <code>tech_posts.sql</code> çalıştır.
@@ -150,7 +150,6 @@ export default async function TeknolojiPage({ searchParams }) {
               totalItems={count}
               pageSize={pageSize}
               query={paginationQuery}
-              mobileMode
             />
           </>
         )}

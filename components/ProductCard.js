@@ -1,6 +1,6 @@
 import ProductImage from "@/components/ProductImage";
 import Link from "next/link";
-import { Eye, MapPin } from "lucide-react";
+import { BadgeDollarSign, Eye, MapPin } from "lucide-react";
 import { formatPrice, getPrimaryImage, hasDiscount, isSold } from "@/lib/products";
 
 export default function ProductCard({ product, large = false, prefetch = false }) {
@@ -9,18 +9,17 @@ export default function ProductCard({ product, large = false, prefetch = false }
   const discount = hasDiscount(product);
 
   return (
-    <Link
-      href={`/urun/${product.id}`}
-      prefetch={prefetch}
+    <article
       className={`group block overflow-hidden rounded-3xl border border-bw-200 bg-white shadow-[0_2px_20px_-12px_rgba(0,0,0,0.15)] transition duration-200 hover:-translate-y-1 hover:border-bw-300 hover:shadow-[0_24px_48px_-24px_rgba(0,0,0,0.28)] active:scale-[0.99] ${
         large ? "sm:col-span-2" : ""
       } ${sold ? "opacity-90" : ""}`}
     >
-      <div
-        className={`relative overflow-hidden bg-bw-100 ${
-          large ? "aspect-[16/10]" : "aspect-[4/3]"
-        }`}
-      >
+      <Link href={`/urun/${product.id}`} prefetch={prefetch} className="block">
+        <div
+          className={`relative overflow-hidden bg-bw-100 ${
+            large ? "aspect-[16/10]" : "aspect-[4/3]"
+          }`}
+        >
         <ProductImage
           src={img}
           alt={product.title}
@@ -48,32 +47,40 @@ export default function ProductCard({ product, large = false, prefetch = false }
             </span>
           </div>
         ) : null}
-      </div>
-      <div className={`p-5 ${large ? "sm:p-7" : ""}`}>
-        {discount ? (
-          <p className="text-sm text-bw-400 line-through">{formatPrice(product.original_price)}</p>
-        ) : null}
-        <p className={`font-semibold tracking-tight text-bw-950 ${large ? "text-2xl" : "text-xl"}`}>
-          {formatPrice(product.price)}
-        </p>
-        <h3
-          className={`mt-2 font-medium text-bw-800 group-hover:text-bw-950 ${
-            large ? "line-clamp-2 text-lg" : "line-clamp-2 text-sm"
-          }`}
-        >
-          {product.title}
-        </h3>
-        <div className="mt-4 flex items-center justify-between gap-2 border-t border-bw-100 pt-4 text-xs text-bw-500">
-          <span className="flex min-w-0 items-center gap-1.5">
-            <MapPin className="h-3.5 w-3.5 shrink-0" />
-            <span className="truncate">{product.city || "—"}</span>
-          </span>
-          <span className="flex items-center gap-1.5">
-            <Eye className="h-3.5 w-3.5" />
-            {product.views ?? 0}
-          </span>
         </div>
-      </div>
-    </Link>
+        <div className={`p-5 ${large ? "sm:p-7" : ""}`}>
+          {discount ? (
+            <p className="text-sm text-bw-400 line-through">{formatPrice(product.original_price)}</p>
+          ) : null}
+          <p className={`font-semibold tracking-tight text-bw-950 ${large ? "text-2xl" : "text-xl"}`}>
+            {formatPrice(product.price)}
+          </p>
+          <h3
+            className={`mt-2 font-medium text-bw-800 group-hover:text-bw-950 ${
+              large ? "line-clamp-2 text-lg" : "line-clamp-2 text-sm"
+            }`}
+          >
+            {product.title}
+          </h3>
+          <div className="mt-4 flex items-center justify-between gap-2 border-t border-bw-100 pt-4 text-xs text-bw-500">
+            <span className="flex min-w-0 items-center gap-1.5">
+              <MapPin className="h-3.5 w-3.5 shrink-0" />
+              <span className="truncate">{product.city || "—"}</span>
+            </span>
+            <span className="flex items-center gap-1.5">
+              <Eye className="h-3.5 w-3.5" />
+              {product.views ?? 0}
+            </span>
+          </div>
+        </div>
+      </Link>
+      <Link
+        href={`/urun/${product.id}#piyasa-karsilastirmasi`}
+        className="flex items-center justify-center gap-1.5 border-t border-bw-100 px-4 py-3 text-xs font-semibold text-bw-600 transition hover:bg-bw-50 hover:text-bw-950"
+      >
+        <BadgeDollarSign className="h-3.5 w-3.5" />
+        Fiyat karşılaştır
+      </Link>
+    </article>
   );
 }

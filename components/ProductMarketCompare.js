@@ -45,7 +45,10 @@ export default function ProductMarketCompare({ query, referencePrice, condition 
 
   if (loading) {
     return (
-      <section className="mt-5 rounded-[1.75rem] border border-bw-200 bg-white p-5 sm:mt-8 sm:p-6">
+      <section
+        id="piyasa-karsilastirmasi"
+        className="mt-5 scroll-mt-24 rounded-[1.75rem] border border-bw-200 bg-white p-5 sm:mt-8 sm:p-6"
+      >
         <div className="flex items-center gap-3 text-sm text-bw-600">
           <Loader2 className="h-4 w-4 animate-spin" />
           Piyasa fiyatları karşılaştırılıyor…
@@ -58,7 +61,10 @@ export default function ProductMarketCompare({ query, referencePrice, condition 
     if (!result?.marketFallbackUrl && !error) return null;
 
     return (
-      <section className="mt-5 rounded-[1.75rem] border border-bw-200 bg-white p-5 sm:mt-8 sm:p-6">
+      <section
+        id="piyasa-karsilastirmasi"
+        className="mt-5 scroll-mt-24 rounded-[1.75rem] border border-bw-200 bg-white p-5 sm:mt-8 sm:p-6"
+      >
         <p className="inline-flex items-center gap-2 text-[10px] font-semibold tracking-[0.18em] text-bw-500 uppercase">
           <Scale className="h-3.5 w-3.5" />
           Piyasa karşılaştırması
@@ -82,7 +88,10 @@ export default function ProductMarketCompare({ query, referencePrice, condition 
   }
 
   return (
-    <section className="mt-5 rounded-[1.75rem] border border-bw-200 bg-white p-5 sm:mt-8 sm:p-6">
+    <section
+      id="piyasa-karsilastirmasi"
+      className="mt-5 scroll-mt-24 rounded-[1.75rem] border border-bw-200 bg-white p-5 sm:mt-8 sm:p-6"
+    >
       <div className="mb-5">
         <p className="inline-flex items-center gap-2 text-[10px] font-semibold tracking-[0.18em] text-bw-500 uppercase">
           <Scale className="h-3.5 w-3.5" />
