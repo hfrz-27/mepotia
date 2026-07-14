@@ -7,17 +7,26 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Trigger Vercel Deploy Hook
+        env:
+          DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$DEPLOY_HOOK" ]; then
+            echo "HATA: VERCEL_DEPLOY_HOOK secret yok."
+            echo "Vercel > Settings > Git > Deploy Hooks URL'sini secret olarak ekle."
+            exit 1
+          fi
+          curl -fsS -X POST "$DEPLOY_HOOK"
+          echo ""
+          echo "Vercel deploy tetiklendi. 2-3 dk bekle."
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-
-      - name: Deploy to Vercel Production
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-args: "--prod"
+      - name: Wait and check live site
+        run: |
+          sleep 90
+          CODE=$(curl -s -o /dev/null -w "%{http_code}" https://mepotia.com/api/version || echo "000")
+          echo "mepotia.com/api/version => HTTP $CODE"
+          if [ "$CODE" = "200" ]; then
+            echo "Site guncellendi!"
+          else
+            echo "Henuz eski surum olabilir. Vercel Deployments kontrol et."
+          fi
