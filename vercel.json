@@ -1,7 +1,7 @@
 {
   "crons": [
     {
-      "path": "/api/sync-tech-news",
+      "path": "/api/revalidate",
       "schedule": "0 */6 * * *"
     }
   ]

@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "icons": "node scripts/generate-icons.mjs"
+    "icons": "node scripts/generate-icons.mjs",
+    "sync-news": "node scripts/sync-news.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.0",

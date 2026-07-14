@@ -153,7 +153,14 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
     setSyncing(true);
     setMsg("");
     try {
-      const res = await fetch("/api/sync-tech-news", { method: "POST" });
+      let res = await fetch("/api/sync-tech-news", { method: "POST" });
+      if (res.status === 404) {
+        res = await fetch("/api/revalidate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ syncTechNews: true }),
+        });
+      }
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Haberler çekilemedi.");
 

@@ -254,10 +254,17 @@ export default function AdminPage() {
     setNewsSyncing(true);
     setNewsMsg("");
     try {
-      const res = await fetch("/api/sync-tech-news", { method: "POST" });
+      let res = await fetch("/api/sync-tech-news", { method: "POST" });
+      if (res.status === 404) {
+        res = await fetch("/api/revalidate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ syncTechNews: true }),
+        });
+      }
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Haberler çekilemedi.");
-      const parts = [`${data.imported} yeni haber eklendi.`];
+      const parts = [`${data.imported ?? 0} yeni haber eklendi.`];
       if (data.skipped) parts.push(`${data.skipped} zaten vardı.`);
       if (data.errors?.length) parts.push(`${data.errors.length} haber atlandı.`);
       setNewsMsg(parts.join(" "));
