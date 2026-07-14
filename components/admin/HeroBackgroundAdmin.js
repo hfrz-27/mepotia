@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { ImageIcon, Loader2, Save } from "lucide-react";
+import { ImageIcon, Loader2, Save, Trash2 } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import { displayImageUrl } from "@/lib/productImage";
 
@@ -12,9 +12,12 @@ const SLOTS = [
   { key: "hero_bg_3", label: "Fotoğraf 3" },
 ];
 
+const EMPTY = { hero_bg_1: "", hero_bg_2: "", hero_bg_3: "" };
+
 export default function HeroBackgroundAdmin() {
-  const [values, setValues] = useState({ hero_bg_1: "", hero_bg_2: "", hero_bg_3: "" });
+  const [values, setValues] = useState(EMPTY);
   const [files, setFiles] = useState({ hero_bg_1: null, hero_bg_2: null, hero_bg_3: null });
+  const [removed, setRemoved] = useState({ hero_bg_1: false, hero_bg_2: false, hero_bg_3: false });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState("");
@@ -41,6 +44,8 @@ export default function HeroBackgroundAdmin() {
         hero_bg_3: data.hero_bg_3 || "",
       });
     }
+    setRemoved({ hero_bg_1: false, hero_bg_2: false, hero_bg_3: false });
+    setFiles({ hero_bg_1: null, hero_bg_2: null, hero_bg_3: null });
     setSqlMissing(false);
     setLoading(false);
   };
@@ -49,19 +54,21 @@ export default function HeroBackgroundAdmin() {
     load();
   }, []);
 
-  const uploadIfNeeded = async (supabase, key) => {
-    const file = files[key];
-    if (!file) return values[key];
+  const resolveSlot = async (supabase, key) => {
+    if (files[key]) {
+      const path = `hero/${key}-${Date.now()}.jpg`;
+      const { error } = await supabase.storage.from("product-images").upload(path, files[key], {
+        upsert: true,
+        contentType: files[key].type || "image/jpeg",
+      });
+      if (error) throw new Error(error.message);
 
-    const path = `hero/${key}-${Date.now()}.jpg`;
-    const { error } = await supabase.storage.from("product-images").upload(path, file, {
-      upsert: true,
-      contentType: file.type || "image/jpeg",
-    });
-    if (error) throw new Error(error.message);
+      const { data: pub } = supabase.storage.from("product-images").getPublicUrl(path);
+      return pub.publicUrl;
+    }
 
-    const { data: pub } = supabase.storage.from("product-images").getPublicUrl(path);
-    return pub.publicUrl;
+    if (removed[key]) return null;
+    return values[key] || null;
   };
 
   const onSave = async () => {
@@ -71,7 +78,7 @@ export default function HeroBackgroundAdmin() {
       const supabase = createClient();
       const next = {};
       for (const slot of SLOTS) {
-        next[slot.key] = await uploadIfNeeded(supabase, slot.key);
+        next[slot.key] = await resolveSlot(supabase, slot.key);
       }
 
       const { error } = await supabase
@@ -81,14 +88,25 @@ export default function HeroBackgroundAdmin() {
 
       if (error) throw new Error(error.message);
 
-      setValues(next);
+      setValues({
+        hero_bg_1: next.hero_bg_1 || "",
+        hero_bg_2: next.hero_bg_2 || "",
+        hero_bg_3: next.hero_bg_3 || "",
+      });
       setFiles({ hero_bg_1: null, hero_bg_2: null, hero_bg_3: null });
+      setRemoved({ hero_bg_1: false, hero_bg_2: false, hero_bg_3: false });
       setMsg("Hero arka planları kaydedildi. Ana sayfayı yenile.");
     } catch (err) {
       setMsg(err.message || "Kaydedilemedi.");
     } finally {
       setSaving(false);
     }
+  };
+
+  const onRemove = (key) => {
+    setFiles((prev) => ({ ...prev, [key]: null }));
+    setValues((prev) => ({ ...prev, [key]: "" }));
+    setRemoved((prev) => ({ ...prev, [key]: true }));
   };
 
   if (loading) {
@@ -111,6 +129,10 @@ export default function HeroBackgroundAdmin() {
     );
   }
 
+  const activeCount = SLOTS.filter(
+    (slot) => !removed[slot.key] && (files[slot.key] || values[slot.key]),
+  ).length;
+
   return (
     <div className="rounded-3xl border border-bw-200 bg-white p-5 shadow-sm sm:p-6">
       <p className="text-xs font-semibold tracking-[0.2em] text-bw-500 uppercase">
@@ -120,20 +142,25 @@ export default function HeroBackgroundAdmin() {
         MEPOTIA arka plan fotoğrafları
       </h2>
       <p className="mt-2 text-sm text-bw-600">
-        3 fotoğraf yükle. Ana sayfada yavaşça kayar ve tek fotoğraf gibi birleşir.
+        1–3 fotoğraf ekleyebilirsin; hepsi zorunlu değil. Birden fazlaysa yavaşça kayar ve tek
+        fotoğraf gibi birleşir. Boş bırakırsan varsayılan koyu arka plan kullanılır.
       </p>
+      <p className="mt-1 text-xs text-bw-500">Aktif fotoğraf: {activeCount}</p>
 
       <div className="mt-5 grid gap-4 sm:grid-cols-3">
         {SLOTS.map((slot) => {
-          const preview = files[slot.key]
+          const hasFile = Boolean(files[slot.key]);
+          const hasSaved = Boolean(values[slot.key]) && !removed[slot.key];
+          const preview = hasFile
             ? URL.createObjectURL(files[slot.key])
-            : values[slot.key]
+            : hasSaved
               ? displayImageUrl(values[slot.key])
               : null;
 
           return (
             <div key={slot.key} className="rounded-2xl border border-bw-200 bg-bw-50 p-3">
               <p className="text-xs font-semibold text-bw-700">{slot.label}</p>
+              <p className="mt-0.5 text-[10px] text-bw-400">İsteğe bağlı</p>
               <div className="relative mt-2 aspect-[16/10] overflow-hidden rounded-xl bg-bw-200">
                 {preview ? (
                   <Image src={preview} alt="" fill className="object-cover" unoptimized />
@@ -143,19 +170,32 @@ export default function HeroBackgroundAdmin() {
                   </div>
                 )}
               </div>
-              <label className="mt-3 inline-flex cursor-pointer items-center gap-2 rounded-xl border border-bw-200 bg-white px-3 py-2 text-xs font-semibold text-bw-700 hover:border-bw-300">
-                Fotoğraf seç
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (!file) return;
-                    setFiles((prev) => ({ ...prev, [slot.key]: file }));
-                  }}
-                />
-              </label>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-bw-200 bg-white px-3 py-2 text-xs font-semibold text-bw-700 hover:border-bw-300">
+                  {hasSaved || hasFile ? "Değiştir" : "Fotoğraf seç"}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      setFiles((prev) => ({ ...prev, [slot.key]: file }));
+                      setRemoved((prev) => ({ ...prev, [slot.key]: false }));
+                    }}
+                  />
+                </label>
+                {preview ? (
+                  <button
+                    type="button"
+                    onClick={() => onRemove(slot.key)}
+                    className="inline-flex items-center gap-1.5 rounded-xl border border-red-200 bg-white px-3 py-2 text-xs font-semibold text-red-700 hover:bg-red-50"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                    Sil
+                  </button>
+                ) : null}
+              </div>
             </div>
           );
         })}
