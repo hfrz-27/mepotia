@@ -1,8 +1,9 @@
 export const runtime = "nodejs";
+export const maxDuration = 300;
 
 import { createClient } from "@/lib/supabase-server";
 import { createAdminClient } from "@/lib/supabase-admin";
-import { syncTechNews } from "@/lib/techNewsSync";
+import { syncTechNews, normalizeFeedUrls } from "@/lib/techNewsSync";
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
@@ -61,7 +62,8 @@ export async function POST(request) {
       } catch {
         // admin oturumu ile devam
       }
-      const result = await syncTechNews(supabase, { limit: 10 });
+      const feedUrls = normalizeFeedUrls(body.feedUrls ?? body.feedUrl);
+      const result = await syncTechNews(supabase, { feedUrls });
       revalidateSite();
       return NextResponse.json({ ok: true, ...result });
     } catch (error) {
@@ -85,7 +87,7 @@ export async function GET(request) {
 
   try {
     const supabase = createAdminClient();
-    const result = await syncTechNews(supabase, { limit: 10 });
+    const result = await syncTechNews(supabase);
     revalidateSite();
     return NextResponse.json({ ok: true, ...result });
   } catch (error) {

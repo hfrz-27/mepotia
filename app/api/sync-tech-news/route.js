@@ -1,8 +1,9 @@
 export const runtime = "nodejs";
+export const maxDuration = 300;
 
 import { createClient } from "@/lib/supabase-server";
 import { createAdminClient } from "@/lib/supabase-admin";
-import { syncTechNews } from "@/lib/techNewsSync";
+import { syncTechNews, normalizeFeedUrls, deleteAllTechPosts } from "@/lib/techNewsSync";
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
@@ -37,10 +38,10 @@ function isCronAuthorized(request) {
   return auth === `Bearer ${secret}`;
 }
 
-async function runSync(supabase) {
-  const result = await syncTechNews(supabase, { limit: 10 });
+async function runSync(supabase, feedUrls) {
+  const result = await syncTechNews(supabase, { feedUrls });
 
-  if (result.imported > 0) {
+  if (result.imported > 0 || result.updated > 0 || result.deleted > 0) {
     revalidatePath("/");
     revalidatePath("/teknoloji");
     revalidatePath("/teknoloji", "layout");
@@ -68,9 +69,20 @@ export async function GET(request) {
 }
 
 /** Admin panel — manuel haber çekme */
-export async function POST() {
+export async function POST(request) {
   const { supabase, error } = await requireAdmin();
   if (error) return error;
+
+  let body = {};
+  try {
+    body = await request.json();
+  } catch {
+    body = {};
+  }
+
+  const feedUrls = normalizeFeedUrls(body.feedUrls ?? body.feedUrl);
+  const deleteAll = body.deleteAll === true;
+  const resetAndSync = body.resetAndSync === true;
 
   try {
     let client = supabase;
@@ -79,7 +91,29 @@ export async function POST() {
     } catch {
       // admin oturumu ile devam
     }
-    const result = await runSync(client);
+
+    if (deleteAll || resetAndSync) {
+      const { deleted } = await deleteAllTechPosts(client);
+      if (!resetAndSync && !feedUrls.length) {
+        revalidatePath("/");
+        revalidatePath("/teknoloji");
+        revalidatePath("/teknoloji", "layout");
+        return NextResponse.json({ ok: true, deleted });
+      }
+      if (resetAndSync && !feedUrls.length) {
+        throw new Error("Yeniden çekmek için site linki gir.");
+      }
+      if (!resetAndSync) {
+        revalidatePath("/");
+        revalidatePath("/teknoloji");
+        revalidatePath("/teknoloji", "layout");
+        return NextResponse.json({ ok: true, deleted });
+      }
+      const result = await runSync(client, feedUrls);
+      return NextResponse.json({ ok: true, deleted, ...result });
+    }
+
+    const result = await runSync(client, feedUrls);
     return NextResponse.json({ ok: true, ...result });
   } catch (err) {
     return NextResponse.json(

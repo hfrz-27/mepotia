@@ -19,5 +19,5 @@ const supabase = createClient(url, key, {
   auth: { persistSession: false, autoRefreshToken: false },
 });
 
-const result = await syncTechNews(supabase, { limit: 10 });
+const result = await syncTechNews(supabase);
 console.log(JSON.stringify(result, null, 2));

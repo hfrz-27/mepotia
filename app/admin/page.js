@@ -4,11 +4,13 @@ import { useEffect, useState } from "react";
 import ProductImage from "@/components/ProductImage";
 import Link from "next/link";
 import Image from "next/image";
-import { ShoppingBag, Search, Pencil, Rss } from "lucide-react";
+import { ShoppingBag, Search, Pencil, Rss, Trash2 } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import { recoverPhotosFromStorage } from "@/lib/recoverPhotos";
 import ShareProductButtons from "@/components/ShareProductButtons";
 import TechPostsAdmin from "@/components/admin/TechPostsAdmin";
+import TechNewsSyncBox from "@/components/admin/TechNewsSyncBox";
+import { purgeSiteFromBrowser } from "@/lib/sitePurgeClient";
 
 function productImage(p) {
   const images = p?.product_images;
@@ -47,8 +49,8 @@ export default function AdminPage() {
   const [productSqlHint, setProductSqlHint] = useState("");
   const [recovering, setRecovering] = useState(false);
   const [recoverDone, setRecoverDone] = useState(false);
-  const [newsSyncing, setNewsSyncing] = useState(false);
-  const [newsMsg, setNewsMsg] = useState("");
+  const [purging, setPurging] = useState(false);
+  const [purgeMsg, setPurgeMsg] = useState("");
 
   const load = async () => {
     const supabase = createClient();
@@ -250,29 +252,41 @@ export default function AdminPage() {
     load();
   };
 
-  const syncShiftDeleteNews = async () => {
-    setNewsSyncing(true);
-    setNewsMsg("");
+  const purgeSite = async () => {
+    if (
+      !confirm(
+        "Sitedeki TÜM ürünler, haberler, teklifler, istekler ve yorumlar silinecek. Geri alınamaz. Emin misin?",
+      )
+    ) {
+      return;
+    }
+
+    setPurging(true);
+    setPurgeMsg("");
+
     try {
-      let res = await fetch("/api/sync-tech-news", { method: "POST" });
-      if (res.status === 404) {
-        res = await fetch("/api/revalidate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ syncTechNews: true }),
-        });
+      const supabase = createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) throw new Error("Admin oturumu gerekli. Önce giriş yap.");
+
+      const result = await purgeSiteFromBrowser(supabase);
+
+      try {
+        await fetch("/api/revalidate", { method: "POST" });
+      } catch {
+        // ignore
       }
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Haberler çekilemedi.");
-      const parts = [`${data.imported ?? 0} yeni haber eklendi.`];
-      if (data.skipped) parts.push(`${data.skipped} zaten vardı.`);
-      if (data.errors?.length) parts.push(`${data.errors.length} haber atlandı.`);
-      setNewsMsg(parts.join(" "));
-      if (data.imported > 0) await load();
+
+      setPurgeMsg(
+        `${result.deletedProducts} ürün, ${result.deletedNews} haber, ${result.deletedOffers} teklif, ${result.deletedRequests} istek, ${result.deletedReviews} yorum silindi. Sayfa sıfırlandı.`,
+      );
+      await load();
     } catch (err) {
-      setNewsMsg(err?.message || "Haberler alınamadı.");
+      setPurgeMsg(err?.message || "Silme başarısız. Supabase SQL Editor'da reset_site_content.sql çalıştır.");
     } finally {
-      setNewsSyncing(false);
+      setPurging(false);
     }
   };
 
@@ -301,33 +315,50 @@ export default function AdminPage() {
         </div>
       </div>
 
-      <div className="mt-6 overflow-hidden rounded-[1.75rem] border border-amber-200/80 bg-gradient-to-r from-bw-950 via-bw-900 to-bw-950 p-5 sm:p-6">
+      <div className="mt-6 rounded-[1.75rem] border border-red-200 bg-red-50 p-5 sm:p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
+            <p className="text-sm font-semibold text-red-900">Vitrini sıfırla</p>
+            <p className="mt-1 text-sm text-red-800/80">
+              Tüm ürünler, haberler, bana-sat teklifleri, ürün istekleri ve müşteri yorumları silinir.
+            </p>
+            {purgeMsg ? <p className="mt-2 text-sm font-medium text-red-900">{purgeMsg}</p> : null}
+          </div>
+          <button
+            type="button"
+            onClick={purgeSite}
+            disabled={purging}
+            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl border border-red-300 bg-white px-6 py-3.5 text-sm font-semibold text-red-700 hover:bg-red-100 disabled:opacity-50"
+          >
+            <Trash2 className="h-4 w-4" />
+            {purging ? "Siliniyor..." : "Her şeyi sil — sıfırla"}
+          </button>
+        </div>
+      </div>
+
+      <div className="mt-6 overflow-hidden rounded-[1.75rem] border border-amber-200/80 bg-gradient-to-r from-bw-950 via-bw-900 to-bw-950 p-5 sm:p-6">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+          <div className="max-w-xl">
             <p className="inline-flex items-center gap-2 text-[10px] font-semibold tracking-[0.22em] text-amber-200/90 uppercase">
               <Rss className="h-3.5 w-3.5" />
               Mepotia Teknoloji
             </p>
-            <p className="mt-2 text-lg font-semibold text-white">Mepotia teknoloji haberleri</p>
+            <p className="mt-2 text-lg font-semibold text-white">Haber kaynağından çek</p>
             <p className="mt-1 text-sm text-bw-300">
-              Güncel teknoloji haberleri otomatik çekilir · Mepotia markalı kapak görselleri oluşturulur.
+              Normal site linki yapıştır — RSS gerekmez. Son 100 haber Mepotia markasıyla eklenir.
             </p>
-            {newsMsg ? <p className="mt-3 text-sm font-medium text-amber-100">{newsMsg}</p> : null}
             {techSqlMissing ? (
               <p className="mt-3 text-xs text-amber-200/90">
                 Önce Supabase&apos;te <code className="rounded bg-white/10 px-1">tech_posts.sql</code> çalıştır.
               </p>
             ) : null}
           </div>
-          <button
-            type="button"
-            onClick={syncShiftDeleteNews}
-            disabled={newsSyncing || techSqlMissing}
-            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl bg-white px-6 py-3.5 text-sm font-semibold text-bw-950 hover:bg-bw-100 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            <Rss className="h-4 w-4" />
-            {newsSyncing ? "Çekiliyor..." : "Haberleri şimdi çek"}
-          </button>
+          <TechNewsSyncBox
+            variant="banner"
+            disabled={techSqlMissing}
+            onSynced={load}
+            className="w-full lg:max-w-md"
+          />
         </div>
       </div>
 

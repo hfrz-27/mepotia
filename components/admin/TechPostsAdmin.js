@@ -2,8 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { Camera, ImagePlus, Rss, Sparkles, Trash2, Upload, X } from "lucide-react";
+import { Camera, ImagePlus, Sparkles, Trash2, Upload, X } from "lucide-react";
 import ShareTechPostButtons from "@/components/ShareTechPostButtons";
+import TechNewsSyncBox from "@/components/admin/TechNewsSyncBox";
 import { createClient } from "@/lib/supabase";
 import { absoluteUrl } from "@/lib/site";
 
@@ -21,7 +22,6 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
   const [coverFile, setCoverFile] = useState(null);
   const [coverPreview, setCoverPreview] = useState("");
   const [loading, setLoading] = useState(false);
-  const [syncing, setSyncing] = useState(false);
   const [msg, setMsg] = useState("");
   const [shareId, setShareId] = useState(null);
   const [userId, setUserId] = useState(null);
@@ -147,34 +147,6 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
     onReload();
   };
 
-  const onSyncNews = async () => {
-    setSyncing(true);
-    setMsg("");
-    try {
-      let res = await fetch("/api/sync-tech-news", { method: "POST" });
-      if (res.status === 404) {
-        res = await fetch("/api/revalidate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ syncTechNews: true }),
-        });
-      }
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Haberler çekilemedi.");
-
-      const parts = [`${data.imported} yeni haber eklendi.`];
-      if (data.skipped) parts.push(`${data.skipped} zaten vardı.`);
-      if (data.errors?.length) parts.push(`${data.errors.length} haber atlandı.`);
-      setMsg(parts.join(" "));
-
-      if (data.imported > 0) onReload();
-    } catch (err) {
-      setMsg(err?.message || "Haberler alınamadı.");
-    } finally {
-      setSyncing(false);
-    }
-  };
-
   const field =
     "w-full rounded-xl border border-bw-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-bw-500 focus:ring-2 focus:ring-bw-950/5";
   const label = "mb-1.5 block text-[10px] font-semibold tracking-[0.18em] text-bw-500 uppercase";
@@ -196,22 +168,12 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
 
   return (
     <div className="mt-6 space-y-8">
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-bw-200 bg-white px-5 py-4">
-        <div>
+      <div className="rounded-2xl border border-bw-200 bg-white px-5 py-5">
+        <div className="mb-4">
           <p className="text-sm font-semibold text-bw-950">Mepotia Teknoloji</p>
-          <p className="text-xs text-bw-500">
-            Güncel haberler otomatik çekilir. Her saat başı güncellenir.
-          </p>
+          <p className="text-xs text-bw-500">Kaynak linkini yapıştır, haberleri çek.</p>
         </div>
-        <button
-          type="button"
-          onClick={onSyncNews}
-          disabled={syncing}
-          className="inline-flex items-center gap-2 rounded-xl bg-bw-950 px-5 py-3 text-sm font-semibold text-white hover:bg-bw-800 disabled:opacity-50"
-        >
-          <Rss className="h-4 w-4" />
-          {syncing ? "Çekiliyor..." : "Haberleri şimdi çek"}
-        </button>
+        <TechNewsSyncBox onSynced={onReload} />
       </div>
 
       <form
