@@ -31,16 +31,11 @@ export default function PremiumPagination({
   basePath,
   page,
   totalPages,
-  totalItems,
-  pageSize,
   query = {},
-  itemLabel = "haber",
 }) {
   if (totalPages <= 1) return null;
 
   const safePage = Math.min(Math.max(page, 1), totalPages);
-  const from = (safePage - 1) * pageSize + 1;
-  const to = Math.min(safePage * pageSize, totalItems);
   const pageItems = getPageItems(safePage, totalPages);
 
   const pageClass = (active) =>
@@ -50,10 +45,6 @@ export default function PremiumPagination({
 
   return (
     <nav aria-label="Sayfalar" className="mt-12 border-t border-bw-200 pt-8 sm:mt-14 sm:pt-10">
-      <p className="mb-4 text-center text-sm text-bw-500">
-        <span className="font-semibold text-bw-800">{from}–{to}</span> / {totalItems} {itemLabel}
-      </p>
-
       <div className="mx-auto flex max-w-full items-center justify-center gap-1.5 sm:gap-2">
         {safePage > 1 ? (
           <Link

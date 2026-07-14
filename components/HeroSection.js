@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ShieldCheck, Eye, Heart } from "lucide-react";
+import { ArrowRight, BadgeDollarSign, ShieldCheck, Eye, Heart } from "lucide-react";
 import HeroSearch from "@/components/HeroSearch";
 
 const TRUST = [
@@ -57,6 +57,13 @@ export default function HeroSection() {
           <HeroSearch variant="dark" />
 
           <div className="animate-fade-up-delay mt-8 flex flex-wrap items-center justify-center gap-3">
+            <Link
+              href="/fiyat-karsilastir"
+              className="group inline-flex items-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-semibold text-white transition hover:border-white/40 hover:bg-white/10"
+            >
+              <BadgeDollarSign className="h-4 w-4" />
+              Fiyat karşılaştır
+            </Link>
             <a
               href="#vitrin"
               className="group inline-flex items-center gap-2 rounded-2xl bg-white px-7 py-3.5 text-sm font-semibold text-bw-950 transition hover:bg-bw-100"

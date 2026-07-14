@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { BadgeDollarSign, LogOut, PenLine, Eye, Menu, X } from "lucide-react";
+import { LogOut, PenLine, Eye, Menu, X } from "lucide-react";
 import Logo from "@/components/Logo";
 import { createClient } from "@/lib/supabase";
 
@@ -124,6 +124,7 @@ export default function Navbar() {
               {[
                 { href: "/", label: "Anasayfa" },
                 { href: "/ara", label: "Ürünler" },
+                { href: "/fiyat-karsilastir", label: "Fiyat karşılaştır" },
                 { href: "/kategoriler", label: "Kategoriler" },
                 { href: "/hakkimizda", label: "Hakkımızda" },
                 { href: "/bana-sat", label: "Bize Ürün Sat" },
@@ -184,16 +185,8 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Sağ — fiyat ve admin kısayolları */}
+        {/* Sağ — admin kısayolları */}
         <div className="relative z-10 flex min-w-[5.5rem] items-center justify-end gap-1.5 sm:min-w-[7rem]">
-          <Link
-            href="/fiyat-karsilastir"
-            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-bw-200 bg-white text-bw-600 transition hover:border-bw-300 hover:bg-bw-50 hover:text-bw-950"
-            aria-label="Fiyat karşılaştır"
-            title="Fiyat karşılaştır"
-          >
-            <BadgeDollarSign className="h-4 w-4" />
-          </Link>
           {user && isAdmin ? (
             <>
               <Link

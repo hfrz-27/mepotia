@@ -599,7 +599,7 @@ export default function IlanVerClient() {
             <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm text-bw-700">
               <label className="flex items-center gap-2">
                 <input type="checkbox" name="is_featured" checked={form.is_featured} onChange={onChange} />
-                Öne çıkar
+                Fırsat ürünü olarak göster
               </label>
               <label className="flex items-center gap-2">
                 <input type="checkbox" name="is_premium" checked={form.is_premium} onChange={onChange} />
