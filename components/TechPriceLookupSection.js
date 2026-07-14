@@ -5,8 +5,13 @@ import Link from "next/link";
 import { Banknote, Loader2, Search, Sparkles } from "lucide-react";
 import BackHomeLink from "@/components/BackHomeLink";
 import PriceComparePanel from "@/components/PriceComparePanel";
+import HeroBackgroundCarousel from "@/components/HeroBackgroundCarousel";
+import HeroBackgroundVideo from "@/components/HeroBackgroundVideo";
 
-export default function TechPriceLookupSection() {
+export default function TechPriceLookupSection({
+  heroImages = [],
+  heroVideo = "",
+}) {
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -40,12 +45,21 @@ export default function TechPriceLookupSection() {
     }
   };
 
+  const hasVideo = Boolean(heroVideo);
+  const hasPhotos = !hasVideo && heroImages.filter(Boolean).length > 0;
+
   return (
     <section id="fiyat-sorgula" className="relative scroll-mt-28 overflow-hidden bg-bw-100">
-      <div
-        className="absolute inset-0 bg-gradient-to-b from-bw-950 via-bw-900/95 to-bw-100"
-        aria-hidden
-      />
+      {hasVideo ? (
+        <HeroBackgroundVideo src={heroVideo} />
+      ) : hasPhotos ? (
+        <HeroBackgroundCarousel images={heroImages} />
+      ) : (
+        <div
+          className="absolute inset-0 bg-gradient-to-b from-bw-950 via-bw-900/95 to-bw-100"
+          aria-hidden
+        />
+      )}
       <div className="hero-grid absolute inset-0 opacity-[0.04]" aria-hidden />
 
       <div className="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-14">

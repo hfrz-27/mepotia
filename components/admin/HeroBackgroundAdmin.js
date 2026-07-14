@@ -6,13 +6,58 @@ import { ImageIcon, Loader2, Save, Trash2, Video } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import { displayImageUrl } from "@/lib/productImage";
 
-const SLOTS = [
-  { key: "hero_bg_1", label: "Fotoğraf 1" },
-  { key: "hero_bg_2", label: "Fotoğraf 2" },
-  { key: "hero_bg_3", label: "Fotoğraf 3" },
+const TABS = [
+  { id: "home", label: "Ana sayfa" },
+  { id: "price", label: "Fiyat karşılaştır" },
 ];
 
-const EMPTY = { hero_bg_1: "", hero_bg_2: "", hero_bg_3: "" };
+const PANELS = {
+  home: {
+    title: "MEPOTIA arka plan — fotoğraf & video",
+    description:
+      "Video yüklersen fotoğrafların yerine oynar (sessiz, döngü). Video yoksa 1–3 fotoğraf yavaşça kayar.",
+    videoKey: "hero_video",
+    slots: [
+      { key: "hero_bg_1", label: "Fotoğraf 1" },
+      { key: "hero_bg_2", label: "Fotoğraf 2" },
+      { key: "hero_bg_3", label: "Fotoğraf 3" },
+    ],
+    storagePrefix: "hero",
+    savedMsg: "Hero arka planı kaydedildi. Sayfayı yenile.",
+  },
+  price: {
+    title: "Fiyat karşılaştır hero — fotoğraf & video",
+    description:
+      "Fiyat karşılaştır sayfasının üst bölümünde görünür. Video önceliklidir; yoksa fotoğraflar döner.",
+    videoKey: "price_compare_video",
+    slots: [
+      { key: "price_compare_bg_1", label: "Fotoğraf 1" },
+      { key: "price_compare_bg_2", label: "Fotoğraf 2" },
+      { key: "price_compare_bg_3", label: "Fotoğraf 3" },
+    ],
+    storagePrefix: "price-compare",
+    savedMsg: "Fiyat karşılaştır hero kaydedildi. Sayfayı yenile.",
+  },
+};
+
+const ALL_KEYS = [
+  "hero_bg_1",
+  "hero_bg_2",
+  "hero_bg_3",
+  "hero_video",
+  "price_compare_bg_1",
+  "price_compare_bg_2",
+  "price_compare_bg_3",
+  "price_compare_video",
+];
+
+function emptyValues() {
+  return ALL_KEYS.reduce((acc, key) => ({ ...acc, [key]: "" }), {});
+}
+
+function emptyFlags(keys) {
+  return keys.reduce((acc, key) => ({ ...acc, [key]: false }), {});
+}
 
 function videoExt(file) {
   const name = file.name.toLowerCase();
@@ -22,43 +67,46 @@ function videoExt(file) {
 }
 
 export default function HeroBackgroundAdmin() {
-  const [values, setValues] = useState(EMPTY);
-  const [heroVideo, setHeroVideo] = useState("");
-  const [files, setFiles] = useState({ hero_bg_1: null, hero_bg_2: null, hero_bg_3: null });
-  const [videoFile, setVideoFile] = useState(null);
-  const [removed, setRemoved] = useState({ hero_bg_1: false, hero_bg_2: false, hero_bg_3: false });
-  const [videoRemoved, setVideoRemoved] = useState(false);
+  const [tab, setTab] = useState("home");
+  const [values, setValues] = useState(emptyValues);
+  const [files, setFiles] = useState({});
+  const [removed, setRemoved] = useState(emptyFlags(ALL_KEYS.filter((k) => !k.includes("video"))));
+  const [videoFiles, setVideoFiles] = useState({});
+  const [videoRemoved, setVideoRemoved] = useState({ hero_video: false, price_compare_video: false });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState("");
   const [sqlMissing, setSqlMissing] = useState(false);
 
+  const panel = PANELS[tab];
+
   const load = async () => {
     setLoading(true);
     const { data, error } = await createClient()
       .from("site_settings")
-      .select("hero_bg_1, hero_bg_2, hero_bg_3, hero_video")
+      .select(ALL_KEYS.join(", "))
       .eq("id", 1)
       .maybeSingle();
 
-    if (error?.message?.includes("hero_bg") || error?.message?.includes("hero_video")) {
+    if (
+      error?.message?.includes("hero_bg") ||
+      error?.message?.includes("hero_video") ||
+      error?.message?.includes("price_compare")
+    ) {
       setSqlMissing(true);
       setLoading(false);
       return;
     }
 
     if (data) {
-      setValues({
-        hero_bg_1: data.hero_bg_1 || "",
-        hero_bg_2: data.hero_bg_2 || "",
-        hero_bg_3: data.hero_bg_3 || "",
-      });
-      setHeroVideo(data.hero_video || "");
+      setValues(
+        ALL_KEYS.reduce((acc, key) => ({ ...acc, [key]: data[key] || "" }), {}),
+      );
     }
-    setRemoved({ hero_bg_1: false, hero_bg_2: false, hero_bg_3: false });
-    setVideoRemoved(false);
-    setFiles({ hero_bg_1: null, hero_bg_2: null, hero_bg_3: null });
-    setVideoFile(null);
+    setRemoved(emptyFlags(ALL_KEYS.filter((k) => !k.includes("video"))));
+    setVideoRemoved({ hero_video: false, price_compare_video: false });
+    setFiles({});
+    setVideoFiles({});
     setSqlMissing(false);
     setLoading(false);
   };
@@ -67,9 +115,9 @@ export default function HeroBackgroundAdmin() {
     load();
   }, []);
 
-  const resolveSlot = async (supabase, key) => {
+  const resolveSlot = async (supabase, key, prefix) => {
     if (files[key]) {
-      const path = `hero/${key}-${Date.now()}.jpg`;
+      const path = `${prefix}/${key}-${Date.now()}.jpg`;
       const { error } = await supabase.storage.from("product-images").upload(path, files[key], {
         upsert: true,
         contentType: files[key].type || "image/jpeg",
@@ -84,13 +132,14 @@ export default function HeroBackgroundAdmin() {
     return values[key] || null;
   };
 
-  const resolveVideo = async (supabase) => {
-    if (videoFile) {
-      const ext = videoExt(videoFile);
-      const path = `hero/hero-video-${Date.now()}.${ext}`;
-      const { error } = await supabase.storage.from("product-images").upload(path, videoFile, {
+  const resolveVideo = async (supabase, videoKey, prefix) => {
+    if (videoFiles[videoKey]) {
+      const file = videoFiles[videoKey];
+      const ext = videoExt(file);
+      const path = `${prefix}/${videoKey}-${Date.now()}.${ext}`;
+      const { error } = await supabase.storage.from("product-images").upload(path, file, {
         upsert: true,
-        contentType: videoFile.type || "video/mp4",
+        contentType: file.type || "video/mp4",
       });
       if (error) throw new Error(error.message);
 
@@ -98,8 +147,8 @@ export default function HeroBackgroundAdmin() {
       return pub.publicUrl;
     }
 
-    if (videoRemoved) return null;
-    return heroVideo || null;
+    if (videoRemoved[videoKey]) return null;
+    return values[videoKey] || null;
   };
 
   const onSave = async () => {
@@ -108,10 +157,17 @@ export default function HeroBackgroundAdmin() {
     try {
       const supabase = createClient();
       const next = {};
-      for (const slot of SLOTS) {
-        next[slot.key] = await resolveSlot(supabase, slot.key);
+
+      for (const panelDef of Object.values(PANELS)) {
+        for (const slot of panelDef.slots) {
+          next[slot.key] = await resolveSlot(supabase, slot.key, panelDef.storagePrefix);
+        }
+        next[panelDef.videoKey] = await resolveVideo(
+          supabase,
+          panelDef.videoKey,
+          panelDef.storagePrefix,
+        );
       }
-      next.hero_video = await resolveVideo(supabase);
 
       const { error } = await supabase
         .from("site_settings")
@@ -120,34 +176,17 @@ export default function HeroBackgroundAdmin() {
 
       if (error) throw new Error(error.message);
 
-      setValues({
-        hero_bg_1: next.hero_bg_1 || "",
-        hero_bg_2: next.hero_bg_2 || "",
-        hero_bg_3: next.hero_bg_3 || "",
-      });
-      setHeroVideo(next.hero_video || "");
-      setFiles({ hero_bg_1: null, hero_bg_2: null, hero_bg_3: null });
-      setVideoFile(null);
-      setRemoved({ hero_bg_1: false, hero_bg_2: false, hero_bg_3: false });
-      setVideoRemoved(false);
-      setMsg("Hero arka planı kaydedildi. Ana sayfayı yenile.");
+      setValues(ALL_KEYS.reduce((acc, key) => ({ ...acc, [key]: next[key] || "" }), {}));
+      setFiles({});
+      setVideoFiles({});
+      setRemoved(emptyFlags(ALL_KEYS.filter((k) => !k.includes("video"))));
+      setVideoRemoved({ hero_video: false, price_compare_video: false });
+      setMsg(panel.savedMsg);
     } catch (err) {
       setMsg(err.message || "Kaydedilemedi.");
     } finally {
       setSaving(false);
     }
-  };
-
-  const onRemove = (key) => {
-    setFiles((prev) => ({ ...prev, [key]: null }));
-    setValues((prev) => ({ ...prev, [key]: "" }));
-    setRemoved((prev) => ({ ...prev, [key]: true }));
-  };
-
-  const onRemoveVideo = () => {
-    setVideoFile(null);
-    setHeroVideo("");
-    setVideoRemoved(true);
   };
 
   if (loading) {
@@ -165,30 +204,47 @@ export default function HeroBackgroundAdmin() {
         <p className="font-semibold">SQL eksik</p>
         <p className="mt-1">
           Supabase&apos;de <code>supabase/hero_backgrounds.sql</code> ve{" "}
-          <code>supabase/hero_video.sql</code> çalıştır.
+          <code>supabase/price_compare_hero.sql</code> çalıştır.
         </p>
       </div>
     );
   }
 
-  const activeCount = SLOTS.filter(
+  const videoKey = panel.videoKey;
+  const hasVideo =
+    Boolean(videoFiles[videoKey]) || (Boolean(values[videoKey]) && !videoRemoved[videoKey]);
+  const videoPreview = videoFiles[videoKey]
+    ? URL.createObjectURL(videoFiles[videoKey])
+    : values[videoKey] && !videoRemoved[videoKey]
+      ? values[videoKey]
+      : null;
+  const activeCount = panel.slots.filter(
     (slot) => !removed[slot.key] && (files[slot.key] || values[slot.key]),
   ).length;
-  const hasVideo = Boolean(videoFile) || (Boolean(heroVideo) && !videoRemoved);
-  const videoPreview = videoFile ? URL.createObjectURL(videoFile) : heroVideo && !videoRemoved ? heroVideo : null;
 
   return (
     <div className="rounded-3xl border border-bw-200 bg-white p-5 shadow-sm sm:p-6">
-      <p className="text-xs font-semibold tracking-[0.2em] text-bw-500 uppercase">
-        Ana sayfa hero
-      </p>
-      <h2 className="mt-1 font-display text-xl font-semibold text-bw-950">
-        MEPOTIA arka plan — fotoğraf & video
-      </h2>
-      <p className="mt-2 text-sm text-bw-600">
-        Video yüklersen fotoğrafların yerine oynar (sessiz, döngü). Video yoksa 1–3 fotoğraf
-        yavaşça kayar. Hepsi isteğe bağlı.
-      </p>
+      <p className="text-xs font-semibold tracking-[0.2em] text-bw-500 uppercase">Hero medya</p>
+
+      <div className="mt-4 flex flex-wrap gap-2">
+        {TABS.map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            onClick={() => setTab(item.id)}
+            className={`rounded-xl px-4 py-2 text-xs font-semibold transition ${
+              tab === item.id
+                ? "bg-bw-950 text-white"
+                : "border border-bw-200 bg-bw-50 text-bw-700 hover:border-bw-300"
+            }`}
+          >
+            {item.label}
+          </button>
+        ))}
+      </div>
+
+      <h2 className="mt-4 font-display text-xl font-semibold text-bw-950">{panel.title}</h2>
+      <p className="mt-2 text-sm text-bw-600">{panel.description}</p>
       <p className="mt-1 text-xs text-bw-500">
         Video: {hasVideo ? "aktif" : "yok"} · Fotoğraf: {activeCount}
       </p>
@@ -225,15 +281,19 @@ export default function HeroBackgroundAdmin() {
               onChange={(e) => {
                 const file = e.target.files?.[0];
                 if (!file) return;
-                setVideoFile(file);
-                setVideoRemoved(false);
+                setVideoFiles((prev) => ({ ...prev, [videoKey]: file }));
+                setVideoRemoved((prev) => ({ ...prev, [videoKey]: false }));
               }}
             />
           </label>
           {hasVideo ? (
             <button
               type="button"
-              onClick={onRemoveVideo}
+              onClick={() => {
+                setVideoFiles((prev) => ({ ...prev, [videoKey]: null }));
+                setValues((prev) => ({ ...prev, [videoKey]: "" }));
+                setVideoRemoved((prev) => ({ ...prev, [videoKey]: true }));
+              }}
               className="inline-flex items-center gap-1.5 rounded-xl border border-red-200 bg-white px-3 py-2 text-xs font-semibold text-red-700 hover:bg-red-50"
             >
               <Trash2 className="h-3.5 w-3.5" />
@@ -244,7 +304,7 @@ export default function HeroBackgroundAdmin() {
       </div>
 
       <div className="mt-5 grid gap-4 sm:grid-cols-3">
-        {SLOTS.map((slot) => {
+        {panel.slots.map((slot) => {
           const hasFile = Boolean(files[slot.key]);
           const hasSaved = Boolean(values[slot.key]) && !removed[slot.key];
           const preview = hasFile
@@ -284,7 +344,11 @@ export default function HeroBackgroundAdmin() {
                 {preview ? (
                   <button
                     type="button"
-                    onClick={() => onRemove(slot.key)}
+                    onClick={() => {
+                      setFiles((prev) => ({ ...prev, [slot.key]: null }));
+                      setValues((prev) => ({ ...prev, [slot.key]: "" }));
+                      setRemoved((prev) => ({ ...prev, [slot.key]: true }));
+                    }}
                     className="inline-flex items-center gap-1.5 rounded-xl border border-red-200 bg-white px-3 py-2 text-xs font-semibold text-red-700 hover:bg-red-50"
                   >
                     <Trash2 className="h-3.5 w-3.5" />

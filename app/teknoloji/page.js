@@ -1,12 +1,13 @@
-import BackHomeLink from "@/components/BackHomeLink";
 import { Suspense } from "react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Cpu } from "lucide-react";
 import TechNewsViewSync from "@/components/TechNewsViewSync";
 import TechNewsCard from "@/components/TechNewsCard";
+import TechNewsPageHero from "@/components/TechNewsPageHero";
 import PremiumPagination from "@/components/PremiumPagination";
 import { getTechPosts, resolveTechPostsPageSize } from "@/lib/techPosts";
+import { getPublishedProducts } from "@/lib/products";
 
 export const revalidate = 60;
 
@@ -43,10 +44,13 @@ export default async function TeknolojiPage({ searchParams }) {
     headerList.get("sec-ch-ua-mobile") || "",
     view,
   );
-  const { data: posts, count, error } = await getTechPosts({
-    limit: pageSize,
-    page,
-  });
+  const [{ data: posts, count, error }, { data: featuredProducts }] = await Promise.all([
+    getTechPosts({
+      limit: pageSize,
+      page,
+    }),
+    getPublishedProducts({ limit: 10, featured: true, orderBy: "created_at" }),
+  ]);
 
   const totalPages = Math.max(1, Math.ceil((count || 0) / pageSize));
   const paginationQuery = view === "mobile" ? { view: "mobile" } : {};
@@ -61,20 +65,7 @@ export default async function TeknolojiPage({ searchParams }) {
         <TechNewsViewSync />
       </Suspense>
 
-      <section className="border-b border-bw-200 bg-white">
-        <div className="mx-auto max-w-7xl px-4 py-7 sm:px-6 sm:py-10 lg:px-8">
-          <BackHomeLink className="mb-5" />
-          <p className="text-[10px] font-semibold tracking-[0.24em] text-bw-500 uppercase">
-            Güncel haberler
-          </p>
-          <h1 className="mt-2 font-display text-2xl font-semibold tracking-wide text-bw-950 sm:text-3xl">
-            Teknoloji
-          </h1>
-          <p className="mt-2 text-sm text-bw-500">
-            {count || 0} haber · son 7 gün
-          </p>
-        </div>
-      </section>
+      <TechNewsPageHero count={count || 0} products={featuredProducts || []} />
 
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
         {error ? (

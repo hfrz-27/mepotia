@@ -1,8 +1,8 @@
-import BackHomeLink from "@/components/BackHomeLink";
 import TechPriceLookupSection from "@/components/TechPriceLookupSection";
 import PriceCompareFeatured from "@/components/PriceCompareFeatured";
 import { Sparkles } from "lucide-react";
 import { getPublishedProducts } from "@/lib/products";
+import { getSiteSettings } from "@/lib/categories";
 
 export const metadata = {
   title: "Fiyat Karşılaştır",
@@ -10,15 +10,25 @@ export const metadata = {
 };
 
 export default async function PriceComparisonPage() {
-  const { data: featuredProducts } = await getPublishedProducts({
-    limit: 8,
-    featured: true,
-    orderBy: "created_at",
-  });
+  const [settings, { data: featuredProducts }] = await Promise.all([
+    getSiteSettings(),
+    getPublishedProducts({
+      limit: 8,
+      featured: true,
+      orderBy: "created_at",
+    }),
+  ]);
 
   return (
     <main className="min-h-screen bg-bw-100">
-      <TechPriceLookupSection />
+      <TechPriceLookupSection
+        heroVideo={settings?.price_compare_video || ""}
+        heroImages={[
+          settings?.price_compare_bg_1,
+          settings?.price_compare_bg_2,
+          settings?.price_compare_bg_3,
+        ].filter(Boolean)}
+      />
 
       <section className="border-t border-bw-200 bg-bw-50">
         <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
