@@ -49,6 +49,7 @@ export default async function HomePage() {
     <HomeReviewsProvider>
       <main>
       <HeroSection
+        heroVideo={settings?.hero_video || ""}
         heroImages={[settings?.hero_bg_1, settings?.hero_bg_2, settings?.hero_bg_3].filter(Boolean)}
       />
 

@@ -5,14 +5,18 @@ import { ArrowRight, BadgeDollarSign, Sparkles } from "lucide-react";
 import HeroSearch from "@/components/HeroSearch";
 import TrustStrip from "@/components/TrustStrip";
 import HeroBackgroundCarousel from "@/components/HeroBackgroundCarousel";
+import HeroBackgroundVideo from "@/components/HeroBackgroundVideo";
 import { ReviewThinStrip } from "@/components/HomeReviews";
 
-export default function HeroSection({ heroImages = [] }) {
-  const hasPhotos = heroImages.filter(Boolean).length > 0;
+export default function HeroSection({ heroImages = [], heroVideo = "" }) {
+  const hasVideo = Boolean(heroVideo);
+  const hasPhotos = !hasVideo && heroImages.filter(Boolean).length > 0;
 
   return (
     <section className="relative overflow-hidden bg-[#1c1f26]">
-      {hasPhotos ? (
+      {hasVideo ? (
+        <HeroBackgroundVideo src={heroVideo} />
+      ) : hasPhotos ? (
         <HeroBackgroundCarousel images={heroImages} />
       ) : (
         <>
