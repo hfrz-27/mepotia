@@ -1,7 +1,6 @@
 # Mepotia Marketplace MVP
 
 Son güncelleme: ShiftDelete haber senkronu (Temmuz 2026).
-
 Next.js 15 + Supabase ikinci el marketplace.
 ## Kurulum
 1. `npm install` 
