@@ -200,7 +200,7 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
         <div>
           <p className="text-sm font-semibold text-bw-950">Mepotia Teknoloji</p>
           <p className="text-xs text-bw-500">
-            Güncel haberler otomatik çekilir. Her 6 saatte bir güncellenir.
+            Güncel haberler otomatik çekilir. Her saat başı güncellenir.
           </p>
         </div>
         <button
