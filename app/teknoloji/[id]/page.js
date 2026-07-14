@@ -1,8 +1,8 @@
-import Link from "next/link";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Cpu } from "lucide-react";
+import { Cpu } from "lucide-react";
+import BackHomeLink from "@/components/BackHomeLink";
 import TechPostBody from "@/components/TechPostBody";
 import { formatTechDate, getTechPostById } from "@/lib/techPosts";
 import { absoluteUrl, SITE_NAME } from "@/lib/site";
@@ -81,13 +81,11 @@ export default async function TechPostPage({ params }) {
       <article className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:py-14">
         {!post.cover_url ? (
           <>
-            <Link
+            <BackHomeLink
               href="/teknoloji"
-              className="inline-flex items-center gap-2 text-sm font-medium text-bw-500 hover:text-bw-950"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Tüm yazılar
-            </Link>
+              label="Tüm haberler"
+              variant="minimal"
+            />
             <p className="mt-6 inline-flex items-center gap-2 text-[10px] tracking-[0.24em] text-bw-500 uppercase">
               <Cpu className="h-3.5 w-3.5" />
               Güncel Haber · {formatTechDate(post.created_at)}
@@ -97,13 +95,10 @@ export default async function TechPostPage({ params }) {
             </h1>
           </>
         ) : (
-          <Link
+          <BackHomeLink
             href="/teknoloji"
-            className="inline-flex items-center gap-2 rounded-xl border border-bw-200 bg-white px-4 py-2 text-sm font-medium text-bw-600 hover:text-bw-950"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Tüm yazılar
-          </Link>
+            label="Tüm haberler"
+          />
         )}
 
         <div className="mt-8 overflow-hidden rounded-[2rem] border border-bw-200 bg-white shadow-[0_24px_60px_-48px_rgba(0,0,0,0.18)]">
