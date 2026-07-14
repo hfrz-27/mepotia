@@ -11,7 +11,6 @@ const EMPTY = {
   title: "",
   excerpt: "",
   body: "",
-  source_url: "",
   published: true,
 };
 
@@ -101,7 +100,7 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
         excerpt: form.excerpt.trim(),
         body: form.body.trim(),
         cover_url,
-        source_url: form.source_url.trim() || null,
+        source_url: null,
         published: form.published,
         updated_at: new Date().toISOString(),
       };
@@ -133,7 +132,6 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
       title: post.title || "",
       excerpt: post.excerpt || "",
       body: post.body || "",
-      source_url: post.source_url || "",
       published: post.published !== false,
     });
     setCoverFile(null);
@@ -149,7 +147,7 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
     onReload();
   };
 
-  const onSyncShiftDelete = async () => {
+  const onSyncNews = async () => {
     setSyncing(true);
     setMsg("");
     try {
@@ -171,7 +169,7 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
 
       if (data.imported > 0) onReload();
     } catch (err) {
-      setMsg(err?.message || "ShiftDelete haberleri alınamadı.");
+      setMsg(err?.message || "Haberler alınamadı.");
     } finally {
       setSyncing(false);
     }
@@ -200,14 +198,14 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
     <div className="mt-6 space-y-8">
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-bw-200 bg-white px-5 py-4">
         <div>
-          <p className="text-sm font-semibold text-bw-950">ShiftDelete.Net</p>
+          <p className="text-sm font-semibold text-bw-950">Mepotia Teknoloji</p>
           <p className="text-xs text-bw-500">
-            Teknoloji haberlerini otomatik çeker. Her 6 saatte bir güncellenir.
+            Güncel haberler otomatik çekilir. Her 6 saatte bir güncellenir.
           </p>
         </div>
         <button
           type="button"
-          onClick={onSyncShiftDelete}
+          onClick={onSyncNews}
           disabled={syncing}
           className="inline-flex items-center gap-2 rounded-xl bg-bw-950 px-5 py-3 text-sm font-semibold text-white hover:bg-bw-800 disabled:opacity-50"
         >
@@ -317,10 +315,6 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
             <div>
               <label className={label} htmlFor="tech-body">İçerik</label>
               <textarea id="tech-body" name="body" value={form.body} onChange={onChange} rows={7} className={field} placeholder="Haberin tam metni..." />
-            </div>
-            <div>
-              <label className={label} htmlFor="tech-source">Kaynak linki</label>
-              <input id="tech-source" name="source_url" value={form.source_url} onChange={onChange} className={field} placeholder="Opsiyonel — haber kaynağı URL" />
             </div>
             <label className="flex items-center gap-2 text-sm text-bw-700">
               <input type="checkbox" name="published" checked={form.published} onChange={onChange} />

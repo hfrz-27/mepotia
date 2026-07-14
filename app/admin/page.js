@@ -270,7 +270,7 @@ export default function AdminPage() {
       setNewsMsg(parts.join(" "));
       if (data.imported > 0) await load();
     } catch (err) {
-      setNewsMsg(err?.message || "ShiftDelete haberleri alınamadı.");
+      setNewsMsg(err?.message || "Haberler alınamadı.");
     } finally {
       setNewsSyncing(false);
     }
@@ -306,11 +306,11 @@ export default function AdminPage() {
           <div>
             <p className="inline-flex items-center gap-2 text-[10px] font-semibold tracking-[0.22em] text-amber-200/90 uppercase">
               <Rss className="h-3.5 w-3.5" />
-              ShiftDelete.Net
+              Mepotia Teknoloji
             </p>
-            <p className="mt-2 text-lg font-semibold text-white">Teknoloji haberlerini otomatik çek</p>
+            <p className="mt-2 text-lg font-semibold text-white">Mepotia teknoloji haberleri</p>
             <p className="mt-1 text-sm text-bw-300">
-              shiftdelete.net/teknoloji-haberleri kaynağından son haberler siteye eklenir.
+              Güncel teknoloji haberleri otomatik çekilir · Mepotia markalı kapak görselleri oluşturulur.
             </p>
             {newsMsg ? <p className="mt-3 text-sm font-medium text-amber-100">{newsMsg}</p> : null}
             {techSqlMissing ? (

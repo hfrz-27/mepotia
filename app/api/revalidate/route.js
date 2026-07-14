@@ -1,6 +1,8 @@
+export const runtime = "nodejs";
+
 import { createClient } from "@/lib/supabase-server";
 import { createAdminClient } from "@/lib/supabase-admin";
-import { syncShiftDeleteNews } from "@/lib/shiftDeleteFeed";
+import { syncTechNews } from "@/lib/techNewsSync";
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
@@ -42,18 +44,24 @@ export async function POST(request) {
     body = {};
   }
 
-  const syncTechNews =
+  const shouldSyncTechNews =
     body?.syncTechNews === true ||
     new URL(request.url).searchParams.get("syncTechNews") === "1";
 
-  if (syncTechNews) {
+  if (shouldSyncTechNews) {
     const auth = await requireAdmin();
     if (!auth.ok) {
       return NextResponse.json({ error: auth.error }, { status: auth.status });
     }
 
     try {
-      const result = await syncShiftDeleteNews(auth.supabase, { limit: 10 });
+      let supabase = auth.supabase;
+      try {
+        supabase = createAdminClient();
+      } catch {
+        // admin oturumu ile devam
+      }
+      const result = await syncTechNews(supabase, { limit: 10 });
       revalidateSite();
       return NextResponse.json({ ok: true, ...result });
     } catch (error) {
@@ -77,7 +85,7 @@ export async function GET(request) {
 
   try {
     const supabase = createAdminClient();
-    const result = await syncShiftDeleteNews(supabase, { limit: 10 });
+    const result = await syncTechNews(supabase, { limit: 10 });
     revalidateSite();
     return NextResponse.json({ ok: true, ...result });
   } catch (error) {

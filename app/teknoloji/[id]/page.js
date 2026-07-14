@@ -2,7 +2,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Cpu, ExternalLink } from "lucide-react";
+import { ArrowLeft, Cpu } from "lucide-react";
 import TechPostBody from "@/components/TechPostBody";
 import { formatTechDate, getTechPostById } from "@/lib/techPosts";
 import { absoluteUrl, SITE_NAME } from "@/lib/site";
@@ -119,18 +119,6 @@ export default async function TechPostPage({ params }) {
             <TechPostBody text={post.body} />
           </div>
         </div>
-
-        {post.source_url ? (
-          <a
-            href={post.source_url}
-            target="_blank"
-            rel="noreferrer"
-            className="mt-8 inline-flex items-center gap-2 rounded-2xl bg-bw-950 px-6 py-3.5 text-sm font-semibold text-white hover:bg-bw-800"
-          >
-            Kaynak bağlantısı
-            <ExternalLink className="h-4 w-4" />
-          </a>
-        ) : null}
 
         <div className="mt-12 border-t border-bw-200 pt-8">
           <p className="text-[10px] font-semibold tracking-[0.22em] text-bw-400 uppercase">

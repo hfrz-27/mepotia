@@ -1,6 +1,8 @@
+export const runtime = "nodejs";
+
 import { createClient } from "@/lib/supabase-server";
 import { createAdminClient } from "@/lib/supabase-admin";
-import { syncShiftDeleteNews } from "@/lib/shiftDeleteFeed";
+import { syncTechNews } from "@/lib/techNewsSync";
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
@@ -36,7 +38,7 @@ function isCronAuthorized(request) {
 }
 
 async function runSync(supabase) {
-  const result = await syncShiftDeleteNews(supabase, { limit: 10 });
+  const result = await syncTechNews(supabase, { limit: 10 });
 
   if (result.imported > 0) {
     revalidatePath("/");
@@ -71,7 +73,13 @@ export async function POST() {
   if (error) return error;
 
   try {
-    const result = await runSync(supabase);
+    let client = supabase;
+    try {
+      client = createAdminClient();
+    } catch {
+      // admin oturumu ile devam
+    }
+    const result = await runSync(client);
     return NextResponse.json({ ok: true, ...result });
   } catch (err) {
     return NextResponse.json(
