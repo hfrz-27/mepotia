@@ -9,7 +9,7 @@ export async function GET() {
   return NextResponse.json({
     commit,
     ref: process.env.VERCEL_GIT_COMMIT_REF || process.env.BRANCH || null,
-    deployed: Boolean(process.env.VERCEL || process.env.NETLIFY),
-    platform: process.env.NETLIFY ? "netlify" : process.env.VERCEL ? "vercel" : "local",
+    deployed: Boolean(process.env.VERCEL),
+    platform: process.env.VERCEL ? "vercel" : "local",
   });
 }

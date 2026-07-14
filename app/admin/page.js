@@ -4,13 +4,12 @@ import { useEffect, useState } from "react";
 import ProductImage from "@/components/ProductImage";
 import Link from "next/link";
 import Image from "next/image";
-import { ShoppingBag, Search, Pencil, Rss, Trash2 } from "lucide-react";
+import { ShoppingBag, Search, Pencil, Trash2, ChevronDown, AlertTriangle } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import { recoverPhotosFromStorage } from "@/lib/recoverPhotos";
 import { deleteProductFully } from "@/lib/deleteProduct";
 import ShareProductButtons from "@/components/ShareProductButtons";
 import TechPostsAdmin from "@/components/admin/TechPostsAdmin";
-import TechNewsSyncBox from "@/components/admin/TechNewsSyncBox";
 import { purgeSiteFromBrowser } from "@/lib/sitePurgeClient";
 
 function productImage(p) {
@@ -51,6 +50,7 @@ export default function AdminPage() {
   const [recovering, setRecovering] = useState(false);
   const [purging, setPurging] = useState(false);
   const [purgeMsg, setPurgeMsg] = useState("");
+  const [purgeOpen, setPurgeOpen] = useState(false);
   const [deployOutdated, setDeployOutdated] = useState(false);
 
   useEffect(() => {
@@ -329,53 +329,6 @@ export default function AdminPage() {
           </p>
         </div>
       ) : null}
-
-      <div className="mt-6 rounded-[1.75rem] border border-red-200 bg-red-50 p-5 sm:p-6">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-sm font-semibold text-red-900">Vitrini sıfırla</p>
-            <p className="mt-1 text-sm text-red-800/80">
-              Tüm ürünler, haberler, bana-sat teklifleri, ürün istekleri ve müşteri yorumları silinir.
-            </p>
-            {purgeMsg ? <p className="mt-2 text-sm font-medium text-red-900">{purgeMsg}</p> : null}
-          </div>
-          <button
-            type="button"
-            onClick={purgeSite}
-            disabled={purging}
-            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl border border-red-300 bg-white px-6 py-3.5 text-sm font-semibold text-red-700 hover:bg-red-100 disabled:opacity-50"
-          >
-            <Trash2 className="h-4 w-4" />
-            {purging ? "Siliniyor..." : "Her şeyi sil — sıfırla"}
-          </button>
-        </div>
-      </div>
-
-      <div className="mt-6 overflow-hidden rounded-[1.75rem] border border-amber-200/80 bg-gradient-to-r from-bw-950 via-bw-900 to-bw-950 p-5 sm:p-6">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <div className="max-w-xl">
-            <p className="inline-flex items-center gap-2 text-[10px] font-semibold tracking-[0.22em] text-amber-200/90 uppercase">
-              <Rss className="h-3.5 w-3.5" />
-              Mepotia Teknoloji
-            </p>
-            <p className="mt-2 text-lg font-semibold text-white">Haber kaynağından çek</p>
-            <p className="mt-1 text-sm text-bw-300">
-              Normal site linki yapıştır — RSS gerekmez. Son 100 haber Mepotia markasıyla eklenir.
-            </p>
-            {techSqlMissing ? (
-              <p className="mt-3 text-xs text-amber-200/90">
-                Önce Supabase&apos;te <code className="rounded bg-white/10 px-1">tech_posts.sql</code> çalıştır.
-              </p>
-            ) : null}
-          </div>
-          <TechNewsSyncBox
-            variant="banner"
-            disabled={techSqlMissing}
-            onSynced={load}
-            className="w-full lg:max-w-md"
-          />
-        </div>
-      </div>
 
       {/* Üst sayılar — net ayrım */}
       <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -896,6 +849,53 @@ export default function AdminPage() {
       {tab === "tech" ? (
         <TechPostsAdmin posts={techPosts} onReload={load} sqlMissing={techSqlMissing} />
       ) : null}
+
+      <section className="mt-16 overflow-hidden rounded-[1.75rem] border border-bw-200 bg-white shadow-[0_24px_60px_-48px_rgba(0,0,0,0.35)]">
+        <button
+          type="button"
+          onClick={() => setPurgeOpen((open) => !open)}
+          className="flex w-full items-center justify-between gap-4 px-5 py-5 text-left transition hover:bg-bw-50 sm:px-6"
+          aria-expanded={purgeOpen}
+        >
+          <div className="flex min-w-0 items-center gap-4">
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-red-200 bg-red-50 text-red-600">
+              <AlertTriangle className="h-5 w-5" />
+            </span>
+            <div>
+              <p className="text-sm font-semibold text-bw-950">Tehlikeli bölge</p>
+              <p className="mt-0.5 text-xs text-bw-500">
+                Tüm siteyi sıfırla — kapalı tut, yanlışlıkla basma
+              </p>
+            </div>
+          </div>
+          <ChevronDown
+            className={`h-5 w-5 shrink-0 text-bw-400 transition ${purgeOpen ? "rotate-180" : ""}`}
+          />
+        </button>
+
+        {purgeOpen ? (
+          <div className="border-t border-red-100 bg-gradient-to-b from-red-50/80 to-white px-5 py-5 sm:px-6 sm:py-6">
+            <p className="text-sm leading-relaxed text-red-900/90">
+              Bu işlem geri alınamaz. Tüm ürünler, haberler, bana-sat teklifleri, ürün istekleri
+              ve müşteri yorumları kalıcı olarak silinir.
+            </p>
+            {purgeMsg ? (
+              <p className="mt-3 rounded-xl border border-red-200 bg-white px-4 py-3 text-sm font-medium text-red-900">
+                {purgeMsg}
+              </p>
+            ) : null}
+            <button
+              type="button"
+              onClick={purgeSite}
+              disabled={purging}
+              className="mt-5 inline-flex items-center justify-center gap-2 rounded-2xl border border-red-300 bg-white px-6 py-3.5 text-sm font-semibold text-red-700 shadow-sm transition hover:bg-red-50 disabled:opacity-50"
+            >
+              <Trash2 className="h-4 w-4" />
+              {purging ? "Siliniyor..." : "Her şeyi sil — sıfırla"}
+            </button>
+          </div>
+        ) : null}
+      </section>
     </main>
   );
 }

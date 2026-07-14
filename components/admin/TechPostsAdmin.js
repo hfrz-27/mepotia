@@ -168,12 +168,20 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
 
   return (
     <div className="mt-6 space-y-8">
-      <div className="rounded-2xl border border-bw-200 bg-white px-5 py-5">
-        <div className="mb-4">
-          <p className="text-sm font-semibold text-bw-950">Mepotia Teknoloji</p>
-          <p className="text-xs text-bw-500">Site linkini yapıştır, haberleri çek.</p>
+      <div className="overflow-hidden rounded-[1.75rem] border border-amber-200/80 bg-gradient-to-r from-bw-950 via-bw-900 to-bw-950 p-5 shadow-[0_32px_80px_-48px_rgba(0,0,0,0.55)] sm:p-6">
+        <div className="max-w-2xl">
+          <p className="inline-flex items-center gap-2 text-[10px] font-semibold tracking-[0.22em] text-amber-200/90 uppercase">
+            <Sparkles className="h-3.5 w-3.5" />
+            Haber kaynağı
+          </p>
+          <p className="mt-2 text-lg font-semibold text-white">Site linkinden haber çek</p>
+          <p className="mt-1 text-sm text-bw-300">
+            Normal site linki yapıştır — RSS gerekmez. Son 100 haber Mepotia markasıyla eklenir.
+          </p>
         </div>
-        <TechNewsSyncBox onSynced={onReload} />
+        <div className="mt-5">
+          <TechNewsSyncBox variant="banner" onSynced={onReload} />
+        </div>
       </div>
 
       <form

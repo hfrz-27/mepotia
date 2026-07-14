@@ -18,8 +18,7 @@ export async function GET(request) {
     parsed.hostname === "images.unsplash.com" ||
     parsed.hostname === "mepotia.com" ||
     parsed.hostname === "www.mepotia.com" ||
-    parsed.hostname.endsWith(".vercel.app") ||
-    parsed.hostname.endsWith(".netlify.app");
+    parsed.hostname.endsWith(".vercel.app");
 
   if (!allowed) {
     return NextResponse.json({ error: "host not allowed" }, { status: 403 });

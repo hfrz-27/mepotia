@@ -35,6 +35,18 @@ yarn-error.log*
 # vercel
 .vercel
 
+# local preview artifacts
+.favicon-live.png
+.og-preview-live.png
+*-live.png
+
+# local docs
+*.docx
+
+# OS
+Thumbs.db
+Desktop.ini
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
