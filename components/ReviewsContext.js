@@ -227,14 +227,14 @@ export function ReviewThinStrip({
         ) : (
           <>
             <div
-              className={`pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r ${
-                dark ? "from-bw-950" : "from-white"
+              className={`pointer-events-none absolute inset-y-0 left-0 z-10 w-5 bg-gradient-to-r ${
+                dark ? "from-bw-950/40" : "from-white/35"
               } to-transparent`}
               aria-hidden
             />
             <div
-              className={`pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l ${
-                dark ? "from-bw-950" : "from-white"
+              className={`pointer-events-none absolute inset-y-0 right-0 z-10 w-5 bg-gradient-to-l ${
+                dark ? "from-bw-950/40" : "from-white/35"
               } to-transparent`}
               aria-hidden
             />

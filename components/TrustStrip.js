@@ -42,7 +42,7 @@ export default function TrustStrip() {
         <p className="mb-3 text-[10px] font-semibold tracking-[0.22em] text-bw-400 uppercase">
           Neden Mepotia?
         </p>
-        <PremiumScrollRow ariaLabel="Güven ilkeleri" fadeFrom="from-white" gap="gap-2.5">
+        <PremiumScrollRow ariaLabel="Güven ilkeleri" gap="gap-2.5">
           {TRUST.map((item) => (
             <TrustCard key={item.t} item={item} />
           ))}

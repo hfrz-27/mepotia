@@ -62,7 +62,7 @@ export default function BuySellAccordion() {
           <PremiumScrollRow
             ariaLabel="Satış ve ürün isteği seçenekleri"
             className="mt-4"
-            fadeFrom="from-bw-50"
+            fadeFrom="from-bw-50/35"
             gap="gap-3"
           >
             {ACTIONS.map((action) => (
