@@ -1,6 +1,9 @@
 name: Vercel Production Deploy
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -13,20 +16,8 @@ jobs:
         run: |
           if [ -z "$DEPLOY_HOOK" ]; then
             echo "HATA: VERCEL_DEPLOY_HOOK secret yok."
-            echo "Vercel > Settings > Git > Deploy Hooks URL'sini secret olarak ekle."
             exit 1
           fi
-          curl -fsS -X POST "$DEPLOY_HOOK"
-          echo ""
-          echo "Vercel deploy tetiklendi. 2-3 dk bekle."
-
-      - name: Wait and check live site
-        run: |
-          sleep 90
-          CODE=$(curl -s -o /dev/null -w "%{http_code}" https://mepotia.com/api/version || echo "000")
-          echo "mepotia.com/api/version => HTTP $CODE"
-          if [ "$CODE" = "200" ]; then
-            echo "Site guncellendi!"
-          else
-            echo "Henuz eski surum olabilir. Vercel Deployments kontrol et."
-          fi
+          RESPONSE=$(curl -fsS -X POST "$DEPLOY_HOOK")
+          echo "$RESPONSE"
+          echo "Deploy tetiklendi. Vercel Deployments sayfasini kontrol et."

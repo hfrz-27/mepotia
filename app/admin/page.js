@@ -324,9 +324,8 @@ export default function AdminPage() {
         <div className="mt-6 rounded-2xl border border-amber-300 bg-amber-50 px-5 py-4 text-sm text-amber-950">
           <p className="font-semibold">Canlı site güncel değil</p>
           <p className="mt-1">
-            Kod GitHub&apos;da hazır ama Vercel eski sürümü gösteriyor.{" "}
-            <strong>vercel.com → mepotia → Create Deployment → main</strong> ile yeni deploy al.
-            Bitince bu uyarı kaybolur.
+            Kod GitHub&apos;da hazır ama canli site eski surumu gosteriyor. Hosting panelinden
+            yeni deploy al veya birkaç dakika bekle.
           </p>
         </div>
       ) : null}
