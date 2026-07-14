@@ -175,23 +175,25 @@ export default function Navbar() {
 
         {/* Orta — Logo */}
         <div className="pointer-events-none absolute inset-x-0 flex justify-center">
-          <div className="pointer-events-auto flex items-center gap-1.5">
-            <Link href="/" className="shrink-0" aria-label="Mepotia ana sayfa">
-              <Logo className="h-7 sm:h-9" priority />
-            </Link>
-            <Link
-              href="/#fiyat-sorgula"
-              className="inline-flex h-7 w-7 items-center justify-center rounded-lg border border-bw-200 bg-white text-bw-600 shadow-[0_10px_24px_-18px_rgba(0,0,0,0.35)] transition hover:border-bw-300 hover:bg-bw-50 hover:text-bw-950 sm:h-8 sm:w-8"
-              aria-label="Fiyat karşılaştır"
-              title="Fiyat karşılaştır"
-            >
-              <BadgeDollarSign className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-            </Link>
-          </div>
+          <Link
+            href="/"
+            className="pointer-events-auto shrink-0"
+            aria-label="Mepotia ana sayfa"
+          >
+            <Logo className="h-7 sm:h-9" priority />
+          </Link>
         </div>
 
-        {/* Sağ — admin kısayolları */}
+        {/* Sağ — fiyat ve admin kısayolları */}
         <div className="relative z-10 flex min-w-[5.5rem] items-center justify-end gap-1.5 sm:min-w-[7rem]">
+          <Link
+            href="/fiyat-karsilastir"
+            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-bw-200 bg-white text-bw-600 transition hover:border-bw-300 hover:bg-bw-50 hover:text-bw-950"
+            aria-label="Fiyat karşılaştır"
+            title="Fiyat karşılaştır"
+          >
+            <BadgeDollarSign className="h-4 w-4" />
+          </Link>
           {user && isAdmin ? (
             <>
               <Link
@@ -213,9 +215,7 @@ export default function Navbar() {
                 ) : null}
               </Link>
             </>
-          ) : (
-            <span className="w-10" aria-hidden />
-          )}
+          ) : null}
         </div>
       </div>
     </header>

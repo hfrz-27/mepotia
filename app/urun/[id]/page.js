@@ -1,7 +1,7 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { after } from "next/server";
-import { MapPin, MessageCircle, Phone } from "lucide-react";
+import { MapPin, MessageCircle, Phone, Store } from "lucide-react";
 import { notFound } from "next/navigation";
 import ProductCard from "@/components/ProductCard";
 import { PremiumBreadcrumb } from "@/components/BackHomeLink";
@@ -165,6 +165,13 @@ export default async function ProductPage({ params }) {
           </div>
 
           <div className="mt-6 flex flex-wrap gap-3 sm:mt-8">
+            <Link
+              href="/#vitrin"
+              className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl border border-bw-300 bg-white px-5 py-3.5 text-sm font-semibold text-bw-800 hover:border-bw-950 hover:bg-bw-50 sm:flex-none"
+            >
+              <Store className="h-4 w-4" />
+              Vitrine dön
+            </Link>
             {!sold && wa ? (
               <a
                 href={wa}
@@ -203,12 +210,6 @@ export default async function ProductPage({ params }) {
           <div className="lg:hidden">
             <ProductDetailsBlock product={product} variant="mobile" />
           </div>
-
-          <ProductMarketCompare
-            query={[product.brand, product.model, product.title].filter(Boolean).join(" ")}
-            referencePrice={Number(product.price)}
-            condition={product.condition}
-          />
         </div>
       </div>
 
@@ -216,6 +217,12 @@ export default async function ProductPage({ params }) {
       <div className="mt-12 hidden lg:block">
         <ProductDetailsBlock product={product} variant="desktop" />
       </div>
+
+      <ProductMarketCompare
+        query={[product.brand, product.model, product.title].filter(Boolean).join(" ")}
+        referencePrice={Number(product.price)}
+        condition={product.condition}
+      />
 
       {similar.length ? (
         <section className="mt-10 sm:mt-14 lg:mt-16">
