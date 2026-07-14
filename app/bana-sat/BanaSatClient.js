@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { MessageCircle, Mail, CheckCircle2 } from "lucide-react";
 import { createClient } from "@/lib/supabase";
+import BackHomeLink from "@/components/BackHomeLink";
 
 const OWNER_EMAIL = "hay98dar@gmail.com";
 const OWNER_WA = "905059574122";
@@ -200,9 +201,7 @@ export default function BanaSatClient() {
               <Mail className="h-4 w-4" />
               E-posta ile gönder
             </a>
-            <Link href="/" className="mt-2 text-sm text-bw-500 underline">
-              Vitrine dön
-            </Link>
+            <BackHomeLink label="Vitrine dön" variant="minimal" className="mt-4" />
           </div>
         </div>
       </main>

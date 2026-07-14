@@ -294,35 +294,35 @@ export default function ShareProductButtons({
       ) : null}
 
       {!storyMode ? (
-        <div className="flex flex-wrap gap-2">
+        <div className="grid grid-cols-3 gap-1.5 sm:flex sm:flex-wrap sm:gap-2">
           <button
             type="button"
             onClick={nativeShare}
-            className="inline-flex items-center gap-2 rounded-2xl border border-bw-300 bg-white px-4 py-3 text-sm font-medium text-bw-800 hover:border-bw-950"
+            className="inline-flex min-w-0 items-center justify-center gap-1 rounded-xl border border-bw-300 bg-white px-2 py-2.5 text-[11px] font-medium text-bw-800 hover:border-bw-950 sm:gap-2 sm:rounded-2xl sm:px-4 sm:py-3 sm:text-sm"
           >
-            <Share2 className="h-4 w-4" />
-            Paylaş
+            <Share2 className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" />
+            <span className="truncate">Paylaş</span>
           </button>
           <a
             href={wa}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-2xl border border-bw-300 bg-white px-4 py-3 text-sm font-medium text-bw-800 hover:border-bw-950"
+            className="inline-flex min-w-0 items-center justify-center gap-1 rounded-xl border border-bw-300 bg-white px-2 py-2.5 text-[11px] font-medium text-bw-800 hover:border-bw-950 sm:gap-2 sm:rounded-2xl sm:px-4 sm:py-3 sm:text-sm"
           >
-            <MessageCircle className="h-4 w-4" />
-            WhatsApp
+            <MessageCircle className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" />
+            <span className="truncate">WhatsApp</span>
           </a>
           <button
             type="button"
             onClick={copy}
-            className="inline-flex items-center gap-2 rounded-2xl border border-bw-300 bg-white px-4 py-3 text-sm font-medium text-bw-800 hover:border-bw-950"
+            className="inline-flex min-w-0 items-center justify-center gap-1 rounded-xl border border-bw-300 bg-white px-2 py-2.5 text-[11px] font-medium text-bw-800 hover:border-bw-950 sm:gap-2 sm:rounded-2xl sm:px-4 sm:py-3 sm:text-sm"
           >
             {copied ? (
-              <Check className="h-4 w-4" />
+              <Check className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" />
             ) : (
-              <Link2 className="h-4 w-4" />
+              <Link2 className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" />
             )}
-            {copied ? "Kopyalandı" : "Linki kopyala"}
+            <span className="truncate">{copied ? "Kopyalandı" : "Linki kopyala"}</span>
           </button>
         </div>
       ) : (

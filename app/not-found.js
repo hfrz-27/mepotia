@@ -1,16 +1,11 @@
-import Link from "next/link";
+import BackHomeLink from "@/components/BackHomeLink";
 
 export default function NotFound() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-white px-4 text-center">
-      <p className="font-display text-5xl font-semibold text-navy-900">404</p>
-      <p className="text-navy-600">Sayfa bulunamadı.</p>
-      <Link
-        href="/"
-        className="rounded-xl bg-navy-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-navy-800"
-      >
-        Ana sayfaya dön
-      </Link>
+    <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-bw-50 px-4 text-center">
+      <p className="font-display text-6xl font-semibold text-bw-950">404</p>
+      <p className="max-w-sm text-bw-600">Aradığın sayfa bulunamadı veya taşınmış olabilir.</p>
+      <BackHomeLink label="Ana sayfaya dön" variant="button" />
     </div>
   );
 }

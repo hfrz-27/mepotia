@@ -73,7 +73,7 @@ export default function ProductDetailsBlock({ product, variant = "mobile" }) {
   return (
     <section
       className={`overflow-hidden border border-bw-200 bg-white shadow-[0_20px_50px_-40px_rgba(0,0,0,0.18)] ${
-        isDesktop ? "mt-0 rounded-[2rem] bg-gradient-to-br from-white via-white to-bw-50" : "mt-6 rounded-[1.75rem]"
+        isDesktop ? "mt-0 rounded-[2rem] bg-gradient-to-br from-white via-white to-bw-50" : "mt-4 rounded-[1.75rem]"
       }`}
     >
       <DetailsHeader product={product} compact={!isDesktop} />

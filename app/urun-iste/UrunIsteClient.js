@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { CheckCircle2, MessageCircle } from "lucide-react";
 import { createClient } from "@/lib/supabase";
+import BackHomeLink from "@/components/BackHomeLink";
 
 const OWNER_WA = "905059574122";
 
@@ -104,10 +105,8 @@ export default function UrunIsteClient() {
             <MessageCircle className="h-4 w-4" />
             WhatsApp ile gönder
           </a>
-          <div className="mt-4">
-            <Link href="/" className="text-sm text-bw-500 underline">
-              Vitrine dön
-            </Link>
+          <div className="mt-4 flex justify-center">
+            <BackHomeLink label="Vitrine dön" variant="minimal" />
           </div>
         </div>
       </main>

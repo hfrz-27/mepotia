@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
+import { PremiumBreadcrumb } from "@/components/BackHomeLink";
 import { getCategoryBySlug } from "@/lib/categories";
 import { getPublishedProducts } from "@/lib/products";
 import { notFound } from "next/navigation";
@@ -30,9 +31,10 @@ export default async function CategoryPage({ params, searchParams }) {
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <p className="text-sm text-bw-500">
-        <Link href="/" className="hover:text-bw-950">Vitrin</Link> / {category.name}
-      </p>
+      <PremiumBreadcrumb
+        items={[{ href: `/kategori/${slug}`, label: category.name, current: true }]}
+        className="mb-4"
+      />
       <h1 className="mt-3 font-display text-4xl font-semibold tracking-wide text-bw-950">
         {category.name}
       </h1>

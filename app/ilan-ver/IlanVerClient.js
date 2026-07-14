@@ -15,6 +15,7 @@ import {
   X,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase";
+import BackHomeLink from "@/components/BackHomeLink";
 
 const INITIAL = {
   title: "",
@@ -646,11 +647,12 @@ export default function IlanVerClient() {
           </button>
         </form>
 
-        <p className="mt-8 text-center text-sm">
-          <Link href={isEdit ? "/admin?tab=products" : "/"} className="text-bw-500 hover:text-bw-950">
-            {isEdit ? "← Yönetim paneli" : "← Ana sayfa"}
-          </Link>
-        </p>
+        <div className="mt-8 flex justify-center">
+          <BackHomeLink
+            href={isEdit ? "/admin?tab=products" : "/"}
+            label={isEdit ? "Yönetim paneli" : "Ana sayfa"}
+          />
+        </div>
       </div>
 
       {needsPhoto ? (

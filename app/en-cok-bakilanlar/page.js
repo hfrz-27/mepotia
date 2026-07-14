@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Eye } from "lucide-react";
+import BackHomeLink from "@/components/BackHomeLink";
 import ProductCard from "@/components/ProductCard";
 import { getPublishedProducts } from "@/lib/products";
 
@@ -19,6 +20,7 @@ export default async function EnCokBakilanlarPage() {
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <BackHomeLink label="Vitrine dön" className="mb-8" />
       <div className="max-w-2xl">
         <p className="text-xs tracking-[0.22em] text-bw-500 uppercase">Popüler</p>
         <h1 className="mt-2 flex items-center gap-3 font-display text-4xl font-semibold tracking-wide text-bw-950">
@@ -32,10 +34,8 @@ export default async function EnCokBakilanlarPage() {
 
       {!products?.length ? (
         <div className="mt-12 rounded-[2rem] border border-dashed border-bw-300 bg-white px-6 py-20 text-center text-sm text-bw-500">
-          Henüz ürün yok.{" "}
-          <Link href="/" className="underline">
-            Vitrine dön
-          </Link>
+          Henüz ürün yok.
+          <BackHomeLink label="Vitrine dön" variant="minimal" className="mt-3" />
         </div>
       ) : (
         <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">

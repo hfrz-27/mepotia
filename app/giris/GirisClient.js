@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase";
 import { fixEmailTypos, isValidEmail } from "@/lib/email";
+import BackHomeLink from "@/components/BackHomeLink";
 
 export default function GirisClient() {
   const router = useRouter();
@@ -136,11 +137,9 @@ export default function GirisClient() {
           Doğrulama mailini tekrar gönder
         </button>
 
-        <p className="mt-4 text-center text-sm text-bw-500">
-          <Link href="/" className="font-medium text-bw-950 underline">
-            Ana sayfa
-          </Link>
-        </p>
+        <div className="mt-6 flex justify-center">
+          <BackHomeLink variant="minimal" />
+        </div>
       </div>
     </main>
   );

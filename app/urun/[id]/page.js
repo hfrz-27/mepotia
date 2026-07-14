@@ -4,6 +4,7 @@ import { after } from "next/server";
 import { MapPin, MessageCircle, Phone } from "lucide-react";
 import { notFound } from "next/navigation";
 import ProductCard from "@/components/ProductCard";
+import { PremiumBreadcrumb } from "@/components/BackHomeLink";
 import ProductGallery from "@/components/ProductGallery";
 import ProductDetailsBlock from "@/components/ProductDetailsBlock";
 import {
@@ -20,6 +21,9 @@ import {
 } from "@/lib/products";
 
 const ShareProductButtons = dynamic(() => import("@/components/ShareProductButtons"), {
+  loading: () => null,
+});
+const ProductMarketCompare = dynamic(() => import("@/components/ProductMarketCompare"), {
   loading: () => null,
 });
 
@@ -93,22 +97,20 @@ export default async function ProductPage({ params }) {
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-10 lg:px-8">
-      <p className="text-xs text-bw-500 sm:text-sm">
-        <Link href="/" className="hover:text-bw-950">
-          Vitrin
-        </Link>
-        {product.categories ? (
-          <>
-            {" / "}
-            <Link
-              href={`/kategori/${product.categories.slug}`}
-              className="hover:text-bw-950"
-            >
-              {product.categories.name}
-            </Link>
-          </>
-        ) : null}
-      </p>
+      <PremiumBreadcrumb
+        items={
+          product.categories
+            ? [
+                {
+                  href: `/kategori/${product.categories.slug}`,
+                  label: product.categories.name,
+                },
+                { href: `/urun/${product.id}`, label: "Ürün detayı", current: true },
+              ]
+            : [{ href: `/urun/${product.id}`, label: "Ürün detayı", current: true }]
+        }
+        className="mb-4"
+      />
 
       <div className="mt-5 grid grid-cols-1 gap-6 lg:mt-8 lg:grid-cols-2 lg:gap-10">
         <ProductGallery images={galleryImages} title={product.title} />
@@ -185,7 +187,7 @@ export default async function ProductPage({ params }) {
             ) : null}
           </div>
 
-          <div className="mt-6">
+          <div className="mt-5 sm:mt-6">
             <p className="mb-2 text-xs font-semibold tracking-[0.2em] text-bw-500 uppercase">
               Bu ürünü paylaş
             </p>
@@ -197,10 +199,16 @@ export default async function ProductPage({ params }) {
             />
           </div>
 
-          {/* Mobil — açıklama sağ kolonda kalır */}
+          {/* Mobil — açıklama paylaşımın hemen altında */}
           <div className="lg:hidden">
             <ProductDetailsBlock product={product} variant="mobile" />
           </div>
+
+          <ProductMarketCompare
+            query={[product.brand, product.model, product.title].filter(Boolean).join(" ")}
+            referencePrice={Number(product.price)}
+            condition={product.condition}
+          />
         </div>
       </div>
 
@@ -210,11 +218,11 @@ export default async function ProductPage({ params }) {
       </div>
 
       {similar.length ? (
-        <section className="mt-20">
-          <h2 className="font-display text-3xl font-semibold tracking-wide text-bw-950">
+        <section className="mt-10 sm:mt-14 lg:mt-16">
+          <h2 className="font-display text-2xl font-semibold tracking-wide text-bw-950 sm:text-3xl">
             Benzer ürünler
           </h2>
-          <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-4 grid grid-cols-1 gap-3 sm:mt-5 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4 lg:gap-5">
             {similar.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}
