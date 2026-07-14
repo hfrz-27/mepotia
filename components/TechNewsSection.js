@@ -5,7 +5,7 @@ import TechNewsMobileScroll from "@/components/TechNewsMobileScroll";
 import { getTechPosts } from "@/lib/techPosts";
 
 export default async function TechNewsSection() {
-  const { data: posts, error } = await getTechPosts({ limit: 6 });
+  const { data: posts, error } = await getTechPosts({ limit: 8 });
 
   return (
     <section id="teknoloji" className="relative scroll-mt-28 overflow-hidden border-y border-bw-200 bg-white">
@@ -58,6 +58,7 @@ export default async function TechNewsSection() {
             <div className="mt-6 flex justify-center sm:hidden">
               <Link
                 href="/teknoloji"
+                prefetch
                 className="inline-flex items-center gap-2 rounded-xl bg-bw-950 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-bw-800"
               >
                 Daha fazla gör

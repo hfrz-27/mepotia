@@ -19,7 +19,8 @@ function MoreButton({ href, label = "Daha fazla göster" }) {
     <div className="mt-6 flex justify-center sm:mt-8">
       <Link
         href={href}
-        className="inline-flex items-center gap-2 rounded-xl border border-bw-200 bg-white px-5 py-2.5 text-sm font-semibold text-bw-900 shadow-[0_12px_32px_-20px_rgba(0,0,0,0.25)] transition hover:border-bw-300 hover:bg-bw-50"
+        prefetch
+        className="inline-flex items-center gap-2 rounded-xl bg-bw-950 px-5 py-2.5 text-sm font-semibold text-white shadow-[0_12px_32px_-20px_rgba(0,0,0,0.35)] transition hover:bg-bw-800"
       >
         {label}
         <ArrowRight className="h-4 w-4" />

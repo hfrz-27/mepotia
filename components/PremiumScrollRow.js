@@ -78,7 +78,7 @@ export default function PremiumScrollRow({
         ref={ref}
         role="region"
         aria-label={ariaLabel}
-        className={`hide-scrollbar flex overflow-x-auto ${gap} snap-x snap-mandatory scroll-smooth py-1`}
+        className={`news-touch-scroll hide-scrollbar flex overflow-x-auto ${gap} snap-x snap-proximity py-1`}
       >
         {children}
       </div>

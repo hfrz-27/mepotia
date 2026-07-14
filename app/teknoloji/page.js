@@ -2,13 +2,11 @@ import BackHomeLink from "@/components/BackHomeLink";
 import { Suspense } from "react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { Clock3, Cpu } from "lucide-react";
+import { Cpu } from "lucide-react";
 import TechNewsViewSync from "@/components/TechNewsViewSync";
-import TechNewsSwipeHint from "@/components/TechNewsSwipeHint";
-import {
-  getTechPosts,
-  resolveTechPostsPageSize,
-} from "@/lib/techPosts";
+import TechNewsCard from "@/components/TechNewsCard";
+import PremiumPagination from "@/components/PremiumPagination";
+import { getTechPosts, resolveTechPostsPageSize } from "@/lib/techPosts";
 
 export const revalidate = 60;
 
@@ -36,8 +34,7 @@ export async function generateMetadata({ searchParams }) {
 export default async function TeknolojiPage({ searchParams }) {
   const sp = await searchParams;
   const rawPage = Number(sp?.page || 1);
-  const page =
-    Number.isFinite(rawPage) && rawPage > 0 ? Math.floor(rawPage) : 1;
+  const page = Number.isFinite(rawPage) && rawPage > 0 ? Math.floor(rawPage) : 1;
   const view = sp?.view === "mobile" ? "mobile" : "";
 
   const headerList = await headers();
@@ -52,6 +49,7 @@ export default async function TeknolojiPage({ searchParams }) {
   });
 
   const totalPages = Math.max(1, Math.ceil((count || 0) / pageSize));
+  const paginationQuery = view === "mobile" ? { view: "mobile" } : {};
 
   if (count > 0 && page > totalPages) {
     redirect(buildRedirectPath(totalPages > 1 ? totalPages : 1, view));
@@ -63,49 +61,48 @@ export default async function TeknolojiPage({ searchParams }) {
         <TechNewsViewSync />
       </Suspense>
 
-      <section className="relative overflow-hidden bg-bw-50">
-        <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 sm:py-7 lg:px-8">
-          <div className="relative overflow-hidden rounded-[1.5rem] border border-white/10 bg-bw-950 px-5 py-6 shadow-[0_32px_80px_-42px_rgba(0,0,0,0.7)] sm:rounded-[2rem] sm:px-10 sm:py-11 lg:px-12">
-            <div className="story-band-grid absolute inset-0 opacity-20" aria-hidden />
-            <div className="absolute -top-24 right-0 h-64 w-64 rounded-full bg-white/10 blur-3xl" aria-hidden />
-            <div className="absolute -bottom-32 left-1/3 h-64 w-64 rounded-full bg-bw-500/15 blur-3xl" aria-hidden />
-
-            <div className="relative">
-              <BackHomeLink variant="dark" className="mb-6 sm:mb-9" />
-              <div className="max-w-3xl border-l border-white/25 pl-4 sm:pl-5">
-                <p className="inline-flex items-center gap-2 text-[10px] font-semibold tracking-[0.28em] text-bw-400 uppercase">
-                  <span className="flex h-6 w-6 items-center justify-center rounded-lg border border-white/10 bg-white/10 text-white">
-                    <Cpu className="h-3 w-3" />
-                  </span>
-                  Güncel Haberler
-                </p>
-                <h1 className="mt-3 font-display text-3xl font-semibold tracking-wide text-white sm:mt-4 sm:text-5xl">
-                  Teknoloji Haberleri
-                </h1>
-                <p className="mt-3 max-w-2xl text-xs leading-relaxed text-bw-400 sm:mt-4 sm:text-base">
-                  Yapay zekâdan akıllı telefonlara, oyunlardan yazılıma kadar en güncel haberler.
-                </p>
-                <p className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[10px] font-semibold tracking-[0.16em] text-bw-300 uppercase">
-                  <Clock3 className="h-3 w-3" />
-                  Son 7 günün seçkisi
-                </p>
-              </div>
-            </div>
-          </div>
+      <section className="border-b border-bw-200 bg-white">
+        <div className="mx-auto max-w-7xl px-4 py-7 sm:px-6 sm:py-10 lg:px-8">
+          <BackHomeLink className="mb-5" />
+          <p className="text-[10px] font-semibold tracking-[0.24em] text-bw-500 uppercase">
+            Güncel haberler
+          </p>
+          <h1 className="mt-2 font-display text-2xl font-semibold tracking-wide text-bw-950 sm:text-3xl">
+            Teknoloji
+          </h1>
+          <p className="mt-2 text-sm text-bw-500">
+            {count || 0} haber · son 7 gün
+          </p>
         </div>
       </section>
 
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
         {error ? (
           <p className="rounded-2xl border border-dashed border-bw-300 bg-white px-6 py-12 text-center text-sm text-bw-500">
             Supabase&apos;de <code>tech_posts.sql</code> çalıştır.
           </p>
         ) : !posts.length ? (
-          <p className="rounded-2xl border border-dashed border-bw-300 bg-white px-6 py-12 text-center text-sm text-bw-500">
-            {page > 1 ? "Bu sayfada haber yok." : "Henüz paylaşım yok."}
-          </p>
+          <div className="rounded-2xl border border-dashed border-bw-300 bg-white px-6 py-16 text-center">
+            <Cpu className="mx-auto h-7 w-7 text-bw-300" />
+            <p className="mt-3 text-sm font-medium text-bw-700">
+              {page > 1 ? "Bu sayfada haber yok." : "Henüz paylaşım yok."}
+            </p>
+          </div>
         ) : (
-          <TechNewsSwipeHint />
+          <>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+              {posts.map((post, index) => (
+                <TechNewsCard key={post.id} post={post} index={index} />
+              ))}
+            </div>
+
+            <PremiumPagination
+              basePath="/teknoloji"
+              page={page}
+              totalPages={totalPages}
+              query={paginationQuery}
+            />
+          </>
         )}
       </div>
     </main>

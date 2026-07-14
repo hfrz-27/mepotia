@@ -1,57 +1,89 @@
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
-import { Cpu } from "lucide-react";
-import { formatTechDate } from "@/lib/techPostUtils";
+import { useCallback, useEffect, useRef } from "react";
+import { TechNewsCardCompact } from "@/components/TechNewsCard";
 
-function NewsCard({ post, index = 0 }) {
-  return (
-    <Link
-      href={`/teknoloji/${post.id}`}
-      prefetch={index === 0}
-      className="group relative block w-[min(76vw,270px)] shrink-0 overflow-hidden rounded-[1.25rem] border border-bw-200 bg-white shadow-[0_16px_40px_-28px_rgba(0,0,0,0.3)] transition duration-300 hover:-translate-y-0.5"
-    >
-      <div className="relative aspect-[4/3] overflow-hidden bg-bw-900">
-        {post.cover_url ? (
-          <Image
-            src={post.cover_url}
-            alt={post.title}
-            fill
-            className="object-cover transition duration-500 group-hover:scale-[1.03]"
-            sizes="76vw"
-            priority={index === 0}
-          />
-        ) : (
-          <div className="flex h-full items-center justify-center">
-            <Cpu className="h-8 w-8 text-white/20" />
-          </div>
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-bw-950 via-bw-950/50 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 p-3.5">
-          <p className="inline-flex rounded-full border border-white/15 bg-bw-950/40 px-2 py-0.5 text-[9px] font-semibold tracking-[0.16em] text-bw-300 uppercase backdrop-blur-sm">
-            {formatTechDate(post.created_at)}
-          </p>
-          <h3 className="mt-2 line-clamp-2 text-sm font-semibold leading-snug text-white">
-            {post.title}
-          </h3>
-        </div>
-      </div>
-    </Link>
-  );
-}
+export default function TechNewsMobileScroll({ posts, speed = 0.18 }) {
+  const ref = useRef(null);
+  const pausedRef = useRef(false);
+  const rafRef = useRef(null);
 
-export default function TechNewsMobileScroll({ posts }) {
+  const pause = useCallback(() => {
+    pausedRef.current = true;
+  }, []);
+
+  const resume = useCallback(() => {
+    pausedRef.current = false;
+  }, []);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    let resumeTimer;
+
+    const onInteract = () => {
+      pause();
+      clearTimeout(resumeTimer);
+      resumeTimer = setTimeout(() => resume(), 2200);
+    };
+
+    el.addEventListener("pointerdown", onInteract);
+    el.addEventListener("touchstart", onInteract, { passive: true });
+    el.addEventListener("wheel", onInteract, { passive: true });
+    el.addEventListener("scroll", onInteract, { passive: true });
+
+    const tick = () => {
+      if (!pausedRef.current && el) {
+        const max = el.scrollWidth - el.clientWidth;
+        const half = max / 2;
+        if (half > 0) {
+          if (el.scrollLeft >= half) {
+            el.scrollLeft = 0;
+          } else {
+            el.scrollLeft += speed;
+          }
+        }
+      }
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
+    rafRef.current = requestAnimationFrame(tick);
+
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      clearTimeout(resumeTimer);
+      el.removeEventListener("pointerdown", onInteract);
+      el.removeEventListener("touchstart", onInteract);
+      el.removeEventListener("wheel", onInteract);
+      el.removeEventListener("scroll", onInteract);
+    };
+  }, [speed, pause, resume]);
+
   const loop = [...posts, ...posts];
 
   return (
-    <div className="mt-5 overflow-hidden sm:hidden">
+    <div className="relative mt-5 sm:hidden">
       <div
-        className="review-marquee-track review-marquee-continuous gap-3 py-1"
-        style={{ "--marquee-duration": "38s" }}
+        className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-gradient-to-r from-white to-transparent"
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-gradient-to-l from-white to-transparent"
+        aria-hidden
+      />
+      <div
+        ref={ref}
+        role="region"
+        aria-label="Teknoloji haberleri"
+        className="news-touch-scroll hide-scrollbar flex gap-3 overflow-x-auto py-1"
       >
         {loop.map((post, index) => (
-          <NewsCard key={`${post.id}-${index}`} post={post} index={index % posts.length} />
+          <TechNewsCardCompact
+            key={`${post.id}-${index}`}
+            post={post}
+            index={index % posts.length}
+          />
         ))}
       </div>
     </div>

@@ -7,8 +7,8 @@ import { Newspaper, X } from "lucide-react";
 import { formatTechDate } from "@/lib/techPostUtils";
 
 const OPEN_EVENT = "mepotia:open-news";
-const EDGE_WIDTH = 56;
-const SWIPE_DISTANCE = 48;
+const EDGE_WIDTH = 72;
+const SWIPE_DISTANCE = 22;
 
 export default function GlobalNewsDrawer() {
   const [open, setOpen] = useState(false);
@@ -82,7 +82,7 @@ export default function GlobalNewsDrawer() {
   return (
     <>
       <div
-        className={`pointer-events-none fixed inset-0 z-[75] bg-bw-950/30 opacity-0 transition-opacity duration-300 ${
+        className={`pointer-events-none fixed inset-0 z-[75] bg-bw-950/30 opacity-0 transition-opacity duration-150 ${
           open ? "pointer-events-auto opacity-100" : ""
         }`}
         onClick={() => setOpen(false)}
@@ -90,7 +90,7 @@ export default function GlobalNewsDrawer() {
       />
       <aside
         aria-label="Güncel teknoloji haberleri"
-        className={`fixed inset-y-0 right-0 z-[80] flex w-[min(88vw,400px)] flex-col border-l border-bw-200 bg-bw-50 shadow-[-24px_0_70px_-34px_rgba(0,0,0,0.55)] transition-transform duration-300 ease-out ${
+        className={`fixed inset-y-0 right-0 z-[80] flex w-[min(88vw,400px)] flex-col border-l border-bw-200 bg-bw-50 shadow-[-24px_0_70px_-34px_rgba(0,0,0,0.55)] transition-transform duration-150 ease-out ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >

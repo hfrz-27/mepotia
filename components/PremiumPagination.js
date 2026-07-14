@@ -49,6 +49,8 @@ export default function PremiumPagination({
         {safePage > 1 ? (
           <Link
             href={buildHref(basePath, safePage - 1, query)}
+            prefetch
+            scroll={false}
             className="inline-flex h-10 items-center gap-1 rounded-xl border border-bw-200 bg-white px-3 text-sm font-semibold text-bw-700 transition hover:border-bw-300 hover:bg-bw-50 hover:text-bw-950"
             aria-label="Önceki sayfa"
           >
@@ -71,6 +73,8 @@ export default function PremiumPagination({
               <Link
                 key={item}
                 href={buildHref(basePath, item, query)}
+                prefetch
+                scroll={false}
                 className={pageClass(item === safePage)}
                 aria-current={item === safePage ? "page" : undefined}
               >
@@ -83,6 +87,8 @@ export default function PremiumPagination({
         {safePage < totalPages ? (
           <Link
             href={buildHref(basePath, safePage + 1, query)}
+            prefetch
+            scroll={false}
             className="inline-flex h-10 items-center gap-1 rounded-xl border border-bw-200 bg-white px-3 text-sm font-semibold text-bw-700 transition hover:border-bw-300 hover:bg-bw-50 hover:text-bw-950"
             aria-label="Sonraki sayfa"
           >
