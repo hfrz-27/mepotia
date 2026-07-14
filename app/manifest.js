@@ -11,9 +11,11 @@ export default function manifest() {
     theme_color: "#09090b",
     lang: "tr",
     icons: [
-      { src: "/favicon.png", sizes: "192x192", type: "image/png" },
+      { src: "/favicon.ico", sizes: "48x48", type: "image/x-icon" },
+      { src: "/favicon-48.png", sizes: "48x48", type: "image/png" },
+      { src: "/favicon.png", sizes: "192x192", type: "image/png", purpose: "any" },
       { src: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
-      { src: "/icon-512.png", sizes: "512x512", type: "image/png" },
+      { src: "/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any maskable" },
     ],
     scope: SITE_URL,
   };
