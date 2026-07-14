@@ -181,7 +181,7 @@ export default async function ProductPage({ params }) {
                 className="inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-xl bg-bw-950 px-3 text-xs font-semibold text-white hover:bg-bw-800 sm:flex-none"
               >
                 <MessageCircle className="h-4 w-4" />
-                WhatsApp ile Yaz
+                WhatsApp
               </a>
             ) : null}
             {!sold && tel ? (
@@ -190,7 +190,7 @@ export default async function ProductPage({ params }) {
                 className="inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-xl border border-bw-950 bg-white px-3 text-xs font-semibold text-bw-950 hover:bg-bw-50 sm:flex-none"
               >
                 <Phone className="h-4 w-4" />
-                Hemen Ara
+                Ara
               </a>
             ) : null}
           </div>

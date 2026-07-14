@@ -33,9 +33,9 @@ export default async function HomePage() {
     <main>
       <HeroSection />
 
-      <TechNewsSection />
-
       <BuySellAccordion />
+
+      <TechNewsSection />
 
       {/* Featured */}
       {featured?.length ? (
