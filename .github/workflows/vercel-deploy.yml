@@ -6,34 +6,18 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    env:
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
-      - name: Check secrets
-        run: |
-          test -n "$VERCEL_TOKEN" || (echo "VERCEL_TOKEN bos" && exit 1)
-          test -n "$VERCEL_PROJECT_ID" || (echo "VERCEL_PROJECT_ID bos" && exit 1)
-          test -n "$VERCEL_ORG_ID" || (echo "VERCEL_ORG_ID bos" && exit 1)
-          echo "Secrets OK"
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Pull Vercel settings
-        run: npx vercel@latest pull --yes --environment=production
-
-      - name: Build
-        run: npx vercel@latest build --prod
-
-      - name: Deploy to production
-        run: npx vercel@latest deploy --prebuilt --prod
+      - name: Deploy to Vercel Production
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: "--prod"
