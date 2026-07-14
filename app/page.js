@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { ArrowRight, MessageCircle, Package, Search } from "lucide-react";
+import { ArrowRight, MessageCircle } from "lucide-react";
+import BuySellAccordion from "@/components/BuySellAccordion";
 import ProductCard from "@/components/ProductCard";
 import HeroSection from "@/components/HeroSection";
 import TechNewsSection from "@/components/TechNewsSection";
@@ -34,97 +35,7 @@ export default async function HomePage() {
 
       <TechNewsSection />
 
-      {/* Ürün sat + Ürün iste — ana ekran */}
-      <section
-        id="al-sat"
-        className="scroll-mt-28 border-b border-bw-200 bg-bw-50"
-      >
-        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-16">
-          <div className="mb-8 max-w-2xl">
-            <p className="text-xs tracking-[0.22em] text-bw-500 uppercase">
-              Senin için
-            </p>
-            <h2 className="mt-3 font-display text-3xl font-semibold tracking-wide text-bw-950 sm:text-4xl">
-              Ürününü Sat, Aradığını Bul
-            </h2>
-            <p className="mt-3 text-base leading-relaxed text-bw-600">
-              Satmak istediğin ürünü birlikte değerlendirelim. Aradığın ürünü yaz,
-              bulduğum anda seninle iletişime geçeyim.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-5">
-            {/* Sat */}
-            <Link
-              href="/bana-sat"
-              className="group relative overflow-hidden rounded-[2rem] bg-bw-950 px-7 py-9 text-white transition duration-500 hover:-translate-y-1 sm:px-10 sm:py-11"
-            >
-              <div
-                aria-hidden
-                className="pointer-events-none absolute inset-0 opacity-20 transition duration-500 group-hover:opacity-30"
-                style={{
-                  backgroundImage:
-                    "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.45) 1px, transparent 0)",
-                  backgroundSize: "22px 22px",
-                }}
-              />
-              <div
-                aria-hidden
-                className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-white/10 blur-2xl transition duration-700 group-hover:scale-125"
-              />
-              <div className="relative">
-                <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-white/20 bg-white/10">
-                  <Package className="h-5 w-5" strokeWidth={1.75} />
-                </span>
-                <p className="mt-6 text-[10px] font-semibold tracking-[0.22em] text-bw-400 uppercase">
-                  Satış teklifi
-                </p>
-                <h3 className="mt-3 font-display text-3xl font-semibold tracking-wide sm:text-4xl">
-                  Ürününü Değerlendir
-                </h3>
-                <p className="mt-4 max-w-sm text-sm leading-relaxed text-bw-300">
-                  Kullanmadığın ürünler değerini kaybetmesin. Fotoğraflarını paylaş,
-                  ürününü değerlendirelim ve doğru alıcıyla buluşturalım.
-                </p>
-                <span className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-white">
-                  Satış Talebi Oluştur
-                  <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
-                </span>
-              </div>
-            </Link>
-
-            {/* İste */}
-            <Link
-              href="/urun-iste"
-              className="group relative overflow-hidden rounded-[2rem] border border-bw-200 bg-white px-7 py-9 text-bw-950 transition duration-500 hover:-translate-y-1 hover:border-bw-400 sm:px-10 sm:py-11"
-            >
-              <div
-                aria-hidden
-                className="pointer-events-none absolute -bottom-20 -left-10 h-56 w-56 rounded-full bg-bw-100 blur-2xl transition duration-700 group-hover:scale-125"
-              />
-              <div className="relative">
-                <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-bw-200 bg-bw-50 text-bw-900">
-                  <Search className="h-5 w-5" strokeWidth={1.75} />
-                </span>
-                <p className="mt-6 text-[10px] font-semibold tracking-[0.22em] text-bw-400 uppercase">
-                  Aradığını Bulalım
-                </p>
-                <h3 className="mt-3 font-display text-3xl font-semibold tracking-wide sm:text-4xl">
-                  Ürün Talebi Oluştur
-                </h3>
-                <p className="mt-4 max-w-sm text-sm leading-relaxed text-bw-500">
-                  Aradığın ürünü bulmak bazen zaman alabilir. Talebini bırak; sana uygun
-                  bir seçenek bulduğumda ilk seni haberdar edeyim.
-                </p>
-                <span className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-bw-950">
-                  İstek gönder
-                  <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
-                </span>
-              </div>
-            </Link>
-          </div>
-        </div>
-      </section>
+      <BuySellAccordion />
 
       {/* Featured */}
       {featured?.length ? (
@@ -144,8 +55,6 @@ export default async function HomePage() {
           </div>
         </section>
       ) : null}
-
-      <StoryBand />
 
       {/* Latest vitrin */}
       <section id="vitrin" className="mx-auto max-w-7xl scroll-mt-28 px-4 py-16 sm:px-6 lg:px-8">
@@ -221,6 +130,8 @@ export default async function HomePage() {
       ) : null}
 
       <CustomerReviews />
+
+      <StoryBand />
 
       {/* Contact CTA */}
       <section className="border-t border-bw-200 bg-bw-50">
