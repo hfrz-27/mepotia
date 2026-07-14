@@ -1,6 +1,6 @@
 import AppShell from "@/components/AppShell";
 import { Outfit, Cinzel } from "next/font/google";
-import { absoluteUrl, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_OG_DESCRIPTION, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -59,21 +59,12 @@ export const metadata = {
     url: SITE_URL,
     siteName: SITE_NAME,
     title: `${SITE_NAME} | Güvenin ve Değerin Buluşma Noktası`,
-    description: SITE_DESCRIPTION,
-    images: [
-      {
-        url: absoluteUrl("/mepotia-logo.png"),
-        width: 1200,
-        height: 630,
-        alt: SITE_NAME,
-      },
-    ],
+    description: SITE_OG_DESCRIPTION,
   },
   twitter: {
     card: "summary_large_image",
     title: `${SITE_NAME} | Güvenin ve Değerin Buluşma Noktası`,
-    description: SITE_DESCRIPTION,
-    images: [absoluteUrl("/mepotia-logo.png")],
+    description: SITE_OG_DESCRIPTION,
   },
   icons: {
     icon: [{ url: "/favicon.png", type: "image/png" }],
