@@ -19,14 +19,16 @@ function CoverImage({ src, alt, className, sizes, priority = false }) {
   );
 }
 
-export default function TechNewsCard({ post, index = 0 }) {
+export default function TechNewsCard({ post, index = 0, featured = false }) {
   return (
     <Link
       href={`/teknoloji/${post.id}`}
       prefetch={index === 0}
-      className="group overflow-hidden rounded-2xl border border-white/10 bg-white/5 transition hover:border-white/20 hover:bg-white/[0.08]"
+      className={`group relative overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/5 shadow-[0_24px_60px_-42px_rgba(0,0,0,0.7)] transition duration-500 hover:-translate-y-1 hover:border-white/25 hover:bg-white/[0.08] ${
+        featured ? "sm:col-span-2 sm:row-span-2" : ""
+      }`}
     >
-      <div className="relative aspect-[16/9] overflow-hidden bg-bw-900">
+      <div className={`relative overflow-hidden bg-bw-900 ${featured ? "aspect-[16/11] sm:h-full sm:min-h-[22rem]" : "aspect-[16/9]"}`}>
         {post.cover_url ? (
           <CoverImage
             src={post.cover_url}
@@ -40,18 +42,25 @@ export default function TechNewsCard({ post, index = 0 }) {
             <Cpu className="h-8 w-8 text-white/20" />
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-bw-950/80 via-transparent to-transparent" />
-      </div>
-      <div className="p-3.5 sm:p-4">
-        <p className="text-[10px] font-semibold tracking-wide text-bw-500 uppercase">
-          {formatTechDate(post.created_at)}
-        </p>
-        <h3 className="mt-1 line-clamp-2 text-sm font-semibold leading-snug text-white group-hover:text-bw-200">
-          {post.title}
-        </h3>
-        {post.excerpt ? (
-          <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-bw-400">{post.excerpt}</p>
-        ) : null}
+        <div className={`absolute inset-0 bg-gradient-to-t from-bw-950 ${featured ? "via-bw-950/35" : "via-bw-950/70"} to-transparent`} />
+        <div className={`absolute inset-x-0 bottom-0 ${featured ? "p-6 sm:p-7" : "p-4"}`}>
+          <p className="inline-flex rounded-full border border-white/15 bg-bw-950/40 px-2.5 py-1 text-[9px] font-semibold tracking-[0.18em] text-bw-300 uppercase backdrop-blur-sm">
+            {featured ? "Öne çıkan haber" : formatTechDate(post.created_at)}
+          </p>
+          <h3 className={`mt-3 font-semibold leading-snug text-white transition group-hover:text-bw-200 ${featured ? "line-clamp-3 text-xl sm:text-2xl" : "line-clamp-2 text-sm"}`}>
+            {post.title}
+          </h3>
+          {post.excerpt ? (
+            <p className={`mt-2 leading-relaxed text-bw-300 ${featured ? "line-clamp-2 text-sm" : "hidden"}`}>
+              {post.excerpt}
+            </p>
+          ) : null}
+          {featured ? (
+            <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-white">
+              Haberi oku <span aria-hidden>→</span>
+            </span>
+          ) : null}
+        </div>
       </div>
     </Link>
   );

@@ -210,6 +210,7 @@ export default function BanaSatClient() {
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-12 sm:px-6 lg:px-8">
+      <BackHomeLink label="Vitrine dön" className="mb-8" />
       <p className="text-xs tracking-[0.22em] text-bw-500 uppercase">Satış teklifi</p>
       <h1 className="mt-2 font-display text-3xl font-semibold tracking-wide text-bw-950 sm:text-4xl">
         Ürününü bana sat

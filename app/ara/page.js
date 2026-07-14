@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
+import BackHomeLink from "@/components/BackHomeLink";
 import { getCategoriesWithSubs } from "@/lib/categories";
 import { getPublishedProducts } from "@/lib/products";
 
@@ -30,6 +31,7 @@ export default async function SearchPage({ searchParams }) {
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <BackHomeLink label="Vitrine dön" className="mb-8" />
       <p className="text-xs tracking-[0.22em] text-bw-500 uppercase">Keşfet</p>
       <h1 className="mt-2 font-display text-4xl font-semibold tracking-wide text-bw-950">
         Gelişmiş arama

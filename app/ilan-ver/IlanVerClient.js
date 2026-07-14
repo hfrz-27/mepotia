@@ -329,6 +329,11 @@ export default function IlanVerClient() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-bw-50 via-white to-bw-50 pb-32">
       <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:py-14">
+        <BackHomeLink
+          href={isEdit ? "/admin?tab=products" : "/"}
+          label={isEdit ? "Yönetim paneli" : "Vitrine dön"}
+          className="mb-8"
+        />
         {/* Header */}
         <div className="text-center">
           <p className="inline-flex items-center gap-1.5 rounded-full border border-bw-200 bg-white px-3 py-1 text-[10px] font-semibold tracking-[0.2em] text-bw-500 uppercase">

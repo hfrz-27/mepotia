@@ -115,6 +115,7 @@ export default function UrunIsteClient() {
 
   return (
     <main className="mx-auto max-w-xl px-4 py-12 sm:px-6 lg:px-8">
+      <BackHomeLink label="Vitrine dön" className="mb-8" />
       <p className="text-xs tracking-[0.22em] text-bw-500 uppercase">Talep</p>
       <h1 className="mt-2 font-display text-3xl font-semibold tracking-wide text-bw-950 sm:text-4xl">
         Ürün iste

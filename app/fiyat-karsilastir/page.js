@@ -1,5 +1,6 @@
 import TechPriceLookupSection from "@/components/TechPriceLookupSection";
 import ProductCard from "@/components/ProductCard";
+import BackHomeLink from "@/components/BackHomeLink";
 import { Sparkles } from "lucide-react";
 import { getPublishedProducts } from "@/lib/products";
 
@@ -17,6 +18,9 @@ export default async function PriceComparisonPage() {
 
   return (
     <main className="min-h-screen bg-bw-50">
+      <div className="mx-auto max-w-7xl px-4 pt-6 sm:px-6 lg:px-8">
+        <BackHomeLink label="Vitrine dön" />
+      </div>
       <TechPriceLookupSection />
       <section className="border-b border-bw-200 bg-bw-50">
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8">

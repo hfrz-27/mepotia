@@ -7,6 +7,7 @@ import ProductCard from "@/components/ProductCard";
 import BackHomeLink, { PremiumBreadcrumb } from "@/components/BackHomeLink";
 import ProductGallery from "@/components/ProductGallery";
 import ProductDetailsBlock from "@/components/ProductDetailsBlock";
+import { createClient } from "@/lib/supabase-server";
 import {
   formatPrice,
   getPrimaryImage,
@@ -78,9 +79,10 @@ export default async function ProductPage({ params }) {
 
   const sold = isSold(product);
   const discount = hasDiscount(product);
+  const supabase = await createClient();
 
   after(() => {
-    void incrementViews(id);
+    void incrementViews(id, supabase);
   });
 
   const similar = await getSimilarProducts(product);
