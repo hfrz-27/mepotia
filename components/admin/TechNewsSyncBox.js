@@ -45,8 +45,7 @@ export default function TechNewsSyncBox({
     if (data.updated) parts.push(`${data.updated} haber güncellendi.`);
     if (!data.deleted && !data.imported && !data.updated) parts.push("İşlem tamamlandı.");
     if (data.skipped) parts.push(`${data.skipped} haber atlandı.`);
-    if (data.errors?.length) parts.push(`${data.errors.length} hata.`);
-    if (data.feeds?.length) parts.push(`Kaynak: ${data.feeds.join(", ")}`);
+      if (data.errors?.length) parts.push(`${data.errors.length} hata.`);
     return parts.join(" ");
   };
 

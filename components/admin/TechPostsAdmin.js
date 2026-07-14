@@ -171,7 +171,7 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
       <div className="rounded-2xl border border-bw-200 bg-white px-5 py-5">
         <div className="mb-4">
           <p className="text-sm font-semibold text-bw-950">Mepotia Teknoloji</p>
-          <p className="text-xs text-bw-500">Kaynak linkini yapıştır, haberleri çek.</p>
+          <p className="text-xs text-bw-500">Site linkini yapıştır, haberleri çek.</p>
         </div>
         <TechNewsSyncBox onSynced={onReload} />
       </div>
