@@ -7,7 +7,7 @@ import TechNewsSection from "@/components/TechNewsSection";
 import { getPublishedProducts } from "@/lib/products";
 import { getSiteSettings } from "@/lib/categories";
 import { fillFeatured, fillProducts } from "@/lib/homeDemoData";
-import CustomerReviews from "@/components/CustomerReviews";
+import { CustomerReviews, HomeReviewsProvider } from "@/components/HomeReviews";
 
 const WA = "https://wa.me/905059574122";
 const MOBILE_PRODUCT_LIMIT = 6;
@@ -45,7 +45,8 @@ export default async function HomePage() {
     : WA;
 
   return (
-    <main>
+    <HomeReviewsProvider>
+      <main>
       <HeroSection />
 
       <BuySellAccordion />
@@ -150,6 +151,7 @@ export default async function HomePage() {
       ) : null}
 
       <CustomerReviews />
-    </main>
+      </main>
+    </HomeReviewsProvider>
   );
 }

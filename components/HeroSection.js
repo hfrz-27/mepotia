@@ -2,9 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, BadgeDollarSign } from "lucide-react";
+import { ArrowRight, BadgeDollarSign, Sparkles } from "lucide-react";
 import HeroSearch from "@/components/HeroSearch";
 import TrustStrip from "@/components/TrustStrip";
+import { ReviewThinStrip } from "@/components/HomeReviews";
 
 export default function HeroSection() {
   return (
@@ -15,50 +16,60 @@ export default function HeroSection() {
           alt=""
           fill
           priority
-          className="object-cover object-center opacity-25"
+          className="object-cover object-center opacity-20"
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-bw-950/92 via-bw-900/88 to-bw-950/96" />
-        <div className="hero-grid absolute inset-0 opacity-20" aria-hidden />
+        <div className="absolute inset-0 bg-gradient-to-b from-bw-950 via-bw-950/95 to-bw-900" />
+        <div className="hero-grid absolute inset-0 opacity-[0.14]" aria-hidden />
+        <div
+          className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-bw-950 to-transparent"
+          aria-hidden
+        />
       </div>
 
-      <div className="relative mx-auto flex min-h-[72vh] max-w-4xl flex-col items-center justify-center px-4 pb-28 pt-20 text-center sm:min-h-[78vh] sm:px-6 sm:pb-32 lg:px-8">
-        <div className="animate-fade-up w-full max-w-3xl rounded-[2rem] border border-white/10 bg-white/[0.06] px-6 py-10 shadow-[0_40px_100px_-40px_rgba(0,0,0,0.85)] sm:px-10 sm:py-12">
-          <p className="inline-flex rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-[10px] font-semibold tracking-[0.24em] text-bw-300 uppercase">
+      <div className="relative mx-auto max-w-4xl px-4 pt-14 pb-4 sm:px-6 sm:pt-20 lg:px-8">
+        <div className="text-center">
+          <p className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1 text-[9px] font-semibold tracking-[0.26em] text-white/55 uppercase sm:text-[10px]">
+            <Sparkles className="h-3 w-3 text-white/40" />
             Teknoloji · İkinci El · Güven
           </p>
 
-          <h1 className="mt-6 font-display text-5xl leading-[1.02] font-semibold tracking-[0.16em] text-white uppercase sm:text-6xl lg:text-7xl">
-            MEPOTIA
+          <h1 className="mt-5 font-display text-[2.65rem] leading-none font-semibold tracking-[0.2em] text-white uppercase sm:mt-6 sm:text-6xl lg:text-7xl">
+            Mepotia
           </h1>
 
-          <p className="animate-fade-up-delay mx-auto mt-5 max-w-xl text-base leading-relaxed text-bw-300 sm:text-lg">
-            Sadece ürün değil, güven sunuyoruz. Özenle seçilmiş ikinci el ürünlerle
-            dürüst ve şeffaf bir alışveriş deneyimi.
+          <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-white/55 sm:mt-5 sm:max-w-xl sm:text-base">
+            Özenle seçilmiş ikinci el ürünlerle dürüst ve şeffaf bir alışveriş deneyimi.
           </p>
+        </div>
 
+        <div className="mx-auto mt-6 max-w-xl space-y-3 sm:mt-8">
           <HeroSearch variant="dark" />
 
-          <div className="animate-fade-up-delay mt-8 grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:flex-wrap sm:items-center sm:justify-center sm:gap-3">
+          <div className="grid grid-cols-2 gap-2 sm:gap-3">
             <Link
               href="/fiyat-karsilastir"
-              className="group inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-3 py-3.5 text-xs font-semibold text-white transition hover:border-white/40 hover:bg-white/10 sm:px-7 sm:text-sm"
+              className="inline-flex items-center justify-center gap-1.5 rounded-2xl border border-white/12 bg-white/[0.04] px-3 py-3 text-[11px] font-semibold text-white/90 transition hover:border-white/25 hover:bg-white/[0.08] sm:gap-2 sm:px-5 sm:py-3.5 sm:text-sm"
             >
-              <BadgeDollarSign className="h-4 w-4" />
+              <BadgeDollarSign className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               Fiyat karşılaştır
             </Link>
             <a
               href="#vitrin"
-              className="group inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-3 py-3.5 text-xs font-semibold text-bw-950 transition hover:bg-bw-100 sm:px-7 sm:text-sm"
+              className="inline-flex items-center justify-center gap-1.5 rounded-2xl bg-white px-3 py-3 text-[11px] font-semibold text-bw-950 shadow-[0_12px_32px_-16px_rgba(255,255,255,0.35)] transition hover:bg-bw-100 sm:gap-2 sm:px-5 sm:py-3.5 sm:text-sm"
             >
               Vitrine bak
-              <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
+              <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             </a>
           </div>
         </div>
       </div>
 
-      <div className="relative z-10 mx-auto -mt-20 max-w-5xl bg-white px-4 pb-6 sm:px-6 sm:pb-8 lg:px-8">
+      <div className="relative z-10 mt-5 md:hidden">
+        <ReviewThinStrip variant="dark" showLabel pauseOnHover={false} duration={22} />
+      </div>
+
+      <div className="relative z-10 mx-auto -mt-1 max-w-5xl rounded-t-[2rem] bg-white px-4 pt-5 pb-6 shadow-[0_-24px_48px_-20px_rgba(0,0,0,0.35)] sm:-mt-16 sm:rounded-t-[2.5rem] sm:px-6 sm:pt-6 sm:pb-8 lg:px-8">
         <TrustStrip />
       </div>
     </section>

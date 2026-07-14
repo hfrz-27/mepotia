@@ -1,28 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ArrowRight, ChevronDown, PenLine, Send, Star, X } from "lucide-react";
 import { createClient } from "@/lib/supabase";
-import { fillReviews } from "@/lib/homeDemoData";
-import PremiumScrollRow from "@/components/PremiumScrollRow";
+import { ReviewThinStrip, useReviews } from "@/components/ReviewsContext";
 
 const PILLARS = ["Kökler", "Dürüstlük", "Özen"];
-
-function MiniStars({ count }) {
-  return (
-    <span className="inline-flex items-center gap-px" aria-label={`${count} yıldız`}>
-      {Array.from({ length: 5 }).map((_, i) => (
-        <Star
-          key={i}
-          className={`h-2.5 w-2.5 ${
-            i < count ? "fill-amber-400 text-amber-400" : "text-bw-200"
-          }`}
-        />
-      ))}
-    </span>
-  );
-}
 
 function StarPicker({ value, onChange }) {
   const [hover, setHover] = useState(0);
@@ -53,51 +37,13 @@ function StarPicker({ value, onChange }) {
   );
 }
 
-function ReviewChip({ review }) {
-  return (
-    <div className="flex shrink-0 snap-start items-center gap-2.5 rounded-full border border-bw-200 bg-bw-50 px-3 py-1.5 shadow-[0_4px_16px_-10px_rgba(0,0,0,0.12)]">
-      <MiniStars count={review.stars} />
-      <p className="max-w-[52vw] truncate text-[11px] text-bw-600 sm:max-w-xs">
-        &ldquo;{review.body}&rdquo;
-      </p>
-      <span className="shrink-0 text-[10px] font-medium text-bw-400">— {review.author_name}</span>
-    </div>
-  );
-}
-
 export default function CustomerReviews() {
-  const [reviews, setReviews] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { tableMissing, load } = useReviews();
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState("");
-  const [tableMissing, setTableMissing] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
   const [form, setForm] = useState({ name: "", stars: 0, text: "" });
-
-  const load = async () => {
-    setLoading(true);
-    const supabase = createClient();
-    const { data, error: err } = await supabase
-      .from("customer_reviews")
-      .select("id, author_name, stars, body, created_at")
-      .order("created_at", { ascending: false })
-      .limit(16);
-
-    if (err) {
-      console.error(err);
-      if (err.message?.includes("customer_reviews")) setTableMissing(true);
-      setReviews(fillReviews([]));
-    } else {
-      setReviews(fillReviews(data || []));
-      setTableMissing(false);
-    }
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    load();
-  }, []);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -128,12 +74,7 @@ export default function CustomerReviews() {
     setSubmitting(false);
     if (err) {
       console.error(err);
-      if (err.message?.includes("customer_reviews")) {
-        setTableMissing(true);
-        setError("Önce customer_reviews.sql çalıştır.");
-      } else {
-        setError("Gönderilemedi, tekrar dene.");
-      }
+      setError("Gönderilemedi, tekrar dene.");
       return;
     }
 
@@ -207,10 +148,7 @@ export default function CustomerReviews() {
           }`}
         >
           <div className="overflow-hidden">
-            <form
-              onSubmit={onSubmit}
-              className="rounded-2xl border border-bw-200 bg-bw-50 p-4"
-            >
+            <form onSubmit={onSubmit} className="rounded-2xl border border-bw-200 bg-bw-50 p-4">
               <div className="grid gap-3 sm:grid-cols-[1fr_auto] sm:items-end">
                 <div className="grid gap-3 sm:grid-cols-2">
                   <input
@@ -252,23 +190,7 @@ export default function CustomerReviews() {
           </div>
         </div>
 
-        <div className="relative mt-5 overflow-hidden rounded-full border border-bw-100 bg-bw-50/80 py-2">
-          {loading ? (
-            <p className="px-4 text-center text-[11px] text-bw-400">Yükleniyor...</p>
-          ) : (
-            <PremiumScrollRow
-              ariaLabel="Müşteri yorumları"
-              fadeFrom="from-bw-50"
-              gap="gap-2"
-              speed={0.35}
-              className="px-1"
-            >
-              {reviews.map((review) => (
-                <ReviewChip key={review.id} review={review} />
-              ))}
-            </PremiumScrollRow>
-          )}
-        </div>
+        <ReviewThinStrip variant="light" className="mt-6" showLabel duration={34} />
       </div>
     </section>
   );

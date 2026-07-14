@@ -111,6 +111,36 @@ body {
   animation: soft-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+@keyframes review-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.review-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: review-marquee var(--marquee-duration, 36s) linear infinite;
+  will-change: transform;
+}
+
+.review-marquee-track:hover {
+  animation-play-state: paused;
+}
+
+.review-marquee-continuous:hover {
+  animation-play-state: running;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .review-marquee-track {
+    animation: none;
+  }
+}
+
 .hero-grid {
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
