@@ -7,6 +7,7 @@ import Image from "next/image";
 import { ShoppingBag, Search, Pencil, Rss, Trash2 } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import { recoverPhotosFromStorage } from "@/lib/recoverPhotos";
+import { deleteProductFully } from "@/lib/deleteProduct";
 import ShareProductButtons from "@/components/ShareProductButtons";
 import TechPostsAdmin from "@/components/admin/TechPostsAdmin";
 import TechNewsSyncBox from "@/components/admin/TechNewsSyncBox";
@@ -48,7 +49,6 @@ export default function AdminPage() {
   const [sqlHint, setSqlHint] = useState("");
   const [productSqlHint, setProductSqlHint] = useState("");
   const [recovering, setRecovering] = useState(false);
-  const [recoverDone, setRecoverDone] = useState(false);
   const [purging, setPurging] = useState(false);
   const [purgeMsg, setPurgeMsg] = useState("");
 
@@ -148,12 +148,9 @@ export default function AdminPage() {
     setRecovering(true);
     try {
       const supabase = createClient();
-      const { linked, productsRestored } = await recoverPhotosFromStorage(supabase);
-      setRecoverDone(true);
-      if (linked > 0 || productsRestored > 0) {
-        setMsg(
-          `${linked} fotoğraf geri bağlandı${productsRestored ? `, ${productsRestored} ilan geri yüklendi` : ""}.`,
-        );
+      const { linked } = await recoverPhotosFromStorage(supabase);
+      if (linked > 0) {
+        setMsg(`${linked} fotoğraf geri bağlandı.`);
         await load();
       } else if (!silent) {
         setMsg("Tüm fotoğraflar zaten bağlı.");
@@ -166,11 +163,6 @@ export default function AdminPage() {
     }
   };
 
-  useEffect(() => {
-    if (recoverDone) return;
-    void runPhotoRecovery(true);
-  }, [recoverDone]);
-
   const toggle = async (id, field, value) => {
     await createClient().from("products").update({ [field]: value }).eq("id", id);
     setMsg("Güncellendi.");
@@ -178,9 +170,15 @@ export default function AdminPage() {
   };
 
   const remove = async (id) => {
-    if (!confirm("Silinsin mi?")) return;
-    await createClient().from("products").delete().eq("id", id);
-    load();
+    if (!confirm("Bu ilan kalıcı olarak silinsin mi? Fotoğrafları da kaldırılır.")) return;
+    try {
+      const supabase = createClient();
+      await deleteProductFully(supabase, id);
+      setMsg("İlan silindi.");
+      load();
+    } catch (err) {
+      setMsg(err?.message || "Silinemedi.");
+    }
   };
 
   const setStatus = async (id, status) => {
@@ -721,9 +719,9 @@ export default function AdminPage() {
               type="button"
               disabled={recovering}
               onClick={() => runPhotoRecovery(false)}
-              className="shrink-0 rounded-xl border-2 border-bw-950 bg-bw-950 px-5 py-3 text-sm font-semibold text-white hover:bg-bw-800 disabled:opacity-60"
+              className="shrink-0 rounded-xl border border-bw-300 bg-white px-5 py-3 text-sm font-semibold text-bw-800 hover:border-bw-950 disabled:opacity-60"
             >
-              {recovering ? "Fotoğraflar yükleniyor…" : "Fotoğrafları geri yükle"}
+              {recovering ? "Fotoğraflar yükleniyor…" : "Kayıp fotoğrafları geri yükle"}
             </button>
           </div>
           {!products.length ? (
