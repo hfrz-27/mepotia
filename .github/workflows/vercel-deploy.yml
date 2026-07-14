@@ -27,4 +27,11 @@ jobs:
         run: rm -rf .git
 
       - name: Deploy to production
-        run: vercel deploy --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          if [ -z "$VERCEL_TOKEN" ]; then
+            echo "HATA: VERCEL_TOKEN bos. GitHub Secrets'tan tokeni yeniden ekle."
+            exit 1
+          fi
+          vercel deploy --prod --yes --token="$VERCEL_TOKEN"
