@@ -1,10 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { MessageCircle, Mail, CheckCircle2 } from "lucide-react";
 import { createClient } from "@/lib/supabase";
-import BackHomeLink from "@/components/BackHomeLink";
+import FormPageShell from "@/components/FormPageShell";
 
 const OWNER_EMAIL = "hay98dar@gmail.com";
 const OWNER_WA = "905059574122";
@@ -173,17 +172,18 @@ export default function BanaSatClient() {
 
   if (done) {
     return (
-      <main className="mx-auto max-w-xl px-4 py-16 sm:px-6">
-        <div className="rounded-[2rem] border border-bw-200 bg-white p-8 text-center">
+      <FormPageShell
+        eyebrow="Satış teklifi"
+        title="Teklifin alındı"
+        description={
+          savedToAdmin
+            ? "Teklif admin paneline düştü. WhatsApp ile de iletebilirsin."
+            : "Teklif WhatsApp / e-posta ile gönderildi. Admin paneli için Supabase'de sell_offers SQL'ini bir kez çalıştırman gerekiyor."
+        }
+        maxWidth="max-w-xl"
+      >
+        <div className="text-center">
           <CheckCircle2 className="mx-auto h-10 w-10 text-bw-900" />
-          <h1 className="mt-4 font-display text-2xl font-semibold text-bw-950">
-            Teklifin alındı
-          </h1>
-          <p className="mt-3 text-sm leading-relaxed text-bw-500">
-            {savedToAdmin
-              ? "Teklif admin paneline düştü. WhatsApp ile de iletebilirsin."
-              : "Teklif WhatsApp / e-posta ile gönderildi. Admin paneli için Supabase’de sell_offers SQL’ini bir kez çalıştırman gerekiyor."}
-          </p>
           <div className="mt-8 flex flex-col gap-3">
             <a
               href={waLink}
@@ -201,29 +201,20 @@ export default function BanaSatClient() {
               <Mail className="h-4 w-4" />
               E-posta ile gönder
             </a>
-            <BackHomeLink label="Vitrine dön" variant="minimal" className="mt-4" />
           </div>
         </div>
-      </main>
+      </FormPageShell>
     );
   }
 
   return (
-    <main className="mx-auto max-w-2xl px-4 py-12 sm:px-6 lg:px-8">
-      <BackHomeLink label="Vitrine dön" className="mb-8" />
-      <p className="text-xs tracking-[0.22em] text-bw-500 uppercase">Satış teklifi</p>
-      <h1 className="mt-2 font-display text-3xl font-semibold tracking-wide text-bw-950 sm:text-4xl">
-        Ürününü bana sat
-      </h1>
-      <p className="mt-3 max-w-xl text-sm leading-relaxed text-bw-500">
-        Formu doldur. Teklif WhatsApp / e-posta ile bana ulaşır; SQL kurulunca
-        admin paneline de düşer.
-      </p>
-
-      <form
-        onSubmit={onSubmit}
-        className="mt-8 space-y-4 rounded-[2rem] border border-bw-200 bg-white p-6 sm:p-8"
-      >
+    <FormPageShell
+      eyebrow="Satış teklifi"
+      title="Ürününü bana sat"
+      description="Formu doldur. Teklif WhatsApp / e-posta ile bana ulaşır; admin paneline de düşer."
+      maxWidth="max-w-2xl"
+    >
+      <form onSubmit={onSubmit} className="space-y-4">
         <div className="grid gap-4 sm:grid-cols-2">
           <input
             name="name"
@@ -336,6 +327,6 @@ export default function BanaSatClient() {
           {loading ? "Gönderiliyor..." : "Teklifi gönder"}
         </button>
       </form>
-    </main>
+    </FormPageShell>
   );
 }

@@ -1,10 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { CheckCircle2, MessageCircle } from "lucide-react";
 import { createClient } from "@/lib/supabase";
-import BackHomeLink from "@/components/BackHomeLink";
+import FormPageShell from "@/components/FormPageShell";
 
 const OWNER_WA = "905059574122";
 
@@ -87,15 +86,14 @@ export default function UrunIsteClient() {
 
   if (done) {
     return (
-      <main className="mx-auto max-w-xl px-4 py-16 sm:px-6">
-        <div className="rounded-[2rem] border border-bw-200 bg-white p-8 text-center">
+      <FormPageShell
+        eyebrow="Ürün talebi"
+        title="İsteğin alındı"
+        description="Uygun ürün bulursam sana dönerim."
+        maxWidth="max-w-xl"
+      >
+        <div className="text-center">
           <CheckCircle2 className="mx-auto h-10 w-10 text-bw-900" />
-          <h1 className="mt-4 font-display text-2xl font-semibold text-bw-950">
-            İsteğin alındı
-          </h1>
-          <p className="mt-3 text-sm leading-relaxed text-bw-500">
-            Uygun ürün bulursam sana dönerim.
-          </p>
           <a
             href={waLink}
             target="_blank"
@@ -105,29 +103,19 @@ export default function UrunIsteClient() {
             <MessageCircle className="h-4 w-4" />
             WhatsApp ile gönder
           </a>
-          <div className="mt-4 flex justify-center">
-            <BackHomeLink label="Vitrine dön" variant="minimal" />
-          </div>
         </div>
-      </main>
+      </FormPageShell>
     );
   }
 
   return (
-    <main className="mx-auto max-w-xl px-4 py-12 sm:px-6 lg:px-8">
-      <BackHomeLink label="Vitrine dön" className="mb-8" />
-      <p className="text-xs tracking-[0.22em] text-bw-500 uppercase">Talep</p>
-      <h1 className="mt-2 font-display text-3xl font-semibold tracking-wide text-bw-950 sm:text-4xl">
-        Ürün iste
-      </h1>
-      <p className="mt-3 text-sm leading-relaxed text-bw-500">
-        Aradığın ürünü yaz. Uygun bulursam haber veririm.
-      </p>
-
-      <form
-        onSubmit={onSubmit}
-        className="mt-8 space-y-4 rounded-[2rem] border border-bw-200 bg-white p-6 sm:p-8"
-      >
+    <FormPageShell
+      eyebrow="Ürün talebi"
+      title="Ürün iste"
+      description="Aradığın ürünü yaz. Uygun bulursam haber veririm."
+      maxWidth="max-w-xl"
+    >
+      <form onSubmit={onSubmit} className="space-y-4">
         <input
           name="phone"
           value={form.phone}
@@ -188,6 +176,6 @@ export default function UrunIsteClient() {
           {loading ? "Gönderiliyor..." : "İsteği gönder"}
         </button>
       </form>
-    </main>
+    </FormPageShell>
   );
 }
