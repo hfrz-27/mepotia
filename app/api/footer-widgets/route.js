@@ -28,11 +28,27 @@ async function fetchJson(url, fallback = null) {
   }
 }
 
+const TROY_OZ_GRAMS = 31.1034768;
+
+function parseGoldTry(goldData, usdTry) {
+  if (goldData?.GA) {
+    const parsed = Number(String(goldData.GA).replace(/\./g, "").replace(",", "."));
+    if (Number.isFinite(parsed)) return parsed;
+  }
+
+  const xauUsd = Number(goldData?.price);
+  if (Number.isFinite(xauUsd) && Number.isFinite(usdTry)) {
+    return (xauUsd * usdTry) / TROY_OZ_GRAMS;
+  }
+
+  return null;
+}
+
 export async function GET() {
-  const [usdData, eurData, goldData, weatherData] = await Promise.all([
+  const [usdData, eurData, goldSpotData, weatherData] = await Promise.all([
     fetchJson("https://api.frankfurter.app/latest?from=USD&to=TRY"),
     fetchJson("https://api.frankfurter.app/latest?from=EUR&to=TRY"),
-    fetchJson("https://api.genelpara.com/embed/altin.json"),
+    fetchJson("https://api.gold-api.com/price/XAU"),
     fetchJson(
       "https://api.open-meteo.com/v1/forecast?latitude=41.01&longitude=28.98&current=temperature_2m,weather_code&timezone=Europe%2FIstanbul",
     ),
@@ -40,12 +56,7 @@ export async function GET() {
 
   const usd = usdData?.rates?.TRY ? Number(usdData.rates.TRY) : null;
   const eur = eurData?.rates?.TRY ? Number(eurData.rates.TRY) : null;
-
-  let gold = null;
-  if (goldData?.GA) {
-    gold = Number(String(goldData.GA).replace(/\./g, "").replace(",", "."));
-    if (Number.isNaN(gold)) gold = null;
-  }
+  const gold = parseGoldTry(goldSpotData, usd);
 
   const temp = weatherData?.current?.temperature_2m;
   const code = weatherData?.current?.weather_code;

@@ -55,12 +55,12 @@ export default function FooterSurvey() {
   };
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-bw-200 bg-bw-50/80">
+    <div className="overflow-hidden rounded-2xl border border-bw-200 bg-bw-50/80 sm:rounded-[1.5rem] lg:rounded-[1.75rem]">
       <button
         type="button"
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
-        className="flex w-full items-center justify-between gap-3 px-4 py-4 text-left transition hover:bg-bw-100/60 sm:px-5"
+        className="flex w-full items-center justify-between gap-3 px-4 py-4 text-left transition hover:bg-bw-100/60 sm:px-6 sm:py-5 lg:px-8"
       >
         <div className="min-w-0">
           <p className="flex items-center gap-2 text-xs font-semibold tracking-[0.2em] text-bw-900 uppercase">
@@ -82,54 +82,56 @@ export default function FooterSurvey() {
         }`}
       >
         <div className="overflow-hidden">
-          <div className="space-y-3 border-t border-bw-200 px-4 pb-4 pt-3 sm:px-5 sm:pb-5">
-            <p className="text-xs text-bw-500">Görüşün admin paneline düşer.</p>
+          <div className="border-t border-bw-200 px-4 pb-4 pt-3 sm:px-6 sm:pb-6 sm:pt-4 lg:grid lg:grid-cols-[1fr_320px] lg:items-end lg:gap-10 lg:px-8 lg:pb-8">
+            <div className="space-y-3">
+              <p className="text-xs text-bw-500">Görüşün admin paneline düşer.</p>
 
-            <div className="flex flex-wrap gap-2">
-              {TYPES.map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => setType(item.id)}
-                  className={`rounded-full px-3 py-1.5 text-[11px] font-semibold transition ${
-                    type === item.id
-                      ? "bg-bw-950 text-white"
-                      : "border border-bw-200 bg-white text-bw-600 hover:border-bw-300"
-                  }`}
-                >
-                  {item.label}
-                </button>
-              ))}
+              <div className="flex flex-wrap gap-2">
+                {TYPES.map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => setType(item.id)}
+                    className={`rounded-full px-3 py-1.5 text-[11px] font-semibold transition ${
+                      type === item.id
+                        ? "bg-bw-950 text-white"
+                        : "border border-bw-200 bg-white text-bw-600 hover:border-bw-300"
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+
+              {type === "satisfaction" ? (
+                <div className="flex gap-1">
+                  {Array.from({ length: 5 }).map((_, i) => {
+                    const n = i + 1;
+                    return (
+                      <button
+                        key={n}
+                        type="button"
+                        onClick={() => setRating(n)}
+                        className="rounded p-0.5"
+                        aria-label={`${n} yıldız`}
+                      >
+                        <Star
+                          className={`h-5 w-5 ${
+                            n <= rating ? "fill-amber-400 text-amber-400" : "text-bw-300"
+                          }`}
+                        />
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : null}
             </div>
 
-            {type === "satisfaction" ? (
-              <div className="flex gap-1">
-                {Array.from({ length: 5 }).map((_, i) => {
-                  const n = i + 1;
-                  return (
-                    <button
-                      key={n}
-                      type="button"
-                      onClick={() => setRating(n)}
-                      className="rounded p-0.5"
-                      aria-label={`${n} yıldız`}
-                    >
-                      <Star
-                        className={`h-5 w-5 ${
-                          n <= rating ? "fill-amber-400 text-amber-400" : "text-bw-300"
-                        }`}
-                      />
-                    </button>
-                  );
-                })}
-              </div>
-            ) : null}
-
-            <form onSubmit={onSubmit} className="space-y-2">
+            <form onSubmit={onSubmit} className="mt-4 space-y-2 lg:mt-0">
               <textarea
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                rows={2}
+                rows={3}
                 maxLength={600}
                 placeholder={
                   type === "satisfaction"
@@ -138,7 +140,7 @@ export default function FooterSurvey() {
                       ? "Sorunu anlat..."
                       : "Önerini yaz..."
                 }
-                className="w-full resize-none rounded-xl border border-bw-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-bw-400"
+                className="w-full resize-none rounded-xl border border-bw-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-bw-400 lg:min-h-[108px]"
               />
               {error ? <p className="text-xs text-red-600">{error}</p> : null}
               {done ? (
@@ -147,7 +149,7 @@ export default function FooterSurvey() {
               <button
                 type="submit"
                 disabled={sending}
-                className="inline-flex items-center gap-2 rounded-xl bg-bw-950 px-4 py-2.5 text-xs font-semibold text-white hover:bg-bw-800 disabled:opacity-50"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-bw-950 px-4 py-2.5 text-xs font-semibold text-white hover:bg-bw-800 disabled:opacity-50 sm:w-auto"
               >
                 <Send className="h-3.5 w-3.5" />
                 {sending ? "Gönderiliyor..." : "Gönder"}

@@ -41,10 +41,10 @@ function FooterGroup({ title, links }) {
           className={`h-4 w-4 text-bw-500 transition sm:hidden ${open ? "rotate-180" : ""}`}
         />
       </button>
-      <ul className={`${open ? "mt-4 block" : "hidden"} space-y-2 text-sm text-bw-500 sm:mt-4 sm:block`}>
+      <ul className={`${open ? "mt-4 block" : "hidden"} space-y-2.5 text-sm text-bw-500 sm:mt-5 sm:block`}>
         {links.map((link) => (
           <li key={link.href}>
-            <Link href={link.href} className="hover:text-bw-950">
+            <Link href={link.href} className="transition hover:text-bw-950">
               {link.label}
             </Link>
           </li>
@@ -57,29 +57,40 @@ function FooterGroup({ title, links }) {
 export default function Footer() {
   return (
     <footer className="mt-auto border-t border-bw-200 bg-white">
-      <div className="mx-auto grid max-w-7xl gap-6 px-4 py-10 sm:grid-cols-2 sm:gap-10 sm:px-6 sm:py-14 lg:grid-cols-4 lg:px-8">
-        <div className="pb-4 sm:pb-0 lg:col-span-2">
-          <Logo className="hidden h-8 sm:block" />
-          <p className="mt-0 max-w-md text-sm leading-relaxed text-bw-500 sm:mt-5">
-            Mepotia adını Mezopotamya&apos;dan alır. Güvenin, emeğin ve ticaretin köklü geçmişinden
-            ilham alan bu isim, bugün dürüst ve şeffaf bir ikinci el alışveriş anlayışını temsil
-            eder.
-          </p>
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8 lg:py-14">
+        <div className="grid gap-8 sm:grid-cols-2 sm:gap-12 lg:grid-cols-12 lg:gap-10">
+          <div className="sm:col-span-2 lg:col-span-5">
+            <Logo className="hidden h-9 sm:block" />
+            <p className="mt-0 max-w-lg text-sm leading-relaxed text-bw-500 sm:mt-6 sm:text-base">
+              Mepotia adını Mezopotamya&apos;dan alır. Güvenin, emeğin ve ticaretin köklü geçmişinden
+              ilham alan bu isim, bugün dürüst ve şeffaf bir ikinci el alışveriş anlayışını temsil
+              eder.
+            </p>
+          </div>
+          <div className="lg:col-span-3">
+            <FooterGroup title="Keşfet" links={EXPLORE_LINKS} />
+          </div>
+          <div className="lg:col-span-4">
+            <FooterGroup title="Yasal" links={LEGAL_LINKS} />
+          </div>
         </div>
-        <FooterGroup title="Keşfet" links={EXPLORE_LINKS} />
-        <FooterGroup title="Yasal" links={LEGAL_LINKS} />
-      </div>
 
-      <div className="mx-auto max-w-7xl px-4 pb-8 sm:px-6 lg:px-8">
-        <FooterSurvey />
+        <div className="mt-8 lg:mt-10">
+          <FooterSurvey />
+        </div>
       </div>
 
       <FooterWidgets />
 
-      <div className="border-t border-bw-100 text-center">
-        <p className="mx-auto max-w-7xl px-4 py-5 text-xs text-bw-400 sm:px-6 lg:px-8">
-          © {new Date().getFullYear()} Mepotia. Tüm hakları saklıdır.
-        </p>
+      <div className="border-t border-bw-100 bg-white">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-5 sm:flex-row sm:px-6 lg:px-8 lg:py-6">
+          <p className="text-xs text-bw-400">
+            © {new Date().getFullYear()} Mepotia. Tüm hakları saklıdır.
+          </p>
+          <p className="text-[10px] tracking-[0.18em] text-bw-400 uppercase">
+            Güvenle al · Güvenle sat
+          </p>
+        </div>
       </div>
     </footer>
   );

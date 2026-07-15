@@ -80,14 +80,14 @@ function ReviewChip({ review, variant = "light" }) {
   const dark = variant === "dark";
   return (
     <div
-      className={`flex shrink-0 items-center gap-2.5 rounded-2xl px-3 py-2 ${
+      className={`flex shrink-0 items-center gap-2 rounded-xl px-2.5 py-1.5 ${
         dark
-          ? "border border-white/12 bg-white/10 shadow-[0_8px_28px_-12px_rgba(0,0,0,0.55)]"
-          : "border border-bw-200 bg-white shadow-[0_8px_24px_-14px_rgba(0,0,0,0.12)]"
+          ? "border border-white/12 bg-white/10"
+          : "border border-bw-200 bg-white shadow-[0_4px_16px_-10px_rgba(0,0,0,0.1)]"
       }`}
     >
       <span
-        className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[9px] font-bold ${
+        className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[8px] font-bold ${
           dark ? "bg-white/15 text-white" : "bg-bw-950 text-white"
         }`}
       >
@@ -195,8 +195,8 @@ export function ReviewThinStrip({
     <div
       className={`relative overflow-hidden ${
         dark
-          ? "bg-bw-950/80 py-3"
-          : "rounded-2xl border border-bw-200 bg-gradient-to-r from-bw-50 via-white to-bw-50 py-3 shadow-[0_12px_32px_-20px_rgba(0,0,0,0.1)]"
+          ? "bg-bw-950/80 py-2"
+          : "rounded-xl border border-bw-100 bg-bw-50/50 py-2"
       } ${className}`}
     >
       {dark ? (

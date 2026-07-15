@@ -1,78 +1,124 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { CloudSun, Coins } from "lucide-react";
-
-function formatRate(value) {
-  if (!Number.isFinite(value)) return "—";
-  return value.toLocaleString("tr-TR", { maximumFractionDigits: 2 });
-}
-
-export default function FooterWidgets() {
-  const [data, setData] = useState(null);
-
-  useEffect(() => {
-    const load = () => {
-      fetch("/api/footer-widgets")
-        .then((r) => r.json())
-        .then(setData)
-        .catch(() => setData(null));
-    };
-
-    if ("requestIdleCallback" in window) {
-      const id = window.requestIdleCallback(load, { timeout: 3000 });
-      return () => window.cancelIdleCallback(id);
-    }
-
-    const timer = window.setTimeout(load, 1200);
-    return () => window.clearTimeout(timer);
-  }, []);
-
-  const items = [
-    data?.usd ? `USD ${formatRate(data.usd)} ₺` : null,
-    data?.eur ? `EUR ${formatRate(data.eur)} ₺` : null,
-    data?.gold ? `Altın ${formatRate(data.gold)} ₺` : null,
-    data?.weather
-      ? `${data.weather.city} ${data.weather.temp}° · ${data.weather.label}`
-      : null,
-  ].filter(Boolean);
-
-  const fallback = "Kurlar yükleniyor…";
-
-  return (
-    <div className="border-t border-bw-100 bg-bw-50/80 py-3">
-      <div className="mx-auto flex max-w-7xl items-center gap-2 px-4 sm:px-6 lg:px-8">
-        <Coins className="h-3.5 w-3.5 shrink-0 text-bw-400" />
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 sm:hidden">
-            {(items.length ? items : [fallback]).map((text) => (
-              <span
-                key={text}
-                className="inline-flex items-center gap-1.5 text-[10px] font-medium tracking-wide text-bw-500"
-              >
-                {text.includes("°") ? <CloudSun className="h-3 w-3 text-bw-400" /> : null}
-                {text}
-              </span>
-            ))}
-          </div>
-          <div className="hidden min-w-0 flex-1 overflow-hidden sm:block">
-            <div
-              className="review-marquee-track review-marquee-continuous gap-6"
-              style={{ "--marquee-duration": "36s" }}
-            >
-              {(items.length ? [...items, ...items] : [fallback, fallback]).map((text, i) => (
-                <span
-                  key={`${text}-${i}`}
-                  className="inline-flex shrink-0 items-center gap-1.5 text-[10px] font-medium tracking-wide text-bw-500"
-                >
-                  {text.includes("°") ? <CloudSun className="h-3 w-3 text-bw-400" /> : null}
-                  {text}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+"use client";
+
+import { useEffect, useState } from "react";
+import { CloudSun, Coins, TrendingUp } from "lucide-react";
+
+function formatRate(value) {
+  if (!Number.isFinite(value)) return "—";
+  return value.toLocaleString("tr-TR", { maximumFractionDigits: 2 });
+}
+
+function WidgetItem({ icon: Icon, label, value, sub }) {
+  return (
+    <div className="flex min-w-0 flex-1 items-center justify-center gap-2 px-3 py-2 sm:gap-2.5 sm:px-4 sm:py-2.5">
+      <Icon className="h-3.5 w-3.5 shrink-0 text-bw-400" strokeWidth={1.75} />
+      <div className="flex min-w-0 items-baseline gap-1.5 sm:gap-2">
+        <span className="shrink-0 text-[10px] font-semibold tracking-[0.14em] text-bw-400 uppercase">
+          {label}
+        </span>
+        <span className="truncate text-xs font-semibold text-bw-950 sm:text-sm">{value}</span>
+        {sub ? (
+          <span className="hidden truncate text-[10px] text-bw-500 lg:inline">{sub}</span>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+export default function FooterWidgets() {
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    const load = () => {
+      fetch("/api/footer-widgets")
+        .then((r) => r.json())
+        .then(setData)
+        .catch(() => setData(null));
+    };
+
+    if ("requestIdleCallback" in window) {
+      const id = window.requestIdleCallback(load, { timeout: 3000 });
+      return () => window.cancelIdleCallback(id);
+    }
+
+    const timer = window.setTimeout(load, 1200);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  const widgets = [
+    data?.usd
+      ? {
+          id: "usd",
+          icon: Coins,
+          label: "Dolar",
+          value: `${formatRate(data.usd)} ₺`,
+          sub: "USD",
+        }
+      : null,
+    data?.eur
+      ? {
+          id: "eur",
+          icon: TrendingUp,
+          label: "Euro",
+          value: `${formatRate(data.eur)} ₺`,
+          sub: "EUR",
+        }
+      : null,
+    data?.gold
+      ? {
+          id: "gold",
+          icon: Coins,
+          label: "Altın",
+          value: `${formatRate(data.gold)} ₺`,
+          sub: "Gram",
+        }
+      : null,
+    data?.weather
+      ? {
+          id: "weather",
+          icon: CloudSun,
+          label: data.weather.city || "Hava",
+          value: `${data.weather.temp}°`,
+          sub: data.weather.label,
+        }
+      : null,
+  ].filter(Boolean);
+
+  const fallback = [
+    { id: "loading", icon: Coins, label: "Piyasa", value: "Yükleniyor…", sub: null },
+  ];
+
+  const items = widgets.length ? widgets : fallback;
+
+  return (
+    <div className="border-t border-bw-200 bg-bw-50/60">
+      <div className="mx-auto max-w-7xl px-4 py-2.5 sm:px-6 sm:py-3 lg:px-8">
+        <div className="flex flex-wrap items-center justify-center gap-1.5 sm:hidden">
+          {items.map((item) => (
+            <span
+              key={item.id}
+              className="inline-flex items-center gap-1 rounded-full border border-bw-200 bg-white px-2.5 py-1 text-[10px] font-medium text-bw-600"
+            >
+              <item.icon className="h-3 w-3 text-bw-400" />
+              <span className="text-bw-400">{item.label}</span>
+              {item.value}
+            </span>
+          ))}
+        </div>
+
+        <div className="hidden overflow-hidden rounded-xl border border-bw-200 bg-white sm:flex sm:divide-x sm:divide-bw-200">
+          {items.map((item) => (
+            <WidgetItem
+              key={item.id}
+              icon={item.icon}
+              label={item.label}
+              value={item.value}
+              sub={item.sub}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+

@@ -8,6 +8,12 @@ import HeroBackgroundCarousel from "@/components/HeroBackgroundCarousel";
 import HeroBackgroundVideo from "@/components/HeroBackgroundVideo";
 import { ReviewThinStrip } from "@/components/HomeReviews";
 
+const HERO_LINKS = [
+  { href: "/fiyat-karsilastir", label: "Fiyat karşılaştır", icon: BadgeDollarSign },
+  { href: "#vitrin", label: "Vitrine bak", icon: ArrowRight },
+  { href: "/teknoloji", label: "Haberlere git", icon: ArrowRight },
+];
+
 export default function HeroSection({ heroImages = [], heroVideo = "" }) {
   const hasVideo = Boolean(heroVideo);
   const hasPhotos = !hasVideo && heroImages.filter(Boolean).length > 0;
@@ -32,50 +38,57 @@ export default function HeroSection({ heroImages = [], heroVideo = "" }) {
       )}
       <div className="hero-grid absolute inset-0 opacity-[0.07]" aria-hidden />
 
-      <div className="relative mx-auto max-w-5xl px-4 pt-12 pb-4 sm:px-6 sm:pt-20 lg:px-8 lg:pt-24">
-        <div className="text-center">
-          <p className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3.5 py-1 text-[9px] font-semibold tracking-[0.26em] text-white/70 uppercase sm:text-[10px]">
-            <Sparkles className="h-3 w-3 text-white/50" />
+      <div className="relative mx-auto max-w-7xl px-4 pt-10 pb-2 sm:px-6 sm:pt-14 lg:px-8 lg:pt-16">
+        <div className="text-center lg:mx-auto lg:max-w-3xl">
+          <p className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-0.5 text-[9px] font-semibold tracking-[0.22em] text-white/70 uppercase">
+            <Sparkles className="h-2.5 w-2.5 text-white/50" />
             Teknoloji · İkinci El · Güven
           </p>
 
-          <h1 className="mt-5 font-display text-[2.65rem] leading-none font-semibold tracking-[0.22em] text-white uppercase sm:mt-6 sm:text-6xl lg:text-7xl">
+          <h1 className="mt-4 font-display text-[2.1rem] leading-none font-semibold tracking-[0.2em] text-white uppercase sm:text-5xl lg:text-6xl">
             MEPOTIA
           </h1>
 
-          <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-white/70 sm:mt-5 sm:max-w-xl sm:text-base lg:text-lg">
-            Özenle seçilmiş ikinci el ürünlerle dürüst ve şeffaf bir alışveriş deneyimi.
+          <p className="mx-auto mt-3 max-w-md text-xs leading-relaxed text-white/65 sm:text-sm">
+            Özenle seçilmiş ikinci el teknoloji ürünleri — dürüst ve şeffaf vitrin.
           </p>
         </div>
 
-        <div className="mx-auto mt-6 max-w-2xl space-y-3 sm:mt-10 lg:max-w-3xl">
+        <div className="mx-auto mt-5 max-w-xl space-y-2.5 sm:mt-6 lg:max-w-2xl">
           <HeroSearch variant="dark" />
 
-          <div className="grid grid-cols-2 gap-2 sm:gap-3">
-            <Link
-              href="/fiyat-karsilastir"
-              className="inline-flex items-center justify-center gap-1.5 rounded-2xl border border-white/20 bg-white/10 px-3 py-3 text-[11px] font-semibold text-white transition hover:bg-white/15 sm:gap-2 sm:px-5 sm:py-3.5 sm:text-sm"
-            >
-              <BadgeDollarSign className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-              Fiyat karşılaştır
-            </Link>
-            <a
-              href="#vitrin"
-              className="inline-flex items-center justify-center gap-1.5 rounded-2xl bg-white px-3 py-3 text-[11px] font-semibold text-bw-950 shadow-[0_12px_32px_-16px_rgba(255,255,255,0.35)] transition hover:bg-bw-100 sm:gap-2 sm:px-5 sm:py-3.5 sm:text-sm"
-            >
-              Vitrine bak
-              <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-            </a>
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            {HERO_LINKS.map((item) => {
+              const Icon = item.icon;
+              const className =
+                "inline-flex items-center gap-1.5 rounded-xl bg-bw-950 px-3.5 py-2 text-[11px] font-semibold text-white transition hover:bg-bw-800 sm:px-4 sm:py-2.5 sm:text-xs";
+              const inner = (
+                <>
+                  <Icon className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                  {item.label}
+                </>
+              );
+
+              return item.href.startsWith("#") ? (
+                <a key={item.href} href={item.href} className={className}>
+                  {inner}
+                </a>
+              ) : (
+                <Link key={item.href} href={item.href} className={className}>
+                  {inner}
+                </Link>
+              );
+            })}
           </div>
         </div>
       </div>
 
-      <div className="relative z-10 mt-5 md:hidden">
-        <ReviewThinStrip variant="dark" showLabel mobileStatic duration={22} />
-      </div>
-
-      <div className="relative z-10 mx-auto -mt-1 max-w-6xl rounded-t-[2rem] bg-white px-4 pt-5 pb-6 shadow-[0_-24px_48px_-20px_rgba(0,0,0,0.35)] sm:-mt-16 sm:rounded-t-[2.5rem] sm:px-6 sm:pt-8 sm:pb-10 lg:px-10">
+      <div className="relative z-10 mx-auto max-w-7xl rounded-t-[1.5rem] bg-white px-4 pt-4 pb-4 shadow-[0_-16px_40px_-18px_rgba(0,0,0,0.3)] sm:mt-6 sm:rounded-t-[1.75rem] sm:px-6 sm:pt-5 sm:pb-5 lg:px-8">
         <TrustStrip />
+
+        <div className="mt-3 border-t border-bw-100 pt-3 sm:mt-4 sm:pt-4">
+          <ReviewThinStrip variant="light" showLabel duration={32} mobileStatic={false} />
+        </div>
       </div>
     </section>
   );

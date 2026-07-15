@@ -38,7 +38,23 @@ export default async function CategoryPage({ params, searchParams }) {
       <h1 className="mt-3 font-display text-4xl font-semibold tracking-wide text-bw-950">
         {category.name}
       </h1>
+      {category.description ? (
+        <p className="mt-2 max-w-2xl text-sm text-bw-500">{category.description}</p>
+      ) : null}
       <p className="mt-2 text-sm text-bw-500">{count || 0} ürün</p>
+
+      {(category.subcategories || []).length ? (
+        <div className="mt-4 flex flex-wrap gap-2">
+          {category.subcategories.map((sub) => (
+            <span
+              key={sub.id || sub.slug}
+              className="rounded-full border border-bw-200 bg-bw-50 px-3 py-1 text-xs font-medium text-bw-600"
+            >
+              {sub.name}
+            </span>
+          ))}
+        </div>
+      ) : null}
 
       <div className="mt-6 flex flex-wrap gap-2">
         {[

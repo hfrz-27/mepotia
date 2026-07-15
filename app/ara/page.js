@@ -30,11 +30,13 @@ export default async function SearchPage({ searchParams }) {
   return (
     <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
       <BackHomeLink label="Vitrine dön" className="mb-6" />
-      <p className="text-xs tracking-[0.22em] text-bw-500 uppercase">Keşfet</p>
+      <p className="text-xs tracking-[0.22em] text-bw-500 uppercase">Teknoloji vitrin</p>
       <h1 className="mt-2 font-display text-3xl font-semibold tracking-wide text-bw-950 sm:text-4xl">
-        Ürünler
+        Teknoloji ürünleri
       </h1>
-      <p className="mt-2 text-sm text-bw-500">{count || 0} sonuç</p>
+      <p className="mt-2 text-sm text-bw-500">
+        Telefon, bilgisayar, kulaklık, kılıf, şarj ve aksesuar — {count || 0} sonuç
+      </p>
 
       <SearchFiltersPanel
         categories={categories}

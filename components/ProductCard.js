@@ -1,7 +1,7 @@
 import ProductImage from "@/components/ProductImage";
 import Link from "next/link";
 import { BadgeDollarSign, Eye, MapPin } from "lucide-react";
-import { formatPrice, getPrimaryImage, hasDiscount, isSold } from "@/lib/products";
+import { formatPrice, getPrimaryImage, hasDiscount, isSold } from "@/lib/productDisplay";
 
 export default function ProductCard({
   product,

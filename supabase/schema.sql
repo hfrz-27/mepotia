@@ -276,29 +276,51 @@ insert into public.site_settings (id, site_name, phone, whatsapp, email, address
 values (1, 'Mepotia', '05300000000', '905300000000', 'info@mepotia.com', 'İstanbul, Türkiye')
 on conflict (id) do nothing;
 
--- Seed categories
+-- Seed categories (teknoloji vitrin)
 insert into public.categories (id, name, slug, sort_order) values
-  ('11111111-1111-1111-1111-111111111101', 'Elektronik', 'elektronik', 1),
-  ('11111111-1111-1111-1111-111111111102', 'Araba', 'araba', 2),
-  ('11111111-1111-1111-1111-111111111103', 'Motor', 'motor', 3),
-  ('11111111-1111-1111-1111-111111111104', 'Ev', 'ev', 4),
-  ('11111111-1111-1111-1111-111111111105', 'Moda', 'moda', 5),
-  ('11111111-1111-1111-1111-111111111106', 'Kitap', 'kitap', 6),
-  ('11111111-1111-1111-1111-111111111107', 'Spor', 'spor', 7),
-  ('11111111-1111-1111-1111-111111111108', 'Koleksiyon', 'koleksiyon', 8),
-  ('11111111-1111-1111-1111-111111111109', 'Diğer', 'diger', 9)
+  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa01', 'Telefon', 'telefon', 1),
+  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa02', 'Bilgisayar', 'bilgisayar', 2),
+  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa03', 'Tablet', 'tablet', 3),
+  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa04', 'Kulaklık', 'kulaklik', 4),
+  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa05', 'Kılıf & Koruma', 'kilif-koruma', 5),
+  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa06', 'Şarj & Kablo', 'sarj-kablo', 6),
+  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa07', 'Aksesuar', 'aksesuar', 7),
+  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa08', 'Akıllı Saat', 'akilli-saat', 8),
+  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa09', 'Oyun & Konsol', 'oyun-konsol', 9)
 on conflict (slug) do nothing;
 
-insert into public.subcategories (category_id, name, slug, sort_order) values
-  ('11111111-1111-1111-1111-111111111101', 'Telefon', 'telefon', 1),
-  ('11111111-1111-1111-1111-111111111101', 'Bilgisayar', 'bilgisayar', 2),
-  ('11111111-1111-1111-1111-111111111101', 'Tablet', 'tablet', 3),
-  ('11111111-1111-1111-1111-111111111101', 'Oyuncu Ekipmanları', 'oyuncu-ekipmanlari', 4),
-  ('11111111-1111-1111-1111-111111111104', 'Mobilya', 'mobilya', 1),
-  ('11111111-1111-1111-1111-111111111104', 'Beyaz Eşya', 'beyaz-esya', 2),
-  ('11111111-1111-1111-1111-111111111105', 'Ayakkabı', 'ayakkabi', 1),
-  ('11111111-1111-1111-1111-111111111105', 'Saat', 'saat', 2),
-  ('11111111-1111-1111-1111-111111111105', 'Çanta', 'canta', 3)
+insert into public.subcategories (category_id, name, slug, sort_order)
+select c.id, v.name, v.slug, v.sort_order
+from public.categories c
+join (
+  values
+    ('telefon', 'iPhone', 'iphone', 1),
+    ('telefon', 'Android', 'android', 2),
+    ('telefon', 'Yedek parça', 'telefon-yedek-parca', 3),
+    ('bilgisayar', 'Laptop', 'laptop', 1),
+    ('bilgisayar', 'Masaüstü', 'masaustu', 2),
+    ('bilgisayar', 'Monitör', 'monitor', 3),
+    ('tablet', 'iPad', 'ipad', 1),
+    ('tablet', 'Android tablet', 'android-tablet', 2),
+    ('kulaklik', 'Kablosuz', 'kablosuz-kulaklik', 1),
+    ('kulaklik', 'Kablolu', 'kablolu-kulaklik', 2),
+    ('kulaklik', 'Mikrofonlu', 'mikrofonlu-kulaklik', 3),
+    ('kilif-koruma', 'Telefon kılıfı', 'telefon-kilifi', 1),
+    ('kilif-koruma', 'Ekran koruyucu', 'ekran-koruyucu', 2),
+    ('kilif-koruma', 'Tablet kılıfı', 'tablet-kilifi', 3),
+    ('sarj-kablo', 'Şarj aleti', 'sarj-aleti', 1),
+    ('sarj-kablo', 'Powerbank', 'powerbank', 2),
+    ('sarj-kablo', 'Kablo & adaptör', 'kablo-adaptor', 3),
+    ('aksesuar', 'Stand & tutucu', 'stand-tutucu', 1),
+    ('aksesuar', 'Araç aksesuarı', 'arac-aksesuar', 2),
+    ('aksesuar', 'Diğer aksesuar', 'diger-aksesuar', 3),
+    ('akilli-saat', 'Apple Watch', 'apple-watch', 1),
+    ('akilli-saat', 'Akıllı saat', 'akilli-saat-genel', 2),
+    ('akilli-saat', 'Kordon & aksesuar', 'saat-aksesuar', 3),
+    ('oyun-konsol', 'Konsol', 'konsol', 1),
+    ('oyun-konsol', 'Oyun kolu', 'oyun-kolu', 2),
+    ('oyun-konsol', 'Oyuncu ekipmanı', 'oyuncu-ekipmani', 3)
+) as v(cat_slug, name, slug, sort_order) on c.slug = v.cat_slug
 on conflict (slug) do nothing;
 
 -- Sample published products (no seller required for demo)
@@ -312,15 +334,15 @@ insert into public.products (
   'Kutulu, garantili, çok temiz kullanım. Adaptör dahil.',
   48750, 'published', 'used', 'Apple', 'iPhone 15 Pro', 'İzmir', 'Konak',
   1280, true, true, 'admin',
-  '11111111-1111-1111-1111-111111111101', '05301112233', '905301112233'
+  'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa01', '05301112233', '905301112233'
 ),
 (
   '22222222-2222-2222-2222-222222222202',
-  '2022 Model Sedan — Az Km',
-  'Bakımlı, boyasız, düşük kilometreli sedan.',
-  1245000, 'published', 'used', 'Toyota', 'Corolla', 'İzmir', 'Bornova',
+  'AirPods Pro 2',
+  'Az kullanılmış, kutulu kablosuz kulaklık.',
+  7250, 'published', 'used', 'Apple', 'AirPods Pro', 'İzmir', 'Bornova',
   890, false, true, 'admin',
-  '11111111-1111-1111-1111-111111111102', '05304445566', '905304445566'
+  'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa04', '05304445566', '905304445566'
 ),
 (
   '22222222-2222-2222-2222-222222222203',
@@ -328,15 +350,15 @@ insert into public.products (
   'Profesyonel kullanım için ideal. Garantisi devam ediyor.',
   62500, 'published', 'used', 'Apple', 'MacBook Pro', 'Ankara', 'Çankaya',
   2100, true, false, 'admin',
-  '11111111-1111-1111-1111-111111111101', '05307778899', '905307778899'
+  'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa02', '05307778899', '905307778899'
 ),
 (
   '22222222-2222-2222-2222-222222222204',
-  'İskandinav Koltuk Takımı',
-  'Az kullanılmış, lekesiz, modern tasarım.',
-  28900, 'published', 'used', null, null, 'Bursa', 'Nilüfer',
+  'MagSafe Şarj Standı',
+  'Orijinal Apple MagSafe şarj standı, temiz kullanım.',
+  1890, 'published', 'used', 'Apple', 'MagSafe', 'Bursa', 'Nilüfer',
   340, false, false, 'admin',
-  '11111111-1111-1111-1111-111111111104', '05301234567', '905301234567'
+  'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa06', '05301234567', '905301234567'
 )
 on conflict (id) do nothing;
 

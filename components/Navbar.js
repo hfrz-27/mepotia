@@ -143,7 +143,7 @@ export default function Navbar() {
                 { href: "/", label: "Anasayfa" },
                 { href: "/ara", label: "Ürünler" },
                 { href: "/fiyat-karsilastir", label: "Fiyat karşılaştır" },
-                { href: "/kategoriler", label: "Kategoriler" },
+                { href: "/kategoriler", label: "Teknoloji ürünleri" },
                 { href: "/hakkimizda", label: "Hakkımızda" },
                 { href: "/bana-sat", label: "Bize Ürün Sat" },
                 { href: "/urun-iste", label: "Ürün İste" },

@@ -6,6 +6,7 @@ import { ArrowRight, ChevronDown, PenLine, Send, Star, X } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import { ReviewThinStrip, useReviews } from "@/components/ReviewsContext";
 import ReviewsAllPanel from "@/components/ReviewsAllPanel";
+import HomeValueBand from "@/components/HomeValueBand";
 
 const PILLARS = ["Kökler", "Dürüstlük", "Özen"];
 
@@ -88,11 +89,11 @@ export default function CustomerReviews() {
 
   return (
     <section className="border-t border-bw-200 bg-white">
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div className="max-w-xl">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-14">
+        <div className="flex flex-wrap items-start justify-between gap-6 lg:gap-10">
+          <div className="max-w-2xl">
             <p className="text-[10px] tracking-[0.28em] text-bw-500 uppercase">Hikâye</p>
-            <h2 className="mt-1.5 font-display text-xl font-semibold tracking-wide text-bw-950 sm:text-2xl">
+            <h2 className="mt-1.5 font-display text-xl font-semibold tracking-wide text-bw-950 sm:text-3xl lg:text-4xl">
               Geçmişten Gelen Güven
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-bw-600">
@@ -193,6 +194,7 @@ export default function CustomerReviews() {
 
         <ReviewThinStrip variant="light" className="mt-6" showLabel duration={34} mobileStatic />
         <ReviewsAllPanel />
+        <HomeValueBand embedded />
       </div>
     </section>
   );
