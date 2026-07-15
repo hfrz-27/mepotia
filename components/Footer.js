@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Mail, MessageCircle, Phone } from "lucide-react";
 import Logo from "@/components/Logo";
 import FooterSurvey from "@/components/FooterSurvey";
 import FooterWidgets from "@/components/FooterWidgets";
@@ -11,11 +11,8 @@ const EXPLORE_LINKS = [
   { href: "/teknoloji", label: "Teknoloji" },
   { href: "/", label: "Vitrin" },
   { href: "/ara", label: "Keşfet" },
-  { href: "/hakkimizda", label: "Hakkında" },
-  { href: "/en-cok-bakilanlar", label: "En çok bakılanlar" },
   { href: "/bana-sat", label: "Ürünümü sat" },
-  { href: "/urun-iste", label: "Ürün iste" },
-  { href: "/iletisim", label: "İletişim" },
+  { href: "/fiyat-karsilastir", label: "Fiyat karşılaştır" },
 ];
 
 const LEGAL_LINKS = [
@@ -25,71 +22,156 @@ const LEGAL_LINKS = [
   { href: "/sikayet", label: "Şikayet" },
 ];
 
-function FooterGroup({ title, links }) {
-  const [open, setOpen] = useState(false);
+function FooterColumn({ title, children, defaultOpen = false }) {
+  const [open, setOpen] = useState(defaultOpen);
 
   return (
-    <div className="border-b border-bw-100 pb-4 sm:border-0 sm:pb-0">
+    <div className="border-b border-bw-200/60 py-4 last:border-0 sm:border-0 sm:py-0">
       <button
         type="button"
-        onClick={() => setOpen((value) => !value)}
+        onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         className="flex w-full items-center justify-between text-left sm:pointer-events-none"
       >
-        <span className="text-xs font-semibold tracking-[0.2em] text-bw-900 uppercase">{title}</span>
+        <span className="text-[11px] font-bold tracking-[0.22em] text-bw-900 uppercase">{title}</span>
         <ChevronDown
-          className={`h-4 w-4 text-bw-500 transition sm:hidden ${open ? "rotate-180" : ""}`}
+          className={`h-4 w-4 text-bw-400 transition sm:hidden ${open ? "rotate-180" : ""}`}
         />
       </button>
-      <ul className={`${open ? "mt-4 block" : "hidden"} space-y-2.5 text-sm text-bw-500 sm:mt-5 sm:block`}>
-        {links.map((link) => (
-          <li key={link.href}>
-            <Link href={link.href} className="transition hover:text-bw-950">
-              {link.label}
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <div className={`${open ? "mt-3 block" : "hidden"} sm:mt-4 sm:block`}>{children}</div>
     </div>
   );
 }
 
-export default function Footer() {
+function FooterLinkList({ items }) {
   return (
-    <footer className="mt-auto border-t border-bw-200 bg-white">
-      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8 lg:py-14">
-        <div className="grid gap-8 sm:grid-cols-2 sm:gap-12 lg:grid-cols-12 lg:gap-10">
-          <div className="sm:col-span-2 lg:col-span-5">
-            <Logo className="hidden h-9 sm:block" />
-            <p className="mt-0 max-w-lg text-sm leading-relaxed text-bw-500 sm:mt-6 sm:text-base">
-              Mepotia adını Mezopotamya&apos;dan alır. Güvenin, emeğin ve ticaretin köklü geçmişinden
-              ilham alan bu isim, bugün dürüst ve şeffaf bir ikinci el alışveriş anlayışını temsil
-              eder.
+    <ul className="space-y-2.5">
+      {items.map((item) => (
+        <li key={item.href + item.label}>
+          {item.external ? (
+            <a
+              href={item.href}
+              target="_blank"
+              rel="noreferrer"
+              className="text-sm text-bw-600 transition hover:text-bw-950"
+            >
+              {item.label}
+            </a>
+          ) : (
+            <Link href={item.href} className="text-sm text-bw-600 transition hover:text-bw-950">
+              {item.label}
+            </Link>
+          )}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+export default function Footer({ whatsapp, phone, email }) {
+  const wa = whatsapp
+    ? `https://wa.me/${String(whatsapp).replace(/\D/g, "")}`
+    : "https://wa.me/905059574122";
+  const tel = phone ? `tel:${phone}` : "tel:05300000000";
+  const mail = email ? `mailto:${email}` : "mailto:info@mepotia.com";
+
+  const helpLinks = [
+    { href: wa, label: "WhatsApp", external: true },
+    { href: tel, label: "Telefon", external: true },
+    { href: mail, label: "E-posta", external: true },
+    { href: "/iletisim", label: "İletişim sayfası" },
+  ];
+
+  return (
+    <footer className="mt-auto border-t border-bw-200 bg-[#f5f5f7]">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <div className="mb-8 flex flex-col gap-3 border-b border-bw-200/70 pb-6 sm:mb-10 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <Logo className="h-8 sm:h-9" />
+            <p className="mt-3 max-w-sm text-sm leading-relaxed text-bw-500">
+              Dürüst ve şeffaf ikinci el teknoloji vitrini.
             </p>
           </div>
-          <div className="lg:col-span-3">
-            <FooterGroup title="Keşfet" links={EXPLORE_LINKS} />
-          </div>
-          <div className="lg:col-span-4">
-            <FooterGroup title="Yasal" links={LEGAL_LINKS} />
-          </div>
+          <p className="text-[10px] font-semibold tracking-[0.2em] text-bw-400 uppercase sm:text-right">
+            Güvenle al · Güvenle sat
+          </p>
         </div>
 
-        <div className="mt-8 lg:mt-10">
+        <div className="grid gap-0 sm:grid-cols-2 sm:gap-x-10 lg:grid-cols-4 lg:gap-x-12">
+          <FooterColumn title="Yardım" defaultOpen>
+            <p className="mb-3 text-xs leading-relaxed text-bw-500">
+              WhatsApp, telefon veya e-posta ile ulaş.
+            </p>
+            <FooterLinkList items={helpLinks} />
+          </FooterColumn>
+
+          <FooterColumn title="Keşfet">
+            <FooterLinkList items={EXPLORE_LINKS} />
+          </FooterColumn>
+
+          <FooterColumn title="Yasal">
+            <FooterLinkList items={LEGAL_LINKS} />
+          </FooterColumn>
+
+          <FooterColumn title="Destek">
+            <ul className="space-y-2.5">
+              <li>
+                <Link href="/hakkimizda" className="text-sm text-bw-600 transition hover:text-bw-950">
+                  Hakkımızda
+                </Link>
+              </li>
+              <li>
+                <Link href="/urun-iste" className="text-sm text-bw-600 transition hover:text-bw-950">
+                  Ürün iste
+                </Link>
+              </li>
+              <li>
+                <Link href="/en-cok-bakilanlar" className="text-sm text-bw-600 transition hover:text-bw-950">
+                  En çok bakılanlar
+                </Link>
+              </li>
+            </ul>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <a
+                href={wa}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-full bg-bw-950 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-bw-800"
+              >
+                <MessageCircle className="h-3.5 w-3.5" />
+                WhatsApp
+              </a>
+              <a
+                href={tel}
+                className="inline-flex items-center gap-1.5 rounded-full border border-bw-200 bg-white px-3 py-1.5 text-xs font-semibold text-bw-800 transition hover:border-bw-300"
+              >
+                <Phone className="h-3.5 w-3.5" />
+                Ara
+              </a>
+              <a
+                href={mail}
+                className="inline-flex items-center gap-1.5 rounded-full border border-bw-200 bg-white px-3 py-1.5 text-xs font-semibold text-bw-800 transition hover:border-bw-300"
+              >
+                <Mail className="h-3.5 w-3.5" />
+                Mail
+              </a>
+            </div>
+          </FooterColumn>
+        </div>
+
+        <div className="mt-6 sm:mt-8">
           <FooterSurvey />
         </div>
       </div>
 
-      <FooterWidgets />
-
-      <div className="border-t border-bw-100 bg-white">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-5 sm:flex-row sm:px-6 lg:px-8 lg:py-6">
-          <p className="text-xs text-bw-400">
-            © {new Date().getFullYear()} Mepotia. Tüm hakları saklıdır.
-          </p>
-          <p className="text-[10px] tracking-[0.18em] text-bw-400 uppercase">
-            Güvenle al · Güvenle sat
-          </p>
+      <div className="border-t border-bw-200 bg-white">
+        <FooterWidgets />
+        <div className="border-t border-bw-100">
+          <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 lg:px-8">
+            <p className="text-center text-xs text-bw-400">
+              © {new Date().getFullYear()} Mepotia. Tüm hakları saklıdır.
+            </p>
+          </div>
         </div>
       </div>
     </footer>

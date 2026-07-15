@@ -37,7 +37,7 @@ export function TechNewsHomeCard({ post, index = 0 }) {
         ) : null}
       </div>
 
-      <div className="relative mx-6 mb-6 mt-auto h-[200px] sm:mx-7 sm:mb-8 sm:h-[240px] lg:h-[260px]">
+      <div className="relative mx-6 mb-6 mt-4 h-[210px] sm:mx-7 sm:mt-5 sm:mb-7 sm:h-[250px] lg:h-[270px]">
         {post.cover_url ? (
           <CoverImage
             src={post.cover_url}

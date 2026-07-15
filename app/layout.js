@@ -1,4 +1,5 @@
 import AppShell from "@/components/AppShell";
+import SiteFooter from "@/components/SiteFooter";
 import { Outfit, Cinzel } from "next/font/google";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_OG_DESCRIPTION, SITE_URL } from "@/lib/site";
 import "./globals.css";
@@ -85,7 +86,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${outfit.variable} ${cinzel.variable} flex min-h-screen flex-col bg-bw-50 text-bw-900 antialiased`}
       >
-        <AppShell>{children}</AppShell>
+        <AppShell footer={<SiteFooter />}>{children}</AppShell>
       </body>
     </html>
   );

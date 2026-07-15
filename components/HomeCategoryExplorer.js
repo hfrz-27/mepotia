@@ -22,53 +22,55 @@ export default function HomeCategoryExplorer({ categories = [], productsByCatego
   const activeProducts = productsByCategory[activeSlug] || productsByCategory[items[0]?.slug] || [];
 
   return (
-    <div className="border-t border-bw-200/70 bg-white">
-      <div className="border-b border-bw-200/70 bg-white/90 backdrop-blur-md">
-        <div className="flex items-center gap-3 px-4 py-3 sm:gap-4 sm:px-6 sm:py-3.5 lg:px-8">
-          <Link
-            href="/kategoriler"
-            prefetch
-            className="inline-flex shrink-0 items-center gap-2 rounded-full bg-[#f5f5f7] px-4 py-2.5 text-sm font-medium text-bw-800 shadow-[0_1px_4px_rgba(0,0,0,0.06)] transition hover:bg-[#ebebed]"
-          >
-            <LayoutGrid className="h-4 w-4 text-bw-700" strokeWidth={1.75} />
-            <span>Tüm Kategoriler</span>
-            <ChevronDown className="h-4 w-4 text-bw-500" strokeWidth={1.75} />
-          </Link>
+    <div className="bg-white">
+      <div className="relative border-b border-bw-200/80 bg-gradient-to-b from-[#f5f5f7] via-[#f8f8fa] to-white shadow-[0_8px_24px_-20px_rgba(0,0,0,0.18)]">
+        <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 sm:py-5 lg:px-8">
+          <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center sm:gap-4">
+            <Link
+              href="/kategoriler"
+              prefetch
+              className="inline-flex shrink-0 items-center gap-2.5 rounded-2xl border border-white/80 bg-white px-5 py-3 text-sm font-semibold text-bw-900 shadow-[0_4px_20px_-8px_rgba(0,0,0,0.15)] transition hover:border-bw-200 hover:shadow-[0_8px_28px_-10px_rgba(0,0,0,0.18)]"
+            >
+              <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#f5f5f7]">
+                <LayoutGrid className="h-4 w-4 text-bw-800" strokeWidth={1.75} />
+              </span>
+              <span>Tüm Kategoriler</span>
+              <ChevronDown className="h-4 w-4 text-bw-500" strokeWidth={1.75} />
+            </Link>
 
-          <span className="hidden h-7 w-px shrink-0 bg-bw-200/80 sm:block" aria-hidden />
-
-          <nav
-            aria-label="Kategoriler"
-            className="hide-scrollbar flex min-w-0 flex-1 items-center gap-0.5 overflow-x-auto sm:gap-1"
-          >
-            {items.map((cat) => {
-              const selected = cat.slug === activeSlug;
-              return (
-                <button
-                  key={cat.slug}
-                  type="button"
-                  onClick={() => setActiveSlug(cat.slug)}
-                  aria-pressed={selected}
-                  className={`shrink-0 whitespace-nowrap rounded-full px-3 py-2 text-[15px] font-medium tracking-tight transition sm:px-4 ${
-                    selected
-                      ? "bg-bw-950 text-white shadow-sm"
-                      : "text-bw-600 hover:bg-bw-50 hover:text-bw-950"
-                  }`}
-                >
-                  {cat.name}
-                </button>
-              );
-            })}
-          </nav>
+            <nav
+              aria-label="Kategoriler"
+              className="hide-scrollbar inline-flex max-w-full items-center gap-1 overflow-x-auto rounded-2xl border border-bw-200/70 bg-white/70 p-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_2px_16px_-10px_rgba(0,0,0,0.12)] backdrop-blur-sm sm:gap-1.5 sm:p-2"
+            >
+              {items.map((cat) => {
+                const selected = cat.slug === activeSlug;
+                return (
+                  <button
+                    key={cat.slug}
+                    type="button"
+                    onClick={() => setActiveSlug(cat.slug)}
+                    aria-pressed={selected}
+                    className={`shrink-0 whitespace-nowrap rounded-xl px-4 py-2.5 text-[15px] font-semibold tracking-tight transition sm:px-5 ${
+                      selected
+                        ? "bg-bw-950 text-white shadow-[0_4px_14px_-6px_rgba(0,0,0,0.45)]"
+                        : "text-bw-700 hover:bg-[#f5f5f7] hover:text-bw-950"
+                    }`}
+                  >
+                    {cat.name}
+                  </button>
+                );
+              })}
+            </nav>
+          </div>
         </div>
       </div>
 
-      <div className="bg-bw-50/50 py-5 sm:py-6">
-        <div className="mx-auto mb-4 max-w-7xl px-4 sm:px-6 lg:px-8">
-          <p className="text-xs font-semibold tracking-wide text-bw-500 uppercase">
+      <div className="bg-gradient-to-b from-white to-bw-50/60 py-6 sm:py-7">
+        <div className="mx-auto mb-5 max-w-7xl px-4 text-center sm:px-6 lg:px-8">
+          <p className="text-[11px] font-bold tracking-[0.2em] text-bw-500 uppercase">
             {active?.name} vitrini
           </p>
-          <h3 className="mt-1 text-lg font-semibold tracking-tight text-bw-950 sm:text-xl">
+          <h3 className="mt-2 font-display text-xl font-semibold tracking-tight text-bw-950 sm:text-2xl">
             {active?.description}
           </h3>
         </div>

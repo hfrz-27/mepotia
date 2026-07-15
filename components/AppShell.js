@@ -3,14 +3,13 @@
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import WhatsAppHelpButton from "@/components/WhatsAppHelpButton";
 
 const GlobalNewsDrawer = dynamic(() => import("@/components/GlobalNewsDrawer"), {
   ssr: false,
 });
 
-export default function AppShell({ children }) {
+export default function AppShell({ children, footer }) {
   const pathname = usePathname();
   const isAdmin = pathname === "/admin" || pathname?.startsWith("/admin/");
   const bare =
@@ -24,7 +23,7 @@ export default function AppShell({ children }) {
       <div className="flex-1">{children}</div>
       {bare ? null : (
         <>
-          <Footer />
+          {footer}
           <WhatsAppHelpButton />
           <GlobalNewsDrawer />
         </>

@@ -6,7 +6,6 @@ import { ArrowRight, ChevronDown, PenLine, Send, Star, X } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import { ReviewThinStrip, useReviews } from "@/components/ReviewsContext";
 import ReviewsAllPanel from "@/components/ReviewsAllPanel";
-import HomeValueBand from "@/components/HomeValueBand";
 
 const PILLARS = ["Kökler", "Dürüstlük", "Özen"];
 
@@ -194,7 +193,6 @@ export default function CustomerReviews() {
 
         <ReviewThinStrip variant="light" className="mt-6" showLabel duration={34} mobileStatic />
         <ReviewsAllPanel />
-        <HomeValueBand embedded />
       </div>
     </section>
   );

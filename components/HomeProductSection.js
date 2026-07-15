@@ -13,7 +13,12 @@ export default function HomeProductSection({
   prefetchCount = 2,
   ariaLabel,
 }) {
-  const bg = tone === "bw-50" ? "bg-bw-50" : "bg-white";
+  const bg =
+    tone === "footer"
+      ? "bg-[#f5f5f7]"
+      : tone === "bw-50"
+        ? "bg-bw-50"
+        : "bg-white";
 
   return (
     <section id={id} className={`scroll-mt-28 border-y border-bw-200 ${bg}`}>

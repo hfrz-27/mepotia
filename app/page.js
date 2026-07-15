@@ -1,8 +1,8 @@
 import HeroSection from "@/components/HeroSection";
 import TechNewsSection from "@/components/TechNewsSection";
 import HomePriceCompareSection from "@/components/HomePriceCompareSection";
-import HomeContactBand from "@/components/HomeContactBand";
 import HomeProductSection from "@/components/HomeProductSection";
+import HomeValueBand from "@/components/HomeValueBand";
 import { getPublishedProducts } from "@/lib/products";
 import { getCategoriesWithSubs, getSiteSettings } from "@/lib/categories";
 import { fillFeatured, fillProducts } from "@/lib/homeDemoData";
@@ -40,7 +40,7 @@ export default async function HomePage() {
 
         <TechNewsSection categories={categories} />
 
-        <HomePriceCompareSection />
+        <HomePriceCompareSection heroImage={settings?.price_compare_bg_1} />
 
         {featured.length ? (
           <HomeProductSection
@@ -89,8 +89,11 @@ export default async function HomePage() {
           </section>
         )}
 
+        <HomeValueBand />
+
         {popular.length ? (
           <HomeProductSection
+            tone="footer"
             eyebrow="Popüler"
             title="En çok bakılanlar"
             description="Ziyaretçilerin en çok ilgi gösterdiği ilanlar."
@@ -101,12 +104,6 @@ export default async function HomePage() {
             ariaLabel="Popüler ürünler"
           />
         ) : null}
-
-        <HomeContactBand
-          whatsapp={settings?.whatsapp}
-          phone={settings?.phone}
-          email={settings?.email}
-        />
 
         <CustomerReviews />
       </main>
