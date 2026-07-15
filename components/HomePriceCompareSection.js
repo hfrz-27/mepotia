@@ -17,7 +17,7 @@ export default function HomePriceCompareSection({
   const imageSrc = heroImage || DEMO_IMG;
 
   return (
-    <section className="relative overflow-hidden border-y border-bw-200 bg-[#f8f8fa]">
+    <section className="relative overflow-hidden border-y border-bw-200 bg-white sm:bg-[#f8f8fa]">
       <div
         className="pointer-events-none absolute -right-24 top-1/2 h-72 w-72 -translate-y-1/2 rounded-full bg-bw-200/40 blur-3xl"
         aria-hidden

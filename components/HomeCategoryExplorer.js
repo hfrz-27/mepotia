@@ -20,12 +20,65 @@ export default function HomeCategoryExplorer({ categories = [], productsByCatego
 
   const active = items.find((c) => c.slug === activeSlug) || items[0];
   const activeProducts = productsByCategory[activeSlug] || productsByCategory[items[0]?.slug] || [];
+  const inactiveItems = items.filter((cat) => cat.slug !== activeSlug);
+  const ActiveIcon = active?.icon;
+
+  const categoryButtonClass = (selected) =>
+    `shrink-0 whitespace-nowrap rounded-xl font-semibold tracking-tight transition ${
+      selected
+        ? "bg-bw-950 text-white shadow-[0_4px_14px_-6px_rgba(0,0,0,0.45)]"
+        : "text-bw-700 hover:bg-[#f5f5f7] hover:text-bw-950"
+    }`;
 
   return (
     <div className="bg-white">
-      <div className="relative border-b border-bw-200/80 bg-gradient-to-b from-[#f5f5f7] via-[#f8f8fa] to-white shadow-[0_8px_24px_-20px_rgba(0,0,0,0.18)]">
-        <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 sm:py-5 lg:px-8">
-          <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center sm:gap-4">
+      <div className="relative border-b border-bw-200/80 bg-white shadow-[0_8px_24px_-20px_rgba(0,0,0,0.18)] sm:bg-gradient-to-b sm:from-[#f5f5f7] sm:via-[#f8f8fa] sm:to-white">
+        <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 sm:py-5 lg:px-8">
+          <div className="flex items-center gap-2 sm:hidden">
+            <Link
+              href="/kategoriler"
+              prefetch
+              aria-label="Tüm kategoriler"
+              className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-bw-200 bg-white text-bw-800 shadow-[0_4px_16px_-10px_rgba(0,0,0,0.15)]"
+            >
+              <LayoutGrid className="h-4 w-4" strokeWidth={1.75} />
+            </Link>
+
+            {active ? (
+              <button
+                type="button"
+                aria-pressed
+                className={`inline-flex shrink-0 items-center gap-2 px-3 py-2 text-sm ${categoryButtonClass(true)}`}
+              >
+                {ActiveIcon ? (
+                  <ActiveIcon className="h-4 w-4 shrink-0" strokeWidth={1.75} />
+                ) : null}
+                <span>{active.name}</span>
+              </button>
+            ) : null}
+
+            <nav
+              aria-label="Diğer kategoriler"
+              className="hide-scrollbar news-touch-scroll flex min-w-0 flex-1 items-center gap-1.5 overflow-x-auto rounded-2xl border border-bw-200/70 bg-white/90 p-1.5"
+            >
+              {inactiveItems.map((cat) => {
+                const Icon = cat.icon;
+                return (
+                  <button
+                    key={cat.slug}
+                    type="button"
+                    onClick={() => setActiveSlug(cat.slug)}
+                    className={`inline-flex shrink-0 items-center gap-2 px-3 py-2 text-sm ${categoryButtonClass(false)}`}
+                  >
+                    <Icon className="h-4 w-4 shrink-0" strokeWidth={1.75} />
+                    <span>{cat.name}</span>
+                  </button>
+                );
+              })}
+            </nav>
+          </div>
+
+          <div className="hidden flex-col items-center gap-3 sm:flex sm:flex-row sm:justify-center sm:gap-4">
             <Link
               href="/kategoriler"
               prefetch
@@ -50,11 +103,7 @@ export default function HomeCategoryExplorer({ categories = [], productsByCatego
                     type="button"
                     onClick={() => setActiveSlug(cat.slug)}
                     aria-pressed={selected}
-                    className={`shrink-0 whitespace-nowrap rounded-xl px-4 py-2.5 text-[15px] font-semibold tracking-tight transition sm:px-5 ${
-                      selected
-                        ? "bg-bw-950 text-white shadow-[0_4px_14px_-6px_rgba(0,0,0,0.45)]"
-                        : "text-bw-700 hover:bg-[#f5f5f7] hover:text-bw-950"
-                    }`}
+                    className={`px-4 py-2.5 text-[15px] sm:px-5 ${categoryButtonClass(selected)}`}
                   >
                     {cat.name}
                   </button>
@@ -65,7 +114,7 @@ export default function HomeCategoryExplorer({ categories = [], productsByCatego
         </div>
       </div>
 
-      <div className="bg-gradient-to-b from-white to-bw-50/60 py-6 sm:py-7">
+      <div className="bg-white py-6 sm:bg-gradient-to-b sm:from-white sm:to-bw-50/60 sm:py-7">
         <div className="mx-auto mb-5 max-w-7xl px-4 text-center sm:px-6 lg:px-8">
           <p className="text-[11px] font-bold tracking-[0.2em] text-bw-500 uppercase">
             {active?.name} vitrini
@@ -82,7 +131,6 @@ export default function HomeCategoryExplorer({ categories = [], productsByCatego
           linkLabel={`Tüm ${active?.name?.toLowerCase()} ilanları`}
           prefetchCount={2}
           ariaLabel={`${active?.name} ürünleri`}
-          fadeFrom="from-bw-50/50"
         />
       </div>
     </div>

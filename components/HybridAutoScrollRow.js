@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const SCROLL_SPEED = 0.32;
 const RESUME_DELAY_MS = 5000;
 
 export default function HybridAutoScrollRow({
@@ -11,6 +10,7 @@ export default function HybridAutoScrollRow({
   gap = "gap-3",
   ariaLabel,
   autoScroll = true,
+  scrollSpeed = 0.32,
 }) {
   const scrollerRef = useRef(null);
   const loopWidthRef = useRef(0);
@@ -42,7 +42,7 @@ export default function HybridAutoScrollRow({
     let frame = 0;
     const tick = () => {
       if (!pausedRef.current && loopWidthRef.current > 0) {
-        el.scrollLeft += SCROLL_SPEED;
+        el.scrollLeft += scrollSpeed;
         if (el.scrollLeft >= loopWidthRef.current) {
           el.scrollLeft -= loopWidthRef.current;
         }
@@ -57,7 +57,7 @@ export default function HybridAutoScrollRow({
       resizeObserver.disconnect();
       if (resumeTimerRef.current) window.clearTimeout(resumeTimerRef.current);
     };
-  }, [autoScroll, children]);
+  }, [autoScroll, children, scrollSpeed]);
 
   const pause = () => {
     pausedRef.current = true;

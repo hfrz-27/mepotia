@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Cpu } from "lucide-react";
 import TechNewsViewSync from "@/components/TechNewsViewSync";
+import TechNewsHybridScroll from "@/components/TechNewsHybridScroll";
 import TechNewsCard from "@/components/TechNewsCard";
 import TechNewsPageHero from "@/components/TechNewsPageHero";
 import PremiumPagination from "@/components/PremiumPagination";
@@ -60,7 +61,7 @@ export default async function TeknolojiPage({ searchParams }) {
   }
 
   return (
-    <main className="min-h-screen bg-bw-50">
+    <main className="min-h-screen bg-white sm:bg-bw-50">
       <Suspense fallback={null}>
         <TechNewsViewSync />
       </Suspense>
@@ -81,7 +82,11 @@ export default async function TeknolojiPage({ searchParams }) {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
+            <div className="sm:hidden">
+              <TechNewsHybridScroll posts={posts} />
+            </div>
+
+            <div className="hidden grid-cols-1 gap-4 sm:grid sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
               {posts.map((post, index) => (
                 <TechNewsCard key={post.id} post={post} index={index} />
               ))}

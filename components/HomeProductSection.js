@@ -15,9 +15,9 @@ export default function HomeProductSection({
 }) {
   const bg =
     tone === "footer"
-      ? "bg-[#f5f5f7]"
+      ? "bg-white sm:bg-[#f5f5f7]"
       : tone === "bw-50"
-        ? "bg-bw-50"
+        ? "bg-white sm:bg-bw-50"
         : "bg-white";
 
   return (

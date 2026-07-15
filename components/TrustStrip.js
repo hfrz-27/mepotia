@@ -1,7 +1,7 @@
 "use client";
 
 import { Eye, Heart, ShieldCheck } from "lucide-react";
-import PremiumScrollRow from "@/components/PremiumScrollRow";
+import HybridAutoScrollRow from "@/components/HybridAutoScrollRow";
 
 const TRUST = [
   {
@@ -56,11 +56,11 @@ export default function TrustStrip() {
         <p className="mb-2 text-[9px] font-semibold tracking-[0.2em] text-bw-400 uppercase">
           Neden Mepotia?
         </p>
-        <PremiumScrollRow ariaLabel="Güven ilkeleri" gap="gap-2">
+        <HybridAutoScrollRow ariaLabel="Güven ilkeleri" gap="gap-2" scrollSpeed={0.18}>
           {TRUST.map((item) => (
             <TrustCard key={item.t} item={item} compact />
           ))}
-        </PremiumScrollRow>
+        </HybridAutoScrollRow>
       </div>
 
       <div className="hidden gap-6 rounded-2xl border border-bw-200 bg-white px-6 py-5 text-center md:grid md:grid-cols-3 lg:gap-8 lg:px-8 lg:py-6">

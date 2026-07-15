@@ -1,4 +1,7 @@
+"use client";
+
 import { Eye, Handshake, ShieldCheck, Sparkles } from "lucide-react";
+import HybridAutoScrollRow from "@/components/HybridAutoScrollRow";
 
 const VALUES = [
   { icon: ShieldCheck, title: "Güvenle al, güvenle sat", text: "Şeffaf fiyat" },
@@ -7,24 +10,56 @@ const VALUES = [
   { icon: Sparkles, title: "Premium deneyim", text: "Sade arayüz" },
 ];
 
+function ValueCard({ item, compact = false }) {
+  const Icon = item.icon;
+
+  return (
+    <div
+      className={`flex shrink-0 items-center gap-2.5 rounded-2xl border border-bw-200 bg-bw-50/80 ${
+        compact ? "w-[9.5rem] px-3 py-2.5" : "w-44 gap-3 px-4 py-3 sm:w-48"
+      }`}
+    >
+      <span
+        className={`flex shrink-0 items-center justify-center rounded-xl bg-bw-950 text-white ${
+          compact ? "h-8 w-8" : "h-10 w-10"
+        }`}
+      >
+        <Icon className={compact ? "h-3.5 w-3.5" : "h-4 w-4"} strokeWidth={1.75} />
+      </span>
+      <div className="min-w-0 text-left">
+        <p className={`font-semibold text-bw-950 ${compact ? "text-[10px] leading-tight" : "text-xs"}`}>
+          {item.title}
+        </p>
+        <p className={`text-bw-500 ${compact ? "text-[9px]" : "text-[11px]"}`}>{item.text}</p>
+      </div>
+    </div>
+  );
+}
+
 export default function HomeValueBand({ embedded = false }) {
-  const content = (
-    <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+  const desktopContent = (
+    <div className="hidden flex-wrap items-center justify-center gap-3 sm:flex sm:gap-4">
       {VALUES.map((item) => (
-        <div
-          key={item.title}
-          className="flex w-44 items-center gap-3 rounded-2xl border border-bw-200 bg-bw-50/80 px-4 py-3 sm:w-48"
-        >
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-bw-950 text-white">
-            <item.icon className="h-4 w-4" strokeWidth={1.75} />
-          </span>
-          <div className="min-w-0 text-left">
-            <p className="text-xs font-semibold text-bw-950">{item.title}</p>
-            <p className="text-[11px] text-bw-500">{item.text}</p>
-          </div>
-        </div>
+        <ValueCard key={item.title} item={item} />
       ))}
     </div>
+  );
+
+  const mobileContent = (
+    <div className="sm:hidden">
+      <HybridAutoScrollRow ariaLabel="Güven ve şeffaflık" gap="gap-2.5" scrollSpeed={0.18}>
+        {VALUES.map((item) => (
+          <ValueCard key={item.title} item={item} compact />
+        ))}
+      </HybridAutoScrollRow>
+    </div>
+  );
+
+  const content = (
+    <>
+      {mobileContent}
+      {desktopContent}
+    </>
   );
 
   if (embedded) {
@@ -33,7 +68,7 @@ export default function HomeValueBand({ embedded = false }) {
 
   return (
     <section className="border-y border-bw-200 bg-white">
-      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">{content}</div>
+      <div className="mx-auto max-w-7xl px-4 py-5 sm:px-6 sm:py-8 lg:px-8">{content}</div>
     </section>
   );
 }

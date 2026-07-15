@@ -3,6 +3,7 @@ import TechNewsSection from "@/components/TechNewsSection";
 import HomePriceCompareSection from "@/components/HomePriceCompareSection";
 import HomeProductSection from "@/components/HomeProductSection";
 import HomeValueBand from "@/components/HomeValueBand";
+import HomeMobileTopBand from "@/components/HomeMobileTopBand";
 import { getPublishedProducts } from "@/lib/products";
 import { getCategoriesWithSubs, getSiteSettings } from "@/lib/categories";
 import { fillFeatured, fillProducts } from "@/lib/homeDemoData";
@@ -38,6 +39,8 @@ export default async function HomePage() {
           heroImages={[settings?.hero_bg_1, settings?.hero_bg_2, settings?.hero_bg_3].filter(Boolean)}
         />
 
+        <HomeMobileTopBand />
+
         <TechNewsSection categories={categories} />
 
         <HomePriceCompareSection heroImage={settings?.price_compare_bg_1} />
@@ -69,7 +72,7 @@ export default async function HomePage() {
             ariaLabel="Vitrin ürünleri"
           />
         ) : (
-          <section id="vitrin" className="scroll-mt-28 border-y border-bw-200 bg-bw-50">
+          <section id="vitrin" className="scroll-mt-28 border-y border-bw-200 bg-white sm:bg-bw-50">
             <div className="mx-auto max-w-7xl px-4 py-8 text-center sm:px-6 sm:py-10 lg:px-8">
               <p className="font-display text-xl text-bw-900">
                 {vitrinError ? "Vitrin yüklenemedi" : "Henüz ürün yok"}

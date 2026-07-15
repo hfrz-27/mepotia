@@ -4,6 +4,7 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState } f
 import { MessageSquareQuote, Star } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import { fillReviews } from "@/lib/homeDemoData";
+import HybridAutoScrollRow from "@/components/HybridAutoScrollRow";
 
 const ReviewsContext = createContext(null);
 
@@ -226,25 +227,39 @@ export function ReviewThinStrip({
           </p>
         ) : (
           <>
-            <div
-              className={`pointer-events-none absolute inset-y-0 left-0 z-10 hidden w-5 bg-gradient-to-r sm:block ${
-                dark ? "from-bw-950/40" : "from-white/35"
-              } to-transparent`}
-              aria-hidden
-            />
-            <div
-              className={`pointer-events-none absolute inset-y-0 right-0 z-10 hidden w-5 bg-gradient-to-l sm:block ${
-                dark ? "from-bw-950/40" : "from-white/35"
-              } to-transparent`}
-              aria-hidden
-            />
-            <ReviewMarquee
-              reviews={reviews}
-              variant={variant}
-              duration={marqueeDuration}
-              pauseOnHover={pauseOnHover}
-              mobileStatic={mobileStatic}
-            />
+            <div className="sm:hidden">
+              <HybridAutoScrollRow
+                ariaLabel="Müşteri yorumları"
+                gap="gap-2.5"
+                scrollSpeed={0.2}
+              >
+                {reviews.slice(0, 8).map((review) => (
+                  <ReviewChip key={review.id} review={review} variant={variant} />
+                ))}
+              </HybridAutoScrollRow>
+            </div>
+
+            <div className="hidden sm:block">
+              <div
+                className={`pointer-events-none absolute inset-y-0 left-0 z-10 hidden w-5 bg-gradient-to-r sm:block ${
+                  dark ? "from-bw-950/40" : "from-white/35"
+                } to-transparent`}
+                aria-hidden
+              />
+              <div
+                className={`pointer-events-none absolute inset-y-0 right-0 z-10 hidden w-5 bg-gradient-to-l sm:block ${
+                  dark ? "from-bw-950/40" : "from-white/35"
+                } to-transparent`}
+                aria-hidden
+              />
+              <ReviewMarquee
+                reviews={reviews}
+                variant={variant}
+                duration={marqueeDuration}
+                pauseOnHover={pauseOnHover}
+                mobileStatic={false}
+              />
+            </div>
           </>
         )}
       </div>

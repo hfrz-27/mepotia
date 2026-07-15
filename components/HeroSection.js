@@ -86,7 +86,7 @@ export default function HeroSection({ heroImages = [], heroVideo = "" }) {
       <div className="relative z-10 mx-auto max-w-7xl rounded-t-[1.5rem] bg-white px-4 pt-4 pb-4 shadow-[0_-16px_40px_-18px_rgba(0,0,0,0.3)] sm:mt-6 sm:rounded-t-[1.75rem] sm:px-6 sm:pt-5 sm:pb-5 lg:px-8">
         <TrustStrip />
 
-        <div className="mt-3 border-t border-bw-100 pt-3 sm:mt-4 sm:pt-4">
+        <div className="mt-3 hidden border-t border-bw-100 pt-3 sm:mt-4 sm:block sm:pt-4">
           <ReviewThinStrip variant="light" showLabel duration={32} mobileStatic={false} />
         </div>
       </div>

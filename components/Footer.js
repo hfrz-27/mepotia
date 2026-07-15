@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ChevronDown, Mail, MessageCircle, Phone } from "lucide-react";
-import Logo from "@/components/Logo";
 import FooterSurvey from "@/components/FooterSurvey";
 import FooterWidgets from "@/components/FooterWidgets";
 
@@ -85,17 +84,7 @@ export default function Footer({ whatsapp, phone, email }) {
   return (
     <footer className="mt-auto border-t border-bw-200 bg-[#f5f5f7]">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mb-8 flex flex-col gap-3 border-b border-bw-200/70 pb-6 sm:mb-10 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <Logo className="h-8 sm:h-9" />
-            <p className="mt-3 max-w-sm text-sm leading-relaxed text-bw-500">
-              Dürüst ve şeffaf ikinci el teknoloji vitrini.
-            </p>
-          </div>
-          <p className="text-[10px] font-semibold tracking-[0.2em] text-bw-400 uppercase sm:text-right">
-            Güvenle al · Güvenle sat
-          </p>
-        </div>
+        <div className="mb-6 border-b border-bw-200/70 sm:mb-10" aria-hidden />
 
         <div className="grid gap-0 sm:grid-cols-2 sm:gap-x-10 lg:grid-cols-4 lg:gap-x-12">
           <FooterColumn title="Yardım" defaultOpen>
