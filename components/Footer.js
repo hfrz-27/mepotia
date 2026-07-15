@@ -25,19 +25,23 @@ function FooterColumn({ title, children, defaultOpen = false }) {
   const [open, setOpen] = useState(defaultOpen);
 
   return (
-    <div className="border-b border-bw-200/60 py-4 last:border-0 sm:border-0 sm:py-0">
+    <div
+      className={`border-b border-bw-200/60 py-3 last:border-0 sm:border-0 sm:py-0 ${
+        open ? "rounded-2xl bg-white px-3 sm:rounded-none sm:bg-transparent sm:px-0" : ""
+      }`}
+    >
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className="flex w-full items-center justify-between text-left sm:pointer-events-none"
+        className="flex w-full items-center justify-between py-1 text-left sm:pointer-events-none"
       >
         <span className="text-[11px] font-bold tracking-[0.22em] text-bw-900 uppercase">{title}</span>
         <ChevronDown
           className={`h-4 w-4 text-bw-400 transition sm:hidden ${open ? "rotate-180" : ""}`}
         />
       </button>
-      <div className={`${open ? "mt-3 block" : "hidden"} sm:mt-4 sm:block`}>{children}</div>
+      <div className={`${open ? "mt-2 block pb-1" : "hidden"} sm:mt-4 sm:block sm:pb-0`}>{children}</div>
     </div>
   );
 }

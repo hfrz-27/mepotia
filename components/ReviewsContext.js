@@ -187,17 +187,20 @@ export function ReviewThinStrip({
   showLabel = false,
   pauseOnHover = true,
   mobileStatic = true,
+  compact = false,
 }) {
   const { reviews, loading } = useReviews();
   const dark = variant === "dark";
   const marqueeDuration = duration ?? (dark ? 28 : 38);
+  const pad = compact ? "py-1.5" : "py-2";
+  const labelMb = compact ? "mb-1.5" : "mb-2";
 
   return (
     <div
       className={`relative overflow-hidden ${
         dark
-          ? "bg-bw-950/80 py-2"
-          : "rounded-xl border border-bw-100 bg-bw-50/50 py-2"
+          ? `bg-transparent ${pad}`
+          : `rounded-xl border border-bw-100 bg-bw-50/50 ${pad}`
       } ${className}`}
     >
       {dark ? (
@@ -209,8 +212,8 @@ export function ReviewThinStrip({
 
       {showLabel ? (
         <p
-          className={`relative mb-2 flex items-center justify-center gap-1.5 text-[9px] font-semibold tracking-[0.22em] uppercase ${
-            dark ? "text-white/40" : "text-bw-400"
+          className={`relative ${labelMb} flex items-center justify-center gap-1.5 text-[9px] font-semibold tracking-[0.22em] uppercase ${
+            dark ? "text-white/50" : "text-bw-400"
           }`}
         >
           <MessageSquareQuote className="h-3 w-3" />

@@ -15,22 +15,22 @@ function ValueCard({ item, compact = false }) {
 
   return (
     <div
-      className={`flex shrink-0 items-center gap-2.5 rounded-2xl border border-bw-200 bg-bw-50/80 ${
+      className={`flex shrink-0 items-center gap-2.5 rounded-2xl border border-bw-800 bg-bw-950 shadow-[0_12px_32px_-20px_rgba(0,0,0,0.55)] ${
         compact ? "w-[9.5rem] px-3 py-2.5" : "w-44 gap-3 px-4 py-3 sm:w-48"
       }`}
     >
       <span
-        className={`flex shrink-0 items-center justify-center rounded-xl bg-bw-950 text-white ${
+        className={`flex shrink-0 items-center justify-center rounded-xl bg-white text-bw-950 ${
           compact ? "h-8 w-8" : "h-10 w-10"
         }`}
       >
         <Icon className={compact ? "h-3.5 w-3.5" : "h-4 w-4"} strokeWidth={1.75} />
       </span>
       <div className="min-w-0 text-left">
-        <p className={`font-semibold text-bw-950 ${compact ? "text-[10px] leading-tight" : "text-xs"}`}>
+        <p className={`font-semibold text-white ${compact ? "text-[10px] leading-tight" : "text-xs"}`}>
           {item.title}
         </p>
-        <p className={`text-bw-500 ${compact ? "text-[9px]" : "text-[11px]"}`}>{item.text}</p>
+        <p className={`text-bw-400 ${compact ? "text-[9px]" : "text-[11px]"}`}>{item.text}</p>
       </div>
     </div>
   );

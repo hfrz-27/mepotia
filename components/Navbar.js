@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LogOut, PenLine, Eye, Menu, X } from "lucide-react";
+import { LogOut, Menu, Newspaper, PenLine, Eye, X } from "lucide-react";
 import Logo from "@/components/Logo";
 import { createClient } from "@/lib/supabase";
 
@@ -203,8 +203,15 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Sağ — admin kısayolları */}
+        {/* Sağ — haberler + admin kısayolları */}
         <div className="relative z-10 flex min-w-[5.5rem] items-center justify-end gap-1.5 sm:min-w-[7rem]">
+          <Link
+            href="/teknoloji"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-bw-200 text-bw-600 transition hover:border-bw-300 hover:bg-bw-50 hover:text-bw-950"
+            aria-label="Haberler"
+          >
+            <Newspaper className="h-4 w-4" />
+          </Link>
           {user && isAdmin ? (
             <>
               <Link
