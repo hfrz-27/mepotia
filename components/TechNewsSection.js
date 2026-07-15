@@ -12,6 +12,11 @@ export default async function TechNewsSection({ categories = [] }) {
     getHomeCategoryProductMap(categories),
   ]);
 
+  const categoryMeta = categories.map((cat) => ({
+    slug: cat.slug,
+    catalogOnly: Boolean(cat.catalogOnly),
+  }));
+
   return (
     <section id="teknoloji" className="relative scroll-mt-28 border-t border-bw-200 bg-white">
       <div className="story-band-grid absolute inset-0 opacity-[0.03]" aria-hidden />
@@ -54,7 +59,7 @@ export default async function TechNewsSection({ categories = [] }) {
         </>
       ) : null}
 
-      <HomeCategoryExplorer categories={categories} productsByCategory={productsByCategory} />
+      <HomeCategoryExplorer categories={categoryMeta} productsByCategory={productsByCategory} />
     </section>
   );
 }
