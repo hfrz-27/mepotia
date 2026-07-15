@@ -27,7 +27,7 @@ export default function HomeCategoryExplorer({ categories = [], productsByCatego
     `shrink-0 whitespace-nowrap rounded-xl font-semibold tracking-tight transition ${
       selected
         ? "bg-bw-950 text-white shadow-[0_4px_14px_-6px_rgba(0,0,0,0.45)]"
-        : "text-bw-700 hover:bg-[#f5f5f7] hover:text-bw-950"
+        : "border border-bw-300 text-bw-700 hover:border-bw-950 hover:bg-[#f5f5f7] hover:text-bw-950"
     }`;
 
   return (
@@ -39,7 +39,7 @@ export default function HomeCategoryExplorer({ categories = [], productsByCatego
               href="/kategoriler"
               prefetch
               aria-label="Tüm kategoriler"
-              className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-bw-200 bg-white text-bw-800 shadow-[0_4px_16px_-10px_rgba(0,0,0,0.15)]"
+              className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border-2 border-bw-950 bg-white text-bw-950"
             >
               <LayoutGrid className="h-4 w-4" strokeWidth={1.75} />
             </Link>
@@ -48,7 +48,7 @@ export default function HomeCategoryExplorer({ categories = [], productsByCatego
               <button
                 type="button"
                 aria-pressed
-                className={`inline-flex shrink-0 items-center gap-2 px-3 py-2 text-sm ${categoryButtonClass(true)}`}
+                className={`inline-flex shrink-0 items-center gap-2 border-2 border-bw-950 px-3 py-2 text-sm ${categoryButtonClass(true)}`}
               >
                 {ActiveIcon ? (
                   <ActiveIcon className="h-4 w-4 shrink-0" strokeWidth={1.75} />
@@ -59,7 +59,7 @@ export default function HomeCategoryExplorer({ categories = [], productsByCatego
 
             <nav
               aria-label="Diğer kategoriler"
-              className="hide-scrollbar news-touch-scroll flex min-w-0 flex-1 items-center gap-1.5 overflow-x-auto rounded-2xl border border-bw-200/70 bg-white/90 p-1.5"
+              className="hide-scrollbar news-touch-scroll flex min-w-0 flex-1 items-center gap-1.5 overflow-x-auto rounded-2xl border-2 border-bw-950 bg-white p-1.5"
             >
               {inactiveItems.map((cat) => {
                 const Icon = cat.icon;

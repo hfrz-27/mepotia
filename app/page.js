@@ -43,8 +43,6 @@ export default async function HomePage() {
 
         <TechNewsSection categories={categories} />
 
-        <HomePriceCompareSection heroImage={settings?.price_compare_bg_1} />
-
         {featured.length ? (
           <HomeProductSection
             eyebrow="Özenle seçilenler"
@@ -57,6 +55,8 @@ export default async function HomePage() {
             ariaLabel="Öne çıkan ürünler"
           />
         ) : null}
+
+        <HomePriceCompareSection heroImage={settings?.price_compare_bg_1} />
 
         {latest.length ? (
           <HomeProductSection

@@ -78,35 +78,13 @@ export default function Footer({ whatsapp, phone, email }) {
   const tel = phone ? `tel:${phone}` : "tel:05300000000";
   const mail = email ? `mailto:${email}` : "mailto:info@mepotia.com";
 
-  const helpLinks = [
-    { href: wa, label: "WhatsApp", external: true },
-    { href: tel, label: "Telefon", external: true },
-    { href: mail, label: "E-posta", external: true },
-    { href: "/iletisim", label: "İletişim sayfası" },
-  ];
-
   return (
     <footer className="mt-auto border-t border-bw-200 bg-[#f5f5f7]">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-6 border-b border-bw-200/70 sm:mb-10" aria-hidden />
 
-        <div className="grid gap-0 sm:grid-cols-2 sm:gap-x-10 lg:grid-cols-4 lg:gap-x-12">
-          <FooterColumn title="Yardım" defaultOpen>
-            <p className="mb-3 text-xs leading-relaxed text-bw-500">
-              WhatsApp, telefon veya e-posta ile ulaş.
-            </p>
-            <FooterLinkList items={helpLinks} />
-          </FooterColumn>
-
-          <FooterColumn title="Keşfet">
-            <FooterLinkList items={EXPLORE_LINKS} />
-          </FooterColumn>
-
-          <FooterColumn title="Yasal">
-            <FooterLinkList items={LEGAL_LINKS} />
-          </FooterColumn>
-
-          <FooterColumn title="Destek">
+        <div className="grid gap-0 sm:grid-cols-2 sm:gap-x-10 lg:grid-cols-3 lg:gap-x-12">
+          <FooterColumn title="Destek" defaultOpen>
             <ul className="space-y-2.5">
               <li>
                 <Link href="/hakkimizda" className="text-sm text-bw-600 transition hover:text-bw-950">
@@ -149,6 +127,14 @@ export default function Footer({ whatsapp, phone, email }) {
                 Mail
               </a>
             </div>
+          </FooterColumn>
+
+          <FooterColumn title="Keşfet">
+            <FooterLinkList items={EXPLORE_LINKS} />
+          </FooterColumn>
+
+          <FooterColumn title="Yasal">
+            <FooterLinkList items={LEGAL_LINKS} />
           </FooterColumn>
         </div>
 
