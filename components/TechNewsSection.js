@@ -3,7 +3,7 @@ import { ArrowRight, Cpu } from "lucide-react";
 import TechNewsHomeRow from "@/components/TechNewsHomeRow";
 import HomeCategoryExplorer from "@/components/HomeCategoryExplorer";
 import HomeSectionHeader from "@/components/HomeSectionHeader";
-import { getHomeCategoryProductMap } from "@/lib/categoryDemoProducts";
+import { getHomeCategoryProductMap } from "@/lib/getHomeCategoryProducts";
 import { getTechPosts } from "@/lib/techPosts";
 
 export default async function TechNewsSection({ categories = [] }) {

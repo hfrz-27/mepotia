@@ -3,8 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ChevronDown, LayoutGrid } from "lucide-react";
-import { TECH_CATEGORY_CATALOG } from "@/lib/techCategories";
-import { getCategoryHref } from "@/lib/categoryDemoProducts";
+import { TECH_CATEGORY_CATALOG, getCategoryHref } from "@/lib/techCategories";
 import HomeProductScroll from "@/components/HomeProductScroll";
 
 export default function HomeCategoryExplorer({ categories = [], productsByCategory = {} }) {
