@@ -1,57 +1,85 @@
 import Link from "next/link";
-import { ArrowRight, LayoutGrid } from "lucide-react";
-import { getCategoriesWithSubs } from "@/lib/categories";
+import ProductCard from "@/components/ProductCard";
+import CategoryFilters from "@/components/CategoryFilters";
+import { PremiumBreadcrumb } from "@/components/BackHomeLink";
+import { getCategoryBySlug } from "@/lib/categories";
+import { getPublishedProducts } from "@/lib/products";
+import { mergeCategoryProducts } from "@/lib/categoryDemoProducts";
+import { notFound } from "next/navigation";
+import { getProductTaxonomy } from "@/lib/productTaxonomy";
 
 export const revalidate = 60;
 
-export const metadata = {
-  title: "Kategoriler | Mepotia",
-  description: "Mepotia'da yer alan tüm ürün kategorilerini keşfet.",
-};
+export default async function CategoryPage({ params, searchParams }) {
+  const { slug } = await params;
+  const sp = await searchParams;
+  const category = await getCategoryBySlug(slug);
+  if (!category) notFound();
 
-export default async function KategorilerPage() {
-  const categories = await getCategoriesWithSubs();
+  const sort = sp?.sort || "newest";
+  const city = sp?.city || "";
+  const condition = sp?.condition || "";
+  const minPrice = sp?.min || "";
+  const maxPrice = sp?.max || "";
+  const brand = sp?.brand || "";
+  const model = sp?.model || "";
+  const page = Number(sp?.page || 1);
+
+  const orderBy = sort === "views" ? "views" : sort === "price_asc" || sort === "price_desc" ? "price" : "created_at";
+  const ascending = sort === "price_asc" || sort === "oldest";
+
+  const result = category.catalogOnly
+    ? { data: [], count: 0 }
+    : await getPublishedProducts({
+        categoryId: category.id,
+        city: city || null,
+        condition: condition || null,
+        minPrice: minPrice || null,
+        maxPrice: maxPrice || null,
+        brand: brand || null,
+        model: model || null,
+        orderBy,
+        ascending,
+        page,
+        limit: 12,
+      });
+
+  const data = mergeCategoryProducts(result.data || [], slug, 12);
+  const count = Math.max(result.count || 0, data.length);
+  const totalPages = Math.max(1, Math.ceil((count || 0) / 12));
 
   return (
-    <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+    <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8"> {/* max-w-7xl → max-w-6xl */}
+      <PremiumBreadcrumb
+        items={[{ href: `/kategori/${slug}`, label: category.name, current: true }]}
+        className="mb-6"
+      />
+
       <div className="mb-8">
-        <p className="text-[11px] font-semibold tracking-[0.2em] text-bw-400 uppercase">
-          Vitrin
-        </p>
-        <h1 className="mt-1 font-display text-2xl font-semibold text-bw-950 sm:text-3xl">
-          Kategoriler
+        <h1 className="font-display text-4xl font-semibold tracking-tight text-bw-950">
+          {category.name}
         </h1>
-        <p className="mt-2 max-w-xl text-sm text-bw-600">
-          İhtiyacın olan ürünü bulmak için bir kategori seç.
-        </p>
+        {category.description && (
+          <p className="mt-2 max-w-xl text-lg text-bw-600">{category.description}</p>
+        )}
+        <p className="mt-1 text-sm text-bw-500">{count} ürün</p>
       </div>
 
-      {categories.length === 0 ? (
-        <div className="rounded-2xl border border-bw-200 bg-bw-50 px-6 py-14 text-center">
-          <LayoutGrid className="mx-auto h-8 w-8 text-bw-300" />
-          <p className="mt-3 text-sm text-bw-500">
-            Şu anda listelenecek kategori yok.
-          </p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {categories.map((cat) => (
-            <div
-              key={cat.id}
-              className="group rounded-2xl border border-bw-200 bg-white p-5 transition hover:border-bw-300 hover:shadow-[0_16px_40px_-28px_rgba(0,0,0,0.35)]"
-            >
-              <Link
-                href={`/kategori/${cat.slug}`}
-                className="flex items-center justify-between"
-              >
-                <h2 className="font-display text-base font-semibold text-bw-950">
-                  {cat.name}
-                </h2>
-                <ArrowRight className="h-4 w-4 text-bw-400 transition group-hover:translate-x-0.5 group-hover:text-bw-950" />
-              </Link>
+      <CategoryFilters
+        slug={slug}
+        taxonomy={getProductTaxonomy(slug)}
+        defaults={{ sort, city, condition, minPrice, maxPrice, brand, model, categoryName: category.name }}
+      />
 
-            </div>
-          ))}
+      <div className="mt-10 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
+        {data.map((p) => (
+          <ProductCard key={p.id} product={p} />
+        ))}
+      </div>
+
+      {totalPages > 1 && (
+        <div className="mt-12 flex justify-center">
+          {/* Pagination */}
         </div>
       )}
     </main>
