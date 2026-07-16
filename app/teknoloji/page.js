@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { ArrowRight } from "lucide-react";
 import TechNewsPageHero from "@/components/TechNewsPageHero";
 import TechNewsViewSync from "@/components/TechNewsViewSync";
 import { getTechPosts, resolveTechPostsPageSize } from "@/lib/techPosts";
@@ -35,7 +36,7 @@ export default async function TeknolojiPage({ searchParams }) {
 
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex justify-between items-baseline mb-10">
-          <h1 className="text-5xl md:text-6xl font-display font-semibold tracking-tighter">
+          <h1 className="text-5xl md:text-6xl font-display font-semibold tracking-tighter text-bw-950">
             Teknoloji
           </h1>
           <p className="text-bw-500 text-lg">2026'nın en önemli gelişmeleri</p>
@@ -69,7 +70,9 @@ export default async function TeknolojiPage({ searchParams }) {
           <p className="text-center py-20 text-bw-500">Henüz haber yok.</p>
         )}
 
-        <PremiumPagination basePath="/teknoloji" page={page} totalPages={totalPages} />
+        <div className="mt-16">
+          <PremiumPagination basePath="/teknoloji" page={page} totalPages={totalPages} />
+        </div>
       </div>
     </main>
   );
