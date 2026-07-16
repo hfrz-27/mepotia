@@ -1,18 +1,68 @@
 import { Suspense } from "react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { ArrowRight } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowUpRight, Clock3, Newspaper } from "lucide-react";
 import TechNewsPageHero from "@/components/TechNewsPageHero";
 import TechNewsViewSync from "@/components/TechNewsViewSync";
-import { getTechPosts, resolveTechPostsPageSize } from "@/lib/techPosts";
-import { getPublishedProducts } from "@/lib/products";
 import PremiumPagination from "@/components/PremiumPagination";
+import { getTechPosts, resolveTechPostsPageSize } from "@/lib/techPosts";
+import { formatTechDate } from "@/lib/techPostUtils";
+import { getPublishedProducts } from "@/lib/products";
 
 export const revalidate = 60;
 
+function NewsCard({ post, index }) {
+  return (
+    <article className={`group ${index === 0 ? "md:col-span-2" : ""}`}>
+      <Link
+        href={`/teknoloji/${post.id}`}
+        className={`relative flex h-full overflow-hidden rounded-[1.75rem] border border-bw-200 bg-white shadow-[0_22px_50px_-42px_rgba(0,0,0,0.45)] transition duration-500 hover:-translate-y-1 hover:border-bw-300 hover:shadow-[0_28px_60px_-40px_rgba(0,0,0,0.3)] ${
+          index === 0 ? "min-h-[25rem] md:min-h-[31rem]" : "flex-col"
+        }`}
+      >
+        <div className={`relative overflow-hidden bg-bw-900 ${index === 0 ? "absolute inset-0" : "aspect-[16/10]"}`}>
+          {post.cover_url ? (
+            <Image
+              src={post.cover_url}
+              alt={post.title}
+              fill
+              priority={index < 2}
+              sizes={index === 0 ? "(max-width: 768px) 100vw, 66vw" : "(max-width: 768px) 100vw, 33vw"}
+              className="object-cover transition duration-700 group-hover:scale-105"
+            />
+          ) : (
+            <div className="h-full w-full bg-gradient-to-br from-bw-800 to-bw-950" />
+          )}
+          {index === 0 ? <div className="absolute inset-0 bg-gradient-to-t from-bw-950 via-bw-950/45 to-transparent" /> : null}
+        </div>
+
+        <div className={`relative ${index === 0 ? "mt-auto p-6 sm:p-8" : "p-5 sm:p-6"}`}>
+          <div className={`flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] ${index === 0 ? "text-bw-300" : "text-bw-500"}`}>
+            <Clock3 className="h-3.5 w-3.5" />
+            <span>{formatTechDate(post.created_at)}</span>
+          </div>
+          <h2 className={`mt-3 font-semibold tracking-tight ${index === 0 ? "max-w-3xl text-2xl leading-tight text-white sm:text-4xl" : "text-xl leading-snug text-bw-950"}`}>
+            {post.title}
+          </h2>
+          {post.excerpt ? (
+            <p className={`mt-3 leading-relaxed ${index === 0 ? "max-w-2xl text-sm text-bw-200 sm:text-base" : "line-clamp-2 text-sm text-bw-600"}`}>
+              {post.excerpt}
+            </p>
+          ) : null}
+          <span className={`mt-5 inline-flex items-center gap-1.5 text-sm font-semibold ${index === 0 ? "text-white" : "text-bw-900"}`}>
+            Haberi oku <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+          </span>
+        </div>
+      </Link>
+    </article>
+  );
+}
+
 export default async function TeknolojiPage({ searchParams }) {
   const sp = await searchParams;
-  const page = Number(sp?.page || 1);
+  const page = Math.max(1, Number(sp?.page || 1));
   const view = sp?.view === "mobile" ? "mobile" : "";
   const headerList = await headers();
   const pageSize = resolveTechPostsPageSize(headerList.get("user-agent") || "", headerList.get("sec-ch-ua-mobile") || "", view);
@@ -21,59 +71,38 @@ export default async function TeknolojiPage({ searchParams }) {
     getTechPosts({ limit: pageSize, page }),
     getPublishedProducts({ limit: 6, featured: true }),
   ]);
-
   const totalPages = Math.max(1, Math.ceil((count || 0) / pageSize));
 
   if (page > totalPages) redirect(`/teknoloji?page=${totalPages}`);
 
   return (
-    <main className="bg-white min-h-screen">
-      <Suspense fallback={null}>
-        <TechNewsViewSync />
-      </Suspense>
-
+    <main className="min-h-screen bg-bw-50">
+      <Suspense fallback={null}><TechNewsViewSync /></Suspense>
       <TechNewsPageHero count={count || 0} products={featuredProducts || []} />
 
-      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex justify-between items-baseline mb-10">
-          <h1 className="text-5xl md:text-6xl font-display font-semibold tracking-tighter text-bw-950">
-            Teknoloji
-          </h1>
-          <p className="text-bw-500 text-lg">2026'nın en önemli gelişmeleri</p>
+      <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+        <div className="mb-8 flex flex-col gap-3 border-b border-bw-200 pb-6 sm:mb-10 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-bw-500">Mepotia teknoloji</p>
+            <h2 className="mt-2 text-3xl font-semibold tracking-tight text-bw-950 sm:text-4xl">Son haberler</h2>
+          </div>
+          <p className="text-sm text-bw-500">En yeni gelişmeler ilk sırada.</p>
         </div>
 
-        {posts && posts.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {posts.map((post) => (
-              <article key={post.id} className="group">
-                <div className="aspect-video bg-bw-100 rounded-3xl overflow-hidden mb-6 relative">
-                  {post.image && <img src={post.image} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />}
-                </div>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3 text-xs uppercase tracking-widest text-bw-500">
-                    <span>{post.category}</span>
-                    <span>•</span>
-                    <span>{new Date(post.published_at).toLocaleDateString('tr-TR')}</span>
-                  </div>
-                  <h2 className="text-2xl font-semibold leading-tight group-hover:text-blue-600 transition-colors line-clamp-3">
-                    {post.title}
-                  </h2>
-                  <p className="text-bw-600 line-clamp-3 text-[15px]">{post.excerpt}</p>
-                  <a href={`/teknoloji/${post.slug}`} className="inline-flex items-center gap-2 text-sm font-medium text-bw-950 group-hover:gap-3 transition-all">
-                    Devamını oku <ArrowRight className="w-4 h-4" />
-                  </a>
-                </div>
-              </article>
-            ))}
+        {posts?.length ? (
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+            {posts.map((post, index) => <NewsCard key={post.id} post={post} index={index} />)}
           </div>
         ) : (
-          <p className="text-center py-20 text-bw-500">Henüz haber yok.</p>
+          <div className="rounded-[1.75rem] border border-dashed border-bw-300 bg-white px-6 py-20 text-center">
+            <Newspaper className="mx-auto h-9 w-9 text-bw-400" strokeWidth={1.4} />
+            <h2 className="mt-4 text-xl font-semibold text-bw-900">Henüz haber yok</h2>
+            <p className="mt-2 text-sm text-bw-500">Yeni teknoloji haberleri kısa süre içinde burada yer alacak.</p>
+          </div>
         )}
 
-        <div className="mt-16">
-          <PremiumPagination basePath="/teknoloji" page={page} totalPages={totalPages} />
-        </div>
-      </div>
+        <PremiumPagination basePath="/teknoloji" page={page} totalPages={totalPages} />
+      </section>
     </main>
   );
 }
