@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { Cpu } from "lucide-react";
+import { Cpu, ArrowRight } from "lucide-react";
 import TechNewsViewSync from "@/components/TechNewsViewSync";
 import TechNewsHybridScroll from "@/components/TechNewsHybridScroll";
 import TechNewsCard from "@/components/TechNewsCard";
@@ -24,13 +24,9 @@ export async function generateMetadata({ searchParams }) {
   const sp = await searchParams;
   const page = Number(sp?.page || 1);
   if (page > 1) {
-    return {
-      title: `Teknoloji Haberleri — Sayfa ${page}`,
-    };
+    return { title: `Teknoloji Haberleri — Sayfa ${page}` };
   }
-  return {
-    title: "Teknoloji Haberleri",
-  };
+  return { title: "Teknoloji Haberleri" };
 }
 
 export default async function TeknolojiPage({ searchParams }) {
@@ -38,67 +34,70 @@ export default async function TeknolojiPage({ searchParams }) {
   const rawPage = Number(sp?.page || 1);
   const page = Number.isFinite(rawPage) && rawPage > 0 ? Math.floor(rawPage) : 1;
   const view = sp?.view === "mobile" ? "mobile" : "";
-
   const headerList = await headers();
   const pageSize = resolveTechPostsPageSize(
     headerList.get("user-agent") || "",
     headerList.get("sec-ch-ua-mobile") || "",
     view,
   );
+
   const [{ data: posts, count, error }, { data: featuredProducts }] = await Promise.all([
-    getTechPosts({
-      limit: pageSize,
-      page,
-    }),
-    getPublishedProducts({ limit: 10, featured: true, orderBy: "created_at" }),
+    getTechPosts({ limit: pageSize, page }),
+    getPublishedProducts({ limit: 6, featured: true, orderBy: "created_at" }),
   ]);
 
   const totalPages = Math.max(1, Math.ceil((count || 0) / pageSize));
-  const paginationQuery = view === "mobile" ? { view: "mobile" } : {};
 
   if (count > 0 && page > totalPages) {
     redirect(buildRedirectPath(totalPages > 1 ? totalPages : 1, view));
   }
 
   return (
-    <main className="min-h-screen bg-white sm:bg-bw-50">
+    <main className="min-h-screen bg-gradient-to-b from-bw-50 to-white">
       <Suspense fallback={null}>
         <TechNewsViewSync />
       </Suspense>
 
       <TechNewsPageHero count={count || 0} products={featuredProducts || []} />
 
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         {error ? (
-          <p className="rounded-2xl border border-dashed border-bw-300 bg-white px-6 py-12 text-center text-sm text-bw-500">
-            Supabase&apos;de <code>tech_posts.sql</code> çalıştır.
-          </p>
+          <div className="rounded-3xl border border-bw-200 bg-white p-12 text-center">
+            <Cpu className="mx-auto h-12 w-12 text-bw-300" />
+            <p className="mt-4 text-lg text-bw-600">Haberler yüklenirken bir sorun oluştu.</p>
+          </div>
         ) : !posts.length ? (
-          <div className="rounded-2xl border border-dashed border-bw-300 bg-white px-6 py-16 text-center">
-            <Cpu className="mx-auto h-7 w-7 text-bw-300" />
-            <p className="mt-3 text-sm font-medium text-bw-700">
-              {page > 1 ? "Bu sayfada haber yok." : "Henüz paylaşım yok."}
-            </p>
+          <div className="rounded-3xl border border-dashed border-bw-200 bg-white py-20 text-center">
+            <Cpu className="mx-auto h-12 w-12 text-bw-300" />
+            <p className="mt-4 text-xl font-medium text-bw-700">Henüz haber bulunmuyor.</p>
           </div>
         ) : (
-          <>
+          <div>
+            <div className="mb-8 flex items-end justify-between">
+              <h2 className="text-4xl font-display font-semibold tracking-tight text-bw-950">
+                Son Teknoloji Haberleri
+              </h2>
+              <p className="text-bw-500">Güncel ve seçkin içerikler</p>
+            </div>
+
             <div className="sm:hidden">
               <TechNewsHybridScroll posts={posts} />
             </div>
 
-            <div className="hidden grid-cols-1 gap-4 sm:grid sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
+            <div className="hidden grid-cols-1 gap-8 sm:grid lg:grid-cols-2 xl:grid-cols-3">
               {posts.map((post, index) => (
                 <TechNewsCard key={post.id} post={post} index={index} />
               ))}
             </div>
 
-            <PremiumPagination
-              basePath="/teknoloji"
-              page={page}
-              totalPages={totalPages}
-              query={paginationQuery}
-            />
-          </>
+            <div className="mt-16">
+              <PremiumPagination
+                basePath="/teknoloji"
+                page={page}
+                totalPages={totalPages}
+              />
+            </div>
+          </div>
         )}
       </div>
     </main>
