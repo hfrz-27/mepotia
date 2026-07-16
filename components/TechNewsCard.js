@@ -25,11 +25,11 @@ export function TechNewsHomeCard({ post, index = 0 }) {
     <Link
       href={`/teknoloji/${post.id}`}
       prefetch={index === 0}
-      className="group flex h-[min(68vh,480px)] w-[min(82vw,340px)] shrink-0 flex-col overflow-hidden rounded-[1.75rem] bg-[#f5f5f7] transition hover:bg-[#ebebed] sm:h-[500px] sm:w-[360px] md:h-[520px] md:w-[380px] lg:h-[550px] lg:w-[400px]"
+      className="group flex h-[min(70vh,530px)] w-[min(82vw,340px)] shrink-0 flex-col overflow-hidden rounded-[1.75rem] bg-[#f5f5f7] transition hover:bg-[#ebebed] sm:h-[540px] sm:w-[360px] md:h-[570px] md:w-[380px] lg:h-[610px] lg:w-[400px]"
     >
       <div className="px-6 pt-6 sm:px-7 sm:pt-7">
         <p className="text-xs text-bw-500 sm:text-sm">{formatTechDate(post.created_at)}</p>
-        <h3 className="mt-2 line-clamp-3 text-xl font-semibold leading-snug tracking-tight text-bw-950 sm:mt-3 sm:text-2xl">
+        <h3 className="mt-2 line-clamp-3 text-xl font-semibold leading-snug tracking-tight text-bw-950 sm:mt-3 sm:text-[1.7rem]">
           {post.title}
         </h3>
         {post.excerpt ? (
@@ -37,18 +37,18 @@ export function TechNewsHomeCard({ post, index = 0 }) {
         ) : null}
       </div>
 
-      <div className="relative mx-6 mb-6 mt-4 h-[210px] sm:mx-7 sm:mt-5 sm:mb-7 sm:h-[250px] lg:h-[270px]">
+      <div className="relative mt-auto h-[48%] min-h-[210px] w-full overflow-hidden">
         {post.cover_url ? (
           <CoverImage
             src={post.cover_url}
             alt={post.title}
-            className="rounded-2xl object-cover object-center sm:transition sm:duration-500 sm:group-hover:scale-[1.02]"
+            className="object-cover object-center sm:transition sm:duration-500 sm:group-hover:scale-[1.02]"
             sizes="(max-width:640px) 82vw, 400px"
             priority={index === 0}
             loading={index === 0 ? undefined : "lazy"}
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center rounded-2xl bg-bw-200/60">
+          <div className="flex h-full w-full items-center justify-center bg-bw-200/60">
             <Cpu className="h-10 w-10 text-bw-400" strokeWidth={1.25} />
           </div>
         )}

@@ -49,6 +49,7 @@ create table if not exists public.products (
   condition text not null default 'used' check (condition in ('new', 'used')),
   brand text,
   model text,
+  specs jsonb not null default '{}'::jsonb,
   city text,
   district text,
   views int not null default 0,

@@ -48,13 +48,13 @@ export default async function TechNewsSection({ categories = [] }) {
           <>
             <TechNewsHomeRow posts={posts} />
 
-            <div className="mt-6 flex justify-center px-4 pb-8 sm:mt-8 sm:pb-10">
+            <div className="mt-4 flex justify-center px-4 pb-6 sm:mt-5 sm:pb-8">
               <Link
                 href="/teknoloji"
                 prefetch
                 className="inline-flex items-center gap-2 rounded-xl bg-bw-950 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-bw-800"
               >
-                Haberlere git
+                Bütün haberleri gör
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>

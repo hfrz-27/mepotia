@@ -3,6 +3,7 @@ import TechNewsSection from "@/components/TechNewsSection";
 import HomePriceCompareSection from "@/components/HomePriceCompareSection";
 import HomeProductSection from "@/components/HomeProductSection";
 import HomeValueBand from "@/components/HomeValueBand";
+import HomeActionRail from "@/components/HomeActionRail";
 import HomeMobileTopBand from "@/components/HomeMobileTopBand";
 import { getPublishedProducts } from "@/lib/products";
 import { getCategoriesWithSubs, getSiteSettings } from "@/lib/categories";
@@ -91,6 +92,8 @@ export default async function HomePage() {
             </div>
           </section>
         )}
+
+        <HomeActionRail />
 
         <HomeValueBand />
 

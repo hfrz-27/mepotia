@@ -141,7 +141,7 @@ export default function Navbar() {
               </p>
               {[
                 { href: "/", label: "Anasayfa" },
-                { href: "/ara", label: "Ürünler" },
+                { href: "/urunler", label: "Ürünler" },
                 { href: "/fiyat-karsilastir", label: "Fiyat karşılaştır" },
                 { href: "/kategoriler", label: "Teknoloji ürünleri" },
                 { href: "/hakkimizda", label: "Hakkımızda" },

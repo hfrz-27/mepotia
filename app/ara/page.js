@@ -15,8 +15,16 @@ export default async function SearchPage({ searchParams }) {
   const minPrice = sp?.min || "";
   const maxPrice = sp?.max || "";
   const categoryId = sp?.category || "";
+  const brand = sp?.brand || "";
+  const model = sp?.model || "";
+  const sort = sp?.sort || "newest";
+  const orderBy = sort === "price_asc" || sort === "price_desc" ? "price" : sort === "views" ? "views" : "created_at";
+  const ascending = sort === "price_asc" || sort === "oldest";
 
   const categories = await getCategoriesWithSubs();
+  // Client filtre bileşenine yalnızca serileştirilebilir alanları gönder.
+  // Kategori kataloğundaki icon bileşenleri React Server Component sınırını geçemez.
+  const filterCategories = categories.map(({ id, name }) => ({ id, name }));
   const { data, count } = await getPublishedProducts({
     search: q || null,
     city: city || null,
@@ -24,6 +32,10 @@ export default async function SearchPage({ searchParams }) {
     minPrice: minPrice || null,
     maxPrice: maxPrice || null,
     categoryId: categoryId || null,
+    brand: brand || null,
+    model: model || null,
+    orderBy,
+    ascending,
     limit: 24,
   });
 
@@ -39,8 +51,8 @@ export default async function SearchPage({ searchParams }) {
       </p>
 
       <SearchFiltersPanel
-        categories={categories}
-        defaults={{ q, city, condition, minPrice, maxPrice, categoryId }}
+        categories={filterCategories}
+        defaults={{ q, city, condition, minPrice, maxPrice, categoryId, brand, model }}
       />
 
       <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">

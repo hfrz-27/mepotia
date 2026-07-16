@@ -13,6 +13,7 @@ const EMPTY = {
   excerpt: "",
   body: "",
   featured_order: "",
+  trending_order: "",
   published: true,
 };
 
@@ -104,6 +105,7 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
         source_url: null,
         is_featured: Boolean(form.featured_order),
         featured_order: form.featured_order ? Number(form.featured_order) : null,
+        trending_order: form.trending_order ? Number(form.trending_order) : null,
         published: form.published,
         updated_at: new Date().toISOString(),
       };
@@ -113,6 +115,13 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
           .from("tech_posts")
           .update({ is_featured: false, featured_order: null })
           .eq("featured_order", Number(form.featured_order));
+        if (clearError) throw clearError;
+      }
+      if (form.trending_order) {
+        const { error: clearError } = await supabase
+          .from("tech_posts")
+          .update({ trending_order: null })
+          .eq("trending_order", Number(form.trending_order));
         if (clearError) throw clearError;
       }
 
@@ -144,6 +153,7 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
       excerpt: post.excerpt || "",
       body: post.body || "",
       featured_order: post.featured_order ? String(post.featured_order) : "",
+      trending_order: post.trending_order ? String(post.trending_order) : "",
       published: post.published !== false,
     });
     setCoverFile(null);
@@ -310,6 +320,14 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
                 {[1, 2, 3, 4, 5].map((order) => <option key={order} value={order}>{order}. büyük haber</option>)}
               </select>
             </div>
+            <div className="rounded-xl border border-sky-200 bg-sky-50 p-3">
+              <label className="block text-sm font-semibold text-sky-950" htmlFor="trending-order">Gündem sırası</label>
+              <p className="mt-1 text-xs text-sky-800">Sağdaki Gündem listesinde gösterilecek haberleri seç. En fazla 5 haber.</p>
+              <select id="trending-order" name="trending_order" value={form.trending_order} onChange={onChange} className="mt-3 w-full rounded-xl border border-sky-200 bg-white px-3 py-2 text-sm text-bw-900 outline-none">
+                <option value="">Gündemde gösterme</option>
+                {[1, 2, 3, 4, 5].map((order) => <option key={order} value={order}>{order}. gündem haberi</option>)}
+              </select>
+            </div>
           </div>
         </div>
 
@@ -356,7 +374,7 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
               </div>
               <div className="min-w-0 flex-1">
                 <p className="text-[10px] font-semibold tracking-wide text-bw-400 uppercase">
-                  {post.featured_order ? `${post.featured_order}. carousel haberi · ` : ""}{post.published ? "Yayında" : "Taslak"} ·{" "}
+                  {post.featured_order ? `${post.featured_order}. carousel · ` : ""}{post.trending_order ? `${post.trending_order}. gündem · ` : ""}{post.published ? "Yayında" : "Taslak"} ·{" "}
                   {post.created_at ? new Date(post.created_at).toLocaleDateString("tr-TR") : ""}
                 </p>
                 <h4 className="mt-0.5 truncate font-semibold text-bw-950">{post.title}</h4>

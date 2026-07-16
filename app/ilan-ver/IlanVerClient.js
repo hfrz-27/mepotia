@@ -17,6 +17,7 @@ import {
 import { createClient } from "@/lib/supabase";
 import BackHomeLink from "@/components/BackHomeLink";
 import { TECH_CATEGORY_SLUGS } from "@/lib/techCategories";
+import { getProductTaxonomy } from "@/lib/productTaxonomy";
 
 const INITIAL = {
   title: "",
@@ -24,10 +25,12 @@ const INITIAL = {
   price: "",
   original_price: "",
   category_id: "",
+  subcategory_id: "",
   city: "",
   district: "",
   brand: "",
   model: "",
+  specs: {},
   condition: "used",
   phone: "",
   whatsapp: "",
@@ -88,7 +91,7 @@ export default function IlanVerClient() {
         return;
       }
       setUserId(user.id);
-      const { data: cats } = await supabase.from("categories").select("*").order("sort_order");
+      const { data: cats } = await supabase.from("categories").select("*, subcategories ( id, name, slug, sort_order )").order("sort_order");
       setCategories((cats || []).filter((category) => TECH_CATEGORY_SLUGS.includes(category.slug)));
 
       if (isEdit) {
@@ -109,10 +112,12 @@ export default function IlanVerClient() {
           original_price:
             product.original_price != null ? String(product.original_price) : "",
           category_id: product.category_id || "",
+          subcategory_id: product.subcategory_id || "",
           city: product.city || "",
           district: product.district || "",
           brand: product.brand || "",
           model: product.model || "",
+          specs: product.specs || {},
           condition: product.condition || "used",
           phone: product.phone || "",
           whatsapp: product.whatsapp || "",
@@ -136,8 +141,13 @@ export default function IlanVerClient() {
 
   const onChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setForm((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
+    setForm((prev) => {
+      if (name === "category_id") return { ...prev, category_id: value, subcategory_id: "", brand: "", model: "", specs: {} };
+      return { ...prev, [name]: type === "checkbox" ? checked : value };
+    });
   };
+
+  const setSpec = (key, value) => setForm((prev) => ({ ...prev, specs: { ...prev.specs, [key]: value } }));
 
   const addFiles = (incoming) => {
     const list = Array.from(incoming || []).filter((f) => f.type.startsWith("image/"));
@@ -213,6 +223,10 @@ export default function IlanVerClient() {
       source: "admin",
     };
     let result = await supabase.from("products").insert([full]).select().single();
+    if (result.error?.message?.includes("specs")) {
+      const { specs, ...legacy } = full;
+      result = await supabase.from("products").insert([legacy]).select().single();
+    }
     if (result.error?.message?.includes("is_discount")) {
       const { is_discount, original_price, ...rest } = full;
       result = await supabase.from("products").insert([rest]).select().single();
@@ -253,10 +267,12 @@ export default function IlanVerClient() {
       condition: form.condition,
       brand: form.brand || null,
       model: form.model || null,
+      specs: form.specs,
       city: form.city || null,
       district: form.district || null,
       negotiable: form.negotiable,
       category_id: form.category_id || null,
+      subcategory_id: form.subcategory_id || null,
       phone: form.phone || null,
       whatsapp: form.whatsapp || form.phone || null,
       is_premium: form.is_premium,
@@ -267,10 +283,14 @@ export default function IlanVerClient() {
     };
 
     if (isEdit) {
-      const { error: updateError } = await supabase
+      let { error: updateError } = await supabase
         .from("products")
         .update(payload)
         .eq("id", editId);
+      if (updateError?.message?.includes("specs")) {
+        const { specs, ...legacyPayload } = payload;
+        ({ error: updateError } = await supabase.from("products").update(legacyPayload).eq("id", editId));
+      }
       if (updateError) {
         console.error(updateError);
         setError(updateError.message);
@@ -318,6 +338,8 @@ export default function IlanVerClient() {
   const field =
     "w-full rounded-xl border border-bw-200 bg-white px-4 py-3 text-sm text-bw-900 outline-none transition placeholder:text-bw-400 focus:border-bw-500 focus:ring-2 focus:ring-bw-950/5";
   const label = "mb-1.5 block text-xs font-semibold tracking-wide text-bw-600 uppercase";
+  const selectedCategory = categories.find((category) => category.id === form.category_id);
+  const selectedTaxonomy = getProductTaxonomy(selectedCategory?.slug);
 
   if (!ready) {
     return (
@@ -574,6 +596,15 @@ export default function IlanVerClient() {
                 <p className="mt-2 text-xs text-amber-700">Teknoloji kategorilerini açmak için yönetim panelindeki Kategoriler bölümünden SQL kurulumunu tamamla.</p>
               ) : null}
             </div>
+            {selectedCategory?.subcategories?.length ? (
+              <div>
+                <label className={label} htmlFor="subcategory_id">Alt kategori</label>
+                <select id="subcategory_id" name="subcategory_id" value={form.subcategory_id} onChange={onChange} className={field}>
+                  <option value="">Seç</option>
+                  {selectedCategory.subcategories.map((sub) => <option key={sub.id} value={sub.id}>{sub.name}</option>)}
+                </select>
+              </div>
+            ) : null}
             <div>
               <label className={label} htmlFor="city">Şehir</label>
               <input id="city" name="city" value={form.city} onChange={onChange} className={field} />
@@ -584,11 +615,11 @@ export default function IlanVerClient() {
             </div>
             <div>
               <label className={label} htmlFor="brand">Marka</label>
-              <input id="brand" name="brand" value={form.brand} onChange={onChange} className={field} />
+              {selectedTaxonomy.brands.length ? <select id="brand" name="brand" value={form.brand} onChange={onChange} className={field}><option value="">Seç</option>{selectedTaxonomy.brands.map((brand) => <option key={brand} value={brand}>{brand}</option>)}</select> : <input id="brand" name="brand" value={form.brand} onChange={onChange} className={field} />}
             </div>
             <div>
               <label className={label} htmlFor="model">Model</label>
-              <input id="model" name="model" value={form.model} onChange={onChange} className={field} />
+              {selectedTaxonomy.models.length ? <select id="model" name="model" value={form.model} onChange={onChange} className={field}><option value="">Seç</option>{selectedTaxonomy.models.map((model) => <option key={model} value={model}>{model}</option>)}</select> : <input id="model" name="model" value={form.model} onChange={onChange} className={field} />}
             </div>
             <div>
               <label className={label} htmlFor="condition">Durum</label>
@@ -602,6 +633,21 @@ export default function IlanVerClient() {
               <input id="whatsapp" name="whatsapp" value={form.whatsapp} onChange={onChange} className={field} />
             </div>
           </div>
+
+          {selectedTaxonomy.specs.length ? (
+            <div className="rounded-2xl border border-bw-100 bg-bw-50/60 p-4">
+              <p className="text-xs font-semibold tracking-wide text-bw-600 uppercase">{selectedCategory.name} özellikleri</p>
+              <div className="mt-3 grid gap-4 sm:grid-cols-2">
+                {selectedTaxonomy.specs.map(([key, title, options]) => (
+                  <label key={key} className={label}>{title}
+                    <select value={form.specs?.[key] || ""} onChange={(event) => setSpec(key, event.target.value)} className={field}>
+                      <option value="">Seç</option>{options.map((option) => <option key={option} value={option}>{option}</option>)}
+                    </select>
+                  </label>
+                ))}
+              </div>
+            </div>
+          ) : null}
 
           <div className="rounded-2xl border border-bw-100 bg-bw-50/60 p-4">
             <p className="text-xs font-semibold tracking-wide text-bw-600 uppercase">Vitrin ayarları</p>

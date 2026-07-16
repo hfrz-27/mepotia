@@ -41,7 +41,7 @@ export default async function KategorilerPage() {
               className="group rounded-2xl border border-bw-200 bg-white p-5 transition hover:border-bw-300 hover:shadow-[0_16px_40px_-28px_rgba(0,0,0,0.35)]"
             >
               <Link
-                href={`/ara?kategori=${cat.slug}`}
+                href={`/kategori/${cat.slug}`}
                 className="flex items-center justify-between"
               >
                 <h2 className="font-display text-base font-semibold text-bw-950">
@@ -50,19 +50,6 @@ export default async function KategorilerPage() {
                 <ArrowRight className="h-4 w-4 text-bw-400 transition group-hover:translate-x-0.5 group-hover:text-bw-950" />
               </Link>
 
-              {cat.subcategories?.length > 0 ? (
-                <div className="mt-3 flex flex-wrap gap-1.5">
-                  {cat.subcategories.map((sub) => (
-                    <Link
-                      key={sub.id}
-                      href={`/ara?kategori=${cat.slug}&alt=${sub.slug}`}
-                      className="rounded-full border border-bw-200 px-2.5 py-1 text-[11px] font-medium text-bw-600 transition hover:border-bw-300 hover:bg-bw-50 hover:text-bw-950"
-                    >
-                      {sub.name}
-                    </Link>
-                  ))}
-                </div>
-              ) : null}
             </div>
           ))}
         </div>

@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, Clock3, Newspaper } from "lucide-react";
+import { ArrowUpRight, Clock3, Newspaper, Radio, Sparkles } from "lucide-react";
 import TechNewsPageHero from "@/components/TechNewsPageHero";
 import TechNewsFeaturedCarousel from "@/components/TechNewsFeaturedCarousel";
 import TechNewsViewSync from "@/components/TechNewsViewSync";
@@ -12,12 +12,14 @@ import { getTechPosts, resolveTechPostsPageSize } from "@/lib/techPosts";
 import { getSiteSettings } from "@/lib/categories";
 import { formatTechDate } from "@/lib/techPostUtils";
 import { getPublishedProducts } from "@/lib/products";
+import { displayImageUrl } from "@/lib/productImage";
 
 export const revalidate = 60;
 
-function NewsCard({ post, index, large = false }) {
+function NewsCard({ post, index, large = false, wide = false }) {
+  const readMinutes = Math.max(1, Math.ceil((post.body || post.excerpt || "").split(/\s+/).filter(Boolean).length / 180));
   return (
-    <article className={`group ${large ? "lg:col-span-2" : ""}`}>
+    <article className={`group ${large ? "lg:col-span-2" : wide ? "md:col-span-2" : ""}`}>
       <Link
         href={`/teknoloji/${post.id}`}
         style={large ? { backgroundColor: "#09090b" } : undefined}
@@ -28,7 +30,7 @@ function NewsCard({ post, index, large = false }) {
         <div className={`relative overflow-hidden bg-bw-900 ${large ? "absolute inset-0" : "aspect-[16/10]"}`}>
           {post.cover_url ? (
             <Image
-              src={post.cover_url}
+              src={displayImageUrl(post.cover_url)}
               alt={post.title}
               fill
               priority={large || index < 2}
@@ -44,7 +46,7 @@ function NewsCard({ post, index, large = false }) {
         <div className={`relative ${large ? "mt-auto p-6 sm:p-8" : "p-5 sm:p-6"}`}>
           <div className={`flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] ${large ? "text-bw-300" : "text-bw-500"}`}>
             <Clock3 className="h-3.5 w-3.5" />
-            <span>{formatTechDate(post.created_at)}</span>
+            <span>{formatTechDate(post.created_at)} · {readMinutes} dk</span>
           </div>
           <h2 className={`mt-3 font-semibold tracking-tight ${large ? "max-w-3xl text-2xl leading-tight text-white sm:text-4xl" : "text-xl leading-snug text-bw-950"}`}>
             {post.title}
@@ -63,6 +65,29 @@ function NewsCard({ post, index, large = false }) {
   );
 }
 
+function NewsDigest({ posts = [] }) {
+  const digest = posts.slice(0, 5);
+  if (!digest.length) return null;
+  return (
+    <aside className="h-fit rounded-[1.5rem] border border-bw-200 bg-white p-5 shadow-[0_20px_44px_-36px_rgba(0,0,0,.45)] lg:sticky lg:top-24">
+      <div className="flex items-center justify-between border-b border-bw-100 pb-4">
+        <p className="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.2em] text-bw-500"><Radio className="h-3.5 w-3.5" /> Gündem</p>
+        <span className="rounded-full bg-emerald-50 px-2 py-1 text-[9px] font-bold uppercase tracking-[.16em] text-emerald-700">Canlı</span>
+      </div>
+      <ol className="mt-2">
+        {digest.map((post, index) => (
+          <li key={post.id} className="border-b border-bw-100 last:border-0">
+            <Link href={`/teknoloji/${post.id}`} className="group flex gap-3 py-4">
+              <span className="font-display text-xl font-semibold text-bw-300">{String(index + 1).padStart(2, "0")}</span>
+              <span className="min-w-0"><span className="line-clamp-2 block text-sm font-semibold leading-snug text-bw-900 transition group-hover:text-bw-600">{post.title}</span><span className="mt-1 block text-[10px] font-medium uppercase tracking-[.14em] text-bw-400">{formatTechDate(post.created_at)}</span></span>
+            </Link>
+          </li>
+        ))}
+      </ol>
+    </aside>
+  );
+}
+
 export default async function TeknolojiPage({ searchParams }) {
   const sp = await searchParams;
   const page = Math.max(1, Number(sp?.page || 1));
@@ -70,14 +95,17 @@ export default async function TeknolojiPage({ searchParams }) {
   const headerList = await headers();
   const pageSize = resolveTechPostsPageSize(headerList.get("user-agent") || "", headerList.get("sec-ch-ua-mobile") || "", view);
 
-  const [{ data: posts, count }, { data: featuredProducts }, settings] = await Promise.all([
-    getTechPosts({ limit: pageSize, page }),
+  const [{ data: posts, count }, { data: carouselItems }, { data: trendingItems }, { data: featuredProducts }, settings] = await Promise.all([
+    getTechPosts({ limit: pageSize, page, featuredFilter: "none" }),
+    getTechPosts({ limit: 5, featuredFilter: "only" }),
+    getTechPosts({ limit: 5, trendingOnly: true }),
     getPublishedProducts({ limit: 6, featured: true }),
     getSiteSettings(),
   ]);
   const totalPages = Math.max(1, Math.ceil((count || 0) / pageSize));
-  const carouselPosts = (posts || []).filter((post) => post.featured_order).sort((a, b) => a.featured_order - b.featured_order).slice(0, 5);
-  const feedPosts = (posts || []).filter((post) => !post.featured_order);
+  const carouselPosts = (carouselItems || []).sort((a, b) => a.featured_order - b.featured_order).slice(0, 5);
+  const feedPosts = posts || [];
+  const trendingPosts = (trendingItems || []).sort((a, b) => a.trending_order - b.trending_order).slice(0, 5);
 
   if (page > totalPages) redirect(`/teknoloji?page=${totalPages}`);
 
@@ -87,20 +115,23 @@ export default async function TeknolojiPage({ searchParams }) {
       <TechNewsPageHero count={count || 0} products={featuredProducts || []} heroImage={settings?.news_hero_bg_1 || ""} heroVideo={settings?.news_hero_video || ""} />
 
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
-        <div className="mb-8 flex flex-col gap-3 border-b border-bw-200 pb-6 sm:mb-10 sm:flex-row sm:items-end sm:justify-between">
+        <div className="mb-8 flex flex-col gap-4 border-b border-bw-200 pb-6 sm:mb-10 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-bw-500">Mepotia teknoloji</p>
-            <h2 className="mt-2 text-3xl font-semibold tracking-tight text-bw-950 sm:text-4xl">Son haberler</h2>
+            <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-bw-500"><Sparkles className="h-3.5 w-3.5" /> Mepotia teknoloji</p>
+            <h2 className="mt-2 text-3xl font-semibold tracking-tight text-bw-950 sm:text-5xl">Bugünün teknoloji gündemi</h2>
           </div>
-          <p className="text-sm text-bw-500">{count || 0} haber · En yeni gelişmeler ilk sırada.</p>
+          <p className="max-w-xs text-sm leading-relaxed text-bw-500 sm:text-right">{count || 0} haber, seçili gelişmeler ve net bir teknoloji akışı.</p>
         </div>
 
         {posts?.length ? (
           <>
-            <TechNewsFeaturedCarousel posts={carouselPosts} />
+            {page === 1 ? <TechNewsFeaturedCarousel posts={carouselPosts} /> : null}
             {feedPosts.length ? (
-              <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
-                {feedPosts.map((post, index) => <NewsCard key={post.id} post={post} index={index} large={!carouselPosts.length && index === 0} />)}
+              <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_19rem] lg:gap-10">
+                <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:gap-6">
+                  {feedPosts.map((post, index) => <NewsCard key={post.id} post={post} index={index} large={page === 1 && !carouselPosts.length && index === 0} wide={feedPosts.length > 1 && feedPosts.length % 2 === 1 && index === feedPosts.length - 1} />)}
+                </div>
+                <NewsDigest posts={trendingPosts.length ? trendingPosts : feedPosts} />
               </div>
             ) : null}
           </>

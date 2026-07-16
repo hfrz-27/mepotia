@@ -1,9 +1,12 @@
 import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
+import CategoryFilters from "@/components/CategoryFilters";
 import { PremiumBreadcrumb } from "@/components/BackHomeLink";
 import { getCategoryBySlug } from "@/lib/categories";
 import { getPublishedProducts } from "@/lib/products";
+import { mergeCategoryProducts } from "@/lib/categoryDemoProducts";
 import { notFound } from "next/navigation";
+import { getProductTaxonomy } from "@/lib/productTaxonomy";
 
 export const revalidate = 60;
 
@@ -14,18 +17,34 @@ export default async function CategoryPage({ params, searchParams }) {
   if (!category) notFound();
 
   const sort = sp?.sort || "newest";
+  const city = sp?.city || "";
+  const condition = sp?.condition || "";
+  const minPrice = sp?.min || "";
+  const maxPrice = sp?.max || "";
+  const brand = sp?.brand || "";
+  const model = sp?.model || "";
   const page = Number(sp?.page || 1);
   const orderBy =
     sort === "views" ? "views" : sort === "price_asc" || sort === "price_desc" ? "price" : "created_at";
-  const ascending = sort === "price_asc";
+  const ascending = sort === "price_asc" || sort === "oldest";
 
-  const { data, count } = await getPublishedProducts({
-    categoryId: category.id,
-    orderBy,
-    ascending,
-    page,
-    limit: 12,
-  });
+  const result = category.catalogOnly
+    ? { data: [], count: 0 }
+    : await getPublishedProducts({
+        categoryId: category.id,
+        city: city || null,
+        condition: condition || null,
+        minPrice: minPrice || null,
+        maxPrice: maxPrice || null,
+        brand: brand || null,
+        model: model || null,
+        orderBy,
+        ascending,
+        page,
+        limit: 12,
+      });
+  const data = mergeCategoryProducts(result.data || [], slug, 12);
+  const count = Math.max(result.count || 0, data.length);
 
   const totalPages = Math.max(1, Math.ceil((count || 0) / 12));
 
@@ -43,20 +62,13 @@ export default async function CategoryPage({ params, searchParams }) {
       ) : null}
       <p className="mt-2 text-sm text-bw-500">{count || 0} ürün</p>
 
-      {(category.subcategories || []).length ? (
-        <div className="mt-4 flex flex-wrap gap-2">
-          {category.subcategories.map((sub) => (
-            <span
-              key={sub.id || sub.slug}
-              className="rounded-full border border-bw-200 bg-bw-50 px-3 py-1 text-xs font-medium text-bw-600"
-            >
-              {sub.name}
-            </span>
-          ))}
-        </div>
-      ) : null}
+      <CategoryFilters
+        slug={slug}
+        taxonomy={getProductTaxonomy(slug)}
+        defaults={{ sort, city, condition, minPrice, maxPrice, brand, model, categoryName: category.name }}
+      />
 
-      <div className="mt-6 flex flex-wrap gap-2">
+      <div className="hidden mt-6 flex-wrap gap-2">
         {[
           ["newest", "En yeni"],
           ["views", "Popüler"],
