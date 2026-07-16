@@ -19,6 +19,7 @@ function NewsCard({ post, index }) {
     <article className={`group ${index === 0 ? "lg:col-span-2" : ""}`}>
       <Link
         href={`/teknoloji/${post.id}`}
+        style={index === 0 ? { backgroundColor: "#09090b" } : undefined}
         className={`relative flex h-full overflow-hidden rounded-[1.75rem] border border-bw-200 bg-white shadow-[0_22px_50px_-42px_rgba(0,0,0,0.45)] transition duration-500 hover:-translate-y-1 hover:border-bw-300 hover:shadow-[0_28px_60px_-40px_rgba(0,0,0,0.3)] ${
           index === 0 ? "min-h-[25rem] bg-bw-950 md:min-h-[31rem]" : "flex-col"
         }`}

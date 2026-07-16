@@ -12,6 +12,7 @@ const EMPTY = {
   title: "",
   excerpt: "",
   body: "",
+  is_featured: false,
   published: true,
 };
 
@@ -101,9 +102,18 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
         body: form.body.trim(),
         cover_url,
         source_url: null,
+        is_featured: form.is_featured,
         published: form.published,
         updated_at: new Date().toISOString(),
       };
+
+      if (form.is_featured) {
+        const { error: clearError } = await supabase
+          .from("tech_posts")
+          .update({ is_featured: false })
+          .eq("is_featured", true);
+        if (clearError) throw clearError;
+      }
 
       const { error } = editId
         ? await supabase.from("tech_posts").update(payload).eq("id", editId)
@@ -132,6 +142,7 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
       title: post.title || "",
       excerpt: post.excerpt || "",
       body: post.body || "",
+      is_featured: Boolean(post.is_featured),
       published: post.published !== false,
     });
     setCoverFile(null);
@@ -290,6 +301,10 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
               <input type="checkbox" name="published" checked={form.published} onChange={onChange} />
               Ana sayfada yayınla
             </label>
+            <label className="flex items-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2.5 text-sm font-semibold text-amber-950">
+              <input type="checkbox" name="is_featured" checked={form.is_featured} onChange={onChange} />
+              Haber sayfasında büyük öne çıkan haber yap
+            </label>
           </div>
         </div>
 
@@ -336,7 +351,7 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
               </div>
               <div className="min-w-0 flex-1">
                 <p className="text-[10px] font-semibold tracking-wide text-bw-400 uppercase">
-                  {post.published ? "Yayında" : "Taslak"} ·{" "}
+                  {post.is_featured ? "Öne çıkan büyük haber · " : ""}{post.published ? "Yayında" : "Taslak"} ·{" "}
                   {post.created_at ? new Date(post.created_at).toLocaleDateString("tr-TR") : ""}
                 </p>
                 <h4 className="mt-0.5 truncate font-semibold text-bw-950">{post.title}</h4>
@@ -345,6 +360,20 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
                   <button type="button" onClick={() => onEdit(post)} className="text-xs font-semibold text-bw-800 underline">
                     Düzenle
                   </button>
+                  {!post.is_featured ? (
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        const supabase = createClient();
+                        await supabase.from("tech_posts").update({ is_featured: false }).eq("is_featured", true);
+                        await supabase.from("tech_posts").update({ is_featured: true }).eq("id", post.id);
+                        onReload();
+                      }}
+                      className="text-xs font-semibold text-amber-700 underline"
+                    >
+                      Büyük haber yap
+                    </button>
+                  ) : null}
                   <button
                     type="button"
                     onClick={() => setShareId(shareId === post.id ? null : post.id)}

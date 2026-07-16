@@ -145,10 +145,19 @@ export default function AdminPage() {
     setFeedback(fbList);
     setFeedbackSqlMissing(fbErr?.message?.includes("site_feedback") ?? false);
 
-    const { data: techRows, error: techErr } = await supabase
+    let { data: techRows, error: techErr } = await supabase
       .from("tech_posts")
-      .select("id, title, excerpt, body, cover_url, source_url, published, created_at")
+      .select("id, title, excerpt, body, cover_url, source_url, is_featured, published, created_at")
+      .order("is_featured", { ascending: false })
       .order("created_at", { ascending: false });
+    if (techErr?.message?.includes("is_featured")) {
+      const legacy = await supabase
+        .from("tech_posts")
+        .select("id, title, excerpt, body, cover_url, source_url, published, created_at")
+        .order("created_at", { ascending: false });
+      techRows = (legacy.data || []).map((post) => ({ ...post, is_featured: false }));
+      techErr = legacy.error;
+    }
     if (techErr) {
       setTechPosts([]);
       setTechSqlMissing(techErr.message?.includes("tech_posts") ?? true);
