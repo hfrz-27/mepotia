@@ -17,10 +17,10 @@ export default function FormPageShell({
         />
         <div className="hero-grid absolute inset-0 opacity-[0.04]" aria-hidden />
 
-        <div className="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-14">
-          <BackHomeLink variant="dark" label="Anasayfaya dön" className="mb-6" />
+        <div className="relative mx-auto max-w-7xl px-4 py-8 text-center sm:px-6 sm:py-12 lg:px-8 lg:py-14">
+          <BackHomeLink variant="dark" label="Anasayfaya dön" className="mx-auto mb-6" />
 
-          <div className="max-w-3xl">
+          <div className="mx-auto max-w-3xl">
             <p className="inline-flex items-center gap-2 text-[10px] font-semibold tracking-[0.24em] text-bw-400 uppercase">
               <Sparkles className="h-3.5 w-3.5 text-bw-500" />
               {eyebrow}
@@ -36,7 +36,7 @@ export default function FormPageShell({
           </div>
 
           <div
-            className={`mt-8 overflow-hidden rounded-[1.75rem] border border-bw-200 bg-white p-6 shadow-[0_28px_80px_-48px_rgba(0,0,0,0.45)] sm:p-8 ${maxWidth}`}
+            className={`mx-auto mt-8 overflow-hidden rounded-[1.75rem] border border-bw-200 bg-white p-6 text-left shadow-[0_28px_80px_-48px_rgba(0,0,0,0.45)] sm:p-8 ${maxWidth}`}
           >
             {children}
           </div>

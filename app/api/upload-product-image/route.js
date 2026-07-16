@@ -1,6 +1,9 @@
 import { createClient } from "@/lib/supabase-server";
 import { NextResponse } from "next/server";
 
+const MAX_UPLOAD_BYTES = 8 * 1024 * 1024;
+const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
+
 export async function POST(request) {
   const supabase = await createClient();
   const {
@@ -28,6 +31,14 @@ export async function POST(request) {
 
   if (!file || typeof file === "string" || !productId || typeof productId !== "string") {
     return NextResponse.json({ error: "Dosya ve productId gerekli." }, { status: 400 });
+  }
+
+  if (!ALLOWED_IMAGE_TYPES.has(file.type)) {
+    return NextResponse.json({ error: "Yalnızca JPEG, PNG veya WebP görsel yüklenebilir." }, { status: 400 });
+  }
+
+  if (file.size <= 0 || file.size > MAX_UPLOAD_BYTES) {
+    return NextResponse.json({ error: "Görsel 8 MB'dan küçük olmalı." }, { status: 400 });
   }
 
   const { data: product } = await supabase

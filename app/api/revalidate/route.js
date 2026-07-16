@@ -45,16 +45,16 @@ export async function POST(request) {
     body = {};
   }
 
+  const auth = await requireAdmin();
+  if (!auth.ok) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
+  }
+
   const shouldSyncTechNews =
     body?.syncTechNews === true ||
     new URL(request.url).searchParams.get("syncTechNews") === "1";
 
   if (shouldSyncTechNews) {
-    const auth = await requireAdmin();
-    if (!auth.ok) {
-      return NextResponse.json({ error: auth.error }, { status: auth.status });
-    }
-
     try {
       let supabase = auth.supabase;
       try {

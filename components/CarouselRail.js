@@ -28,7 +28,7 @@ export function useCarouselNav(scrollerRef) {
       el.removeEventListener("scroll", update);
       ro.disconnect();
     };
-  }, [update]);
+  }, [scrollerRef, update]);
 
   const scrollBy = (direction) => {
     const el = scrollerRef.current;

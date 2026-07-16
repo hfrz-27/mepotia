@@ -19,7 +19,7 @@ export default async function TechNewsSection({ categories = [] }) {
 
   return (
     <section id="teknoloji" className="relative scroll-mt-28 border-t border-bw-200 bg-white">
-      <div className="story-band-grid absolute inset-0 opacity-[0.03]" aria-hidden />
+      <div className="pointer-events-none story-band-grid absolute inset-0 opacity-[0.03]" aria-hidden />
 
       <HomeCategoryExplorer categories={categoryMeta} productsByCategory={productsByCategory} />
 

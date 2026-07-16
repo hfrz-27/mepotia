@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Newspaper, X } from "lucide-react";
@@ -18,7 +18,7 @@ export default function GlobalNewsDrawer() {
   const fetched = useRef(false);
   const openRef = useRef(false);
 
-  const loadPosts = async () => {
+  const loadPosts = useCallback(async () => {
     if (fetched.current || loading) return;
     setLoading(true);
     try {
@@ -31,13 +31,13 @@ export default function GlobalNewsDrawer() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [loading]);
 
-  const openDrawer = () => {
+  const openDrawer = useCallback(() => {
     setOpen(true);
     openRef.current = true;
     void loadPosts();
-  };
+  }, [loadPosts]);
 
   useEffect(() => {
     openRef.current = open;
@@ -83,7 +83,7 @@ export default function GlobalNewsDrawer() {
       window.removeEventListener("touchstart", onStart);
       window.removeEventListener("touchend", onEnd);
     };
-  }, []);
+  }, [openDrawer]);
 
   return (
     <>

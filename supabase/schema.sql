@@ -257,19 +257,24 @@ create policy "product_images_public_read" on storage.objects
 drop policy if exists "product_images_auth_upload" on storage.objects;
 create policy "product_images_auth_upload" on storage.objects
   for insert with check (
-    bucket_id = 'product-images' and auth.role() = 'authenticated'
+    bucket_id = 'product-images'
+    and public.is_admin()
   );
 
 drop policy if exists "product_images_auth_update" on storage.objects;
 create policy "product_images_auth_update" on storage.objects
   for update using (
-    bucket_id = 'product-images' and auth.role() = 'authenticated'
+    bucket_id = 'product-images'
+    and public.is_admin()
+  ) with check (
+    bucket_id = 'product-images'
+    and public.is_admin()
   );
 
 drop policy if exists "product_images_auth_delete" on storage.objects;
 create policy "product_images_auth_delete" on storage.objects
   for delete using (
-    bucket_id = 'product-images' and (auth.role() = 'authenticated' or public.is_admin())
+    bucket_id = 'product-images' and public.is_admin()
   );
 
 -- Seed settings

@@ -15,7 +15,7 @@ export default function HomeCategoryExplorer({ categories = [], productsByCatego
     }));
   }, [categories]);
 
-  const activeSlug = items[0]?.slug || "telefon";
+  const [activeSlug, setActiveSlug] = useState(items[0]?.slug || "telefon");
   const [directoryOpen, setDirectoryOpen] = useState(false);
 
   const active = items.find((c) => c.slug === activeSlug) || items[0];
@@ -30,7 +30,7 @@ export default function HomeCategoryExplorer({ categories = [], productsByCatego
         : "border border-bw-300 text-bw-700 hover:border-bw-950 hover:bg-[#f5f5f7] hover:text-bw-950"
     }`;
 
-  const categorySearchHref = (category) => `/kategori/${category.slug}`;
+  const selectCategory = (slug) => setActiveSlug(slug);
 
   return (
     <div className="bg-white">
@@ -48,12 +48,17 @@ export default function HomeCategoryExplorer({ categories = [], productsByCatego
             </button>
 
             {active ? (
-              <Link href={categorySearchHref(active)} className={`inline-flex shrink-0 items-center gap-2 border-2 border-bw-950 px-3 py-2 text-sm ${categoryButtonClass(true)}`}>
+              <button
+                type="button"
+                onClick={() => selectCategory(active.slug)}
+                aria-pressed="true"
+                className={`inline-flex shrink-0 items-center gap-2 border-2 border-bw-950 px-3 py-2 text-sm ${categoryButtonClass(true)}`}
+              >
                 {ActiveIcon ? (
                   <ActiveIcon className="h-4 w-4 shrink-0" strokeWidth={1.75} />
                 ) : null}
                 <span>{active.name}</span>
-              </Link>
+              </button>
             ) : null}
 
             <nav
@@ -63,10 +68,16 @@ export default function HomeCategoryExplorer({ categories = [], productsByCatego
               {inactiveItems.map((cat) => {
                 const Icon = cat.icon;
                 return (
-                  <Link key={cat.slug} href={categorySearchHref(cat)} className={`inline-flex shrink-0 items-center gap-2 px-3 py-2 text-sm ${categoryButtonClass(false)}`}>
+                  <button
+                    key={cat.slug}
+                    type="button"
+                    onClick={() => selectCategory(cat.slug)}
+                    aria-pressed="false"
+                    className={`inline-flex shrink-0 items-center gap-2 px-3 py-2 text-sm ${categoryButtonClass(false)}`}
+                  >
                     <Icon className="h-4 w-4 shrink-0" strokeWidth={1.75} />
                     <span>{cat.name}</span>
-                  </Link>
+                  </button>
                 );
               })}
             </nav>
@@ -93,9 +104,15 @@ export default function HomeCategoryExplorer({ categories = [], productsByCatego
               {items.map((cat) => {
                 const selected = cat.slug === activeSlug;
                 return (
-                  <Link key={cat.slug} href={categorySearchHref(cat)} aria-current={selected ? "page" : undefined} className={`px-4 py-2.5 text-[15px] sm:px-5 ${categoryButtonClass(selected)}`}>
+                  <button
+                    key={cat.slug}
+                    type="button"
+                    onClick={() => selectCategory(cat.slug)}
+                    aria-pressed={selected}
+                    className={`px-4 py-2.5 text-[15px] sm:px-5 ${categoryButtonClass(selected)}`}
+                  >
                     {cat.name}
-                  </Link>
+                  </button>
                 );
               })}
             </nav>
@@ -117,7 +134,7 @@ export default function HomeCategoryExplorer({ categories = [], productsByCatego
                     <div key={category.slug} className="relative w-[8.75rem] shrink-0 rounded-xl border border-bw-100 bg-bw-50 p-2.5 transition hover:border-bw-300 hover:bg-white">
                       <div className="flex items-center gap-2">
                         <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-bw-800 shadow-sm"><Icon className="h-4 w-4" /></span>
-                        <Link href={categorySearchHref(category)} className="text-sm font-semibold text-bw-950 hover:underline after:absolute after:inset-0">{category.name}</Link>
+                        <Link href={`/kategori/${category.slug}`} className="text-sm font-semibold text-bw-950 hover:underline after:absolute after:inset-0">{category.name}</Link>
                       </div>
                     </div>
                   );
@@ -142,7 +159,7 @@ export default function HomeCategoryExplorer({ categories = [], productsByCatego
           key={activeSlug}
           products={activeProducts}
           href={active ? `/kategori/${active.slug}` : undefined}
-          linkLabel={`Tüm ${active?.name?.toLowerCase()} ilanları`}
+          linkLabel="Tüm ürünleri gör"
           prefetchCount={2}
           ariaLabel={`${active?.name} ürünleri`}
         />
