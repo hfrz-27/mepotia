@@ -9,6 +9,7 @@ create table if not exists public.tech_posts (
   cover_url text,
   source_url text,
   is_featured boolean not null default false,
+  featured_order smallint check (featured_order between 1 and 5),
   published boolean not null default true,
   author_id uuid references public.profiles(id) on delete set null,
   created_at timestamptz not null default now(),
@@ -20,6 +21,9 @@ create index if not exists tech_posts_created_at_idx
 
 create index if not exists tech_posts_featured_idx
   on public.tech_posts (is_featured desc, created_at desc);
+
+create index if not exists tech_posts_featured_order_idx
+  on public.tech_posts (featured_order asc nulls last, created_at desc);
 
 alter table public.tech_posts enable row level security;
 

@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Clock3, Newspaper } from "lucide-react";
 import TechNewsPageHero from "@/components/TechNewsPageHero";
+import TechNewsFeaturedCarousel from "@/components/TechNewsFeaturedCarousel";
 import TechNewsViewSync from "@/components/TechNewsViewSync";
 import PremiumPagination from "@/components/PremiumPagination";
 import { getTechPosts, resolveTechPostsPageSize } from "@/lib/techPosts";
@@ -14,46 +15,46 @@ import { getPublishedProducts } from "@/lib/products";
 
 export const revalidate = 60;
 
-function NewsCard({ post, index }) {
+function NewsCard({ post, index, large = false }) {
   return (
-    <article className={`group ${index === 0 ? "lg:col-span-2" : ""}`}>
+    <article className={`group ${large ? "lg:col-span-2" : ""}`}>
       <Link
         href={`/teknoloji/${post.id}`}
-        style={index === 0 ? { backgroundColor: "#09090b" } : undefined}
+        style={large ? { backgroundColor: "#09090b" } : undefined}
         className={`relative flex h-full overflow-hidden rounded-[1.75rem] border border-bw-200 bg-white shadow-[0_22px_50px_-42px_rgba(0,0,0,0.45)] transition duration-500 hover:-translate-y-1 hover:border-bw-300 hover:shadow-[0_28px_60px_-40px_rgba(0,0,0,0.3)] ${
-          index === 0 ? "min-h-[25rem] bg-bw-950 md:min-h-[31rem]" : "flex-col"
+          large ? "min-h-[25rem] bg-bw-950 md:min-h-[31rem]" : "flex-col"
         }`}
       >
-        <div className={`relative overflow-hidden bg-bw-900 ${index === 0 ? "absolute inset-0" : "aspect-[16/10]"}`}>
+        <div className={`relative overflow-hidden bg-bw-900 ${large ? "absolute inset-0" : "aspect-[16/10]"}`}>
           {post.cover_url ? (
             <Image
               src={post.cover_url}
               alt={post.title}
               fill
-              priority={index < 2}
-              sizes={index === 0 ? "(max-width: 768px) 100vw, 66vw" : "(max-width: 768px) 100vw, 33vw"}
+              priority={large || index < 2}
+              sizes={large ? "(max-width: 768px) 100vw, 66vw" : "(max-width: 768px) 100vw, 33vw"}
               className="object-cover transition duration-700 group-hover:scale-105"
             />
           ) : (
             <div className="h-full w-full bg-gradient-to-br from-bw-800 to-bw-950" />
           )}
-          {index === 0 ? <div className="absolute inset-0 bg-gradient-to-t from-bw-950 via-bw-950/70 to-bw-950/20" /> : null}
+          {large ? <div className="absolute inset-0 bg-gradient-to-t from-bw-950 via-bw-950/70 to-bw-950/20" /> : null}
         </div>
 
-        <div className={`relative ${index === 0 ? "mt-auto p-6 sm:p-8" : "p-5 sm:p-6"}`}>
-          <div className={`flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] ${index === 0 ? "text-bw-300" : "text-bw-500"}`}>
+        <div className={`relative ${large ? "mt-auto p-6 sm:p-8" : "p-5 sm:p-6"}`}>
+          <div className={`flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] ${large ? "text-bw-300" : "text-bw-500"}`}>
             <Clock3 className="h-3.5 w-3.5" />
             <span>{formatTechDate(post.created_at)}</span>
           </div>
-          <h2 className={`mt-3 font-semibold tracking-tight ${index === 0 ? "max-w-3xl text-2xl leading-tight text-white sm:text-4xl" : "text-xl leading-snug text-bw-950"}`}>
+          <h2 className={`mt-3 font-semibold tracking-tight ${large ? "max-w-3xl text-2xl leading-tight text-white sm:text-4xl" : "text-xl leading-snug text-bw-950"}`}>
             {post.title}
           </h2>
           {post.excerpt ? (
-            <p className={`mt-3 leading-relaxed ${index === 0 ? "max-w-2xl text-sm text-bw-200 sm:text-base" : "line-clamp-2 text-sm text-bw-600"}`}>
+            <p className={`mt-3 leading-relaxed ${large ? "max-w-2xl text-sm text-bw-200 sm:text-base" : "line-clamp-2 text-sm text-bw-600"}`}>
               {post.excerpt}
             </p>
           ) : null}
-          <span className={`mt-5 inline-flex items-center gap-1.5 text-sm font-semibold ${index === 0 ? "text-white" : "text-bw-900"}`}>
+          <span className={`mt-5 inline-flex items-center gap-1.5 text-sm font-semibold ${large ? "text-white" : "text-bw-900"}`}>
             Haberi oku <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
           </span>
         </div>
@@ -75,6 +76,8 @@ export default async function TeknolojiPage({ searchParams }) {
     getSiteSettings(),
   ]);
   const totalPages = Math.max(1, Math.ceil((count || 0) / pageSize));
+  const carouselPosts = (posts || []).filter((post) => post.featured_order).sort((a, b) => a.featured_order - b.featured_order).slice(0, 5);
+  const feedPosts = (posts || []).filter((post) => !post.featured_order);
 
   if (page > totalPages) redirect(`/teknoloji?page=${totalPages}`);
 
@@ -93,9 +96,14 @@ export default async function TeknolojiPage({ searchParams }) {
         </div>
 
         {posts?.length ? (
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
-            {posts.map((post, index) => <NewsCard key={post.id} post={post} index={index} />)}
-          </div>
+          <>
+            <TechNewsFeaturedCarousel posts={carouselPosts} />
+            {feedPosts.length ? (
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+                {feedPosts.map((post, index) => <NewsCard key={post.id} post={post} index={index} large={!carouselPosts.length && index === 0} />)}
+              </div>
+            ) : null}
+          </>
         ) : (
           <div className="rounded-[1.75rem] border border-dashed border-bw-300 bg-white px-6 py-20 text-center">
             <Newspaper className="mx-auto h-9 w-9 text-bw-400" strokeWidth={1.4} />

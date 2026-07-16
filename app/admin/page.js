@@ -147,15 +147,15 @@ export default function AdminPage() {
 
     let { data: techRows, error: techErr } = await supabase
       .from("tech_posts")
-      .select("id, title, excerpt, body, cover_url, source_url, is_featured, published, created_at")
-      .order("is_featured", { ascending: false })
+      .select("id, title, excerpt, body, cover_url, source_url, featured_order, is_featured, published, created_at")
+      .order("featured_order", { ascending: true, nullsFirst: false })
       .order("created_at", { ascending: false });
-    if (techErr?.message?.includes("is_featured")) {
+    if (techErr?.message?.includes("featured_order")) {
       const legacy = await supabase
         .from("tech_posts")
         .select("id, title, excerpt, body, cover_url, source_url, published, created_at")
         .order("created_at", { ascending: false });
-      techRows = (legacy.data || []).map((post) => ({ ...post, is_featured: false }));
+      techRows = (legacy.data || []).map((post) => ({ ...post, featured_order: post.is_featured ? 1 : null }));
       techErr = legacy.error;
     }
     if (techErr) {
