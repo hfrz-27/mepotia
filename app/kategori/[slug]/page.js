@@ -49,7 +49,7 @@ export default async function CategoryPage({ params, searchParams }) {
   const totalPages = Math.max(1, Math.ceil((count || 0) / 12));
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8"> {/* max-w-7xl → max-w-6xl */}
+    <main className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8"> {/* Daraltıldı */}
       <PremiumBreadcrumb
         items={[{ href: `/kategori/${slug}`, label: category.name, current: true }]}
         className="mb-6"
@@ -79,7 +79,7 @@ export default async function CategoryPage({ params, searchParams }) {
 
       {totalPages > 1 && (
         <div className="mt-12 flex justify-center">
-          {/* Pagination */}
+          {/* Pagination buraya eklenebilir */}
         </div>
       )}
     </main>
