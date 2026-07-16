@@ -48,6 +48,14 @@ export const ADMIN_TABS = [
         badgeKey: null,
         totalKey: "products",
       },
+      {
+        id: "categories",
+        label: "Kategoriler",
+        hint: "Ürün kategorileri",
+        icon: LayoutGrid,
+        badgeKey: null,
+        totalKey: null,
+      },
     ],
   },
   {

@@ -8,7 +8,6 @@ create table if not exists public.tech_posts (
   body text not null default '',
   cover_url text,
   source_url text,
-  category text not null default 'Yapay Zekâ',
   published boolean not null default true,
   author_id uuid references public.profiles(id) on delete set null,
   created_at timestamptz not null default now(),

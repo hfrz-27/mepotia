@@ -8,6 +8,7 @@ import { displayImageUrl } from "@/lib/productImage";
 
 const TABS = [
   { id: "home", label: "Ana sayfa" },
+  { id: "news", label: "Haberler" },
   { id: "price", label: "Fiyat karşılaştır" },
 ];
 
@@ -24,6 +25,15 @@ const PANELS = {
     ],
     storagePrefix: "hero",
     savedMsg: "Hero arka planı kaydedildi. Sayfayı yenile.",
+  },
+  news: {
+    title: "Haberler hero — kapak görseli",
+    description:
+      "Teknoloji haberleri sayfasının en üstünde görünür. Yüklediğin görselin üzerine okunaklı koyu bir katman eklenir.",
+    videoKey: "news_hero_video",
+    slots: [{ key: "news_hero_bg_1", label: "Hero görseli" }],
+    storagePrefix: "news-hero",
+    savedMsg: "Haberler hero görseli kaydedildi. Sayfayı yenile.",
   },
   price: {
     title: "Fiyat karşılaştır hero — fotoğraf & video",
@@ -45,6 +55,8 @@ const ALL_KEYS = [
   "hero_bg_2",
   "hero_bg_3",
   "hero_video",
+  "news_hero_bg_1",
+  "news_hero_video",
   "price_compare_bg_1",
   "price_compare_bg_2",
   "price_compare_bg_3",
@@ -91,7 +103,8 @@ export default function HeroBackgroundAdmin() {
     if (
       error?.message?.includes("hero_bg") ||
       error?.message?.includes("hero_video") ||
-      error?.message?.includes("price_compare")
+      error?.message?.includes("price_compare") ||
+      error?.message?.includes("news_hero")
     ) {
       setSqlMissing(true);
       setLoading(false);
@@ -203,8 +216,8 @@ export default function HeroBackgroundAdmin() {
       <div className="rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-950">
         <p className="font-semibold">SQL eksik</p>
         <p className="mt-1">
-          Supabase&apos;de <code>supabase/hero_backgrounds.sql</code> ve{" "}
-          <code>supabase/price_compare_hero.sql</code> çalıştır.
+          Supabase&apos;de <code>supabase/hero_backgrounds.sql</code>,{" "}
+          <code>supabase/price_compare_hero.sql</code> ve <code>supabase/news_hero.sql</code> çalıştır.
         </p>
       </div>
     );

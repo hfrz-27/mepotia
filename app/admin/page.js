@@ -16,6 +16,7 @@ import { recoverPhotosFromStorage } from "@/lib/recoverPhotos";
 import { deleteProductFully } from "@/lib/deleteProduct";
 import ShareProductButtons from "@/components/ShareProductButtons";
 import TechPostsAdmin from "@/components/admin/TechPostsAdmin";
+import ProductCategoriesAdmin from "@/components/admin/ProductCategoriesAdmin";
 import HeroBackgroundAdmin from "@/components/admin/HeroBackgroundAdmin";
 import AdminLayout from "@/components/admin/AdminLayout";
 import AdminToast from "@/components/admin/AdminToast";
@@ -59,6 +60,7 @@ export default function AdminPage() {
   const [feedback, setFeedback] = useState([]);
   const [feedbackSqlMissing, setFeedbackSqlMissing] = useState(false);
   const [techPosts, setTechPosts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [techSqlMissing, setTechSqlMissing] = useState(false);
   const [msg, setMsg] = useState("");
   const [tab, setTab] = useState("offers");
@@ -114,6 +116,9 @@ export default function AdminPage() {
     }));
     setProducts(rows);
 
+    const { data: categoryRows } = await supabase.from("categories").select("id, name, slug, sort_order").order("sort_order");
+    setCategories(categoryRows || []);
+
     if (prodErr && !rows.length) {
       setMsg(`Ürünler yüklenemedi: ${prodErr.message}`);
     }
@@ -140,18 +145,10 @@ export default function AdminPage() {
     setFeedback(fbList);
     setFeedbackSqlMissing(fbErr?.message?.includes("site_feedback") ?? false);
 
-    let { data: techRows, error: techErr } = await supabase
+    const { data: techRows, error: techErr } = await supabase
       .from("tech_posts")
-      .select("id, title, excerpt, body, cover_url, source_url, category, published, created_at")
+      .select("id, title, excerpt, body, cover_url, source_url, published, created_at")
       .order("created_at", { ascending: false });
-    if (techErr?.message?.includes("category")) {
-      const legacy = await supabase
-        .from("tech_posts")
-        .select("id, title, excerpt, body, cover_url, source_url, published, created_at")
-        .order("created_at", { ascending: false });
-      techRows = (legacy.data || []).map((post) => ({ ...post, category: "Yapay Zekâ" }));
-      techErr = legacy.error;
-    }
     if (techErr) {
       setTechPosts([]);
       setTechSqlMissing(techErr.message?.includes("tech_posts") ?? true);
@@ -760,6 +757,8 @@ export default function AdminPage() {
           )}
         </div>
       ) : null}
+
+      {tab === "categories" ? <ProductCategoriesAdmin categories={categories} /> : null}
 
       {tab === "tech" ? (
         <TechPostsAdmin posts={techPosts} onReload={load} sqlMissing={techSqlMissing} />

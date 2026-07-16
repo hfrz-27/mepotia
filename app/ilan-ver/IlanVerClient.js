@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import BackHomeLink from "@/components/BackHomeLink";
+import { TECH_CATEGORY_SLUGS } from "@/lib/techCategories";
 
 const INITIAL = {
   title: "",
@@ -88,7 +89,7 @@ export default function IlanVerClient() {
       }
       setUserId(user.id);
       const { data: cats } = await supabase.from("categories").select("*").order("sort_order");
-      setCategories(cats || []);
+      setCategories((cats || []).filter((category) => TECH_CATEGORY_SLUGS.includes(category.slug)));
 
       if (isEdit) {
         const { data: product, error: loadErr } = await supabase
@@ -569,6 +570,9 @@ export default function IlanVerClient() {
                   <option key={c.id} value={c.id}>{c.name}</option>
                 ))}
               </select>
+              {!categories.length ? (
+                <p className="mt-2 text-xs text-amber-700">Teknoloji kategorilerini açmak için yönetim panelindeki Kategoriler bölümünden SQL kurulumunu tamamla.</p>
+              ) : null}
             </div>
             <div>
               <label className={label} htmlFor="city">Şehir</label>

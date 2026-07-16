@@ -7,13 +7,11 @@ import ShareTechPostButtons from "@/components/ShareTechPostButtons";
 import TechNewsSyncBox from "@/components/admin/TechNewsSyncBox";
 import { createClient } from "@/lib/supabase";
 import { absoluteUrl } from "@/lib/site";
-import { TECH_NEWS_CATEGORIES } from "@/lib/techNewsCategories";
 
 const EMPTY = {
   title: "",
   excerpt: "",
   body: "",
-  category: "Yapay Zekâ",
   published: true,
 };
 
@@ -101,7 +99,6 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
         title: form.title.trim(),
         excerpt: form.excerpt.trim(),
         body: form.body.trim(),
-        category: form.category,
         cover_url,
         source_url: null,
         published: form.published,
@@ -135,7 +132,6 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
       title: post.title || "",
       excerpt: post.excerpt || "",
       body: post.body || "",
-      category: post.category || "Yapay Zekâ",
       published: post.published !== false,
     });
     setCoverFile(null);
@@ -283,12 +279,6 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
               <input id="tech-title" name="title" value={form.title} onChange={onChange} required className={field} placeholder="Örn. iPhone 17 özellikleri sızdı" />
             </div>
             <div>
-              <label className={label} htmlFor="tech-category">Kategori</label>
-              <select id="tech-category" name="category" value={form.category} onChange={onChange} className={field}>
-                {TECH_NEWS_CATEGORIES.map((category) => <option key={category} value={category}>{category}</option>)}
-              </select>
-            </div>
-            <div>
               <label className={label} htmlFor="tech-excerpt">Kısa özet</label>
               <input id="tech-excerpt" name="excerpt" value={form.excerpt} onChange={onChange} className={field} placeholder="Ana sayfada görünecek 1-2 cümle" />
             </div>
@@ -346,7 +336,7 @@ export default function TechPostsAdmin({ posts, onReload, sqlMissing }) {
               </div>
               <div className="min-w-0 flex-1">
                 <p className="text-[10px] font-semibold tracking-wide text-bw-400 uppercase">
-                  {post.published ? "Yayında" : "Taslak"} · {post.category || "Genel"} ·{" "}
+                  {post.published ? "Yayında" : "Taslak"} ·{" "}
                   {post.created_at ? new Date(post.created_at).toLocaleDateString("tr-TR") : ""}
                 </p>
                 <h4 className="mt-0.5 truncate font-semibold text-bw-950">{post.title}</h4>
