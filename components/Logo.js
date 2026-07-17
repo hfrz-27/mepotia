@@ -6,7 +6,7 @@ import Image from "next/image";
 export default function Logo({ className = "h-8", priority = false }) {
   return (
     <Image
-      src="/mepotia-logo.png"
+      src="/Mepotia.png"
       alt="Mepotia"
       width={960}
       height={240}
