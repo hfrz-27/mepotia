@@ -6,7 +6,7 @@ import { fileURLToPath } from "url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const publicDir = join(__dirname, "..", "public");
 
-const sourceIcon = readFileSync(join(publicDir, "apple-touch-icon.png"));
+const sourceIcon = readFileSync(join(publicDir, "mepotia-app-icon.png"));
 
 async function writePng(name, size) {
   const out = join(publicDir, name);
@@ -66,5 +66,6 @@ function buildIco(buffers, sizes) {
 
 await writePng("favicon.png", 192);
 await writePng("favicon-48.png", 48);
+await writePng("apple-touch-icon.png", 180);
 await writePng("icon-512.png", 512);
 await writeIco();

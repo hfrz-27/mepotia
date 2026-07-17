@@ -70,7 +70,7 @@ export async function generateMetadata({ params }) {
   const description = post.excerpt || post.title;
   const ogImage = post.cover_url
     ? [{ url: post.cover_url, width: 1200, height: 630, alt: post.title }]
-    : [{ url: absoluteUrl("/Mepotia.png"), width: 1200, height: 630, alt: SITE_NAME }];
+    : [{ url: absoluteUrl("/mepotia-app-icon.png"), width: 1024, height: 1024, alt: SITE_NAME }];
 
   return {
     title: `${post.title} — Mepotia Teknoloji`,
