@@ -1,47 +1,96 @@
 "use client";
 
-import { BadgeCheck, BadgeDollarSign, Handshake, ShieldCheck } from "lucide-react";
-
-const VALUES = [
-  { icon: ShieldCheck, title: "Güvenle al · sat", text: "Şeffaf süreç" },
-  { icon: Handshake, title: "Dürüst ticaret", text: "Net açıklama" },
-  { icon: BadgeDollarSign, title: "Adil fiyat", text: "Piyasa uyumu" },
-  { icon: BadgeCheck, title: "Özenli seçim", text: "Temiz vitrin" },
-];
+import Link from "next/link";
+import {
+  ArrowUpRight,
+  BadgeCheck,
+  BadgeDollarSign,
+  Handshake,
+  ShieldCheck,
+} from "lucide-react";
 
 /**
- * Sabit güven şeridi — döngü yok, pv-wrap hizalı.
+ * Apple “Neden Apple Store?” tarzı — neden Mepotia.
  */
+const REASONS = [
+  {
+    icon: ShieldCheck,
+    title: "Güvenle al · sat",
+    text: "Şeffaf süreç, net iletişim. Her adım açık; sürpriz yok.",
+  },
+  {
+    icon: Handshake,
+    title: "Dürüst ticaret",
+    text: "Net açıklama ve doğru ürün bilgisi. Ne görüyorsan o.",
+  },
+  {
+    icon: BadgeDollarSign,
+    title: "Adil fiyat",
+    text: "Piyasa uyumlu fiyatlandırma. Değerini bilen vitrin.",
+  },
+  {
+    icon: BadgeCheck,
+    title: "Özenli seçim",
+    text: "Temiz vitrin — özenle seçilmiş ikinci el teknoloji.",
+  },
+];
+
 export default function HomeValueBand({ embedded = false }) {
-  const content = (
-    <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-2.5">
-      {VALUES.map((item) => {
-        const Icon = item.icon;
-        return (
-          <div
-            key={item.title}
-            className="flex items-center gap-2.5 rounded-2xl bg-white px-3 py-2.5 ring-1 ring-black/[0.05] sm:gap-3 sm:px-3.5 sm:py-3"
-          >
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#1d1d1f] text-white sm:h-10 sm:w-10">
-              <Icon className="h-4 w-4" strokeWidth={1.6} />
-            </span>
-            <div className="min-w-0">
-              <p className="truncate text-[12px] font-semibold text-[#1d1d1f] sm:text-[13px]">
+  const body = (
+    <>
+      <header className="mx-auto max-w-2xl text-center">
+        <h2 className="text-[1.65rem] font-semibold leading-[1.12] tracking-[-0.035em] text-[#1d1d1f] sm:text-[2.35rem] md:text-[2.75rem]">
+          Neden Mepotia?
+        </h2>
+        <p className="mx-auto mt-2 max-w-xl text-[14px] leading-snug tracking-[-0.01em] text-[#6e6e73] sm:mt-3 sm:text-[17px] md:text-[19px]">
+          Bizden alışveriş yapmak için şimdi daha da fazla sebebiniz var.
+        </p>
+      </header>
+
+      <div className="mt-8 grid grid-cols-1 gap-3 sm:mt-10 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
+        {REASONS.map((item) => {
+          const Icon = item.icon;
+          return (
+            <article
+              key={item.title}
+              className="flex h-full flex-col rounded-[22px] bg-white p-5 ring-1 ring-black/[0.04] sm:rounded-[28px] sm:p-6"
+            >
+              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#f5f5f7] text-[#1d1d1f] sm:h-12 sm:w-12">
+                <Icon className="h-5 w-5" strokeWidth={1.55} />
+              </span>
+              <h3 className="mt-4 text-[17px] font-semibold tracking-[-0.02em] text-[#1d1d1f] sm:text-[18px]">
                 {item.title}
+              </h3>
+              <p className="mt-2 flex-1 text-[13px] leading-relaxed text-[#6e6e73] sm:text-[14px]">
+                {item.text}
               </p>
-              <p className="truncate text-[11px] text-[#6e6e73]">{item.text}</p>
-            </div>
-          </div>
-        );
-      })}
-    </div>
+            </article>
+          );
+        })}
+      </div>
+
+      <div className="mt-8 flex justify-center sm:mt-10">
+        <Link
+          href="/urunler"
+          className="inline-flex items-center gap-1 text-[14px] font-normal text-[#0066cc] transition hover:underline sm:text-[15px]"
+        >
+          Vitrine göz at
+          <ArrowUpRight className="h-4 w-4" strokeWidth={2} />
+        </Link>
+      </div>
+    </>
   );
 
-  if (embedded) return <div className="mt-5">{content}</div>;
+  if (embedded) {
+    return <div className="mt-6 sm:mt-8">{body}</div>;
+  }
 
   return (
-    <section className="bg-[#f5f5f7] py-5 sm:py-7" aria-label="Değerler">
-      <div className="pv-wrap">{content}</div>
+    <section
+      className="bg-[#f5f5f7] py-12 sm:py-16 md:py-20"
+      aria-label="Neden Mepotia"
+    >
+      <div className="pv-wrap">{body}</div>
     </section>
   );
 }
