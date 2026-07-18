@@ -98,8 +98,8 @@ export default function Navbar() {
       className={[
         "sticky top-0 z-50 transition-all duration-300",
         scrolled
-          ? "h-12 border-b border-black/[0.06] bg-[rgba(245,245,247,0.82)] shadow-none backdrop-blur-[20px] backdrop-saturate-150"
-          : "h-12 border-b border-transparent bg-[rgba(245,245,247,0.88)] backdrop-blur-[20px] backdrop-saturate-150 sm:h-[3.25rem]",
+          ? "h-14 border-b border-black/[0.06] bg-[rgba(245,245,247,0.82)] shadow-none backdrop-blur-[20px] backdrop-saturate-150 sm:h-[3.75rem]"
+          : "h-14 border-b border-transparent bg-[rgba(245,245,247,0.88)] pt-1 backdrop-blur-[20px] backdrop-saturate-150 sm:h-16 sm:pt-1.5",
       ].join(" ")}
     >
       <div className="relative mx-auto flex h-full max-w-[980px] items-center justify-between gap-3 px-4 sm:max-w-[1080px] sm:px-5 lg:max-w-[1200px] lg:px-6">
