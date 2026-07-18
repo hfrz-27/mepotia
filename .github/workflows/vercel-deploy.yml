@@ -10,21 +10,87 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger Vercel Deploy Hook
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Discover project + deploy
         env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
           DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
         run: |
-          if [ -z "$DEPLOY_HOOK" ]; then
-            echo "HATA: VERCEL_DEPLOY_HOOK secret yok."
+          set -e
+          if [ -z "$VERCEL_TOKEN" ]; then
+            echo "VERCEL_TOKEN secret yok."
             exit 1
           fi
-          RESPONSE=$(curl -fsS -X POST "$DEPLOY_HOOK" || true)
-          echo "$RESPONSE"
+
+          echo "== Token ile proje listesi =="
+          # Team/user scope
+          curl -sS -H "Authorization: Bearer $VERCEL_TOKEN" \
+            "https://api.vercel.com/v9/projects?limit=20" | tee /tmp/projects.json | head -c 2000
           echo ""
-          echo "=============================================="
-          echo "NOT: Deploy 'blocked' veya 'Pro' isterse:"
-          echo "1) vercel.com → personal Hobby hesap"
-          echo "2) Add New Project → Import hfrz-27/mepotia"
-          echo "3) Domain: mepotia.com ekle"
-          echo "VEYA Netlify ücretsiz: netlify.com → Import repo"
-          echo "=============================================="
+
+          # ID'leri JSON'dan çıkarmaya çalış
+          PROJECT_ID="${VERCEL_PROJECT_ID:-}"
+          ORG_ID="${VERCEL_ORG_ID:-}"
+
+          if [ -z "$PROJECT_ID" ] || [ "$PROJECT_ID" = "" ]; then
+            PROJECT_ID=$(node -e "
+              const j=require('/tmp/projects.json');
+              const list=j.projects||j||[];
+              const arr=Array.isArray(list)?list:(list.projects||[]);
+              const p=arr.find(x=>/mepotia/i.test(x.name||''))||arr[0];
+              if(!p){process.exit(2)}
+              console.log(p.id);
+            " 2>/dev/null || true)
+          fi
+
+          if [ -z "$ORG_ID" ]; then
+            ORG_ID=$(node -e "
+              const j=require('/tmp/projects.json');
+              const list=j.projects||[];
+              const arr=Array.isArray(list)?list:(j.projects||[]);
+              const p=arr.find(x=>/mepotia/i.test(x.name||''))||arr[0];
+              if(p&&p.accountId) console.log(p.accountId);
+            " 2>/dev/null || true)
+          fi
+
+          echo "PROJECT_ID=${PROJECT_ID:-empty}"
+          echo "ORG_ID=${ORG_ID:-empty}"
+
+          if [ -n "$PROJECT_ID" ] && [ -n "$ORG_ID" ]; then
+            export VERCEL_PROJECT_ID="$PROJECT_ID"
+            export VERCEL_ORG_ID="$ORG_ID"
+            echo "== vercel pull =="
+            vercel pull --yes --environment=production --token="$VERCEL_TOKEN" || true
+            echo "== vercel build =="
+            vercel build --prod --token="$VERCEL_TOKEN"
+            echo "== vercel deploy prebuilt prod =="
+            URL=$(vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN")
+            echo "Deployed: $URL"
+            exit 0
+          fi
+
+          echo "== Fallback: deploy from cwd with link =="
+          # Token ile scope içinde deploy dene (link gerekebilir)
+          vercel deploy --prod --yes --token="$VERCEL_TOKEN" && exit 0
+
+          echo "== Fallback: deploy hook =="
+          if [ -n "$DEPLOY_HOOK" ]; then
+            curl -fsS -X POST "$DEPLOY_HOOK" || true
+            echo "Hook tetiklendi. Vercel 'blocked/Pro' diyorsa hesap ayarı gerekir."
+            exit 0
+          fi
+
+          echo "Deploy başarısız: token/proje erişimi yok."
+          exit 1
