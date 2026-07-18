@@ -6,7 +6,12 @@ import { Home, LayoutGrid, Search, Newspaper, User } from "lucide-react";
 
 const TABS = [
   { href: "/", label: "Ana", icon: Home, match: (p) => p === "/" },
-  { href: "/ara", label: "Ara", icon: Search, match: (p) => p?.startsWith("/ara") },
+  {
+    href: "/ara",
+    label: "Ara",
+    icon: Search,
+    match: (p) => p?.startsWith("/ara") || p?.startsWith("/urunler"),
+  },
   {
     href: "/kategoriler",
     label: "Kategori",
@@ -48,8 +53,10 @@ export default function MobileTabBar() {
               <li key={tab.href} className="flex-1">
                 <Link
                   href={tab.href}
+                  prefetch
+                  scroll
                   className={[
-                    "flex flex-col items-center gap-0.5 py-2.5 text-[10px] font-medium transition active:scale-95",
+                    "flex min-h-[48px] w-full flex-col items-center justify-center gap-0.5 py-2 text-[10px] font-medium transition active:scale-95",
                     on ? "text-[#0b0b0b]" : "text-[#a3a3a3]",
                   ].join(" ")}
                 >

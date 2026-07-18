@@ -36,13 +36,13 @@ export default function TechNewsHomeRow({ posts }) {
           <h2 className="mt-1 text-[1.35rem] font-semibold leading-[1.1] tracking-[-0.03em] text-[#1d1d1f] sm:text-[28px] md:text-[32px]">
             Teknoloji haberleri.
           </h2>
-          <div className="mt-2">
+          <div className="mt-3 flex justify-center sm:mt-4">
             <Link
               href="/teknoloji"
-              className="inline-flex items-center gap-0.5 text-[13px] font-medium text-[#1d1d1f] transition hover:underline hover:underline-offset-4 sm:text-[14px]"
+              className="inline-flex min-h-[40px] items-center justify-center gap-1.5 rounded-full bg-black px-5 py-2 text-[13px] font-semibold text-white transition active:scale-[0.98] sm:min-h-[44px] sm:px-6 sm:text-[14px]"
             >
-              Tüm haberler
-              <ArrowUpRight className="h-3.5 w-3.5" />
+              Tüm haberleri gör
+              <ArrowUpRight className="h-4 w-4" strokeWidth={2.25} />
             </Link>
           </div>
         </div>
@@ -137,6 +137,16 @@ export default function TechNewsHomeRow({ posts }) {
               );
             })}
           </div>
+        </div>
+
+        <div className="mt-5 flex justify-center sm:mt-6">
+          <Link
+            href="/teknoloji"
+            className="inline-flex min-h-[44px] w-full max-w-xs items-center justify-center gap-1.5 rounded-full bg-black px-5 py-2.5 text-[13px] font-semibold text-white sm:w-auto sm:px-6 sm:text-[14px]"
+          >
+            Tüm haberleri gör
+            <ArrowUpRight className="h-4 w-4" strokeWidth={2.25} />
+          </Link>
         </div>
       </div>
     </div>

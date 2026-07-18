@@ -20,9 +20,26 @@ function buildQuery(params) {
   return s ? `?${s}` : "";
 }
 
-export default function CategoryFilters({ slug, defaults = {}, taxonomy = {} }) {
+/**
+ * Sıralama + filtre paneli.
+ * basePath: "/kategori/telefon" | "/ara" | "/en-cok-bakilanlar" | "/urunler"
+ */
+export default function CategoryFilters({
+  basePath,
+  slug,
+  defaults = {},
+  taxonomy = {},
+  showSearch = false,
+}) {
+  const path = basePath || (slug ? `/kategori/${slug}` : "/ara");
   const hasAdvanced = Boolean(
-    defaults.city || defaults.condition || defaults.minPrice || defaults.maxPrice || defaults.brand || defaults.model
+    defaults.q ||
+      defaults.city ||
+      defaults.condition ||
+      defaults.minPrice ||
+      defaults.maxPrice ||
+      defaults.brand ||
+      defaults.model
   );
   const [advancedOpen, setAdvancedOpen] = useState(hasAdvanced);
   const currentSort = defaults.sort || "newest";
@@ -38,6 +55,7 @@ export default function CategoryFilters({ slug, defaults = {}, taxonomy = {} }) 
 
   const activeChips = useMemo(() => {
     const chips = [];
+    if (defaults.q) chips.push({ key: "q", label: `“${defaults.q}”` });
     if (defaults.brand) chips.push({ key: "brand", label: defaults.brand });
     if (defaults.model) chips.push({ key: "model", label: defaults.model });
     if (defaults.city) chips.push({ key: "city", label: defaults.city });
@@ -52,11 +70,22 @@ export default function CategoryFilters({ slug, defaults = {}, taxonomy = {} }) 
     return chips;
   }, [defaults]);
 
-  const clearHref = `/kategori/${slug}${buildQuery({ sort: currentSort === "newest" ? "" : currentSort })}`;
+  const queryBase = {
+    q: defaults.q,
+    city: defaults.city,
+    condition: defaults.condition,
+    min: defaults.minPrice,
+    max: defaults.maxPrice,
+    brand: defaults.brand,
+    model: defaults.model,
+  };
+
+  const clearHref = `${path}${buildQuery({
+    sort: currentSort === "newest" ? "" : currentSort,
+  })}`;
 
   return (
     <div className="mb-4 space-y-2.5 sm:mb-5">
-      {/* Sort chips + filter toggle */}
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div
           role="group"
@@ -65,14 +94,9 @@ export default function CategoryFilters({ slug, defaults = {}, taxonomy = {} }) 
         >
           {SORT_OPTIONS.map((opt) => {
             const active = currentSort === opt.value;
-            const href = `/kategori/${slug}${buildQuery({
+            const href = `${path}${buildQuery({
+              ...queryBase,
               sort: opt.value === "newest" ? "" : opt.value,
-              city: defaults.city,
-              condition: defaults.condition,
-              min: defaults.minPrice,
-              max: defaults.maxPrice,
-              brand: defaults.brand,
-              model: defaults.model,
             })}`;
             return (
               <Link
@@ -107,12 +131,13 @@ export default function CategoryFilters({ slug, defaults = {}, taxonomy = {} }) 
               {activeChips.length}
             </span>
           ) : (
-            <ChevronDown className={`h-3.5 w-3.5 transition ${advancedOpen ? "rotate-180" : ""}`} />
+            <ChevronDown
+              className={`h-3.5 w-3.5 transition ${advancedOpen ? "rotate-180" : ""}`}
+            />
           )}
         </button>
       </div>
 
-      {/* Active filter chips */}
       {activeChips.length > 0 ? (
         <div className="flex flex-wrap items-center gap-2">
           {activeChips.map((chip) => (
@@ -133,16 +158,29 @@ export default function CategoryFilters({ slug, defaults = {}, taxonomy = {} }) 
         </div>
       ) : null}
 
-      {/* Compact advanced panel */}
       {advancedOpen ? (
         <form
-          action={`/kategori/${slug}`}
+          action={path}
+          method="get"
           className="rounded-2xl border border-bw-200/90 bg-white p-3.5 shadow-[0_16px_40px_-32px_rgba(0,0,0,0.35)] sm:p-4"
         >
           <input type="hidden" name="sort" value={currentSort} />
           <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-6">
+            {showSearch ? (
+              <label className="col-span-2 block sm:col-span-3 lg:col-span-2">
+                <span className="mb-1 block text-[10px] font-semibold tracking-[0.14em] text-bw-400 uppercase">
+                  Arama
+                </span>
+                <input
+                  name="q"
+                  defaultValue={defaults.q || ""}
+                  placeholder="Ürün, marka, şehir…"
+                  className={field}
+                />
+              </label>
+            ) : null}
             <label className="block">
-              <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-bw-400">
+              <span className="mb-1 block text-[10px] font-semibold tracking-[0.14em] text-bw-400 uppercase">
                 Min fiyat
               </span>
               <input
@@ -155,7 +193,7 @@ export default function CategoryFilters({ slug, defaults = {}, taxonomy = {} }) 
               />
             </label>
             <label className="block">
-              <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-bw-400">
+              <span className="mb-1 block text-[10px] font-semibold tracking-[0.14em] text-bw-400 uppercase">
                 Max fiyat
               </span>
               <input
@@ -168,7 +206,7 @@ export default function CategoryFilters({ slug, defaults = {}, taxonomy = {} }) 
               />
             </label>
             <label className="block">
-              <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-bw-400">
+              <span className="mb-1 block text-[10px] font-semibold tracking-[0.14em] text-bw-400 uppercase">
                 Marka
               </span>
               {taxonomy.brands?.length ? (
@@ -177,11 +215,16 @@ export default function CategoryFilters({ slug, defaults = {}, taxonomy = {} }) 
                   {selectOptions(taxonomy.brands)}
                 </select>
               ) : (
-                <input name="brand" defaultValue={defaults.brand || ""} placeholder="Marka" className={field} />
+                <input
+                  name="brand"
+                  defaultValue={defaults.brand || ""}
+                  placeholder="Marka"
+                  className={field}
+                />
               )}
             </label>
             <label className="block">
-              <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-bw-400">
+              <span className="mb-1 block text-[10px] font-semibold tracking-[0.14em] text-bw-400 uppercase">
                 Model
               </span>
               {taxonomy.models?.length ? (
@@ -190,11 +233,16 @@ export default function CategoryFilters({ slug, defaults = {}, taxonomy = {} }) 
                   {selectOptions(taxonomy.models)}
                 </select>
               ) : (
-                <input name="model" defaultValue={defaults.model || ""} placeholder="Model" className={field} />
+                <input
+                  name="model"
+                  defaultValue={defaults.model || ""}
+                  placeholder="Model"
+                  className={field}
+                />
               )}
             </label>
             <label className="block">
-              <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-bw-400">
+              <span className="mb-1 block text-[10px] font-semibold tracking-[0.14em] text-bw-400 uppercase">
                 Şehir
               </span>
               <input
@@ -205,7 +253,7 @@ export default function CategoryFilters({ slug, defaults = {}, taxonomy = {} }) 
               />
             </label>
             <label className="block">
-              <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-bw-400">
+              <span className="mb-1 block text-[10px] font-semibold tracking-[0.14em] text-bw-400 uppercase">
                 Durum
               </span>
               <select name="condition" defaultValue={defaults.condition || ""} className={field}>

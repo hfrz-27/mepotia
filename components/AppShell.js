@@ -18,6 +18,9 @@ export default function AppShell({ children, footer }) {
     pathname?.startsWith("/giris/") ||
     isAdmin;
   const isCategory = pathname === "/kategori" || pathname?.startsWith("/kategori/");
+  // Ürün detayında sticky WhatsApp / teklif barı var — yüzen yardım tuşunu gizle
+  const isProductDetail = pathname?.startsWith("/urun/");
+  const hideHelpFab = isCategory || isProductDetail;
 
   return (
     <>
@@ -27,7 +30,7 @@ export default function AppShell({ children, footer }) {
         <>
           {footer}
           <MobileTabBar />
-          {isCategory ? null : <WhatsAppHelpButton />}
+          {hideHelpFab ? null : <WhatsAppHelpButton />}
           <GlobalNewsDrawer />
         </>
       )}

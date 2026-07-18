@@ -39,7 +39,11 @@ export default function SearchFiltersPanel({ categories = [], defaults = {} }) {
         }`}
       >
         <div className="overflow-hidden">
-          <form className="rounded-2xl border border-bw-200 bg-bw-50 p-4 shadow-[0_12px_32px_-20px_rgba(0,0,0,0.1)] sm:p-5">
+          <form
+            action="/ara"
+            method="get"
+            className="rounded-2xl border border-bw-200 bg-bw-50 p-4 shadow-[0_12px_32px_-20px_rgba(0,0,0,0.1)] sm:p-5"
+          >
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               <input name="q" defaultValue={q} placeholder="Kelime" className={field} />
               <input name="brand" defaultValue={brand} placeholder="Marka" className={field} />

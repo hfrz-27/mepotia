@@ -1,87 +1,87 @@
 import Link from "next/link";
-import ProductCard from "@/components/ProductCard";
-import CategoryFilters from "@/components/CategoryFilters";
-import { PremiumBreadcrumb } from "@/components/BackHomeLink";
-import { getCategoryBySlug } from "@/lib/categories";
-import { getPublishedProducts } from "@/lib/products";
-import { mergeCategoryProducts } from "@/lib/categoryDemoProducts";
-import { notFound } from "next/navigation";
-import { getProductTaxonomy } from "@/lib/productTaxonomy";
+import { ArrowUpRight } from "lucide-react";
+import BackHomeLink from "@/components/BackHomeLink";
+import { getCategoriesWithSubs } from "@/lib/categories";
+import { TECH_CATEGORY_CATALOG } from "@/lib/techCategories";
 
 export const revalidate = 60;
 
-export default async function CategoryPage({ params, searchParams }) {
-  const { slug } = await params;
-  const sp = await searchParams;
-  const category = await getCategoryBySlug(slug);
-  if (!category) notFound();
+export const metadata = {
+  title: "Kategoriler — Mepotia",
+  description:
+    "Telefon, bilgisayar, tablet, kulaklık, kılıf, şarj ve teknoloji aksesuarları.",
+};
 
-  const sort = sp?.sort || "newest";
-  const city = sp?.city || "";
-  const condition = sp?.condition || "";
-  const minPrice = sp?.min || "";
-  const maxPrice = sp?.max || "";
-  const brand = sp?.brand || "";
-  const model = sp?.model || "";
-  const page = Number(sp?.page || 1);
+export default async function KategorilerPage() {
+  const categories = await getCategoriesWithSubs();
+  const bySlug = new Map(categories.map((c) => [c.slug, c]));
 
-  const orderBy = sort === "views" ? "views" : sort === "price_asc" || sort === "price_desc" ? "price" : "created_at";
-  const ascending = sort === "price_asc" || sort === "oldest";
-
-  const result = category.catalogOnly
-    ? { data: [], count: 0 }
-    : await getPublishedProducts({
-        categoryId: category.id,
-        city: city || null,
-        condition: condition || null,
-        minPrice: minPrice || null,
-        maxPrice: maxPrice || null,
-        brand: brand || null,
-        model: model || null,
-        orderBy,
-        ascending,
-        page,
-        limit: 12,
-      });
-
-  const data = mergeCategoryProducts(result.data || [], slug, 12);
-  const count = Math.max(result.count || 0, data.length);
-  const totalPages = Math.max(1, Math.ceil((count || 0) / 12));
+  const tiles = TECH_CATEGORY_CATALOG.map((catalog) => {
+    const row = bySlug.get(catalog.slug);
+    return {
+      ...catalog,
+      id: row?.id || catalog.slug,
+      catalogOnly: !row || row.catalogOnly,
+      subcategories: row?.subcategories?.length
+        ? row.subcategories
+        : catalog.subcategories,
+    };
+  });
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8"> {/* max-w-7xl → max-w-6xl */}
-      <PremiumBreadcrumb
-        items={[{ href: `/kategori/${slug}`, label: category.name, current: true }]}
-        className="mb-6"
-      />
+    <main className="min-h-screen bg-gradient-to-b from-white to-[#f5f5f7]">
+      <div className="mx-auto max-w-7xl px-4 pt-4 pb-10 sm:px-6 sm:pt-5 sm:pb-12 lg:px-8">
+        <BackHomeLink label="Vitrine dön" className="mb-4" />
 
-      <div className="mb-8">
-        <h1 className="font-display text-4xl font-semibold tracking-tight text-bw-950">
-          {category.name}
-        </h1>
-        {category.description && (
-          <p className="mt-2 max-w-xl text-lg text-bw-600">{category.description}</p>
-        )}
-        <p className="mt-1 text-sm text-bw-500">{count} ürün</p>
-      </div>
+        <header className="mb-6 max-w-2xl sm:mb-8">
+          <p className="text-[11px] font-semibold tracking-[0.16em] text-[#86868b] uppercase">
+            Vitrin
+          </p>
+          <h1 className="mt-1 text-[1.75rem] font-semibold tracking-[-0.03em] text-[#1d1d1f] sm:text-[2.25rem]">
+            Kategoriler
+          </h1>
+          <p className="mt-2 text-[14px] leading-relaxed text-[#6e6e73] sm:text-[15px]">
+            İhtiyacın olan ürün grubunu seç — filtreli vitrine geç.
+          </p>
+        </header>
 
-      <CategoryFilters
-        slug={slug}
-        taxonomy={getProductTaxonomy(slug)}
-        defaults={{ sort, city, condition, minPrice, maxPrice, brand, model, categoryName: category.name }}
-      />
-
-      <div className="mt-10 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
-        {data.map((p) => (
-          <ProductCard key={p.id} product={p} />
-        ))}
-      </div>
-
-      {totalPages > 1 && (
-        <div className="mt-12 flex justify-center">
-          {/* Pagination */}
+        <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4">
+          {tiles.map((cat) => {
+            const Icon = cat.icon;
+            const href = `/kategori/${cat.slug}`;
+            return (
+              <Link
+                key={cat.slug}
+                href={href}
+                className="group flex flex-col rounded-[18px] bg-white p-3.5 ring-1 ring-black/[0.05] transition active:scale-[0.99] sm:rounded-[20px] sm:p-5"
+              >
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1d1d1f] text-white sm:h-11 sm:w-11">
+                  <Icon className="h-4 w-4 sm:h-[18px] sm:w-[18px]" strokeWidth={1.7} />
+                </span>
+                <p className="mt-3 text-[14px] font-semibold tracking-[-0.02em] text-[#1d1d1f] sm:text-[16px]">
+                  {cat.name}
+                </p>
+                <p className="mt-1 line-clamp-2 text-[11px] leading-snug text-[#6e6e73] sm:text-[12px]">
+                  {cat.description}
+                </p>
+                <span className="mt-3 inline-flex items-center gap-0.5 text-[12px] font-semibold text-[#1d1d1f] opacity-70 transition group-hover:opacity-100">
+                  Gör
+                  <ArrowUpRight className="h-3.5 w-3.5" />
+                </span>
+              </Link>
+            );
+          })}
         </div>
-      )}
+
+        <div className="mt-8 flex justify-center sm:mt-10">
+          <Link
+            href="/ara"
+            className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-black px-6 py-2.5 text-[13px] font-semibold text-white sm:text-[14px]"
+          >
+            Tüm ürünleri ara
+          </Link>
+        </div>
+      </div>
     </main>
   );
 }
