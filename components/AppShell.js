@@ -16,6 +16,7 @@ export default function AppShell({ children, footer }) {
     pathname === "/giris" ||
     pathname?.startsWith("/giris/") ||
     isAdmin;
+  const isCategory = pathname === "/kategori" || pathname?.startsWith("/kategori/");
 
   return (
     <>
@@ -24,7 +25,7 @@ export default function AppShell({ children, footer }) {
       {bare ? null : (
         <>
           {footer}
-          <WhatsAppHelpButton />
+          {isCategory ? null : <WhatsAppHelpButton />}
           <GlobalNewsDrawer />
         </>
       )}

@@ -1,7 +1,8 @@
 import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import CategoryFilters from "@/components/CategoryFilters";
-import BackHomeLink from "@/components/BackHomeLink";
+import CategoryGuideFab from "@/components/CategoryGuideFab";
+import { PremiumBreadcrumb } from "@/components/BackHomeLink";
 import { getCategoryBySlug } from "@/lib/categories";
 import { getPublishedProducts } from "@/lib/products";
 import { mergeCategoryProducts } from "@/lib/categoryDemoProducts";
@@ -9,6 +10,20 @@ import { notFound } from "next/navigation";
 import { getProductTaxonomy } from "@/lib/productTaxonomy";
 
 export const revalidate = 60;
+
+function buildPageHref(slug, sp, page) {
+  const q = new URLSearchParams();
+  if (sp?.sort && sp.sort !== "newest") q.set("sort", sp.sort);
+  if (sp?.city) q.set("city", sp.city);
+  if (sp?.condition) q.set("condition", sp.condition);
+  if (sp?.min) q.set("min", sp.min);
+  if (sp?.max) q.set("max", sp.max);
+  if (sp?.brand) q.set("brand", sp.brand);
+  if (sp?.model) q.set("model", sp.model);
+  if (page > 1) q.set("page", String(page));
+  const s = q.toString();
+  return s ? `/kategori/${slug}?${s}` : `/kategori/${slug}`;
+}
 
 export default async function CategoryPage({ params, searchParams }) {
   const { slug } = await params;
@@ -45,77 +60,94 @@ export default async function CategoryPage({ params, searchParams }) {
       });
   const data = mergeCategoryProducts(result.data || [], slug, 12);
   const count = Math.max(result.count || 0, data.length);
-
   const totalPages = Math.max(1, Math.ceil((count || 0) / 12));
 
   return (
-    <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
-      <header className="mb-6 sm:mb-7">
-      <BackHomeLink href="/" label="Vitrine dön" className="mb-6" />
-      <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-bw-500">
-        Kategori vitrini
-      </p>
-      <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight text-bw-950 sm:text-4xl">
-        {category.name}
-      </h1>
-      {category.description ? (
-        <p className="mt-2 max-w-3xl text-sm leading-relaxed text-bw-500 sm:text-base">
-          {category.description} <span className="whitespace-nowrap">— {count || 0} sonuç</span>
-        </p>
-      ) : null}
-      </header>
+    <main className="min-h-screen bg-gradient-to-b from-white to-bw-50/80">
+      <div className="mx-auto max-w-7xl px-4 pt-4 pb-8 sm:px-6 sm:pt-5 sm:pb-10 lg:px-8">
+        <PremiumBreadcrumb
+          className="mb-3"
+          items={[
+            { href: "/kategoriler", label: "Kategoriler" },
+            { href: `/kategori/${slug}`, label: category.name, current: true },
+          ]}
+        />
 
-      <CategoryFilters
-        slug={slug}
-        taxonomy={getProductTaxonomy(slug)}
-        defaults={{ sort, city, condition, minPrice, maxPrice, brand, model, categoryName: category.name }}
-      />
+        <header className="mb-4 max-w-2xl sm:mb-5">
+          <h1 className="font-display text-2xl font-semibold leading-tight tracking-tight text-bw-950 sm:text-3xl">
+            {category.name}
+          </h1>
+          {category.description ? (
+            <p className="mt-1 max-w-xl text-sm leading-snug text-bw-500">
+              {category.description}
+            </p>
+          ) : null}
+        </header>
 
-      <div className="hidden mt-6 flex-wrap gap-2">
-        {[
-          ["newest", "En yeni"],
-          ["views", "Popüler"],
-          ["price_asc", "Ucuz"],
-          ["price_desc", "Pahalı"],
-        ].map(([value, label]) => (
-          <Link
-            key={value}
-            href={`/kategori/${slug}?sort=${value}`}
-            className={`rounded-2xl px-4 py-2 text-sm font-medium ${
-              sort === value
-                ? "bg-bw-950 text-white"
-                : "border border-bw-200 bg-white text-bw-700 hover:border-bw-400"
-            }`}
+        <CategoryFilters
+          slug={slug}
+          taxonomy={getProductTaxonomy(slug)}
+          defaults={{
+            sort,
+            city,
+            condition,
+            minPrice,
+            maxPrice,
+            brand,
+            model,
+            categoryName: category.name,
+          }}
+        />
+
+        {data.length ? (
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+            {data.map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-2xl border border-dashed border-bw-200 bg-white px-5 py-10 text-center">
+            <p className="text-sm font-semibold text-bw-900">Bu filtrelerle ilan yok</p>
+            <p className="mx-auto mt-1.5 max-w-sm text-sm text-bw-500">
+              Filtreleri gevşeterek veya başka bir sıralama seçerek vitrini yeniden dene.
+            </p>
+            <Link
+              href={`/kategori/${slug}`}
+              className="mt-4 inline-flex rounded-full bg-bw-950 px-4 py-2 text-xs font-semibold text-white transition hover:bg-bw-800"
+            >
+              Filtreleri temizle
+            </Link>
+          </div>
+        )}
+
+        {totalPages > 1 ? (
+          <nav
+            aria-label="Sayfalar"
+            className="mt-8 flex flex-wrap items-center justify-center gap-1.5"
           >
-            {label}
-          </Link>
-        ))}
+            {Array.from({ length: totalPages }).map((_, i) => {
+              const n = i + 1;
+              const active = n === page;
+              return (
+                <Link
+                  key={n}
+                  href={buildPageHref(slug, sp, n)}
+                  className={`flex h-9 min-w-9 items-center justify-center rounded-full px-3 text-sm font-semibold transition ${
+                    active
+                      ? "bg-bw-950 text-white shadow-sm"
+                      : "border border-bw-200 bg-white text-bw-600 hover:border-bw-300 hover:text-bw-950"
+                  }`}
+                >
+                  {n}
+                </Link>
+              );
+            })}
+          </nav>
+        ) : null}
       </div>
 
-      <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
-        {data.map((p) => (
-          <ProductCard key={p.id} product={p} />
-        ))}
-      </div>
-
-      {totalPages > 1 ? (
-        <div className="mt-10 flex justify-center gap-2">
-          {Array.from({ length: totalPages }).map((_, i) => {
-            const n = i + 1;
-            return (
-              <Link
-                key={n}
-                href={`/kategori/${slug}?sort=${sort}&page=${n}`}
-                className={`rounded-xl px-3 py-1.5 text-sm ${
-                  n === page ? "bg-bw-950 text-white" : "border border-bw-200 bg-white"
-                }`}
-              >
-                {n}
-              </Link>
-            );
-          })}
-        </div>
-      ) : null}
+      <CategoryGuideFab categorySlug={slug} categoryName={category.name} />
     </main>
   );
 }
+

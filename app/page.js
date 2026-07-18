@@ -1,6 +1,6 @@
 import HeroSection from "@/components/HeroSection";
 import TechNewsSection from "@/components/TechNewsSection";
-import HomePriceCompareSection from "@/components/HomePriceCompareSection";
+import HomeCompareGate from "@/components/HomeCompareGate";
 import HomeProductSection from "@/components/HomeProductSection";
 import HomeValueBand from "@/components/HomeValueBand";
 import HomeActionRail from "@/components/HomeActionRail";
@@ -57,7 +57,7 @@ export default async function HomePage() {
           />
         ) : null}
 
-        <HomePriceCompareSection heroImage={settings?.price_compare_bg_1} />
+        <HomeCompareGate />
 
         {latest.length ? (
           <HomeProductSection

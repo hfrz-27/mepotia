@@ -10,13 +10,16 @@ const TABS = [
   { id: "home", label: "Ana sayfa" },
   { id: "news", label: "Haberler" },
   { id: "price", label: "Fiyat karşılaştır" },
+  { id: "specs", label: "Özellik karşılaştır" },
+  { id: "guides", label: "Rehberler" },
+  { id: "sell", label: "Bana sat" },
+  { id: "request", label: "Ürün iste" },
 ];
 
 const PANELS = {
   home: {
-    title: "MEPOTIA arka plan — fotoğraf & video",
-    description:
-      "Video yüklersen fotoğrafların yerine oynar (sessiz, döngü). Video yoksa 1–3 fotoğraf yavaşça kayar.",
+    title: "Ana sayfa hero",
+    description: "Video öncelikli. Video yoksa 1–3 fotoğraf yavaşça kayar.",
     videoKey: "hero_video",
     slots: [
       { key: "hero_bg_1", label: "Fotoğraf 1" },
@@ -24,21 +27,19 @@ const PANELS = {
       { key: "hero_bg_3", label: "Fotoğraf 3" },
     ],
     storagePrefix: "hero",
-    savedMsg: "Hero arka planı kaydedildi. Sayfayı yenile.",
+    savedMsg: "Ana sayfa hero kaydedildi. Sayfayı yenile.",
   },
   news: {
-    title: "Haberler hero — kapak görseli",
-    description:
-      "Teknoloji haberleri sayfasının en üstünde görünür. Yüklediğin görselin üzerine okunaklı koyu bir katman eklenir.",
+    title: "Haberler hero",
+    description: "Teknoloji haberleri sayfasının üst kapak alanı.",
     videoKey: "news_hero_video",
     slots: [{ key: "news_hero_bg_1", label: "Hero görseli" }],
     storagePrefix: "news-hero",
-    savedMsg: "Haberler hero görseli kaydedildi. Sayfayı yenile.",
+    savedMsg: "Haberler hero kaydedildi. Sayfayı yenile.",
   },
   price: {
-    title: "Fiyat karşılaştır hero — fotoğraf & video",
-    description:
-      "Fiyat karşılaştır sayfasının üst bölümünde görünür. Video önceliklidir; yoksa fotoğraflar döner.",
+    title: "Fiyat karşılaştır hero",
+    description: "/fiyat-karsilastir sayfasının en üstü. Video öncelikli.",
     videoKey: "price_compare_video",
     slots: [
       { key: "price_compare_bg_1", label: "Fotoğraf 1" },
@@ -46,22 +47,65 @@ const PANELS = {
       { key: "price_compare_bg_3", label: "Fotoğraf 3" },
     ],
     storagePrefix: "price-compare",
-    savedMsg: "Fiyat karşılaştır hero kaydedildi. Sayfayı yenile.",
+    savedMsg: "Fiyat karşılaştır hero kaydedildi.",
+  },
+  specs: {
+    title: "Özellik karşılaştır hero",
+    description: "/urun-karsilastir sayfasının en üstü. Video öncelikli.",
+    videoKey: "specs_compare_video",
+    slots: [
+      { key: "specs_compare_bg_1", label: "Fotoğraf 1" },
+      { key: "specs_compare_bg_2", label: "Fotoğraf 2" },
+      { key: "specs_compare_bg_3", label: "Fotoğraf 3" },
+    ],
+    storagePrefix: "specs-compare",
+    savedMsg: "Özellik karşılaştır hero kaydedildi.",
+  },
+  guides: {
+    title: "Rehber sayfaları hero",
+    description:
+      "/rehber listesi ve her rehber detayının üstü. Video öncelikli; yoksa fotoğraflar kullanılır.",
+    videoKey: "guide_hero_video",
+    slots: [
+      { key: "guide_hero", label: "Fotoğraf 1" },
+      { key: "guide_hero_2", label: "Fotoğraf 2" },
+      { key: "guide_hero_3", label: "Fotoğraf 3" },
+    ],
+    storagePrefix: "guide-heroes",
+    savedMsg: "Rehber hero kaydedildi.",
+  },
+  sell: {
+    title: "Bana sat sayfası",
+    description: "/bana-sat form sayfasının arka planı. Video veya 1–3 fotoğraf.",
+    videoKey: "sell_hero_video",
+    slots: [
+      { key: "sell_hero_bg_1", label: "Fotoğraf 1" },
+      { key: "sell_hero_bg_2", label: "Fotoğraf 2" },
+      { key: "sell_hero_bg_3", label: "Fotoğraf 3" },
+    ],
+    storagePrefix: "sell-hero",
+    savedMsg: "Bana sat hero kaydedildi.",
+  },
+  request: {
+    title: "Ürün iste sayfası",
+    description: "/urun-iste form sayfasının arka planı. Video veya 1–3 fotoğraf.",
+    videoKey: "request_hero_video",
+    slots: [
+      { key: "request_hero_bg_1", label: "Fotoğraf 1" },
+      { key: "request_hero_bg_2", label: "Fotoğraf 2" },
+      { key: "request_hero_bg_3", label: "Fotoğraf 3" },
+    ],
+    storagePrefix: "request-hero",
+    savedMsg: "Ürün iste hero kaydedildi.",
   },
 };
 
-const ALL_KEYS = [
-  "hero_bg_1",
-  "hero_bg_2",
-  "hero_bg_3",
-  "hero_video",
-  "news_hero_bg_1",
-  "news_hero_video",
-  "price_compare_bg_1",
-  "price_compare_bg_2",
-  "price_compare_bg_3",
-  "price_compare_video",
-];
+const ALL_KEYS = Object.values(PANELS).flatMap((p) => [
+  p.videoKey,
+  ...p.slots.map((s) => s.key),
+]);
+
+const VIDEO_KEYS = Object.values(PANELS).map((p) => p.videoKey);
 
 function emptyValues() {
   return ALL_KEYS.reduce((acc, key) => ({ ...acc, [key]: "" }), {});
@@ -84,7 +128,7 @@ export default function HeroBackgroundAdmin() {
   const [files, setFiles] = useState({});
   const [removed, setRemoved] = useState(emptyFlags(ALL_KEYS.filter((k) => !k.includes("video"))));
   const [videoFiles, setVideoFiles] = useState({});
-  const [videoRemoved, setVideoRemoved] = useState({ hero_video: false, price_compare_video: false });
+  const [videoRemoved, setVideoRemoved] = useState(emptyFlags(VIDEO_KEYS));
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState("");
@@ -104,7 +148,13 @@ export default function HeroBackgroundAdmin() {
       error?.message?.includes("hero_bg") ||
       error?.message?.includes("hero_video") ||
       error?.message?.includes("price_compare") ||
-      error?.message?.includes("news_hero")
+      error?.message?.includes("specs_compare") ||
+      error?.message?.includes("guide_hero") ||
+      error?.message?.includes("news_hero") ||
+      error?.message?.includes("sell_hero") ||
+      error?.message?.includes("request_hero") ||
+      error?.message?.includes("specs_compare") ||
+      error?.code === "42703"
     ) {
       setSqlMissing(true);
       setLoading(false);
@@ -112,12 +162,10 @@ export default function HeroBackgroundAdmin() {
     }
 
     if (data) {
-      setValues(
-        ALL_KEYS.reduce((acc, key) => ({ ...acc, [key]: data[key] || "" }), {}),
-      );
+      setValues(ALL_KEYS.reduce((acc, key) => ({ ...acc, [key]: data[key] || "" }), {}));
     }
-    setRemoved(emptyFlags(ALL_KEYS.filter((k) => !k.includes("video"))));
-    setVideoRemoved({ hero_video: false, price_compare_video: false });
+    setRemoved(emptyFlags(ALL_KEYS.filter((k) => !k.includes("video") && !k.endsWith("_video"))));
+    setVideoRemoved(emptyFlags(VIDEO_KEYS));
     setFiles({});
     setVideoFiles({});
     setSqlMissing(false);
@@ -130,17 +178,16 @@ export default function HeroBackgroundAdmin() {
 
   const resolveSlot = async (supabase, key, prefix) => {
     if (files[key]) {
-      const path = `${prefix}/${key}-${Date.now()}.jpg`;
+      const ext = (files[key].name.split(".").pop() || "jpg").toLowerCase();
+      const path = `${prefix}/${key}-${Date.now()}.${ext}`;
       const { error } = await supabase.storage.from("product-images").upload(path, files[key], {
         upsert: true,
         contentType: files[key].type || "image/jpeg",
       });
       if (error) throw new Error(error.message);
-
       const { data: pub } = supabase.storage.from("product-images").getPublicUrl(path);
       return pub.publicUrl;
     }
-
     if (removed[key]) return null;
     return values[key] || null;
   };
@@ -155,11 +202,9 @@ export default function HeroBackgroundAdmin() {
         contentType: file.type || "video/mp4",
       });
       if (error) throw new Error(error.message);
-
       const { data: pub } = supabase.storage.from("product-images").getPublicUrl(path);
       return pub.publicUrl;
     }
-
     if (videoRemoved[videoKey]) return null;
     return values[videoKey] || null;
   };
@@ -192,8 +237,8 @@ export default function HeroBackgroundAdmin() {
       setValues(ALL_KEYS.reduce((acc, key) => ({ ...acc, [key]: next[key] || "" }), {}));
       setFiles({});
       setVideoFiles({});
-      setRemoved(emptyFlags(ALL_KEYS.filter((k) => !k.includes("video"))));
-      setVideoRemoved({ hero_video: false, price_compare_video: false });
+      setRemoved(emptyFlags(ALL_KEYS.filter((k) => !VIDEO_KEYS.includes(k))));
+      setVideoRemoved(emptyFlags(VIDEO_KEYS));
       setMsg(panel.savedMsg);
     } catch (err) {
       setMsg(err.message || "Kaydedilemedi.");
@@ -216,8 +261,8 @@ export default function HeroBackgroundAdmin() {
       <div className="rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-950">
         <p className="font-semibold">SQL eksik</p>
         <p className="mt-1">
-          Supabase&apos;de <code>supabase/hero_backgrounds.sql</code>,{" "}
-          <code>supabase/price_compare_hero.sql</code> ve <code>supabase/news_hero.sql</code> çalıştır.
+          Supabase SQL Editor&apos;da bir kez çalıştır:{" "}
+          <code className="rounded bg-amber-100 px-1">supabase/page_heroes.sql</code>
         </p>
       </div>
     );
@@ -238,14 +283,20 @@ export default function HeroBackgroundAdmin() {
   return (
     <div className="rounded-2xl border border-bw-200 bg-white p-5 shadow-sm sm:p-6">
       <p className="text-xs font-semibold tracking-[0.2em] text-bw-500 uppercase">Hero medya</p>
+      <p className="mt-1 text-sm text-bw-600">
+        Her sayfanın başındaki arka plan — fotoğraf veya video. Video varsa fotoğraf devre dışı.
+      </p>
 
       <div className="mt-4 flex flex-wrap gap-2">
         {TABS.map((item) => (
           <button
             key={item.id}
             type="button"
-            onClick={() => setTab(item.id)}
-            className={`rounded-xl px-4 py-2 text-xs font-semibold transition ${
+            onClick={() => {
+              setTab(item.id);
+              setMsg("");
+            }}
+            className={`rounded-xl px-3.5 py-2 text-xs font-semibold transition ${
               tab === item.id
                 ? "bg-bw-950 text-white"
                 : "border border-bw-200 bg-bw-50 text-bw-700 hover:border-bw-300"
@@ -267,7 +318,7 @@ export default function HeroBackgroundAdmin() {
           <Video className="h-4 w-4" />
           Hero videosu
         </p>
-        <p className="mt-1 text-[10px] text-bw-500">MP4 / WebM · önerilen max ~15 MB</p>
+        <p className="mt-1 text-[10px] text-bw-500">MP4 / WebM · önerilen max ~15 MB · sessiz döngü</p>
         <div className="relative mt-3 aspect-[16/9] overflow-hidden rounded-xl bg-bw-900">
           {videoPreview ? (
             <video
@@ -316,7 +367,7 @@ export default function HeroBackgroundAdmin() {
         </div>
       </div>
 
-      <div className="mt-5 grid gap-4 sm:grid-cols-3">
+      <div className={`mt-5 grid gap-4 ${panel.slots.length === 1 ? "sm:max-w-md" : "sm:grid-cols-3"}`}>
         {panel.slots.map((slot) => {
           const hasFile = Boolean(files[slot.key]);
           const hasSaved = Boolean(values[slot.key]) && !removed[slot.key];

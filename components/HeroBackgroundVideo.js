@@ -1,12 +1,12 @@
 "use client";
 
-export default function HeroBackgroundVideo({ src }) {
+export default function HeroBackgroundVideo({ src, lightOverlay = false }) {
   if (!src) return null;
 
   return (
     <div className="absolute inset-0 overflow-hidden" aria-hidden>
       <video
-        className="absolute inset-0 h-full w-full object-cover"
+        className="absolute inset-0 h-full w-full scale-105 object-cover"
         src={src}
         autoPlay
         muted
@@ -14,8 +14,14 @@ export default function HeroBackgroundVideo({ src }) {
         playsInline
         preload="metadata"
       />
-      <div className="absolute inset-0 bg-gradient-to-br from-bw-950/78 via-bw-950/58 to-bw-950/82" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_20%,rgba(255,255,255,0.08)_0%,transparent_55%)]" />
+      {/* Keep video readable under text without washing it out */}
+      <div
+        className={
+          lightOverlay
+            ? "absolute inset-0 bg-gradient-to-br from-bw-950/30 via-bw-950/20 to-bw-950/40"
+            : "absolute inset-0 bg-gradient-to-br from-bw-950/55 via-bw-950/40 to-bw-950/60"
+        }
+      />
     </div>
   );
 }

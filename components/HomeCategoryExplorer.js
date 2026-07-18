@@ -122,10 +122,12 @@ export default function HomeCategoryExplorer({ categories = [], productsByCatego
             <div className="relative z-20 mx-auto mt-3 max-w-7xl overflow-hidden rounded-[1.35rem] border border-bw-200 bg-white p-2.5 shadow-[0_20px_48px_-34px_rgba(0,0,0,.3)] sm:mt-4 sm:p-3">
               <div className="mb-2 flex items-center justify-between gap-3 px-1">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[.18em] text-bw-500">Kategori rehberi</p>
+                  <p className="text-xs font-semibold uppercase tracking-[.18em] text-bw-500">Kategoriler</p>
                   <p className="hidden mt-1 text-sm text-bw-600">Bir kategori seçerek ilanları doğrudan aç.</p>
                 </div>
-                <Link href="/kategoriler" className="inline-flex items-center gap-1.5 rounded-xl border border-bw-200 px-3 py-1.5 text-[10px] font-semibold text-bw-700 transition hover:bg-bw-50">Tümünü gör <ExternalLink className="h-3 w-3" /></Link>
+                <Link href="/kategoriler" className="inline-flex items-center gap-1.5 rounded-xl border border-bw-200 px-3 py-1.5 text-[10px] font-semibold text-bw-700 transition hover:bg-bw-50">
+                  Tümünü gör <ExternalLink className="h-3 w-3" />
+                </Link>
               </div>
               <div className="hide-scrollbar news-touch-scroll flex gap-2 overflow-x-auto pb-0.5">
                 {items.map((category) => {
@@ -133,8 +135,12 @@ export default function HomeCategoryExplorer({ categories = [], productsByCatego
                   return (
                     <div key={category.slug} className="relative w-[8.75rem] shrink-0 rounded-xl border border-bw-100 bg-bw-50 p-2.5 transition hover:border-bw-300 hover:bg-white">
                       <div className="flex items-center gap-2">
-                        <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-bw-800 shadow-sm"><Icon className="h-4 w-4" /></span>
-                        <Link href={`/kategori/${category.slug}`} className="text-sm font-semibold text-bw-950 hover:underline after:absolute after:inset-0">{category.name}</Link>
+                        <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-bw-800 shadow-sm">
+                          <Icon className="h-4 w-4" />
+                        </span>
+                        <Link href={`/kategori/${category.slug}`} className="text-sm font-semibold text-bw-950 hover:underline after:absolute after:inset-0">
+                          {category.name}
+                        </Link>
                       </div>
                     </div>
                   );

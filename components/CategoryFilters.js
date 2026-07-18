@@ -1,28 +1,238 @@
 "use client";
 
-import { useState } from "react";
-import { ChevronDown, SlidersHorizontal } from "lucide-react";
+import { useMemo, useState } from "react";
+import Link from "next/link";
+import { ChevronDown, SlidersHorizontal, X } from "lucide-react";
+
+const SORT_OPTIONS = [
+  { value: "newest", label: "En yeni" },
+  { value: "views", label: "Popüler" },
+  { value: "price_asc", label: "Fiyat ↑" },
+  { value: "price_desc", label: "Fiyat ↓" },
+];
+
+function buildQuery(params) {
+  const q = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (value) q.set(key, String(value));
+  });
+  const s = q.toString();
+  return s ? `?${s}` : "";
+}
 
 export default function CategoryFilters({ slug, defaults = {}, taxonomy = {} }) {
-  const [advancedOpen, setAdvancedOpen] = useState(Boolean(defaults.city || defaults.condition || defaults.minPrice || defaults.maxPrice || defaults.brand || defaults.model));
-  const field = "w-full rounded-xl border border-bw-200 bg-white px-3 py-2.5 text-sm text-bw-900 outline-none transition focus:border-bw-500";
-  const selectOptions = (items) => items?.map((item) => <option key={item} value={item}>{item}</option>);
+  const hasAdvanced = Boolean(
+    defaults.city || defaults.condition || defaults.minPrice || defaults.maxPrice || defaults.brand || defaults.model
+  );
+  const [advancedOpen, setAdvancedOpen] = useState(hasAdvanced);
+  const currentSort = defaults.sort || "newest";
+
+  const field =
+    "w-full rounded-xl border border-bw-200/90 bg-bw-50/60 px-3 py-2 text-sm text-bw-900 outline-none transition placeholder:text-bw-400 focus:border-bw-400 focus:bg-white";
+  const selectOptions = (items) =>
+    items?.map((item) => (
+      <option key={item} value={item}>
+        {item}
+      </option>
+    ));
+
+  const activeChips = useMemo(() => {
+    const chips = [];
+    if (defaults.brand) chips.push({ key: "brand", label: defaults.brand });
+    if (defaults.model) chips.push({ key: "model", label: defaults.model });
+    if (defaults.city) chips.push({ key: "city", label: defaults.city });
+    if (defaults.condition) {
+      chips.push({
+        key: "condition",
+        label: defaults.condition === "new" ? "Sıfır" : "İkinci el",
+      });
+    }
+    if (defaults.minPrice) chips.push({ key: "min", label: `Min ₺${defaults.minPrice}` });
+    if (defaults.maxPrice) chips.push({ key: "max", label: `Max ₺${defaults.maxPrice}` });
+    return chips;
+  }, [defaults]);
+
+  const clearHref = `/kategori/${slug}${buildQuery({ sort: currentSort === "newest" ? "" : currentSort })}`;
 
   return (
-    <form action={`/kategori/${slug}`} className="mb-6 flex flex-col">
-      <div className={`${advancedOpen ? "grid" : "hidden"} order-2 mt-3 max-w-md gap-3 rounded-2xl border border-bw-200 bg-white p-4 shadow-[0_14px_34px_-28px_rgba(0,0,0,0.28)] sm:p-5`}>
-        <label className="text-xs font-semibold text-bw-600">Sırala<select name="sort" defaultValue={defaults.sort || "newest"} className={`${field} mt-1.5`}><option value="newest">En yeni</option><option value="oldest">En eski</option><option value="price_asc">Fiyat: düşükten yükseğe</option><option value="price_desc">Fiyat: yüksekten düşüğe</option><option value="views">En çok incelenen</option></select></label>
+    <div className="mb-4 space-y-2.5 sm:mb-5">
+      {/* Sort chips + filter toggle */}
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div
+          role="group"
+          aria-label="Sıralama"
+          className="inline-flex max-w-full items-center gap-0.5 overflow-x-auto rounded-full border border-bw-200/80 bg-white p-1 shadow-[0_8px_24px_-20px_rgba(0,0,0,0.35)]"
+        >
+          {SORT_OPTIONS.map((opt) => {
+            const active = currentSort === opt.value;
+            const href = `/kategori/${slug}${buildQuery({
+              sort: opt.value === "newest" ? "" : opt.value,
+              city: defaults.city,
+              condition: defaults.condition,
+              min: defaults.minPrice,
+              max: defaults.maxPrice,
+              brand: defaults.brand,
+              model: defaults.model,
+            })}`;
+            return (
+              <Link
+                key={opt.value}
+                href={href}
+                className={`shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold transition sm:px-4 sm:text-[13px] ${
+                  active
+                    ? "bg-bw-950 text-white shadow-sm"
+                    : "text-bw-600 hover:bg-bw-50 hover:text-bw-950"
+                }`}
+              >
+                {opt.label}
+              </Link>
+            );
+          })}
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setAdvancedOpen((open) => !open)}
+          aria-expanded={advancedOpen}
+          className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-xs font-semibold transition sm:text-[13px] ${
+            advancedOpen || hasAdvanced
+              ? "border-bw-900 bg-bw-950 text-white"
+              : "border-bw-200 bg-white text-bw-700 shadow-[0_8px_24px_-20px_rgba(0,0,0,0.35)] hover:border-bw-300 hover:text-bw-950"
+          }`}
+        >
+          <SlidersHorizontal className="h-3.5 w-3.5" strokeWidth={2} />
+          Filtrele
+          {hasAdvanced ? (
+            <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-white/20 px-1 text-[10px]">
+              {activeChips.length}
+            </span>
+          ) : (
+            <ChevronDown className={`h-3.5 w-3.5 transition ${advancedOpen ? "rotate-180" : ""}`} />
+          )}
+        </button>
       </div>
-      <button type="button" onClick={() => setAdvancedOpen((open) => !open)} className="order-1 inline-flex self-start items-center gap-3 rounded-2xl border border-bw-200 bg-white px-5 py-3.5 text-sm font-semibold text-bw-800 shadow-[0_14px_30px_-26px_rgba(0,0,0,0.45)] transition hover:border-bw-300 hover:text-bw-950" aria-expanded={advancedOpen}><SlidersHorizontal className="h-4 w-4" /> Gelişmiş filtre <ChevronDown className={`ml-6 h-4 w-4 transition ${advancedOpen ? "rotate-180" : ""}`} /></button>
-      {advancedOpen ? <div className="order-3 mt-3 grid gap-3 rounded-2xl border border-bw-200 bg-white p-4 shadow-[0_14px_34px_-28px_rgba(0,0,0,0.28)] sm:grid-cols-2 sm:p-5 lg:grid-cols-4">
-        <label className="text-xs font-semibold text-bw-600">Minimum fiyat<input name="min" type="number" min="0" defaultValue={defaults.minPrice || ""} placeholder="Örn. 10.000" className={`${field} mt-1.5`} /></label>
-        <label className="text-xs font-semibold text-bw-600">Maksimum fiyat<input name="max" type="number" min="0" defaultValue={defaults.maxPrice || ""} placeholder="Örn. 50.000" className={`${field} mt-1.5`} /></label>
-        <label className="text-xs font-semibold text-bw-600">Marka{taxonomy.brands?.length ? <select name="brand" defaultValue={defaults.brand || ""} className={`${field} mt-1.5`}><option value="">Tümü</option>{selectOptions(taxonomy.brands)}</select> : <input name="brand" defaultValue={defaults.brand || ""} placeholder="Marka" className={`${field} mt-1.5`} />}</label>
-        <label className="text-xs font-semibold text-bw-600">Model{taxonomy.models?.length ? <select name="model" defaultValue={defaults.model || ""} className={`${field} mt-1.5`}><option value="">Tümü</option>{selectOptions(taxonomy.models)}</select> : <input name="model" defaultValue={defaults.model || ""} placeholder="Model" className={`${field} mt-1.5`} />}</label>
-        <label className="text-xs font-semibold text-bw-600">Şehir<input name="city" defaultValue={defaults.city || ""} placeholder="İstanbul" className={`${field} mt-1.5`} /></label>
-        <label className="text-xs font-semibold text-bw-600">Durum<select name="condition" defaultValue={defaults.condition || ""} className={`${field} mt-1.5`}><option value="">Tümü</option><option value="new">Sıfır</option><option value="used">İkinci el</option></select></label>
-        <button type="submit" className="rounded-xl bg-bw-950 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-bw-800 sm:col-span-2 lg:col-span-4">Uygula</button>
-      </div> : null}
-    </form>
+
+      {/* Active filter chips */}
+      {activeChips.length > 0 ? (
+        <div className="flex flex-wrap items-center gap-2">
+          {activeChips.map((chip) => (
+            <span
+              key={chip.key}
+              className="inline-flex items-center gap-1.5 rounded-full border border-bw-200 bg-bw-50 px-2.5 py-1 text-[11px] font-medium text-bw-700"
+            >
+              {chip.label}
+            </span>
+          ))}
+          <Link
+            href={clearHref}
+            className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-[11px] font-semibold text-bw-500 transition hover:text-bw-950"
+          >
+            <X className="h-3 w-3" />
+            Temizle
+          </Link>
+        </div>
+      ) : null}
+
+      {/* Compact advanced panel */}
+      {advancedOpen ? (
+        <form
+          action={`/kategori/${slug}`}
+          className="rounded-2xl border border-bw-200/90 bg-white p-3.5 shadow-[0_16px_40px_-32px_rgba(0,0,0,0.35)] sm:p-4"
+        >
+          <input type="hidden" name="sort" value={currentSort} />
+          <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-6">
+            <label className="block">
+              <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-bw-400">
+                Min fiyat
+              </span>
+              <input
+                name="min"
+                type="number"
+                min="0"
+                defaultValue={defaults.minPrice || ""}
+                placeholder="0"
+                className={field}
+              />
+            </label>
+            <label className="block">
+              <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-bw-400">
+                Max fiyat
+              </span>
+              <input
+                name="max"
+                type="number"
+                min="0"
+                defaultValue={defaults.maxPrice || ""}
+                placeholder="∞"
+                className={field}
+              />
+            </label>
+            <label className="block">
+              <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-bw-400">
+                Marka
+              </span>
+              {taxonomy.brands?.length ? (
+                <select name="brand" defaultValue={defaults.brand || ""} className={field}>
+                  <option value="">Tümü</option>
+                  {selectOptions(taxonomy.brands)}
+                </select>
+              ) : (
+                <input name="brand" defaultValue={defaults.brand || ""} placeholder="Marka" className={field} />
+              )}
+            </label>
+            <label className="block">
+              <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-bw-400">
+                Model
+              </span>
+              {taxonomy.models?.length ? (
+                <select name="model" defaultValue={defaults.model || ""} className={field}>
+                  <option value="">Tümü</option>
+                  {selectOptions(taxonomy.models)}
+                </select>
+              ) : (
+                <input name="model" defaultValue={defaults.model || ""} placeholder="Model" className={field} />
+              )}
+            </label>
+            <label className="block">
+              <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-bw-400">
+                Şehir
+              </span>
+              <input
+                name="city"
+                defaultValue={defaults.city || ""}
+                placeholder="İstanbul"
+                className={field}
+              />
+            </label>
+            <label className="block">
+              <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.14em] text-bw-400">
+                Durum
+              </span>
+              <select name="condition" defaultValue={defaults.condition || ""} className={field}>
+                <option value="">Tümü</option>
+                <option value="new">Sıfır</option>
+                <option value="used">İkinci el</option>
+              </select>
+            </label>
+          </div>
+          <div className="mt-3 flex items-center justify-end gap-2 border-t border-bw-100 pt-3">
+            {hasAdvanced ? (
+              <Link
+                href={clearHref}
+                className="rounded-full px-3.5 py-2 text-xs font-semibold text-bw-500 transition hover:text-bw-950"
+              >
+                Sıfırla
+              </Link>
+            ) : null}
+            <button
+              type="submit"
+              className="rounded-full bg-bw-950 px-5 py-2 text-xs font-semibold text-white transition hover:bg-bw-800 sm:text-[13px]"
+            >
+              Uygula
+            </button>
+          </div>
+        </form>
+      ) : null}
+    </div>
   );
 }

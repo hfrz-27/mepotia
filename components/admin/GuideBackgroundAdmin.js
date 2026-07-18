@@ -6,10 +6,7 @@ import { ImageIcon, Loader2, Save } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import { displayImageUrl } from "@/lib/productImage";
 
-const SLOTS = [
-  { key: "phone_guide_hero", label: "Telefon rehberi" },
-  { key: "computer_guide_hero", label: "Bilgisayar rehberi" },
-];
+const SLOTS = [{ key: "guide_hero", label: "Tüm rehberler" }];
 
 export default function GuideBackgroundAdmin() {
   const [values, setValues] = useState({});
@@ -58,9 +55,9 @@ export default function GuideBackgroundAdmin() {
 
   return <div className="mt-6 rounded-2xl border border-bw-200 bg-white p-5 shadow-sm sm:p-6">
     <p className="text-xs font-semibold uppercase tracking-[.2em] text-bw-500">Ürün rehberleri</p>
-    <h2 className="mt-2 text-xl font-semibold text-bw-950">Rehber büyük görselleri</h2>
-    <p className="mt-2 text-sm text-bw-600">Bu görseller, telefon veya bilgisayar kategorisindeki ürünlerin altında ilgili rehberde görünür.</p>
-    <div className="mt-5 grid gap-4 sm:grid-cols-2">{SLOTS.map((slot) => {
+    <h2 className="mt-2 text-xl font-semibold text-bw-950">Rehber büyük görseli</h2>
+    <p className="mt-2 text-sm text-bw-600">Tek görsel; tüm kategorilerdeki rehber kartlarında ve rehber sayfalarının üst kısmında aynı şekilde kullanılır.</p>
+    <div className="mt-5 grid gap-4 sm:max-w-md">{SLOTS.map((slot) => {
       const preview = files[slot.key] ? URL.createObjectURL(files[slot.key]) : values[slot.key] ? displayImageUrl(values[slot.key]) : null;
       return <div key={slot.key} className="rounded-2xl border border-bw-200 bg-bw-50 p-3"><p className="text-sm font-semibold text-bw-800">{slot.label}</p><div className="relative mt-3 aspect-[16/9] overflow-hidden rounded-xl bg-bw-200">{preview ? <Image src={preview} alt="" fill className="object-cover" unoptimized /> : <div className="flex h-full items-center justify-center text-bw-400"><ImageIcon className="h-7 w-7" /></div>}</div><label className="mt-3 inline-flex cursor-pointer rounded-xl border border-bw-200 bg-white px-3 py-2 text-xs font-semibold text-bw-700 hover:border-bw-950">{preview ? "Görseli değiştir" : "Görsel seç"}<input type="file" accept="image/*" className="hidden" onChange={(event) => { const file = event.target.files?.[0]; if (file) setFiles((current) => ({ ...current, [slot.key]: file })); }} /></label></div>;
     })}</div>

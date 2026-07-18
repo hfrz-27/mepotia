@@ -21,7 +21,7 @@ export default function HeroSection({ heroImages = [], heroVideo = "" }) {
   return (
     <section className="relative overflow-hidden bg-[#1c1f26]">
       {hasVideo ? (
-        <HeroBackgroundVideo src={heroVideo} />
+        <HeroBackgroundVideo src={heroVideo} lightOverlay />
       ) : hasPhotos ? (
         <HeroBackgroundCarousel images={heroImages} />
       ) : (

@@ -84,7 +84,7 @@ export default async function ProductPage({ params }) {
   const supabase = await createClient();
   const { data: settings } = await supabase
     .from("site_settings")
-    .select("phone_guide_hero, computer_guide_hero")
+    .select("guide_hero")
     .eq("id", 1)
     .maybeSingle();
 
@@ -227,7 +227,7 @@ export default async function ProductPage({ params }) {
 
       <ProductBuyingGuide
         categorySlug={product.categories?.slug}
-        heroImage={product.categories?.slug === "telefon" ? settings?.phone_guide_hero : settings?.computer_guide_hero}
+        categoryName={product.categories?.name}
       />
 
       <ProductMarketCompare

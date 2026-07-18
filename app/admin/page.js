@@ -18,7 +18,7 @@ import ShareProductButtons from "@/components/ShareProductButtons";
 import TechPostsAdmin from "@/components/admin/TechPostsAdmin";
 import ProductCategoriesAdmin from "@/components/admin/ProductCategoriesAdmin";
 import HeroBackgroundAdmin from "@/components/admin/HeroBackgroundAdmin";
-import GuideBackgroundAdmin from "@/components/admin/GuideBackgroundAdmin";
+
 import AdminLayout from "@/components/admin/AdminLayout";
 import AdminToast from "@/components/admin/AdminToast";
 import AdminKpiBar from "@/components/admin/AdminKpiBar";
@@ -774,7 +774,7 @@ export default function AdminPage() {
         <TechPostsAdmin posts={techPosts} onReload={load} sqlMissing={techSqlMissing} />
       ) : null}
 
-      {tab === "site" ? <><HeroBackgroundAdmin /><GuideBackgroundAdmin /></> : null}
+      {tab === "site" ? <HeroBackgroundAdmin /> : null}
 
       <section className="mt-12 overflow-hidden rounded-2xl border border-bw-200 bg-white shadow-sm">
         <button

@@ -101,7 +101,7 @@ export default function ProductMarketCompare({ query, referencePrice, condition 
                   rel="noreferrer"
                   className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-bw-950 underline-offset-2 hover:underline"
                 >
-                  Epey&apos;de fiyatlara bak
+                  Piyasa fiyatlarına bak
                   <ExternalLink className="h-3.5 w-3.5" />
                 </a>
               ) : null}

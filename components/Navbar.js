@@ -144,7 +144,6 @@ export default function Navbar() {
                 { href: "/urunler", label: "Ürünler" },
                 { href: "/fiyat-karsilastir", label: "Fiyat karşılaştır" },
                 { href: "/kategoriler", label: "Teknoloji ürünleri" },
-                { href: "/rehber", label: "Satın alma rehberleri" },
                 { href: "/hakkimizda", label: "Hakkımızda" },
                 { href: "/bana-sat", label: "Bize Ürün Sat" },
                 { href: "/urun-iste", label: "Ürün İste" },
