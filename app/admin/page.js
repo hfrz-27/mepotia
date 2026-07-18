@@ -84,7 +84,7 @@ export default function AdminPage() {
     const supabase = createClient();
 
     const fullSelect =
-      "id, title, status, is_featured, is_premium, is_discount, original_price, views, created_at, product_images(url, sort_order), price";
+      "id, title, status, is_featured, is_premium, is_discount, original_price, views, created_at, home_collection, home_collection_order, product_images(url, sort_order), price";
     const minSelect =
       "id, title, status, is_featured, is_premium, views, created_at, product_images(url, sort_order), price";
 
@@ -223,6 +223,40 @@ export default function AdminPage() {
   const toggle = async (id, field, value) => {
     await createClient().from("products").update({ [field]: value }).eq("id", id);
     setMsg("Güncellendi.");
+    load();
+  };
+
+  /** Ana sayfa 3 koleksiyon: yok → öne çıkan → özenle → popüler → yok */
+  const HOME_COLLECTION_CYCLE = [null, "featured", "curated", "popular"];
+  const HOME_COLLECTION_LABEL = {
+    featured: "1 · Yeni sahibi",
+    curated: "2 · Özenle seçilmiş",
+    popular: "3 · En çok bakılanlar",
+  };
+
+  const cycleHomeCollection = async (product) => {
+    const cur = product.home_collection || null;
+    const idx = HOME_COLLECTION_CYCLE.indexOf(cur);
+    const next = HOME_COLLECTION_CYCLE[(idx < 0 ? 0 : idx + 1) % HOME_COLLECTION_CYCLE.length];
+    const payload = {
+      home_collection: next,
+      // Geriye dönük: ilk koleksiyon is_featured ile de işaretlensin
+      is_featured: next === "featured",
+    };
+    const { error } = await createClient().from("products").update(payload).eq("id", product.id);
+    if (error) {
+      if (/home_collection/i.test(error.message || "")) {
+        setMsg("Önce Supabase’de home_collections.sql çalıştır.");
+      } else {
+        setMsg(error.message || "Koleksiyon güncellenemedi.");
+      }
+      return;
+    }
+    setMsg(
+      next
+        ? `Ana sayfa: ${HOME_COLLECTION_LABEL[next]}`
+        : "Ana sayfa koleksiyonundan çıkarıldı."
+    );
     load();
   };
 
@@ -696,6 +730,23 @@ export default function AdminPage() {
                     }`}
                   >
                     {p.is_discount ? "İndirim ✓" : "İndirim işaretle"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => cycleHomeCollection(p)}
+                    className={`rounded-xl px-3 py-2 text-xs font-semibold ${
+                      p.home_collection || p.is_featured
+                        ? "bg-bw-950 text-white"
+                        : actionBtn
+                    }`}
+                    title="Tıkla: koleksiyon değiştir (Yok → Yeni sahibi → Özenle → Popüler)"
+                  >
+                    Ana sayfa:{" "}
+                    {p.home_collection
+                      ? HOME_COLLECTION_LABEL[p.home_collection] || p.home_collection
+                      : p.is_featured
+                        ? "1 · Yeni sahibi"
+                        : "Yok"}
                   </button>
                   <button
                     type="button"
