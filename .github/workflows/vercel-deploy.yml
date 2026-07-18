@@ -18,8 +18,13 @@ jobs:
             echo "HATA: VERCEL_DEPLOY_HOOK secret yok."
             exit 1
           fi
-          RESPONSE=$(curl -fsS -X POST "$DEPLOY_HOOK")
+          RESPONSE=$(curl -fsS -X POST "$DEPLOY_HOOK" || true)
           echo "$RESPONSE"
-          echo "Deploy hook tetiklendi."
-          echo "Vercel Dashboard: https://vercel.com/dashboard"
-          echo "Blocked görürsen Deployments > redeploy / unblock gerekir."
+          echo ""
+          echo "=============================================="
+          echo "NOT: Deploy 'blocked' veya 'Pro' isterse:"
+          echo "1) vercel.com → personal Hobby hesap"
+          echo "2) Add New Project → Import hfrz-27/mepotia"
+          echo "3) Domain: mepotia.com ekle"
+          echo "VEYA Netlify ücretsiz: netlify.com → Import repo"
+          echo "=============================================="
