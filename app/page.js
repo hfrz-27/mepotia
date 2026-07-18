@@ -15,7 +15,7 @@ const WA = "https://wa.me/905059574122";
 const PRODUCT_LIMIT = 12;
 const GRID_LIMIT = 21;
 
-export const revalidate = 60;
+export const revalidate = 30;
 
 export default async function HomePage() {
   const [settings, latestRes, featuredRes, popularRes, allRes] = await Promise.all([
