@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
+import { appleTextLinkClass } from "@/lib/appleUi";
 
 export default function HomeSectionHeader({
   eyebrow,
@@ -48,10 +49,7 @@ export default function HomeSectionHeader({
         ) : null}
         {href && centered ? (
           <div className="mt-4">
-            <Link
-              href={href}
-              className="inline-flex items-center gap-0.5 text-[17px] font-normal text-[#1d1d1f] transition hover:underline hover:underline-offset-4"
-            >
+            <Link href={href} className={appleTextLinkClass}>
               {linkLabel}
               <ChevronRight className="h-4 w-4" strokeWidth={2} />
             </Link>
@@ -59,10 +57,7 @@ export default function HomeSectionHeader({
         ) : null}
       </div>
       {href && !centered ? (
-        <Link
-          href={href}
-          className="inline-flex shrink-0 items-center gap-0.5 text-[17px] font-normal text-[#1d1d1f] transition hover:underline hover:underline-offset-4"
-        >
+        <Link href={href} className={`shrink-0 ${appleTextLinkClass}`}>
           {linkLabel}
           <ChevronRight className="h-4 w-4" strokeWidth={2} />
         </Link>

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight, Cpu } from "lucide-react";
 import { formatTechDate } from "@/lib/techPostUtils";
+import { appleTextLinkClass } from "@/lib/appleUi";
 
 /**
  * Apple + dergi: sol büyük manşet, sağ liste — hover ile manşet değişir.
@@ -37,12 +38,9 @@ export default function TechNewsHomeRow({ posts }) {
             Teknoloji haberleri.
           </h2>
           <div className="mt-3 flex justify-center sm:mt-4">
-            <Link
-              href="/teknoloji"
-              className="inline-flex min-h-[40px] items-center justify-center gap-1.5 rounded-full bg-black px-5 py-2 text-[13px] font-semibold text-white transition active:scale-[0.98] sm:min-h-[44px] sm:px-6 sm:text-[14px]"
-            >
+            <Link href="/teknoloji" className={appleTextLinkClass}>
               Tüm haberleri gör
-              <ArrowUpRight className="h-4 w-4" strokeWidth={2.25} />
+              <ArrowUpRight className="h-4 w-4" strokeWidth={2} />
             </Link>
           </div>
         </div>

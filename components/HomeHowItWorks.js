@@ -69,9 +69,10 @@ export default function HomeHowItWorks() {
           </Link>
           <Link
             href="/urunler"
-            className="inline-flex items-center gap-2 rounded-2xl border border-bw-200 bg-white px-5 py-3 text-sm font-semibold text-bw-900 transition hover:border-bw-400"
+            className="inline-flex items-center gap-1 text-[15px] font-normal text-[#0066cc] transition hover:underline"
           >
             Vitrini keşfet
+            <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
       </div>

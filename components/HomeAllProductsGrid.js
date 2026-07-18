@@ -2,12 +2,13 @@ import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import ProductImage from "@/components/ProductImage";
 import { formatPrice, getPrimaryImage, isSold } from "@/lib/productDisplay";
+import { appleTextLinkClassSm } from "@/lib/appleUi";
 
 /**
  * Okunur küçük vitrin:
  * mobil 5×3 = 15 · desktop 7×3 = 21
  */
-export default function HomeAllProductsGrid({ products = [], href = "/ara" }) {
+export default function HomeAllProductsGrid({ products = [], href = "/urunler" }) {
   const items = (products || []).filter(Boolean).slice(0, 21);
   if (!items.length) return null;
 
@@ -23,10 +24,7 @@ export default function HomeAllProductsGrid({ products = [], href = "/ara" }) {
               Ürünler
             </h2>
           </div>
-          <Link
-            href={href}
-            className="inline-flex items-center gap-0.5 text-[12px] font-semibold text-[#1d1d1f] sm:text-[13px]"
-          >
+          <Link href={href} className={appleTextLinkClassSm}>
             Daha fazla
             <ChevronRight className="h-3.5 w-3.5" strokeWidth={2} />
           </Link>
@@ -36,7 +34,7 @@ export default function HomeAllProductsGrid({ products = [], href = "/ara" }) {
           {items.map((product, index) => {
             const sold = isSold(product);
             const demo = Boolean(product.demo);
-            const productHref = demo ? "/ara" : `/urun/${product.id}`;
+            const productHref = demo ? "/urunler" : `/urun/${product.id}`;
             const mobileHide = index >= 15 ? "hidden sm:block" : "block";
 
             return (

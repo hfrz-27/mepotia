@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import CarouselRail from "@/components/CarouselRail";
 import ProductCard from "@/components/ProductCard";
+import { appleTextLinkClass } from "@/lib/appleUi";
 
 export default function HomeProductScroll({
   products,
@@ -34,9 +35,9 @@ export default function HomeProductScroll({
 
       {href ? (
         <div className="mt-6 flex justify-center px-4">
-          <Link href={href} prefetch className="pv-btn">
+          <Link href={href} prefetch className={appleTextLinkClass}>
             {linkLabel}
-            <ArrowRight className="h-4 w-4" />
+            <ChevronRight className="h-4 w-4" strokeWidth={2} />
           </Link>
         </div>
       ) : null}

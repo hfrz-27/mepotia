@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { TECH_CATEGORY_CATALOG } from "@/lib/techCategories";
+import { appleTextLinkClassSm } from "@/lib/appleUi";
 
 /**
  * Kompakt 3×3 — mobilde de kısa, alt alta uzun liste yok.
@@ -29,10 +30,7 @@ export default function HomeCategoryExplorer({ categories = [] }) {
               Kategoriler
             </h2>
           </div>
-          <Link
-            href="/kategoriler"
-            className="inline-flex min-h-[40px] items-center gap-0.5 text-[13px] font-semibold text-[#1d1d1f] sm:text-[14px]"
-          >
+          <Link href="/kategoriler" className={appleTextLinkClassSm}>
             Tümü
             <ChevronRight className="h-4 w-4" strokeWidth={2} />
           </Link>

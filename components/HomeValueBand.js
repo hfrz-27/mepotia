@@ -8,6 +8,7 @@ import {
   Handshake,
   ShieldCheck,
 } from "lucide-react";
+import { appleTextLinkClassSm } from "@/lib/appleUi";
 
 /**
  * Apple “Neden Apple Store?” tarzı — mobil uyumlu + Hakkında.
@@ -77,12 +78,9 @@ export default function HomeValueBand({ embedded = false }) {
         >
           Hakkında
         </Link>
-        <Link
-          href="/urunler"
-          className="inline-flex min-h-[40px] items-center gap-1 text-[13px] font-semibold text-[#1d1d1f] sm:text-[14px]"
-        >
+        <Link href="/urunler" className={appleTextLinkClassSm}>
           Vitrine göz at
-          <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={2.25} />
+          <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={2} />
         </Link>
       </div>
     </>

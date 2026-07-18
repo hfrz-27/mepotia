@@ -147,10 +147,10 @@ export default function CustomerReviews() {
           <div className="mt-4 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
             <Link
               href="/hakkimizda"
-              className="inline-flex min-h-[44px] items-center gap-1 rounded-full bg-black px-5 py-2.5 text-[13px] font-semibold text-white transition active:scale-[0.98] sm:text-[14px]"
+              className="inline-flex min-h-[44px] items-center gap-1 text-[14px] font-normal text-[#0066cc] transition hover:underline sm:text-[15px]"
             >
               Hakkımızda
-              <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={2.25} />
+              <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={2} />
             </Link>
             <button
               type="button"
