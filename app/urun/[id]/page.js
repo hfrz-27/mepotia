@@ -9,6 +9,7 @@ import ProductGallery from "@/components/ProductGallery";
 import ProductDetailsBlock from "@/components/ProductDetailsBlock";
 import ProductOfferForm from "@/components/ProductOfferForm";
 import ProductBuyingGuide from "@/components/ProductBuyingGuide";
+import ProductStickyBar from "@/components/ProductStickyBar";
 import { createClient } from "@/lib/supabase-server";
 import {
   formatPrice,
@@ -121,59 +122,58 @@ export default async function ProductPage({ params }) {
         className="mb-4"
       />
 
-      <div className="mt-5 grid grid-cols-1 gap-6 lg:mt-8 lg:grid-cols-2 lg:gap-10">
+      {/* Sol galeri · sağ bilgi — premium vitrin layout */}
+      <div className="mt-5 grid grid-cols-1 gap-8 lg:mt-8 lg:grid-cols-2 lg:gap-12">
         <ProductGallery images={galleryImages} title={product.title} />
 
         <div className="lg:pt-1">
-          <div className="flex flex-wrap gap-1.5 sm:gap-2">
+          <div className="flex flex-wrap gap-1.5">
             {product.is_premium ? (
-              <span className="rounded-lg bg-bw-950 px-2.5 py-1 text-[10px] font-bold tracking-wide text-white uppercase">
+              <span className="rounded-full bg-[#0b0b0b] px-2.5 py-1 text-[10px] font-bold tracking-wide text-white uppercase">
                 Premium
               </span>
             ) : null}
             {discount ? (
-              <span className="rounded-lg bg-bw-950 px-2.5 py-1 text-[10px] font-bold tracking-wide text-white uppercase">
+              <span className="rounded-full bg-[#0b0b0b] px-2.5 py-1 text-[10px] font-bold tracking-wide text-white uppercase">
                 İndirim
               </span>
             ) : null}
             {sold ? (
-              <span className="rounded-lg border border-bw-300 bg-bw-100 px-2.5 py-1 text-[10px] font-bold tracking-wide text-bw-700 uppercase">
+              <span className="rounded-full border border-black/10 bg-[#f5f5f5] px-2.5 py-1 text-[10px] font-bold tracking-wide text-[#525252] uppercase">
                 Satıldı
               </span>
             ) : null}
-            <span className="rounded-lg border border-bw-200 bg-white px-2.5 py-1 text-[10px] tracking-wide text-bw-600 uppercase">
+            <span className="rounded-full border border-black/[0.08] bg-white px-2.5 py-1 text-[10px] tracking-wide text-[#737373] uppercase">
               {product.condition === "new" ? "Sıfır" : "İkinci El"}
             </span>
           </div>
 
-          <div className="mt-4 rounded-2xl border border-bw-200 bg-gradient-to-b from-white to-bw-50 p-4 sm:mt-5 sm:rounded-none sm:border-0 sm:bg-transparent sm:p-0">
-            <h1 className="font-display text-xl font-semibold leading-snug tracking-wide text-bw-950 sm:text-3xl sm:leading-tight lg:text-4xl xl:text-5xl">
-              {product.title}
-            </h1>
+          <div className="mt-5">
+            <h1 className="pv-title text-2xl sm:text-3xl lg:text-4xl">{product.title}</h1>
             {discount ? (
-              <p className="mt-3 text-base text-bw-400 line-through sm:mt-5 sm:text-xl">
+              <p className="mt-3 text-base text-[#a3a3a3] line-through sm:text-xl">
                 {formatPrice(product.original_price)}
               </p>
             ) : null}
             <p
-              className={`font-semibold tracking-tight text-bw-950 ${
-                discount ? "mt-1 text-2xl sm:text-3xl" : "mt-3 text-2xl sm:mt-5 sm:text-4xl"
+              className={`font-semibold tracking-tight text-[#0b0b0b] tabular-nums ${
+                discount ? "mt-1 text-2xl sm:text-3xl" : "mt-3 text-2xl sm:mt-4 sm:text-4xl"
               }`}
             >
               {formatPrice(product.price)}
             </p>
             {sold ? (
-              <p className="mt-3 rounded-xl border border-bw-200 bg-bw-50 px-3 py-2.5 text-sm text-bw-600 sm:mt-4 sm:rounded-2xl sm:px-4 sm:py-3">
+              <p className="mt-3 rounded-[12px] border border-black/[0.06] bg-[#f5f5f5] px-3 py-2.5 text-sm text-[#525252]">
                 Bu ürün satıldı. Benzer ürünler için vitrine göz atabilirsin.
               </p>
             ) : null}
-            <p className="mt-3 flex items-center gap-2 text-xs text-bw-500 sm:mt-4 sm:text-sm">
-              <MapPin className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" />
+            <p className="mt-3 flex items-center gap-2 text-sm text-[#737373]">
+              <MapPin className="h-4 w-4 shrink-0" />
               {[product.district, product.city].filter(Boolean).join(", ") || "—"}
             </p>
           </div>
 
-          <div className="mt-6 flex flex-wrap gap-3 sm:mt-8">
+          <div className="mt-7 flex flex-wrap gap-3">
             <ProductOfferForm
               productId={product.id}
               title={product.title}
@@ -184,7 +184,7 @@ export default async function ProductPage({ params }) {
                 href={wa}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-xl bg-bw-950 px-3 text-xs font-semibold text-white hover:bg-bw-800 sm:flex-none"
+                className="pv-btn h-11 flex-1 sm:flex-none"
               >
                 <MessageCircle className="h-4 w-4" />
                 WhatsApp
@@ -193,13 +193,14 @@ export default async function ProductPage({ params }) {
             {!sold && tel ? (
               <a
                 href={tel}
-                className="inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-xl border border-bw-950 bg-white px-3 text-xs font-semibold text-bw-950 hover:bg-bw-50 sm:flex-none"
+                className="inline-flex h-11 flex-1 items-center justify-center gap-1.5 rounded-full border border-[#0b0b0b] bg-white px-4 text-sm font-semibold text-[#0b0b0b] transition hover:bg-[#f5f5f5] sm:flex-none"
               >
                 <Phone className="h-4 w-4" />
                 Ara
               </a>
             ) : null}
           </div>
+
 
           <div className="mt-5 sm:mt-6">
             <p className="mb-2 text-xs font-semibold tracking-[0.2em] text-bw-500 uppercase">
@@ -237,17 +238,30 @@ export default async function ProductPage({ params }) {
       />
 
       {similar.length ? (
-        <section className="mt-10 sm:mt-14 lg:mt-16">
-          <h2 className="font-display text-2xl font-semibold tracking-wide text-bw-950 sm:text-3xl">
-            Benzer ürünler
+        <section className="mt-10 pb-4 sm:mt-14 lg:mt-16">
+          <p className="pv-eyebrow">Senin için</p>
+          <h2 className="pv-title mt-2 text-2xl sm:text-3xl">
+            Bu ürüne bakanlar şunlara da baktı
           </h2>
-          <div className="mt-4 grid grid-cols-2 gap-3 sm:mt-5 sm:gap-4 lg:grid-cols-4 lg:gap-5">
+          <div className="mt-5 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4 lg:gap-5">
             {similar.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}
           </div>
         </section>
       ) : null}
+
+      {/* Mobil sticky CTA — sepet yerine güvenli iletişim */}
+      <div className="h-24 lg:hidden" aria-hidden />
+      <ProductStickyBar
+        title={product.title}
+        price={product.price}
+        originalPrice={product.original_price}
+        discount={discount}
+        sold={sold}
+        wa={wa}
+        tel={tel}
+      />
     </main>
   );
 }

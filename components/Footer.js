@@ -97,6 +97,11 @@ export default function Footer({ whatsapp, phone, email }) {
                 </Link>
               </li>
               <li>
+                <Link href="/takas" className="text-sm text-bw-600 transition hover:text-bw-950">
+                  Takas
+                </Link>
+              </li>
+              <li>
                 <Link href="/en-cok-bakilanlar" className="text-sm text-bw-600 transition hover:text-bw-950">
                   En çok bakılanlar
                 </Link>
@@ -143,7 +148,7 @@ export default function Footer({ whatsapp, phone, email }) {
         </div>
       </div>
 
-      <div className="border-t border-bw-200 bg-white">
+      <div className="border-t border-bw-200 bg-[#f5f5f7]">
         <FooterWidgets />
         <div className="border-t border-bw-100">
           <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 lg:px-8">

@@ -13,24 +13,24 @@ export default function HomeProductSection({
   prefetchCount = 2,
   ariaLabel,
 }) {
-  const bg =
-    tone === "footer"
-      ? "bg-white sm:bg-[#f5f5f7]"
-      : tone === "bw-50"
-        ? "bg-white sm:bg-bw-50"
-        : "bg-white";
+  const mist = tone === "footer" || tone === "bw-50";
 
   return (
-    <section id={id} className={`scroll-mt-28 border-y border-bw-200 ${bg}`}>
-      <div className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 sm:pt-10 lg:px-8">
+    <section
+      id={id}
+      className={`scroll-mt-16 ${mist ? "bg-[#f5f5f7]" : "bg-white"}`}
+    >
+      <div className="pv-wrap pt-16 sm:pt-20 lg:pt-24">
         <HomeSectionHeader
           eyebrow={eyebrow}
           title={title}
           description={description}
+          href={href}
+          linkLabel={linkLabel}
+          className="mb-8 sm:mb-10"
         />
       </div>
-
-      <div className="pb-8 sm:pb-10">
+      <div className="pb-16 sm:pb-20 lg:pb-24">
         <HomeProductScroll
           products={products}
           href={href}

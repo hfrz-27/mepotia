@@ -1,74 +1,53 @@
 "use client";
 
-import { Eye, Handshake, ShieldCheck, Sparkles } from "lucide-react";
-import HybridAutoScrollRow from "@/components/HybridAutoScrollRow";
+import {
+  BadgeCheck,
+  BadgeDollarSign,
+  Handshake,
+  ShieldCheck,
+} from "lucide-react";
 
 const VALUES = [
-  { icon: ShieldCheck, title: "Güvenle al, güvenle sat", text: "Şeffaf fiyat" },
-  { icon: Eye, title: "Şeffaf vitrin", text: "Net açıklama" },
-  { icon: Handshake, title: "Dürüst ticaret", text: "Köklü güven" },
-  { icon: Sparkles, title: "Premium deneyim", text: "Sade arayüz" },
+  { icon: ShieldCheck, title: "Güvenle al · sat", text: "Şeffaf süreç" },
+  { icon: Handshake, title: "Dürüst ticaret", text: "Net açıklama" },
+  { icon: BadgeDollarSign, title: "Adil fiyat", text: "Piyasa uyumu" },
+  { icon: BadgeCheck, title: "Özenli seçim", text: "Temiz vitrin" },
 ];
 
-function ValueCard({ item, compact = false }) {
+function Chip({ item }) {
   const Icon = item.icon;
-
   return (
-    <div
-      className={`flex shrink-0 items-center gap-2.5 rounded-2xl border border-bw-800 bg-bw-950 shadow-[0_12px_32px_-20px_rgba(0,0,0,0.55)] ${
-        compact ? "w-[9.5rem] px-3 py-2.5" : "w-44 gap-3 px-4 py-3 sm:w-48"
-      }`}
-    >
-      <span
-        className={`flex shrink-0 items-center justify-center rounded-xl bg-white text-bw-950 ${
-          compact ? "h-8 w-8" : "h-10 w-10"
-        }`}
-      >
-        <Icon className={compact ? "h-3.5 w-3.5" : "h-4 w-4"} strokeWidth={1.75} />
+    <div className="flex min-w-0 flex-1 items-center gap-2 rounded-xl bg-white py-2 pr-2.5 pl-2 ring-1 ring-black/[0.05] sm:gap-3 sm:rounded-full sm:py-2.5 sm:pr-4 sm:pl-2.5">
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#f5f5f7] text-[#1d1d1f] sm:h-10 sm:w-10">
+        <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={1.6} />
       </span>
-      <div className="min-w-0 text-left">
-        <p className={`font-semibold text-white ${compact ? "text-[10px] leading-tight" : "text-xs"}`}>
+      <div className="min-w-0">
+        <p className="truncate text-[11px] font-semibold tracking-[-0.01em] text-[#1d1d1f] sm:text-[13px]">
           {item.title}
         </p>
-        <p className={`text-bw-400 ${compact ? "text-[9px]" : "text-[11px]"}`}>{item.text}</p>
+        <p className="truncate text-[10px] text-[#6e6e73] sm:text-[12px]">{item.text}</p>
       </div>
     </div>
   );
 }
 
+/**
+ * Sabit değer şeridi — döngü yok, pv-wrap ile üst bölümlerle hizalı.
+ */
 export default function HomeValueBand({ embedded = false }) {
-  const desktopContent = (
-    <div className="hidden flex-wrap items-center justify-center gap-3 sm:flex sm:gap-4">
+  const content = (
+    <div className="grid grid-cols-2 gap-2 sm:grid-cols-2 sm:gap-2.5 lg:grid-cols-4 lg:gap-3">
       {VALUES.map((item) => (
-        <ValueCard key={item.title} item={item} />
+        <Chip key={item.title} item={item} />
       ))}
     </div>
   );
 
-  const mobileContent = (
-    <div className="sm:hidden">
-      <HybridAutoScrollRow ariaLabel="Güven ve şeffaflık" gap="gap-2.5" scrollSpeed={0.18}>
-        {VALUES.map((item) => (
-          <ValueCard key={item.title} item={item} compact />
-        ))}
-      </HybridAutoScrollRow>
-    </div>
-  );
-
-  const content = (
-    <>
-      {mobileContent}
-      {desktopContent}
-    </>
-  );
-
-  if (embedded) {
-    return <div className="mt-6 border-t border-bw-100 pt-6">{content}</div>;
-  }
+  if (embedded) return <div className="mt-5">{content}</div>;
 
   return (
-    <section className="border-y border-bw-200 bg-white">
-      <div className="mx-auto max-w-7xl px-4 py-5 sm:px-6 sm:py-8 lg:px-8">{content}</div>
+    <section className="bg-[#f5f5f7] py-6 sm:py-8" aria-label="Değerler">
+      <div className="pv-wrap">{content}</div>
     </section>
   );
 }

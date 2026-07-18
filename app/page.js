@@ -1,31 +1,34 @@
-import HeroSection from "@/components/HeroSection";
-import TechNewsSection from "@/components/TechNewsSection";
+﻿import TechNewsSection from "@/components/TechNewsSection";
+import HomeAllProductsGrid from "@/components/HomeAllProductsGrid";
 import HomeCompareGate from "@/components/HomeCompareGate";
-import HomeProductSection from "@/components/HomeProductSection";
+import HomeFeaturedCollection from "@/components/HomeFeaturedCollection";
 import HomeValueBand from "@/components/HomeValueBand";
 import HomeActionRail from "@/components/HomeActionRail";
-import HomeMobileTopBand from "@/components/HomeMobileTopBand";
+import HomeTradeGate from "@/components/HomeTradeGate";
+import HomeIntroHero from "@/components/HomeIntroHero";
 import { getPublishedProducts } from "@/lib/products";
-import { getCategoriesWithSubs, getSiteSettings } from "@/lib/categories";
+import { getSiteSettings } from "@/lib/categories";
 import { fillFeatured, fillProducts } from "@/lib/homeDemoData";
 import { CustomerReviews, HomeReviewsProvider } from "@/components/HomeReviews";
 
 const WA = "https://wa.me/905059574122";
 const PRODUCT_LIMIT = 12;
+const GRID_LIMIT = 20;
 
 export const revalidate = 60;
 
 export default async function HomePage() {
-  const [settings, categories, latestRes, featuredRes, popularRes] = await Promise.all([
+  const [settings, latestRes, featuredRes, popularRes, allRes] = await Promise.all([
     getSiteSettings(),
-    getCategoriesWithSubs(),
     getPublishedProducts({ limit: PRODUCT_LIMIT, orderBy: "created_at" }),
     getPublishedProducts({ limit: PRODUCT_LIMIT, featured: true }),
     getPublishedProducts({ limit: PRODUCT_LIMIT, orderBy: "views" }),
+    getPublishedProducts({ limit: GRID_LIMIT, orderBy: "created_at" }),
   ]);
   const latest = fillProducts(latestRes.data, PRODUCT_LIMIT);
   const featured = fillFeatured(featuredRes.data, PRODUCT_LIMIT);
   const popular = fillProducts(popularRes.data, PRODUCT_LIMIT);
+  const allProducts = fillProducts(allRes.data, GRID_LIMIT);
   const vitrinError = latestRes.error;
 
   const wa = settings?.whatsapp
@@ -35,58 +38,54 @@ export default async function HomePage() {
   return (
     <HomeReviewsProvider>
       <main>
-        <HeroSection
-          heroVideo={settings?.hero_video || ""}
-          heroImages={[settings?.hero_bg_1, settings?.hero_bg_2, settings?.hero_bg_3].filter(Boolean)}
-        />
+        <HomeIntroHero />
 
-        {/* Haber en üstte — hero'nun hemen altı */}
-        <TechNewsSection categories={categories} />
-
-        <HomeMobileTopBand />
+        {/* Haber → koleksiyonlar / işlemler → kategoriler → ürünler → yorumlar */}
+        <TechNewsSection />
 
         {featured.length ? (
-          <HomeProductSection
-            eyebrow="Özenle seçilenler"
-            title="Yeni sahibini bekleyenler"
-            description="Fırsat olarak işaretlenen vitrin ürünleri."
-            href="/ara"
-            linkLabel="Tüm vitrin"
+          <HomeFeaturedCollection
             products={featured.slice(0, PRODUCT_LIMIT)}
-            prefetchCount={3}
-            ariaLabel="Öne çıkan ürünler"
+            href="/ara"
+            linkLabel="Koleksiyonu keşfet"
+            eyebrow="Öne çıkan"
+            title="Yeni sahibini bekleyenler."
+            description="Fırsat olarak işaretlenen vitrin ürünleri — özenle seçilmiş, hazır."
+            variant="mosaic"
+            ariaLabel="Öne çıkan koleksiyon"
+            priority
           />
         ) : null}
 
-        <HomeCompareGate />
+        <HomeActionRail />
 
         {latest.length ? (
-          <HomeProductSection
+          <HomeFeaturedCollection
             id="vitrin"
-            tone="bw-50"
-            eyebrow="Vitrin"
-            title="Özenle seçilmiş ürünler"
-            description="En yeni ikinci el teknoloji ilanları."
+            products={latest.slice(0, PRODUCT_LIMIT)}
             href="/ara"
             linkLabel="Tümünü gör"
-            products={latest.slice(0, PRODUCT_LIMIT)}
-            prefetchCount={3}
-            ariaLabel="Vitrin ürünleri"
+            eyebrow="Vitrin"
+            title="Özenle seçilmiş ürünler."
+            description="En yeni ikinci el teknoloji ilanları."
+            tone="mist"
+            variant="split"
+            ariaLabel="Vitrin koleksiyonu"
           />
         ) : (
-          <section id="vitrin" className="scroll-mt-28 border-y border-bw-200 bg-white sm:bg-bw-50">
-            <div className="mx-auto max-w-7xl px-4 py-8 text-center sm:px-6 sm:py-10 lg:px-8">
-              <p className="font-display text-xl text-bw-900">
-                {vitrinError ? "Vitrin yüklenemedi" : "Henüz ürün yok"}
+          <section id="vitrin" className="scroll-mt-16 bg-[#f5f5f7]">
+            <div className="mx-auto max-w-3xl px-5 py-24 text-center sm:px-8">
+              <p className="text-[32px] font-semibold tracking-[-0.03em] text-[#1d1d1f] sm:text-[40px]">
+                {vitrinError ? "Vitrin yüklenemedi." : "Henüz ürün yok."}
               </p>
-              <p className="mt-2 text-sm text-bw-500">
+              <p className="mt-3 text-[17px] text-[#6e6e73]">
                 {vitrinError ? "Sayfayı yenile veya biraz sonra tekrar dene." : "Yakında vitrin dolacak."}
               </p>
               <a
                 href={wa}
                 target="_blank"
                 rel="noreferrer"
-                className="mt-4 inline-flex rounded-xl bg-bw-950 px-4 py-2.5 text-sm font-semibold text-white"
+                className="mt-6 inline-flex rounded-full bg-[#1d1d1f] px-5 py-2.5 text-[15px] font-normal text-white transition hover:bg-[#000000]"
               >
                 WhatsApp
               </a>
@@ -94,23 +93,26 @@ export default async function HomePage() {
           </section>
         )}
 
-        <HomeActionRail />
+        <HomeCompareGate />
+
+        {popular.length ? (
+          <HomeFeaturedCollection
+            products={popular.slice(0, PRODUCT_LIMIT)}
+            href="/en-cok-bakilanlar"
+            linkLabel="Popüler liste"
+            eyebrow="Popüler"
+            title="En çok bakılanlar."
+            description="Ziyaretçilerin en çok ilgi gösterdiği ilanlar."
+            variant="cinema"
+            ariaLabel="Popüler koleksiyon"
+          />
+        ) : null}
+
+        <HomeTradeGate />
 
         <HomeValueBand />
 
-        {popular.length ? (
-          <HomeProductSection
-            tone="footer"
-            eyebrow="Popüler"
-            title="En çok bakılanlar"
-            description="Ziyaretçilerin en çok ilgi gösterdiği ilanlar."
-            href="/en-cok-bakilanlar"
-            linkLabel="Popüler liste"
-            products={popular.slice(0, PRODUCT_LIMIT)}
-            prefetchCount={3}
-            ariaLabel="Popüler ürünler"
-          />
-        ) : null}
+        <HomeAllProductsGrid products={allProducts} href="/ara" />
 
         <CustomerReviews />
       </main>

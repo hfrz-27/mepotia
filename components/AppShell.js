@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import Navbar from "@/components/Navbar";
+import MobileTabBar from "@/components/MobileTabBar";
 import WhatsAppHelpButton from "@/components/WhatsAppHelpButton";
 
 const GlobalNewsDrawer = dynamic(() => import("@/components/GlobalNewsDrawer"), {
@@ -25,6 +26,7 @@ export default function AppShell({ children, footer }) {
       {bare ? null : (
         <>
           {footer}
+          <MobileTabBar />
           {isCategory ? null : <WhatsAppHelpButton />}
           <GlobalNewsDrawer />
         </>

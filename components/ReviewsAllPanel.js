@@ -52,7 +52,7 @@ export default function ReviewsAllPanel() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="mt-3 text-xs font-semibold text-bw-600 underline-offset-2 transition hover:text-bw-950 hover:underline"
+        className="text-[13px] font-semibold text-[#1d1d1f] underline-offset-4 transition hover:underline"
       >
         Tüm yorumları oku ({reviews.length})
       </button>

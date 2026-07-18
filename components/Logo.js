@@ -3,7 +3,7 @@
 import Image from "next/image";
 
 /** Siyah logo yazısı — yüksek çözünürlük, arkasında kutu yok */
-export default function Logo({ className = "h-8", priority = false }) {
+export default function Logo({ className = "h-7", priority = false }) {
   return (
     <Image
       src="/Mepotia.png"
