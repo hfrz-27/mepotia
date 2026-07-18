@@ -13,7 +13,7 @@ import { CustomerReviews, HomeReviewsProvider } from "@/components/HomeReviews";
 
 const WA = "https://wa.me/905059574122";
 const PRODUCT_LIMIT = 12;
-const GRID_LIMIT = 20;
+const GRID_LIMIT = 21;
 
 export const revalidate = 60;
 

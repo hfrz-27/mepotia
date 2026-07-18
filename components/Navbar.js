@@ -102,10 +102,25 @@ export default function Navbar() {
           : "h-12 border-b border-transparent bg-[rgba(245,245,247,0.88)] backdrop-blur-[20px] backdrop-saturate-150 sm:h-[3.25rem]",
       ].join(" ")}
     >
-      <div className="mx-auto flex h-full max-w-[980px] items-center justify-between gap-3 px-4 sm:max-w-[1080px] sm:px-5 lg:max-w-[1200px] lg:px-6">
-        {/* Logo */}
-        <Link href="/" className="relative z-20 shrink-0 opacity-90 transition hover:opacity-100" aria-label="Mepotia ana sayfa">
-          <Logo className="h-6 sm:h-7" priority />
+      <div className="relative mx-auto flex h-full max-w-[980px] items-center justify-between gap-3 px-4 sm:max-w-[1080px] sm:px-5 lg:max-w-[1200px] lg:px-6">
+        {/* Sol boşluk — mobilde logo ortada kalsın diye dengeler */}
+        <div className="z-10 w-[4.5rem] shrink-0 md:w-auto md:min-w-0">
+          <Link
+            href="/"
+            className="relative z-20 hidden shrink-0 opacity-90 transition hover:opacity-100 md:inline-flex"
+            aria-label="Mepotia ana sayfa"
+          >
+            <Logo className="h-7" priority />
+          </Link>
+        </div>
+
+        {/* Logo — mobilde tam ortada, desktop’ta sol tarafta (yukarıda) */}
+        <Link
+          href="/"
+          className="absolute left-1/2 z-20 -translate-x-1/2 opacity-90 transition hover:opacity-100 md:hidden"
+          aria-label="Mepotia ana sayfa"
+        >
+          <Logo className="h-6" priority />
         </Link>
 
         {/* Desktop nav */}
@@ -128,7 +143,7 @@ export default function Navbar() {
         </nav>
 
         {/* Right actions */}
-        <div className="relative z-20 flex items-center gap-0.5 sm:gap-1" ref={menuRef}>
+        <div className="relative z-20 ml-auto flex w-[4.5rem] items-center justify-end gap-0.5 sm:gap-1 md:w-auto" ref={menuRef}>
           <Link
             href="/ara"
             className="flex h-9 w-9 items-center justify-center rounded-full text-[#1d1d1f] transition hover:bg-black/[0.04]"
