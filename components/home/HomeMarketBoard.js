@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import ProductImage from "@/components/ProductImage";
 import { formatPrice, getPrimaryImage, isSold } from "@/lib/productDisplay";
