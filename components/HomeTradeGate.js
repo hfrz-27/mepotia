@@ -11,7 +11,7 @@ export default function HomeTradeGate() {
   return (
     <section className="bg-[#f5f5f7] py-6 sm:py-10" aria-label="Takas">
       <div className="pv-wrap">
-        <div className="overflow-hidden rounded-[20px] bg-black text-white shadow-[0_24px_60px_-36px_rgba(0,0,0,0.5)] sm:rounded-[32px]">
+        <div className="overflow-hidden rounded-[20px] bg-black text-white shadow-xl sm:rounded-[32px]">
           <div className="border-b border-white/10 px-4 py-5 text-center sm:px-8 sm:py-8">
             <p className="text-[10px] font-semibold tracking-[0.14em] text-white/45 uppercase sm:text-[11px]">
               Takas

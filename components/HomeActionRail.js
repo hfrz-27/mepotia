@@ -43,8 +43,8 @@ export default function HomeActionRail() {
                 className={[
                   "group relative flex min-h-[200px] flex-col justify-between overflow-hidden rounded-[20px] p-5 transition active:scale-[0.99] sm:min-h-[260px] sm:rounded-[28px] sm:p-8",
                   item.dark
-                    ? "bg-black text-white shadow-[0_20px_50px_-28px_rgba(0,0,0,0.45)]"
-                    : "bg-white text-[#111] ring-1 ring-black/[0.06] shadow-[0_16px_40px_-28px_rgba(0,0,0,0.18)]",
+                    ? "bg-black text-white shadow-lg"
+                    : "bg-white text-[#111] ring-1 ring-black/[0.06] shadow-md",
                 ].join(" ")}
               >
                 {/* Decor */}

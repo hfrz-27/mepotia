@@ -107,7 +107,7 @@ export default function HomeCompareGate() {
   return (
     <section className="bg-[#f5f5f7] py-6 sm:py-10" aria-label="Karşılaştır">
       <div className="pv-wrap">
-        <div className="overflow-hidden rounded-[20px] border border-black/[0.06] bg-[#fafafa] shadow-[0_16px_40px_-28px_rgba(0,0,0,0.12)] sm:rounded-[28px]">
+        <div className="overflow-hidden rounded-[20px] border border-black/[0.06] bg-[#fafafa] shadow-md sm:rounded-[28px]">
           <div className="flex items-center gap-1.5 border-b border-black/[0.05] bg-white p-1.5 sm:gap-2 sm:p-2.5">
             {tools.map((t, i) => {
               const on = i === active;

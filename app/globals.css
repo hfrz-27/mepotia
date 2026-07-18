@@ -163,18 +163,23 @@ body {
 .pv-card {
   border-radius: 18px;
   background: #fff;
-  box-shadow: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
   border: 1px solid rgba(0, 0, 0, 0.04);
   transition:
-    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.5s ease;
+    transform 0.35s ease,
+    box-shadow 0.35s ease;
 }
 
 @media (min-width: 640px) {
   .pv-card:hover {
-    transform: scale(1.02);
-    box-shadow: var(--shadow-lift);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   }
+}
+
+/* fill img parent must be relative */
+.relative > img[class*="absolute"] {
+  max-width: none;
 }
 
 .pv-btn {

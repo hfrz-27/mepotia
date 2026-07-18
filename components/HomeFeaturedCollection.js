@@ -15,7 +15,7 @@ function CoverMosaic({ items, priority, label, title, description, linkLabel }) 
   const strip = items.slice(0, 4);
 
   return (
-    <div className="relative overflow-hidden rounded-[20px] bg-black shadow-[0_24px_60px_-36px_rgba(0,0,0,0.55)] ring-1 ring-white/10 sm:rounded-[28px] lg:rounded-[32px]">
+    <div className="relative overflow-hidden rounded-[20px] bg-black shadow-xl sm:rounded-[28px] lg:rounded-[32px]">
       {hero ? (
         <div className="absolute inset-0">
           <ProductImage
@@ -23,7 +23,7 @@ function CoverMosaic({ items, priority, label, title, description, linkLabel }) 
             alt=""
             fill
             priority={priority}
-            className="object-cover transition duration-[1.15s] ease-out group-hover:scale-[1.05]"
+            className="object-cover transition duration-700 ease-out group-hover:scale-[1.03]"
           />
         </div>
       ) : (
@@ -33,10 +33,10 @@ function CoverMosaic({ items, priority, label, title, description, linkLabel }) 
       <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-black/30" />
       <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/30 to-transparent" />
 
-      <div className="relative flex min-h-[320px] flex-col justify-between p-4 sm:min-h-[420px] sm:p-8 lg:min-h-[480px] lg:p-10">
+      <div className="relative flex min-h-[300px] flex-col justify-between p-4 sm:min-h-[400px] sm:p-8 lg:min-h-[460px] lg:p-10">
         <div className="flex items-center justify-between gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-2.5 py-1 backdrop-blur-md sm:gap-2 sm:px-3.5 sm:py-1.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-white sm:h-2 sm:w-2" />
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-2.5 py-1 sm:px-3.5 sm:py-1.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-white" />
             <span className="text-[10px] font-semibold tracking-[0.1em] text-white uppercase sm:text-[11px]">
               {label}
             </span>
@@ -56,34 +56,36 @@ function CoverMosaic({ items, priority, label, title, description, linkLabel }) 
             </p>
           ) : null}
           <div className="mt-4 flex flex-wrap items-center gap-2 sm:mt-6 sm:gap-3">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2.5 text-[13px] font-semibold text-black sm:gap-2 sm:px-6 sm:py-3 sm:text-[14px]">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2.5 text-[13px] font-semibold text-black sm:px-6 sm:py-3 sm:text-[14px]">
               {linkLabel}
               <ArrowUpRight className="h-4 w-4" strokeWidth={2.25} />
             </span>
             {hero?.price != null ? (
-              <span className="rounded-full border border-white/25 bg-white/10 px-3 py-2 text-[12px] font-semibold text-white backdrop-blur-md sm:px-4 sm:text-[13px]">
+              <span className="rounded-full border border-white/25 bg-white/10 px-3 py-2 text-[12px] font-semibold text-white sm:px-4 sm:text-[13px]">
                 {formatPrice(hero.price)}
               </span>
             ) : null}
           </div>
         </div>
 
-        {/* Mobil: yatay kaydırılabilir şerit */}
-        <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-0.5 news-touch-scroll hide-scrollbar sm:mx-0 sm:grid sm:grid-cols-4 sm:gap-2.5 sm:overflow-visible sm:px-0">
+        <div className="flex gap-2 overflow-x-auto pb-1 news-touch-scroll hide-scrollbar sm:grid sm:grid-cols-4 sm:gap-2.5 sm:overflow-visible sm:pb-0">
           {strip.map((p) => (
             <div
               key={p.id}
-              className="flex w-[min(70vw,220px)] shrink-0 items-center gap-2 rounded-[14px] border border-white/15 bg-white/10 p-1.5 backdrop-blur-xl sm:w-auto sm:rounded-[18px] sm:p-2.5"
+              className="flex min-w-[9.5rem] shrink-0 items-center gap-2 rounded-2xl border border-white/15 bg-black/40 p-1.5 sm:min-w-0 sm:p-2"
             >
-              <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-[10px] bg-white/10 sm:h-14 sm:w-14 sm:rounded-[12px]">
-                <ProductImage src={getPrimaryImage(p)} alt="" fill className="object-cover" />
+              {/* Beyaz çerçeve: padding kutusu — ring+overflow kesilmez */}
+              <div className="shrink-0 rounded-[10px] bg-white p-[2px] sm:rounded-[12px]">
+                <div className="relative h-10 w-10 overflow-hidden rounded-[8px] bg-[#e8e8ed] sm:h-12 sm:w-12 sm:rounded-[10px]">
+                  <ProductImage src={getPrimaryImage(p)} alt="" fill className="object-cover" />
+                </div>
               </div>
-              <div className="min-w-0 flex-1 pr-1">
+              <div className="min-w-0 flex-1 pr-0.5">
                 <p className="line-clamp-1 text-[11px] font-semibold text-white sm:text-[12px]">
                   {p.title}
                 </p>
                 {p.price != null ? (
-                  <p className="mt-0.5 text-[11px] font-semibold text-white/90 tabular-nums sm:text-[13px]">
+                  <p className="mt-0.5 text-[11px] font-semibold text-white/90 tabular-nums sm:text-[12px]">
                     {formatPrice(p.price)}
                   </p>
                 ) : null}
@@ -104,7 +106,7 @@ function CoverSplit({ items, priority, label, title, description, linkLabel }) {
   const tiles = items.slice(0, 4);
 
   return (
-    <div className="overflow-hidden rounded-[20px] bg-white shadow-[0_24px_60px_-36px_rgba(0,0,0,0.28)] ring-1 ring-black/[0.06] sm:rounded-[28px] lg:rounded-[32px]">
+    <div className="overflow-hidden rounded-[20px] bg-white shadow-lg ring-1 ring-black/[0.06] sm:rounded-[28px] lg:rounded-[32px]">
       <div className="relative overflow-hidden border-b border-black/[0.04] bg-gradient-to-b from-[#fafafa] to-white px-4 py-6 sm:px-10 sm:py-11">
         <div className="relative flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
           <div className="max-w-xl">
@@ -186,7 +188,7 @@ function CoverCinema({ items, priority, label, title, description, linkLabel }) 
   const strip = items.slice(0, 5);
 
   return (
-    <div className="relative overflow-hidden rounded-[20px] bg-black shadow-[0_24px_60px_-36px_rgba(0,0,0,0.55)] ring-1 ring-white/10 sm:rounded-[28px] lg:rounded-[32px]">
+    <div className="relative overflow-hidden rounded-[20px] bg-black shadow-xl sm:rounded-[28px] lg:rounded-[32px]">
       {hero ? (
         <div className="absolute inset-0">
           <ProductImage
@@ -194,7 +196,7 @@ function CoverCinema({ items, priority, label, title, description, linkLabel }) 
             alt=""
             fill
             priority={priority}
-            className="object-cover transition duration-[1.1s] ease-out group-hover:scale-[1.05]"
+            className="object-cover transition duration-700 ease-out group-hover:scale-[1.03]"
           />
         </div>
       ) : (
@@ -204,9 +206,9 @@ function CoverCinema({ items, priority, label, title, description, linkLabel }) 
       <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/35" />
       <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/40" />
 
-      <div className="relative flex min-h-[300px] flex-col justify-between p-4 sm:min-h-[420px] sm:p-9 lg:min-h-[460px] lg:p-11">
+      <div className="relative flex min-h-[300px] flex-col justify-between p-4 sm:min-h-[400px] sm:p-9 lg:min-h-[440px] lg:p-11">
         <div className="flex items-center justify-between gap-2">
-          <span className="rounded-full border border-white/25 bg-white/10 px-2.5 py-1 text-[10px] font-semibold tracking-wide text-white backdrop-blur-md sm:px-3.5 sm:py-1.5 sm:text-[11px]">
+          <span className="rounded-full border border-white/25 bg-white/10 px-2.5 py-1 text-[10px] font-semibold tracking-wide text-white sm:px-3.5 sm:py-1.5 sm:text-[11px]">
             {label}
           </span>
           <span className="rounded-full bg-white px-2.5 py-1 text-[10px] font-semibold text-black sm:px-3.5 sm:py-1.5 sm:text-[11px]">
@@ -229,13 +231,16 @@ function CoverCinema({ items, priority, label, title, description, linkLabel }) 
           </span>
         </div>
 
-        <div className="flex justify-center gap-2 overflow-x-auto pb-0.5 news-touch-scroll hide-scrollbar sm:gap-3">
+        {/* Tam beyaz çerçeve: padding; ring+overflow kesilmez */}
+        <div className="flex justify-center gap-2.5 pb-0.5 sm:gap-3">
           {strip.slice(0, 4).map((p) => (
             <div
               key={p.id}
-              className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl bg-white shadow-lg ring-2 ring-white sm:h-[72px] sm:w-[72px] sm:rounded-[18px] sm:ring-[3px]"
+              className="shrink-0 rounded-[12px] bg-white p-[3px] shadow-md sm:rounded-[16px] sm:p-1"
             >
-              <ProductImage src={getPrimaryImage(p)} alt="" fill className="object-cover" />
+              <div className="relative h-11 w-11 overflow-hidden rounded-[9px] bg-[#e8e8ed] sm:h-16 sm:w-16 sm:rounded-[12px]">
+                <ProductImage src={getPrimaryImage(p)} alt="" fill className="object-cover" />
+              </div>
             </div>
           ))}
         </div>
@@ -278,7 +283,7 @@ export default function HomeFeaturedCollection({
       <div className="pv-wrap">
         <Link
           href={href}
-          className="group block outline-none focus-visible:ring-2 focus-visible:ring-black/15 focus-visible:ring-offset-4"
+          className="group block outline-none"
         >
           <Cover
             items={items}
