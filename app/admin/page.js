@@ -226,27 +226,22 @@ export default function AdminPage() {
     load();
   };
 
-  /** Ana sayfa 3 koleksiyon: yok → öne çıkan → özenle → popüler → yok */
-  const HOME_COLLECTION_CYCLE = [null, "featured", "curated", "popular"];
   const HOME_COLLECTION_LABEL = {
     featured: "1 · Yeni sahibi",
     curated: "2 · Özenle seçilmiş",
     popular: "3 · En çok bakılanlar",
   };
 
-  const cycleHomeCollection = async (product) => {
-    const cur = product.home_collection || null;
-    const idx = HOME_COLLECTION_CYCLE.indexOf(cur);
-    const next = HOME_COLLECTION_CYCLE[(idx < 0 ? 0 : idx + 1) % HOME_COLLECTION_CYCLE.length];
+  const setHomeCollection = async (id, next) => {
     const payload = {
-      home_collection: next,
-      // Geriye dönük: ilk koleksiyon is_featured ile de işaretlensin
+      home_collection: next || null,
       is_featured: next === "featured",
     };
-    const { error } = await createClient().from("products").update(payload).eq("id", product.id);
+    const { error } = await createClient().from("products").update(payload).eq("id", id);
     if (error) {
       if (/home_collection/i.test(error.message || "")) {
-        setMsg("Önce Supabase’de home_collections.sql çalıştır.");
+        setMsg("Önce Supabase SQL Editor’da home_collections.sql çalıştır.");
+        setProductSqlHint("home_collections.sql");
       } else {
         setMsg(error.message || "Koleksiyon güncellenemedi.");
       }
@@ -254,8 +249,8 @@ export default function AdminPage() {
     }
     setMsg(
       next
-        ? `Ana sayfa: ${HOME_COLLECTION_LABEL[next]}`
-        : "Ana sayfa koleksiyonundan çıkarıldı."
+        ? `Ana sayfa koleksiyonu: ${HOME_COLLECTION_LABEL[next]}`
+        : "Koleksiyondan çıkarıldı — sadece Ürünler sayfasında."
     );
     load();
   };
@@ -635,12 +630,21 @@ export default function AdminPage() {
       {tab === "products" ? (
         <div className="space-y-4">
           {productSqlHint ? (
-            <AdminSqlAlert title="İndirim alanları eksik">
+            <AdminSqlAlert
+              title={
+                String(productSqlHint).includes("home_collection")
+                  ? "Ana sayfa koleksiyonu için SQL gerekli"
+                  : "SQL alanları eksik"
+              }
+            >
               Supabase SQL Editor&apos;da{" "}
               <code className="rounded bg-white px-1.5 py-0.5 text-xs">
                 supabase/{productSqlHint}
               </code>{" "}
-              çalıştır. Ürünler şimdilik indirim özelliği olmadan listeleniyor.
+              bir kez çalıştır.
+              {String(productSqlHint).includes("home_collection")
+                ? " Sonra üründe koleksiyon seç: Yeni sahibi / Özenle / En çok bakılanlar."
+                : " Ürünler şimdilik eksik alanlar olmadan listeleniyor."}
             </AdminSqlAlert>
           ) : null}
           <div className="flex flex-col gap-3 rounded-2xl border border-bw-200 bg-white px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
@@ -731,32 +735,28 @@ export default function AdminPage() {
                   >
                     {p.is_discount ? "İndirim ✓" : "İndirim işaretle"}
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => cycleHomeCollection(p)}
-                    className={`rounded-xl px-3 py-2 text-xs font-semibold ${
-                      p.home_collection || p.is_featured
-                        ? "bg-bw-950 text-white"
-                        : actionBtn
-                    }`}
-                    title="Tıkla: koleksiyon değiştir (Yok → Yeni sahibi → Özenle → Popüler)"
-                  >
-                    Ana sayfa:{" "}
-                    {p.home_collection
-                      ? HOME_COLLECTION_LABEL[p.home_collection] || p.home_collection
-                      : p.is_featured
-                        ? "1 · Yeni sahibi"
-                        : "Yok"}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => toggle(p.id, "is_featured", !p.is_featured)}
-                    className={`rounded-xl px-3 py-2 text-xs font-semibold ${
-                      p.is_featured ? "bg-bw-950 text-white" : actionBtn
-                    }`}
-                  >
-                    Öne çıkan: {p.is_featured ? "Evet" : "Hayır"}
-                  </button>
+                  <label className="flex min-w-[11rem] flex-col gap-1 rounded-xl border border-bw-200 bg-white px-3 py-2">
+                    <span className="text-[10px] font-semibold tracking-wide text-bw-500 uppercase">
+                      Ana sayfa koleksiyonu
+                    </span>
+                    <select
+                      value={
+                        p.home_collection ||
+                        (p.is_featured ? "featured" : "") ||
+                        ""
+                      }
+                      onChange={(e) => {
+                        const next = e.target.value || null;
+                        setHomeCollection(p.id, next);
+                      }}
+                      className="rounded-lg border border-bw-200 bg-bw-50 px-2 py-1.5 text-xs font-semibold text-bw-900 outline-none"
+                    >
+                      <option value="">Yok (sadece ürünler)</option>
+                      <option value="featured">1 · Yeni sahibi</option>
+                      <option value="curated">2 · Özenle seçilmiş</option>
+                      <option value="popular">3 · En çok bakılanlar</option>
+                    </select>
+                  </label>
                   <button
                     type="button"
                     onClick={() => toggle(p.id, "is_premium", !p.is_premium)}

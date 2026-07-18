@@ -36,9 +36,34 @@ const INITIAL = {
   whatsapp: "",
   is_premium: false,
   is_featured: false,
+  /** Ana sayfa koleksiyonu: "" | featured | curated | popular */
+  home_collection: "",
   is_discount: false,
   negotiable: true,
 };
+
+const HOME_COLLECTION_OPTIONS = [
+  {
+    value: "",
+    label: "Yok — sadece ürünler sayfasında",
+    hint: "Ana sayfa 3 koleksiyonda çıkmaz",
+  },
+  {
+    value: "featured",
+    label: "Yeni sahibini bekleyenler",
+    hint: "Ana sayfa 1. koleksiyon",
+  },
+  {
+    value: "curated",
+    label: "Özenle seçilmiş ürünler",
+    hint: "Ana sayfa 2. koleksiyon",
+  },
+  {
+    value: "popular",
+    label: "En çok bakılanlar",
+    hint: "Ana sayfa 3. koleksiyon",
+  },
+];
 
 async function refreshVitrin() {
   try {
@@ -123,6 +148,10 @@ export default function IlanVerClient() {
           whatsapp: product.whatsapp || "",
           is_premium: Boolean(product.is_premium),
           is_featured: Boolean(product.is_featured),
+          home_collection:
+            product.home_collection ||
+            (product.is_featured ? "featured" : "") ||
+            "",
           is_discount: Boolean(product.is_discount),
           negotiable: product.negotiable !== false,
         });
@@ -231,6 +260,15 @@ export default function IlanVerClient() {
       const { is_discount, original_price, ...rest } = full;
       result = await supabase.from("products").insert([rest]).select().single();
     }
+    if (result.error?.message && /home_collection/i.test(result.error.message)) {
+      const { home_collection, ...rest } = full;
+      result = await supabase.from("products").insert([rest]).select().single();
+      if (!result.error) {
+        setError(
+          "Ürün eklendi ama koleksiyon için Supabase’de home_collections.sql çalıştır, sonra ürünü düzenle."
+        );
+      }
+    }
     return result;
   };
 
@@ -276,7 +314,8 @@ export default function IlanVerClient() {
       phone: form.phone || null,
       whatsapp: form.whatsapp || form.phone || null,
       is_premium: form.is_premium,
-      is_featured: form.is_featured,
+      is_featured: form.home_collection === "featured" || form.is_featured,
+      home_collection: form.home_collection || null,
       is_discount: form.is_discount,
       original_price: form.is_discount ? Number(form.original_price) : null,
       updated_at: new Date().toISOString(),
@@ -287,6 +326,19 @@ export default function IlanVerClient() {
         .from("products")
         .update(payload)
         .eq("id", editId);
+      // SQL henüz yoksa home_collection alanını atla
+      if (updateError?.message && /home_collection/i.test(updateError.message)) {
+        const { home_collection, ...withoutHome } = payload;
+        ({ error: updateError } = await supabase
+          .from("products")
+          .update(withoutHome)
+          .eq("id", editId));
+        if (!updateError) {
+          setError(
+            "Ürün kaydedildi ama ana sayfa koleksiyonu için Supabase’de home_collections.sql çalıştır."
+          );
+        }
+      }
       if (updateError?.message?.includes("specs")) {
         const { specs, ...legacyPayload } = payload;
         ({ error: updateError } = await supabase.from("products").update(legacyPayload).eq("id", editId));
@@ -650,12 +702,43 @@ export default function IlanVerClient() {
           ) : null}
 
           <div className="rounded-2xl border border-bw-100 bg-bw-50/60 p-4">
-            <p className="text-xs font-semibold tracking-wide text-bw-600 uppercase">Vitrin ayarları</p>
-            <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm text-bw-700">
-              <label className="flex items-center gap-2">
-                <input type="checkbox" name="is_featured" checked={form.is_featured} onChange={onChange} />
-                Fırsat ürünü olarak göster
-              </label>
+            <p className="text-xs font-semibold tracking-wide text-bw-600 uppercase">
+              Ana sayfa koleksiyonu
+            </p>
+            <p className="mt-1 text-[12px] leading-snug text-bw-500">
+              Ürünü paylaşırken hangi blokta çıksın? Seçmezsen sadece Ürünler sayfasında görünür —
+              o koleksiyonda bütün ürünler değil, sadece seçtiklerin çıkar.
+            </p>
+            <div className="mt-3 space-y-2">
+              {HOME_COLLECTION_OPTIONS.map((opt) => {
+                const on = (form.home_collection || "") === opt.value;
+                return (
+                  <label
+                    key={opt.value || "none"}
+                    className={[
+                      "flex cursor-pointer items-start gap-3 rounded-xl border px-3 py-2.5 transition",
+                      on
+                        ? "border-bw-950 bg-white shadow-sm"
+                        : "border-bw-200 bg-white/70 hover:border-bw-300",
+                    ].join(" ")}
+                  >
+                    <input
+                      type="radio"
+                      name="home_collection"
+                      value={opt.value}
+                      checked={on}
+                      onChange={onChange}
+                      className="mt-1"
+                    />
+                    <span className="min-w-0">
+                      <span className="block text-sm font-semibold text-bw-900">{opt.label}</span>
+                      <span className="mt-0.5 block text-[11px] text-bw-500">{opt.hint}</span>
+                    </span>
+                  </label>
+                );
+              })}
+            </div>
+            <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 border-t border-bw-100 pt-3 text-sm text-bw-700">
               <label className="flex items-center gap-2">
                 <input type="checkbox" name="is_premium" checked={form.is_premium} onChange={onChange} />
                 Premium
