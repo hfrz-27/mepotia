@@ -79,10 +79,10 @@ export default function HomeValueBand({ embedded = false }) {
         </Link>
         <Link
           href="/urunler"
-          className="inline-flex min-h-[40px] items-center gap-1 text-[13px] font-medium text-[#0066cc] sm:text-[14px]"
+          className="inline-flex min-h-[40px] items-center gap-1 text-[13px] font-semibold text-[#1d1d1f] sm:text-[14px]"
         >
           Vitrine göz at
-          <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={2} />
+          <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={2.25} />
         </Link>
       </div>
     </>
