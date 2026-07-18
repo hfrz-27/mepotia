@@ -8,7 +8,7 @@ import { getTechPosts } from "@/lib/techPosts";
 
 export default async function TechNewsSection({ categories = [] }) {
   const [{ data: posts, error }, productsByCategory] = await Promise.all([
-    getTechPosts({ limit: 8 }),
+    getTechPosts({ limit: 7 }),
     getHomeCategoryProductMap(categories),
   ]);
 
@@ -18,28 +18,25 @@ export default async function TechNewsSection({ categories = [] }) {
   }));
 
   return (
-    <section id="teknoloji" className="relative scroll-mt-28 border-t border-bw-200 bg-white">
-      <div className="pointer-events-none story-band-grid absolute inset-0 opacity-[0.03]" aria-hidden />
-
+    <section id="teknoloji" className="sx-section">
       <HomeCategoryExplorer categories={categoryMeta} productsByCategory={productsByCategory} />
 
-      <div className="relative border-t border-bw-200">
-        <div className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 sm:pt-10 lg:px-8">
+      <div className="sx-section-alt border-t border-[#2a2a30]">
+        <div className="sx-wrap pb-8">
           <HomeSectionHeader
-            eyebrow="Güncel haberler"
+            eyebrow="Sinyal"
             title="Teknoloji haberleri"
-            description="Telefon, oyun ve yazılım dünyasından güncel gelişmeler."
-            className="!mb-4 sm:!mb-5"
+            description="Seçilmiş gelişmeler — gürültü yok, net özet."
+            className="mb-0"
           />
-
           {error ? (
-            <div className="mb-8 rounded-xl border border-dashed border-bw-300 bg-bw-50 px-4 py-6 text-center text-sm text-bw-600">
-              Supabase&apos;de <code className="text-bw-950">tech_posts.sql</code> çalıştır.
-            </div>
+            <p className="mt-6 border border-[#2a2a30] bg-[#111114] px-4 py-3 text-sm text-zinc-400">
+              tech_posts.sql gerekli.
+            </p>
           ) : !posts.length ? (
-            <div className="mb-8 rounded-xl border border-dashed border-bw-300 bg-bw-50 px-4 py-8 text-center">
-              <Cpu className="mx-auto h-7 w-7 text-bw-300" />
-              <p className="mt-2 text-sm font-medium text-bw-700">Henüz paylaşım yok</p>
+            <div className="mt-8 border border-[#2a2a30] bg-[#111114] px-4 py-10 text-center">
+              <Cpu className="mx-auto h-8 w-8 text-zinc-600" />
+              <p className="mt-2 text-sm text-zinc-400">Henüz paylaşım yok</p>
             </div>
           ) : null}
         </div>
@@ -47,15 +44,10 @@ export default async function TechNewsSection({ categories = [] }) {
         {posts?.length && !error ? (
           <>
             <TechNewsHomeRow posts={posts} />
-
-            <div className="mt-4 flex justify-center px-4 pb-6 sm:mt-5 sm:pb-8">
-              <Link
-                href="/teknoloji"
-                prefetch
-                className="inline-flex items-center gap-2 rounded-xl bg-bw-950 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-bw-800"
-              >
-                Bütün haberleri gör
-                <ArrowRight className="h-4 w-4" />
+            <div className="flex justify-center px-4 py-10">
+              <Link href="/teknoloji" prefetch className="sx-btn">
+                Tüm haberler
+                <ArrowRight className="h-4 w-4" strokeWidth={2.25} />
               </Link>
             </div>
           </>

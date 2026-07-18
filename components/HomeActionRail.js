@@ -1,26 +1,65 @@
-import Link from "next/link";
-import { ArrowUpRight, HandCoins, Search } from "lucide-react";
+"use client";
 
-const actions = [
-  { href: "/bana-sat", icon: HandCoins, eyebrow: "Ürünün var mı?", title: "Bana sat", text: "Hızlı teklif al" },
-  { href: "/urun-iste", icon: Search, eyebrow: "Aradığını bulamadın mı?", title: "Ürün iste", text: "Modelini bize yaz" },
+import { HandCoins, Search } from "lucide-react";
+import ToolExpandStack from "@/components/ToolExpandStack";
+
+const CARDS = [
+  {
+    href: "/bana-sat",
+    eyebrow: "01 · Satış",
+    short: "Bana sat",
+    title: "Ürününü bana sat",
+    description:
+      "Elinde cihaz varsa hızlı ve adil teklif al. Fotoğraf + model, net dönüş.",
+    howItWorks:
+      "Model ve durumunu yaz, fotoğraf ekle. Kısa sürede adil teklif alırsın.",
+    points: ["Hızlı teklif", "Adil fiyat", "Kolay süreç"],
+    steps: [
+      "Model ve durumunu yaz",
+      "Fotoğraf ekle, formu gönder",
+      "Teklifi al ve onayla",
+    ],
+    benefits: [
+      "Pazarlık yormadan net fiyat aralığı",
+      "Güvenli ve hızlı satış yolu",
+    ],
+    cta: "Teklif al",
+    icon: HandCoins,
+    accent: "#1f6b4a",
+  },
+  {
+    href: "/urun-iste",
+    eyebrow: "02 · Talep",
+    short: "Ürün iste",
+    title: "Aradığın ürünü iste",
+    description:
+      "Vitrinde yoksa modelini yaz. Senin için arayalım, uygun ilan çıkınca haber verelim.",
+    howItWorks:
+      "Model ve bütçeni yaz. Uygun ilan çıkınca haber veririz.",
+    points: ["Model yaz", "Biz bulalım", "Haber ver"],
+    steps: [
+      "Model ve tercihlerini yaz",
+      "Bütçe notunu ekle",
+      "Uygun ürün gelince haber al",
+    ],
+    benefits: [
+      "Vitrinde olmayan ürünleri talep et",
+      "Zaman kaybetmeden doğru modele ulaş",
+    ],
+    cta: "İstek gönder",
+    icon: Search,
+    accent: "#111110",
+  },
 ];
 
 export default function HomeActionRail() {
   return (
-    <section className="border-b border-bw-200 bg-white">
-      <div className="mx-auto max-w-7xl px-4 py-5 sm:px-6 sm:py-7 lg:px-8">
-        <div className="flex gap-3 overflow-x-auto pb-1 sm:grid sm:grid-cols-2 sm:overflow-visible">
-          {actions.map((action) => {
-            const Icon = action.icon;
-            return <Link key={action.href} href={action.href} className="group flex min-w-[17rem] flex-1 items-center gap-3 rounded-2xl border border-bw-200 bg-gradient-to-br from-white to-bw-50 px-4 py-3.5 transition hover:-translate-y-0.5 hover:border-bw-400 hover:shadow-[0_18px_35px_-25px_rgba(0,0,0,.35)] sm:min-w-0 sm:px-5">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-bw-950 text-white"><Icon className="h-4 w-4" /></span>
-              <span className="min-w-0 flex-1"><span className="block text-[10px] font-semibold tracking-[.14em] text-bw-500 uppercase">{action.eyebrow}</span><span className="mt-0.5 block font-display text-base font-semibold text-bw-950">{action.title}</span><span className="block text-xs text-bw-500">{action.text}</span></span>
-              <ArrowUpRight className="h-4 w-4 shrink-0 text-bw-400 transition group-hover:text-bw-950" />
-            </Link>;
-          })}
-        </div>
-      </div>
-    </section>
+    <ToolExpandStack
+      eyebrow="Al · Sat"
+      title="Sat veya iste"
+      subtitle="Satış teklifi veya ürün talebi — tek tıkla başla."
+      cards={CARDS}
+      tone="white"
+    />
   );
 }

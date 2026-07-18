@@ -1,101 +1,85 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, BadgeDollarSign, Sparkles } from "lucide-react";
+import { ArrowRight, BadgeDollarSign, Search } from "lucide-react";
 import HeroSearch from "@/components/HeroSearch";
-import TrustStrip from "@/components/TrustStrip";
 import HeroBackgroundCarousel from "@/components/HeroBackgroundCarousel";
 import HeroBackgroundVideo from "@/components/HeroBackgroundVideo";
-import { ReviewThinStrip } from "@/components/HomeReviews";
-
-const HERO_LINKS = [
-  { href: "/fiyat-karsilastir", label: "Fiyat karşılaştır", icon: BadgeDollarSign, primary: true },
-  { href: "#vitrin", label: "Vitrine bak", icon: ArrowRight, primary: false },
-  { href: "/teknoloji", label: "Haberlere git", icon: ArrowRight, primary: false },
-];
 
 export default function HeroSection({ heroImages = [], heroVideo = "" }) {
   const hasVideo = Boolean(heroVideo);
   const hasPhotos = !hasVideo && heroImages.filter(Boolean).length > 0;
 
   return (
-    <section className="relative overflow-hidden bg-[#1c1f26]">
+    <section className="relative overflow-hidden border-b border-[#2a2a30] bg-[#070708]">
       {hasVideo ? (
-        <HeroBackgroundVideo src={heroVideo} lightOverlay />
-      ) : hasPhotos ? (
-        <HeroBackgroundCarousel images={heroImages} />
-      ) : (
-        <>
-          <div
-            className="absolute inset-0 bg-gradient-to-br from-[#3a3f4b] via-[#252830] to-[#14161c]"
-            aria-hidden
-          />
-          <div
-            className="absolute inset-0 bg-[radial-gradient(ellipse_at_20%_0%,rgba(255,255,255,0.14)_0%,transparent_55%),radial-gradient(ellipse_at_80%_100%,rgba(255,255,255,0.06)_0%,transparent_50%)]"
-            aria-hidden
-          />
-        </>
-      )}
-      <div className="hero-grid absolute inset-0 opacity-[0.07]" aria-hidden />
-
-      <div className="relative mx-auto max-w-7xl px-4 pt-10 pb-2 sm:px-6 sm:pt-14 lg:px-8 lg:pt-16">
-        <div className="text-center lg:mx-auto lg:max-w-3xl">
-          <p className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-0.5 text-[9px] font-semibold tracking-[0.22em] text-white/70 uppercase">
-            <Sparkles className="h-2.5 w-2.5 text-white/50" />
-            Teknoloji · İkinci El · Güven
-          </p>
-
-          <h1 className="mt-4 font-display text-[2.1rem] leading-none font-semibold tracking-[0.2em] text-white uppercase sm:text-5xl lg:text-6xl">
-            MEPOTIA
-          </h1>
-
-          <p className="mx-auto mt-3 max-w-md text-xs leading-relaxed text-white/65 sm:text-sm">
-            Özenle seçilmiş ikinci el teknoloji ürünleri — dürüst ve şeffaf vitrin.
-          </p>
+        <div className="absolute inset-0 opacity-40">
+          <HeroBackgroundVideo src={heroVideo} lightOverlay />
         </div>
+      ) : hasPhotos ? (
+        <div className="absolute inset-0 opacity-35">
+          <HeroBackgroundCarousel images={heroImages} />
+        </div>
+      ) : null}
 
-        <div className="mx-auto mt-5 max-w-xl space-y-2.5 sm:mt-6 lg:max-w-2xl">
-          <HeroSearch variant="dark" />
+      <div className="pointer-events-none absolute inset-0 bg-[#070708]/75" aria-hidden />
+      <div className="hero-grid absolute inset-0 opacity-80" aria-hidden />
 
-          <div className="grid w-full grid-cols-3 gap-1.5 sm:flex sm:w-auto sm:flex-nowrap sm:justify-center sm:gap-2.5">
-            {HERO_LINKS.map((item) => {
-              const Icon = item.icon;
-              const className = item.primary
-                ? "inline-flex items-center justify-center gap-1 rounded-full border border-white/30 bg-white px-2 py-2 text-[9px] font-semibold leading-tight text-bw-950 shadow-[0_10px_28px_-14px_rgba(0,0,0,0.55)] transition hover:bg-bw-50 sm:gap-2 sm:px-5 sm:py-2.5 sm:text-xs"
-                : "inline-flex items-center justify-center gap-1 rounded-full border border-white/20 bg-white/10 px-2 py-2 text-[9px] font-semibold leading-tight text-white backdrop-blur-md transition hover:border-white/35 hover:bg-white/18 sm:gap-2 sm:px-5 sm:py-2.5 sm:text-xs";
-              const inner = (
-                <>
-                  <Icon className="h-3 w-3 shrink-0 sm:h-3.5 sm:w-3.5" />
-                  <span className="text-center">{item.label}</span>
-                </>
-              );
+      <div className="relative mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-12 lg:px-8 lg:py-24">
+        <div className="lg:col-span-7">
+          <p className="sx-kicker">İkinci el teknoloji · 2026</p>
+          <h1 className="sx-title mt-4 text-5xl sm:text-6xl lg:text-7xl">
+            MEPOTIA
+            <span className="block text-[#ff4d1a]">SIGNAL</span>
+          </h1>
+          <p className="sx-sub mt-5 max-w-md text-base">
+            Özenle seçilmiş cihazlar. Net fiyat. Dürüst vitrin. Kaydırma yok — karar net.
+          </p>
 
-              return item.href.startsWith("#") ? (
-                <a key={item.href} href={item.href} className={className}>
-                  {inner}
-                </a>
-              ) : (
-                <Link key={item.href} href={item.href} className={className}>
-                  {inner}
-                </Link>
-              );
-            })}
+          <div className="mt-8 max-w-xl">
+            <HeroSearch variant="dark" />
+          </div>
+
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link href="/fiyat-karsilastir" className="sx-btn">
+              <BadgeDollarSign className="h-4 w-4" />
+              Fiyat karşılaştır
+            </Link>
+            <Link href="#vitrin" className="sx-btn-ghost">
+              Vitrine bak
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link href="/urun-iste" className="sx-btn-ghost">
+              <Search className="h-4 w-4" />
+              Ürün iste
+            </Link>
           </div>
         </div>
-      </div>
 
-      <div className="relative z-10 mx-auto max-w-7xl rounded-t-[1.5rem] border border-white/70 bg-gradient-to-b from-white via-[#fafafa] to-[#f3f3f5] px-4 pt-3 pb-3 shadow-[0_-18px_44px_-22px_rgba(0,0,0,0.32)] ring-1 ring-bw-200/40 sm:mt-4 sm:rounded-t-[1.75rem] sm:px-6 sm:pt-3.5 sm:pb-3.5 lg:px-8">
-        <TrustStrip />
-
-        <div className="mt-2.5 hidden border-t border-bw-200/50 pt-2.5 sm:mt-3 sm:block sm:pt-3">
-          <ReviewThinStrip
-            variant="light"
-            showLabel
-            duration={32}
-            mobileStatic={false}
-            compact
-            className="border-0 bg-white/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]"
-          />
+        <div className="grid gap-px bg-[#2a2a30] lg:col-span-5">
+          {[
+            { k: "01", t: "Karşılaştır", d: "Fiyat + spek", href: "/fiyat-karsilastir" },
+            { k: "02", t: "Sat", d: "Hızlı teklif al", href: "/bana-sat" },
+            { k: "03", t: "İste", d: "Modelini yaz", href: "/urun-iste" },
+            { k: "04", t: "Haber", d: "Güncel sinyal", href: "/teknoloji" },
+          ].map((item) => (
+            <Link
+              key={item.k}
+              href={item.href}
+              className="group flex items-center justify-between gap-4 bg-[#111114] px-5 py-5 transition hover:bg-[#ff4d1a]"
+            >
+              <div>
+                <p className="text-[10px] font-bold tracking-[0.2em] text-zinc-500 uppercase group-hover:text-white/70">
+                  {item.k}
+                </p>
+                <p className="mt-1 font-[family-name:var(--font-syne)] text-xl font-bold text-white">
+                  {item.t}
+                </p>
+                <p className="text-sm text-zinc-400 group-hover:text-white/80">{item.d}</p>
+              </div>
+              <ArrowRight className="h-5 w-5 text-zinc-600 group-hover:text-white" />
+            </Link>
+          ))}
         </div>
       </div>
     </section>

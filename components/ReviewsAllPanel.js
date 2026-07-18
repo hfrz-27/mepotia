@@ -17,9 +17,9 @@ function initials(name) {
 
 function FullReviewCard({ review }) {
   return (
-    <article className="rounded-2xl border border-bw-200 bg-white p-4 shadow-[0_8px_24px_-16px_rgba(0,0,0,0.1)]">
+    <article className="mepo-card !rounded-2xl p-4">
       <div className="flex items-center gap-3">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-bw-950 text-[10px] font-bold text-white">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-bw-950 text-[10px] font-bold text-white">
           {initials(review.author_name)}
         </span>
         <div>
@@ -52,15 +52,15 @@ export default function ReviewsAllPanel() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="mt-3 text-xs font-semibold text-bw-600 underline-offset-2 transition hover:text-bw-950 hover:underline"
+        className="mt-4 text-xs font-semibold text-bw-600 underline-offset-4 transition hover:text-bw-950 hover:underline"
       >
         Tüm yorumları oku ({reviews.length})
       </button>
 
       {open ? (
-        <div className="fixed inset-0 z-[80] flex items-end justify-center bg-bw-950/50 p-4 sm:items-center">
-          <div className="flex max-h-[85vh] w-full max-w-lg flex-col overflow-hidden rounded-2xl border border-bw-200 bg-white shadow-[0_32px_80px_-24px_rgba(0,0,0,0.4)]">
-            <div className="flex items-center justify-between border-b border-bw-100 px-4 py-3">
+        <div className="fixed inset-0 z-[80] flex items-end justify-center bg-bw-950/55 p-4 backdrop-blur-[2px] sm:items-center">
+          <div className="mepo-card flex max-h-[85vh] w-full max-w-lg flex-col overflow-hidden !rounded-[1.5rem] shadow-[0_32px_80px_-24px_rgba(0,0,0,0.45)]">
+            <div className="flex items-center justify-between border-b border-bw-100 px-4 py-3.5">
               <p className="flex items-center gap-2 text-sm font-semibold text-bw-950">
                 <MessageSquareQuote className="h-4 w-4" />
                 Tüm yorumlar
@@ -68,7 +68,7 @@ export default function ReviewsAllPanel() {
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-bw-200 text-bw-600"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-bw-200 text-bw-600 transition hover:bg-bw-950 hover:text-white"
                 aria-label="Kapat"
               >
                 <X className="h-4 w-4" />

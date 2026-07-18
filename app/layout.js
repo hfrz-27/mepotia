@@ -1,18 +1,18 @@
 import AppShell from "@/components/AppShell";
 import SiteFooter from "@/components/SiteFooter";
-import { Outfit, Cinzel } from "next/font/google";
+import { DM_Sans, Syne } from "next/font/google";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_OG_DESCRIPTION, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
-const outfit = Outfit({
+const dmSans = DM_Sans({
   subsets: ["latin"],
-  variable: "--font-outfit",
+  variable: "--font-dm",
   display: "swap",
 });
 
-const cinzel = Cinzel({
+const syne = Syne({
   subsets: ["latin"],
-  variable: "--font-cinzel",
+  variable: "--font-syne",
   display: "swap",
 });
 
@@ -82,9 +82,9 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="tr">
+    <html lang="tr" className="dark">
       <body
-        className={`${outfit.variable} ${cinzel.variable} flex min-h-screen flex-col bg-bw-50 text-bw-900 antialiased`}
+        className={`${dmSans.variable} ${syne.variable} flex min-h-screen flex-col bg-[#070708] text-zinc-100 antialiased`}
       >
         <AppShell footer={<SiteFooter />}>{children}</AppShell>
       </body>

@@ -1,23 +1,27 @@
 "use client";
 
-import CarouselRail from "@/components/CarouselRail";
 import { TechNewsHomeCard } from "@/components/TechNewsCard";
 
 export default function TechNewsHomeRow({ posts }) {
-  const items = posts.slice(0, 8);
+  const items = posts.slice(0, 7);
   if (!items.length) return null;
 
+  const [first, ...rest] = items;
+
   return (
-    <CarouselRail
-      ariaLabel="Teknoloji haberleri"
-      edgeToEdge
-      prevLabel="Önceki haberler"
-      nextLabel="Sonraki haberler"
-      scrollerClassName="news-touch-scroll hide-scrollbar flex gap-4 overflow-x-auto pb-1 sm:gap-5"
-    >
-      {items.map((post, index) => (
-        <TechNewsHomeCard key={post.id} post={post} index={index} />
-      ))}
-    </CarouselRail>
+    <div className="mx-auto max-w-6xl space-y-px bg-[#2a2a30] px-0">
+      <div className="bg-[#070708]">
+        <TechNewsHomeCard post={first} index={0} featured />
+      </div>
+      {rest.length ? (
+        <div className="grid gap-px bg-[#2a2a30] sm:grid-cols-2 lg:grid-cols-3">
+          {rest.map((post, index) => (
+            <div key={post.id} className="bg-[#070708]">
+              <TechNewsHomeCard post={post} index={index + 1} />
+            </div>
+          ))}
+        </div>
+      ) : null}
+    </div>
   );
 }
