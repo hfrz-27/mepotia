@@ -13,29 +13,27 @@ const CATS = [
 ];
 
 /**
- * Intro — arama + 5 kategori (yan yana, hizalı).
+ * Apple tarzı manşet + arama + kategori chip’leri.
  */
 export default function HomeIntroHero() {
   return (
-    <section className="bg-[#f5f5f7] pt-5 pb-3 sm:pt-8 sm:pb-4" aria-label="Giriş">
+    <section className="bg-[#f5f5f7] pt-8 pb-4 sm:pt-12 sm:pb-6" aria-label="Giriş">
       <div className="pv-wrap">
-        <div className="mx-auto max-w-xl text-center">
-          <p className="text-[10px] font-semibold tracking-[0.18em] text-[#86868b] uppercase">
-            Mepotia
-          </p>
-          <h1 className="mt-1.5 text-[1.45rem] font-semibold leading-[1.1] tracking-[-0.035em] text-[#1d1d1f] sm:text-[1.85rem]">
-            Özenle seçilmiş teknoloji.
+        {/* En üst — Apple manşet dilinde Mepotia */}
+        <header className="mx-auto max-w-3xl text-center">
+          <h1 className="text-[1.85rem] font-semibold leading-[1.12] tracking-[-0.04em] text-[#1d1d1f] sm:text-[2.75rem] md:text-[3.25rem]">
+            Mepotia deneyimi.
           </h1>
-          <p className="mt-1.5 text-[12px] text-[#6e6e73] sm:text-[13px]">
-            Dürüst vitrin · şeffaf fiyat
+          <p className="mx-auto mt-2 max-w-xl text-[15px] font-normal leading-snug tracking-[-0.015em] text-[#6e6e73] sm:mt-3 sm:text-[19px] md:text-[21px]">
+            Güvenilir ikinci el teknolojiyle daha da fazlasını yapın.
           </p>
+        </header>
 
-          <div className="mx-auto mt-4 max-w-md sm:mt-5">
-            <HeroSearch variant="light" />
-          </div>
+        <div className="mx-auto mt-6 max-w-md sm:mt-8">
+          <HeroSearch variant="light" />
         </div>
 
-        <div className="mt-4 grid grid-cols-5 gap-1.5 sm:mt-5 sm:gap-2.5">
+        <div className="mt-5 grid grid-cols-5 gap-1.5 sm:mt-6 sm:gap-2.5">
           {CATS.map((cat) => {
             const Icon = cat.icon;
             return (
