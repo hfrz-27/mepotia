@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import CarouselRail from "@/components/CarouselRail";
 import ProductCard from "@/components/ProductCard";
 
-/** GRID product wall — not the old horizontal carousel. */
 export default function HomeProductScroll({
   products,
   href,
@@ -15,20 +15,32 @@ export default function HomeProductScroll({
   if (!products.length) return null;
 
   return (
-    <div aria-label={ariaLabel}>
-      <div className="mx-auto grid max-w-6xl grid-cols-2 gap-px bg-[#2a2a30] sm:grid-cols-3 lg:grid-cols-4">
+    <div>
+      <CarouselRail
+        ariaLabel={ariaLabel}
+        edgeToEdge
+        prevLabel="Önceki ürünler"
+        nextLabel="Sonraki ürünler"
+      >
         {products.map((product, index) => (
-          <div key={product.id} className="bg-[#070708]">
+          <div
+            key={product.id}
+            className="w-[min(72vw,240px)] shrink-0 first:ml-0 sm:w-[250px] md:w-[260px] lg:w-[272px]"
+          >
             <ProductCard product={product} prefetch={index < prefetchCount} />
           </div>
         ))}
-      </div>
+      </CarouselRail>
 
       {href ? (
-        <div className="mt-8 flex justify-center px-4">
-          <Link href={href} prefetch className="sx-btn">
+        <div className="mt-5 flex justify-center px-4 sm:mt-6">
+          <Link
+            href={href}
+            prefetch
+            className="inline-flex items-center gap-2 rounded-xl bg-bw-950 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-bw-800"
+          >
             {linkLabel}
-            <ArrowRight className="h-4 w-4" strokeWidth={2.25} />
+            <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
       ) : null}

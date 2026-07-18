@@ -105,16 +105,22 @@ export default function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 border-b border-[#2a2a30] bg-[#070708]/95 backdrop-blur-md transition-shadow duration-200 ${
-        scrolled ? "shadow-[0_12px_40px_-20px_rgba(0,0,0,0.8)]" : ""
+      className={`sticky top-0 z-50 border-b bg-white transition-[box-shadow,border-color] duration-200 ${
+        scrolled
+          ? "border-bw-200 shadow-[0_8px_24px_-20px_rgba(0,0,0,0.2)] sm:bg-white/95 sm:backdrop-blur-md"
+          : "border-bw-200/80"
       }`}
     >
-      <div className="relative mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-3 sm:px-6 lg:px-8">
-        <div className="relative z-20 flex min-w-[5.5rem] items-center justify-start gap-1.5" ref={menuRef}>
+      <div className="relative mx-auto flex h-[4.5rem] max-w-7xl items-center justify-between gap-2 px-3 sm:px-6 lg:px-8">
+        {/* En sol — Menü, yanında En çok bakılanlar */}
+        <div
+          className="relative z-20 flex min-w-[5.5rem] items-center justify-start gap-1.5"
+          ref={menuRef}
+        >
           <button
             type="button"
             onClick={() => setMenuOpen((v) => !v)}
-            className="flex h-10 w-10 items-center justify-center border border-[#2a2a30] text-zinc-200 transition hover:border-[#ff4d1a] hover:text-white"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-bw-200 text-bw-700 transition hover:bg-bw-50"
             aria-label="Menü"
             aria-expanded={menuOpen}
           >
@@ -122,16 +128,16 @@ export default function Navbar() {
           </button>
           <Link
             href="/en-cok-bakilanlar"
-            className="flex h-10 w-10 items-center justify-center border border-[#2a2a30] text-zinc-400 transition hover:border-[#ff4d1a] hover:text-white"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-bw-200 text-bw-600 transition hover:border-bw-300 hover:bg-bw-50 hover:text-bw-950"
             aria-label="En çok bakılanlar"
           >
             <Eye className="h-4 w-4" />
           </Link>
 
           {menuOpen ? (
-            <div className="absolute left-0 top-[calc(100%+0.5rem)] z-50 w-64 overflow-hidden border border-[#2a2a30] bg-[#111114] shadow-[0_24px_60px_-20px_rgba(0,0,0,0.8)]">
-              <p className="px-4 py-2.5 text-[10px] font-bold tracking-[0.2em] text-[#ff4d1a] uppercase">
-                Menü
+            <div className="absolute left-0 top-[calc(100%+0.5rem)] z-50 w-64 overflow-hidden rounded-2xl border border-bw-200 bg-white shadow-[0_20px_50px_-24px_rgba(0,0,0,0.35)]">
+              <p className="px-4 py-2.5 text-[10px] font-semibold tracking-[0.2em] text-bw-400 uppercase">
+                Ana Menü
               </p>
               {[
                 { href: "/", label: "Anasayfa" },
@@ -142,29 +148,33 @@ export default function Navbar() {
                 { href: "/bana-sat", label: "Bize Ürün Sat" },
                 { href: "/urun-iste", label: "Ürün İste" },
                 { href: "/iletisim", label: "İletişim" },
-                ...(isAdmin ? [{ href: "/admin", label: "Yönetim", badge: notifCount }] : []),
+                ...(isAdmin
+                  ? [{ href: "/admin", label: "Yönetim", badge: notifCount }]
+                  : []),
               ].map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center justify-between border-t border-[#2a2a30] px-4 py-3 text-sm font-medium transition hover:bg-[#18181c] ${
-                    pathname === item.href ? "bg-[#18181c] text-white" : "text-zinc-300"
+                  className={`flex items-center justify-between border-t border-bw-100 px-4 py-3 text-sm font-medium transition hover:bg-bw-50 ${
+                    pathname === item.href
+                      ? "bg-bw-50 text-bw-950"
+                      : "text-bw-900"
                   }`}
                 >
                   <span>{item.label}</span>
                   {item.badge > 0 ? (
-                    <span className="flex h-5 min-w-5 items-center justify-center bg-[#ff4d1a] px-1.5 text-[10px] font-bold text-white">
+                    <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-bw-950 px-1.5 text-[10px] font-bold text-white">
                       {item.badge}
                     </span>
                   ) : null}
                 </Link>
               ))}
-              <div className="border-t border-[#2a2a30]">
+              <div className="border-t border-bw-100">
                 {user ? (
                   <button
                     type="button"
                     onClick={logout}
-                    className="flex w-full items-center gap-2 px-4 py-3 text-left text-sm font-medium text-zinc-400 hover:bg-[#18181c]"
+                    className="flex w-full items-center gap-2 px-4 py-3 text-left text-sm font-medium text-bw-600 hover:bg-bw-50"
                   >
                     <LogOut className="h-4 w-4" />
                     Çıkış
@@ -172,9 +182,9 @@ export default function Navbar() {
                 ) : (
                   <Link
                     href="/giris"
-                    className="block px-4 py-3 text-sm font-bold tracking-wide text-[#ff4d1a] hover:bg-[#18181c]"
+                    className="block px-4 py-3 font-display text-sm font-semibold tracking-[0.14em] text-bw-950 hover:bg-bw-50"
                   >
-                    GİRİŞ
+                    MEPOTIA
                   </Link>
                 )}
               </div>
@@ -182,16 +192,22 @@ export default function Navbar() {
           ) : null}
         </div>
 
+        {/* Orta — Logo */}
         <div className="pointer-events-none absolute inset-x-0 flex justify-center">
-          <Link href="/" className="pointer-events-auto shrink-0 logo-on-dark" aria-label="Mepotia ana sayfa">
-            <Logo className="h-7 sm:h-8" priority />
+          <Link
+            href="/"
+            className="pointer-events-auto shrink-0"
+            aria-label="Mepotia ana sayfa"
+          >
+            <Logo className="h-7 sm:h-9" priority />
           </Link>
         </div>
 
+        {/* Sağ — haberler + admin kısayolları */}
         <div className="relative z-10 flex min-w-[5.5rem] items-center justify-end gap-1.5 sm:min-w-[7rem]">
           <Link
             href="/teknoloji"
-            className="flex h-10 w-10 items-center justify-center border border-[#2a2a30] text-zinc-400 transition hover:border-[#ff4d1a] hover:text-white"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-bw-200 text-bw-600 transition hover:border-bw-300 hover:bg-bw-50 hover:text-bw-950"
             aria-label="Haberler"
           >
             <Newspaper className="h-4 w-4" />
@@ -200,18 +216,18 @@ export default function Navbar() {
             <>
               <Link
                 href="/ilan-ver"
-                className="inline-flex items-center gap-1.5 bg-[#ff4d1a] px-2.5 py-2 text-xs font-bold tracking-wide text-white uppercase transition hover:bg-[#ff6a3d] sm:px-4 sm:text-sm"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-bw-950 px-2.5 py-2 text-xs font-semibold text-white transition hover:bg-bw-800 sm:px-4 sm:text-sm"
               >
                 <PenLine className="h-3.5 w-3.5" />
                 <span className="hidden sm:inline">Paylaş</span>
               </Link>
               <Link
                 href="/admin"
-                className="relative inline-flex items-center px-2.5 py-2 text-xs font-medium text-zinc-400 transition hover:text-white sm:px-3 sm:text-sm"
+                className="relative inline-flex items-center rounded-xl px-2.5 py-2 text-xs font-medium text-bw-600 transition hover:bg-bw-100 hover:text-bw-950 sm:px-3 sm:text-sm"
               >
                 Yönetim
                 {notifCount > 0 ? (
-                  <span className="ml-1 flex h-5 min-w-5 items-center justify-center bg-[#ff4d1a] px-1.5 text-[10px] font-bold text-white">
+                  <span className="ml-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-bw-950 px-1.5 text-[10px] font-bold text-white">
                     {notifCount}
                   </span>
                 ) : null}
@@ -223,4 +239,3 @@ export default function Navbar() {
     </header>
   );
 }
-

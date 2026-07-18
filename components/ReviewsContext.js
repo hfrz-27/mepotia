@@ -81,15 +81,15 @@ function ReviewChip({ review, variant = "light" }) {
   const dark = variant === "dark";
   return (
     <div
-      className={`flex shrink-0 items-center gap-2.5 rounded-full px-3 py-2 ${
+      className={`flex shrink-0 items-center gap-2 rounded-xl px-2.5 py-1.5 ${
         dark
-          ? "border border-white/15 bg-white/10"
-          : "border border-[var(--m26-line)] bg-white shadow-[var(--m26-shadow)]"
+          ? "border border-white/12 bg-white/10"
+          : "border border-bw-200 bg-white shadow-[0_4px_16px_-10px_rgba(0,0,0,0.1)]"
       }`}
     >
       <span
-        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${
-          dark ? "bg-white/15 text-white" : "bg-[var(--m26-ink)] text-white"
+        className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[8px] font-bold ${
+          dark ? "bg-white/15 text-white" : "bg-bw-950 text-white"
         }`}
       >
         {initials(review.author_name)}
@@ -97,15 +97,15 @@ function ReviewChip({ review, variant = "light" }) {
       <div className="min-w-0">
         <div className="flex items-center gap-1.5">
           <span
-            className={`text-[11px] font-semibold ${dark ? "text-white/90" : "text-[var(--m26-ink)]"}`}
+            className={`text-[10px] font-semibold ${dark ? "text-white/90" : "text-bw-950"}`}
           >
             {review.author_name}
           </span>
           <MiniStars count={review.stars} variant={variant} />
         </div>
         <p
-          className={`mt-0.5 max-w-[58vw] truncate text-[11px] leading-snug sm:max-w-[260px] ${
-            dark ? "text-white/65" : "text-[var(--m26-mute)]"
+          className={`mt-0.5 max-w-[58vw] truncate text-[11px] leading-snug sm:max-w-[240px] ${
+            dark ? "text-white/65" : "text-bw-500"
           }`}
         >
           &ldquo;{review.body}&rdquo;

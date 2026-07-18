@@ -4,7 +4,7 @@ import { useRef, useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const ARROW_BASE =
-  "absolute top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-bw-200/80 bg-white/90 text-bw-700 shadow-[0_8px_28px_-10px_rgba(0,0,0,0.22)] backdrop-blur-md transition duration-300 hover:border-bw-950 hover:bg-bw-950 hover:text-white disabled:cursor-default disabled:opacity-25 disabled:hover:border-bw-200/80 disabled:hover:bg-white/90 disabled:hover:text-bw-700 sm:flex";
+  "absolute top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-[#e8e8ed]/90 text-bw-600 shadow-[0_2px_8px_rgba(0,0,0,0.12)] backdrop-blur-sm transition hover:bg-[#e8e8ed] disabled:cursor-default disabled:opacity-30 sm:flex";
 
 export function useCarouselNav(scrollerRef) {
   const [canPrev, setCanPrev] = useState(false);
@@ -56,7 +56,7 @@ export default function CarouselRail({
   const showFade = fadeFrom && !edgeToEdge;
 
   return (
-    <div className={`mepo-rail-arrows relative w-full ${className}`}>
+    <div className={`relative w-full ${className}`}>
       {showFade ? (
         <>
           <div

@@ -1,89 +1,117 @@
-import HomeHeroV3 from "@/components/home/HomeHeroV3";
-import HomeCatsV3 from "@/components/home/HomeCatsV3";
-import HomeMarketBoard from "@/components/home/HomeMarketBoard";
-import HomeNewsV3 from "@/components/home/HomeNewsV3";
-import HomeOpsV3 from "@/components/home/HomeOpsV3";
-import HomeProofV3 from "@/components/home/HomeProofV3";
-import HomeStripV3 from "@/components/home/HomeStripV3";
+import HeroSection from "@/components/HeroSection";
+import TechNewsSection from "@/components/TechNewsSection";
+import HomeCompareGate from "@/components/HomeCompareGate";
+import HomeProductSection from "@/components/HomeProductSection";
+import HomeValueBand from "@/components/HomeValueBand";
+import HomeActionRail from "@/components/HomeActionRail";
+import HomeMobileTopBand from "@/components/HomeMobileTopBand";
 import { getPublishedProducts } from "@/lib/products";
 import { getCategoriesWithSubs, getSiteSettings } from "@/lib/categories";
 import { fillFeatured, fillProducts } from "@/lib/homeDemoData";
-import { getHomeCategoryProductMap } from "@/lib/getHomeCategoryProducts";
-import { getTechPosts } from "@/lib/techPosts";
-import { HomeReviewsProvider } from "@/components/HomeReviews";
+import { CustomerReviews, HomeReviewsProvider } from "@/components/HomeReviews";
 
+const WA = "https://wa.me/905059574122";
 const PRODUCT_LIMIT = 12;
+
 export const revalidate = 60;
 
 export default async function HomePage() {
-  const [settings, categories, latestRes, featuredRes, popularRes, newsRes] = await Promise.all([
+  const [settings, categories, latestRes, featuredRes, popularRes] = await Promise.all([
     getSiteSettings(),
     getCategoriesWithSubs(),
     getPublishedProducts({ limit: PRODUCT_LIMIT, orderBy: "created_at" }),
     getPublishedProducts({ limit: PRODUCT_LIMIT, featured: true }),
     getPublishedProducts({ limit: PRODUCT_LIMIT, orderBy: "views" }),
-    getTechPosts({ limit: 8 }),
   ]);
-
-  const categoryMeta = categories.map((c) => ({
-    slug: c.slug,
-    catalogOnly: Boolean(c.catalogOnly),
-  }));
-  const productsMap = await getHomeCategoryProductMap(categoryMeta);
-
   const latest = fillProducts(latestRes.data, PRODUCT_LIMIT);
   const featured = fillFeatured(featuredRes.data, PRODUCT_LIMIT);
   const popular = fillProducts(popularRes.data, PRODUCT_LIMIT);
-  const posts = newsRes?.data || [];
+  const vitrinError = latestRes.error;
+
+  const wa = settings?.whatsapp
+    ? `https://wa.me/${String(settings.whatsapp).replace(/\D/g, "")}`
+    : WA;
 
   return (
     <HomeReviewsProvider>
-      <main className="min-h-screen bg-black text-white">
-        <HomeHeroV3
-          video={settings?.hero_video || ""}
-          images={[settings?.hero_bg_1, settings?.hero_bg_2, settings?.hero_bg_3].filter(Boolean)}
+      <main>
+        <HeroSection
+          heroVideo={settings?.hero_video || ""}
+          heroImages={[settings?.hero_bg_1, settings?.hero_bg_2, settings?.hero_bg_3].filter(Boolean)}
         />
 
-        <HomeStripV3 />
+        <HomeMobileTopBand />
+
+        <TechNewsSection categories={categories} />
 
         {featured.length ? (
-          <HomeMarketBoard
-            kicker="Drop"
+          <HomeProductSection
+            eyebrow="Özenle seçilenler"
             title="Yeni sahibini bekleyenler"
-            products={featured}
-            href="/ara"
-            linkLabel="Tüm drop"
-          />
-        ) : null}
-
-        <HomeOpsV3 />
-
-        <HomeCatsV3 categories={categoryMeta} productsByCategory={productsMap} />
-
-        {latest.length ? (
-          <HomeMarketBoard
-            id="vitrin"
-            kicker="Vitrin"
-            title="Taze ilanlar"
-            products={latest}
+            description="Fırsat olarak işaretlenen vitrin ürünleri."
             href="/ara"
             linkLabel="Tüm vitrin"
+            products={featured.slice(0, PRODUCT_LIMIT)}
+            prefetchCount={3}
+            ariaLabel="Öne çıkan ürünler"
           />
         ) : null}
 
-        <HomeNewsV3 posts={posts} />
+        <HomeCompareGate />
+
+        {latest.length ? (
+          <HomeProductSection
+            id="vitrin"
+            tone="bw-50"
+            eyebrow="Vitrin"
+            title="Özenle seçilmiş ürünler"
+            description="En yeni ikinci el teknoloji ilanları."
+            href="/ara"
+            linkLabel="Tümünü gör"
+            products={latest.slice(0, PRODUCT_LIMIT)}
+            prefetchCount={3}
+            ariaLabel="Vitrin ürünleri"
+          />
+        ) : (
+          <section id="vitrin" className="scroll-mt-28 border-y border-bw-200 bg-white sm:bg-bw-50">
+            <div className="mx-auto max-w-7xl px-4 py-8 text-center sm:px-6 sm:py-10 lg:px-8">
+              <p className="font-display text-xl text-bw-900">
+                {vitrinError ? "Vitrin yüklenemedi" : "Henüz ürün yok"}
+              </p>
+              <p className="mt-2 text-sm text-bw-500">
+                {vitrinError ? "Sayfayı yenile veya biraz sonra tekrar dene." : "Yakında vitrin dolacak."}
+              </p>
+              <a
+                href={wa}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-4 inline-flex rounded-xl bg-bw-950 px-4 py-2.5 text-sm font-semibold text-white"
+              >
+                WhatsApp
+              </a>
+            </div>
+          </section>
+        )}
+
+        <HomeActionRail />
+
+        <HomeValueBand />
 
         {popular.length ? (
-          <HomeMarketBoard
-            kicker="Heat"
+          <HomeProductSection
+            tone="footer"
+            eyebrow="Popüler"
             title="En çok bakılanlar"
-            products={popular}
+            description="Ziyaretçilerin en çok ilgi gösterdiği ilanlar."
             href="/en-cok-bakilanlar"
-            linkLabel="Heat list"
+            linkLabel="Popüler liste"
+            products={popular.slice(0, PRODUCT_LIMIT)}
+            prefetchCount={3}
+            ariaLabel="Popüler ürünler"
           />
         ) : null}
 
-        <HomeProofV3 />
+        <CustomerReviews />
       </main>
     </HomeReviewsProvider>
   );

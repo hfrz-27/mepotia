@@ -36,7 +36,7 @@ function FooterColumn({ title, children, defaultOpen = false }) {
         aria-expanded={open}
         className="flex w-full items-center justify-between py-1 text-left sm:pointer-events-none"
       >
-        <span className="text-[11px] font-bold tracking-[0.22em] text-[#ff4d1a] uppercase">{title}</span>
+        <span className="text-[11px] font-bold tracking-[0.22em] text-bw-900 uppercase">{title}</span>
         <ChevronDown
           className={`h-4 w-4 text-bw-400 transition sm:hidden ${open ? "rotate-180" : ""}`}
         />
@@ -79,7 +79,7 @@ export default function Footer({ whatsapp, phone, email }) {
   const mail = email ? `mailto:${email}` : "mailto:info@mepotia.com";
 
   return (
-    <footer className="mt-auto border-t border-[#2a2a30] bg-[#070708] text-zinc-300">
+    <footer className="mt-auto border-t border-bw-200 bg-[#f5f5f7]">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-6 border-b border-bw-200/70 sm:mb-10" aria-hidden />
 
@@ -143,7 +143,7 @@ export default function Footer({ whatsapp, phone, email }) {
         </div>
       </div>
 
-      <div className="border-t border-[#2a2a30] bg-[#0c0c0f]">
+      <div className="border-t border-bw-200 bg-white">
         <FooterWidgets />
         <div className="border-t border-bw-100">
           <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 lg:px-8">

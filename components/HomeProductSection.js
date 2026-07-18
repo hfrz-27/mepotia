@@ -13,19 +13,24 @@ export default function HomeProductSection({
   prefetchCount = 2,
   ariaLabel,
 }) {
-  const alt = tone === "footer" || tone === "bw-50";
+  const bg =
+    tone === "footer"
+      ? "bg-white sm:bg-[#f5f5f7]"
+      : tone === "bw-50"
+        ? "bg-white sm:bg-bw-50"
+        : "bg-white";
 
   return (
-    <section id={id} className={`sx-section ${alt ? "sx-section-alt" : ""}`}>
-      <div className="sx-wrap pb-6 sm:pb-8">
+    <section id={id} className={`scroll-mt-28 border-y border-bw-200 ${bg}`}>
+      <div className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 sm:pt-10 lg:px-8">
         <HomeSectionHeader
           eyebrow={eyebrow}
           title={title}
           description={description}
-          className="mb-8"
         />
       </div>
-      <div className="pb-12 sm:pb-14">
+
+      <div className="pb-8 sm:pb-10">
         <HomeProductScroll
           products={products}
           href={href}

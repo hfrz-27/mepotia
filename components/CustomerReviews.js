@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { ArrowRight, PenLine, Send, Star, X } from "lucide-react";
+import { ArrowRight, ChevronDown, PenLine, Send, Star, X } from "lucide-react";
 import { createClient } from "@/lib/supabase";
-import { useReviews } from "@/components/ReviewsContext";
+import { ReviewThinStrip, useReviews } from "@/components/ReviewsContext";
 import ReviewsAllPanel from "@/components/ReviewsAllPanel";
 
 const PILLARS = ["Kökler", "Dürüstlük", "Özen"];
@@ -23,10 +23,14 @@ function StarPicker({ value, onChange }) {
             onMouseEnter={() => setHover(n)}
             onMouseLeave={() => setHover(0)}
             onClick={() => onChange(n)}
-            className="p-0.5"
+            className="rounded p-0.5"
             aria-label={`${n} yıldız`}
           >
-            <Star className={`h-5 w-5 ${active ? "fill-[#ff4d1a] text-[#ff4d1a]" : "text-zinc-600"}`} />
+            <Star
+              className={`h-5 w-5 ${
+                active ? "fill-amber-400 text-amber-400" : "text-bw-300"
+              }`}
+            />
           </button>
         );
       })}
@@ -34,19 +38,8 @@ function StarPicker({ value, onChange }) {
   );
 }
 
-function initials(name) {
-  return (
-    String(name || "?")
-      .trim()
-      .split(/\s+/)
-      .slice(0, 2)
-      .map((p) => p[0]?.toUpperCase() || "")
-      .join("") || "?"
-  );
-}
-
 export default function CustomerReviews() {
-  const { reviews, tableMissing, load } = useReviews();
+  const { tableMissing, load } = useReviews();
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState("");
@@ -68,6 +61,7 @@ export default function CustomerReviews() {
       setError("Yorum en az 10 karakter.");
       return;
     }
+
     setSubmitting(true);
     const supabase = createClient();
     const { error: err } = await supabase.from("customer_reviews").insert([
@@ -77,11 +71,14 @@ export default function CustomerReviews() {
         body: form.text.trim(),
       },
     ]);
+
     setSubmitting(false);
     if (err) {
-      setError("Gönderilemedi.");
+      console.error(err);
+      setError("Gönderilemedi, tekrar dene.");
       return;
     }
+
     setForm({ name: "", stars: 0, text: "" });
     setDone(true);
     setFormOpen(false);
@@ -90,64 +87,80 @@ export default function CustomerReviews() {
   };
 
   return (
-    <section className="sx-section sx-section-alt">
-      <div className="sx-wrap">
-        <div className="grid gap-10 lg:grid-cols-12">
-          <div className="lg:col-span-4">
-            <p className="sx-kicker">Hikâye</p>
-            <h2 className="sx-title mt-2 text-3xl sm:text-4xl">
-              Geçmişten
-              <br />
-              gelen güven
+    <section className="border-t border-bw-200 bg-white">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-14">
+        <div className="flex flex-wrap items-start justify-between gap-6 lg:gap-10">
+          <div className="max-w-2xl">
+            <p className="text-[10px] tracking-[0.28em] text-bw-500 uppercase">Hikâye</p>
+            <h2 className="mt-1.5 font-display text-xl font-semibold tracking-wide text-bw-950 sm:text-3xl lg:text-4xl">
+              Geçmişten Gelen Güven
             </h2>
-            <p className="sx-sub mt-4">
-              Mepotia, Mezopotamya&apos;dan ilham alır. Emek, sabır ve şeffaflıkla büyüyen ikinci el
-              vitrin.
+            <p className="mt-2 text-sm leading-relaxed text-bw-600">
+              <strong className="text-bw-950">Mepotia</strong>, Mezopotamya&apos;dan ilham alır. Emek,
+              sabır ve şeffaflıkla büyüyen kişisel bir ikinci el vitrin.
             </p>
-            <div className="mt-5 flex flex-wrap gap-2">
-              {PILLARS.map((p) => (
-                <span key={p} className="sx-chip">
-                  {p}
+
+            <div className="news-touch-scroll hide-scrollbar mt-3 flex gap-2 overflow-x-auto">
+              {PILLARS.map((item) => (
+                <span
+                  key={item}
+                  className="shrink-0 rounded-full border border-bw-200 bg-bw-50 px-3 py-1 text-[11px] font-medium text-bw-600"
+                >
+                  {item}
                 </span>
               ))}
             </div>
-            <Link href="/hakkimizda" className="sx-btn mt-7">
-              Hikâyeyi oku
+
+            <Link
+              href="/hakkimizda"
+              className="mt-5 inline-flex items-center gap-2.5 rounded-2xl bg-bw-950 px-5 py-3 text-sm font-semibold text-white shadow-[0_14px_36px_-14px_rgba(0,0,0,0.45)] transition hover:bg-bw-800"
+            >
+              Mepotia&apos;yı tanı
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
 
-          <div className="lg:col-span-8">
-            <div className="mb-5 flex items-center justify-between gap-3">
-              <p className="sx-kicker">Yorumlar</p>
-              <button type="button" onClick={() => setFormOpen((o) => !o)} className="sx-btn-ghost !py-2">
-                {formOpen ? <X className="h-4 w-4" /> : <PenLine className="h-4 w-4" />}
-                {formOpen ? "Kapat" : "Yaz"}
-              </button>
-            </div>
+          <button
+            type="button"
+            onClick={() => setFormOpen((o) => !o)}
+            className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-bw-200 bg-white px-4 py-2 text-sm font-semibold text-bw-900 shadow-[0_8px_20px_-14px_rgba(0,0,0,0.2)] transition hover:border-bw-300"
+          >
+            {formOpen ? <X className="h-4 w-4" /> : <PenLine className="h-4 w-4" />}
+            {formOpen ? "Kapat" : "Yorum yaz"}
+            {!formOpen ? <ChevronDown className="h-3.5 w-3.5 opacity-50" /> : null}
+          </button>
+        </div>
 
-            {tableMissing ? (
-              <p className="mb-4 border border-amber-900/50 bg-amber-950/30 px-3 py-2 text-xs text-amber-200">
-                customer_reviews.sql gerekli.
-              </p>
-            ) : null}
-            {done ? (
-              <p className="mb-4 border border-emerald-900/50 bg-emerald-950/30 px-3 py-2 text-xs text-emerald-200">
-                Teşekkürler — yorum eklendi.
-              </p>
-            ) : null}
+        {tableMissing ? (
+          <p className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2 text-xs text-amber-800">
+            Supabase&apos;de <code>customer_reviews.sql</code> çalıştır.
+          </p>
+        ) : null}
 
-            {formOpen ? (
-              <form onSubmit={onSubmit} className="sx-card mb-6 p-5">
+        {done ? (
+          <p className="animate-soft-in mt-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2 text-xs text-emerald-800">
+            Teşekkürler! Yorumun eklendi.
+          </p>
+        ) : null}
+
+        <div
+          className={`grid transition-all duration-500 ease-out ${
+            formOpen ? "mt-4 grid-rows-[1fr] opacity-100" : "mt-0 grid-rows-[0fr] opacity-0"
+          }`}
+        >
+          <div className="overflow-hidden">
+            <form onSubmit={onSubmit} className="rounded-2xl border border-bw-200 bg-bw-50 p-4">
+              <div className="grid gap-3 sm:grid-cols-[1fr_auto] sm:items-end">
                 <div className="grid gap-3 sm:grid-cols-2">
                   <input
                     value={form.name}
                     onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-                    placeholder="İsim"
-                    className="border border-[#2a2a30] bg-[#0c0c0f] px-3 py-2.5 text-sm text-white outline-none focus:border-[#ff4d1a]"
+                    placeholder="İsmin"
+                    maxLength={80}
+                    className="rounded-xl border border-bw-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-bw-400"
                   />
-                  <div className="flex items-center gap-2 border border-[#2a2a30] bg-[#0c0c0f] px-3 py-2">
-                    <span className="text-[10px] font-bold tracking-wider text-zinc-500 uppercase">
+                  <div className="flex items-center gap-2 rounded-xl border border-bw-200 bg-white px-3 py-2">
+                    <span className="text-[10px] font-semibold tracking-wide text-bw-500 uppercase">
                       Puan
                     </span>
                     <StarPicker
@@ -156,51 +169,30 @@ export default function CustomerReviews() {
                     />
                   </div>
                 </div>
-                <textarea
-                  value={form.text}
-                  onChange={(e) => setForm((f) => ({ ...f, text: e.target.value }))}
-                  rows={3}
-                  placeholder="Yorumun..."
-                  className="mt-3 w-full resize-none border border-[#2a2a30] bg-[#0c0c0f] px-3 py-2.5 text-sm text-white outline-none focus:border-[#ff4d1a]"
-                />
-                {error ? <p className="mt-2 text-xs text-red-400">{error}</p> : null}
-                <button type="submit" disabled={submitting} className="sx-btn mt-3 disabled:opacity-50">
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-bw-950 px-5 py-2.5 text-sm font-semibold text-white hover:bg-bw-800 disabled:opacity-50"
+                >
                   <Send className="h-4 w-4" />
                   {submitting ? "..." : "Gönder"}
                 </button>
-              </form>
-            ) : null}
-
-            <div className="grid gap-px bg-[#2a2a30] sm:grid-cols-2">
-              {(reviews || []).slice(0, 6).map((review) => (
-                <article key={review.id} className="bg-[#111114] p-5">
-                  <div className="flex items-center gap-3">
-                    <span className="flex h-10 w-10 items-center justify-center bg-[#ff4d1a] text-xs font-bold text-white">
-                      {initials(review.author_name)}
-                    </span>
-                    <div>
-                      <p className="text-sm font-bold text-zinc-50">{review.author_name}</p>
-                      <div className="mt-0.5 flex gap-0.5">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`h-3 w-3 ${
-                              i < review.stars ? "fill-[#ff4d1a] text-[#ff4d1a]" : "text-zinc-700"
-                            }`}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  <p className="mt-3 text-sm leading-relaxed text-zinc-400">
-                    &ldquo;{review.body}&rdquo;
-                  </p>
-                </article>
-              ))}
-            </div>
-            <ReviewsAllPanel />
+              </div>
+              <textarea
+                value={form.text}
+                onChange={(e) => setForm((f) => ({ ...f, text: e.target.value }))}
+                rows={2}
+                maxLength={500}
+                placeholder="Kısa yorumun..."
+                className="mt-3 w-full resize-none rounded-xl border border-bw-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-bw-400"
+              />
+              {error ? <p className="mt-2 text-xs text-red-600">{error}</p> : null}
+            </form>
           </div>
         </div>
+
+        <ReviewThinStrip variant="light" className="mt-6" showLabel duration={34} mobileStatic />
+        <ReviewsAllPanel />
       </div>
     </section>
   );
