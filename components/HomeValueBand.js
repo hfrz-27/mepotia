@@ -47,7 +47,7 @@ export default function HomeValueBand({ embedded = false }) {
         </p>
       </header>
 
-      <div className="mt-8 grid grid-cols-1 gap-3 sm:mt-10 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
+      <div className="mt-5 grid grid-cols-1 gap-2.5 sm:mt-6 sm:grid-cols-2 sm:gap-3 lg:grid-cols-4">
         {REASONS.map((item) => {
           const Icon = item.icon;
           return (
@@ -69,7 +69,7 @@ export default function HomeValueBand({ embedded = false }) {
         })}
       </div>
 
-      <div className="mt-8 flex justify-center sm:mt-10">
+      <div className="mt-5 flex justify-center sm:mt-6">
         <Link
           href="/urunler"
           className="inline-flex items-center gap-1 text-[14px] font-normal text-[#0066cc] transition hover:underline sm:text-[15px]"
@@ -82,12 +82,12 @@ export default function HomeValueBand({ embedded = false }) {
   );
 
   if (embedded) {
-    return <div className="mt-6 sm:mt-8">{body}</div>;
+    return <div className="mt-4 sm:mt-5">{body}</div>;
   }
 
   return (
     <section
-      className="bg-[#f5f5f7] py-12 sm:py-16 md:py-20"
+      className="bg-[#f5f5f7] py-6 sm:py-8 md:py-10"
       aria-label="Neden Mepotia"
     >
       <div className="pv-wrap">{body}</div>
