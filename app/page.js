@@ -40,9 +40,10 @@ export default async function HomePage() {
           heroImages={[settings?.hero_bg_1, settings?.hero_bg_2, settings?.hero_bg_3].filter(Boolean)}
         />
 
-        <HomeMobileTopBand />
-
+        {/* Haber en üstte — hero'nun hemen altı */}
         <TechNewsSection categories={categories} />
+
+        <HomeMobileTopBand />
 
         {featured.length ? (
           <HomeProductSection

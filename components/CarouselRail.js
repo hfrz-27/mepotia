@@ -4,7 +4,7 @@ import { useRef, useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const ARROW_BASE =
-  "absolute top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-[#e8e8ed]/90 text-bw-600 shadow-[0_2px_8px_rgba(0,0,0,0.12)] backdrop-blur-sm transition hover:bg-[#e8e8ed] disabled:cursor-default disabled:opacity-30 sm:flex";
+  "absolute top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#1d1d1f] shadow-[0_4px_16px_rgba(0,0,0,0.12)] ring-1 ring-black/[0.06] backdrop-blur-md transition hover:bg-white hover:shadow-[0_6px_20px_rgba(0,0,0,0.14)] disabled:cursor-default disabled:opacity-25 sm:flex";
 
 export function useCarouselNav(scrollerRef) {
   const [canPrev, setCanPrev] = useState(false);

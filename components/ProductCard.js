@@ -1,13 +1,31 @@
 import ProductImage from "@/components/ProductImage";
 import Link from "next/link";
-import { BadgeDollarSign, Eye, MapPin } from "lucide-react";
+import { BadgeDollarSign, Eye, MapPin, Sparkles } from "lucide-react";
 import { formatPrice, getPrimaryImage, hasDiscount, isSold } from "@/lib/productDisplay";
+
+function Pill({ children, tone = "glass" }) {
+  const tones = {
+    glass:
+      "border border-white/40 bg-white/90 text-[#1d1d1f] shadow-[0_4px_16px_-6px_rgba(0,0,0,0.2)] backdrop-blur-md",
+    gold:
+      "border border-[#d4af37]/35 bg-gradient-to-r from-[#f5e6b8] to-[#d4af37] text-[#1d1d1f] shadow-[0_6px_18px_-8px_rgba(212,175,55,0.55)]",
+    ink: "border border-white/10 bg-[#1d1d1f]/90 text-white shadow-[0_6px_18px_-8px_rgba(0,0,0,0.45)] backdrop-blur-md",
+    soft:
+      "border border-black/[0.06] bg-white/95 text-[#6e6e73] shadow-sm backdrop-blur-md",
+  };
+  return (
+    <span
+      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[9px] font-bold tracking-[0.12em] uppercase sm:text-[10px] ${tones[tone] || tones.glass}`}
+    >
+      {children}
+    </span>
+  );
+}
 
 export default function ProductCard({
   product,
   large = false,
   prefetch = false,
-  neutralBadges = false,
   showCompareLink = true,
 }) {
   const img = getPrimaryImage(product);
@@ -15,110 +33,129 @@ export default function ProductCard({
   const discount = hasDiscount(product);
   const demo = Boolean(product.demo);
   const href = demo ? "/ara" : `/urun/${product.id}`;
-  const compareHref = demo ? "/fiyat-karsilastir" : `/urun/${product.id}#piyasa-karsilastirmasi`;
+  const compareHref = demo
+    ? "/fiyat-karsilastir"
+    : `/urun/${product.id}#piyasa-karsilastirmasi`;
 
   return (
     <article
-      className={`group block overflow-hidden rounded-2xl border border-bw-200 bg-white shadow-[0_2px_20px_-12px_rgba(0,0,0,0.15)] transition duration-200 sm:rounded-3xl sm:hover:-translate-y-1 sm:hover:border-bw-300 sm:hover:shadow-[0_24px_48px_-24px_rgba(0,0,0,0.28)] ${
-        large ? "sm:col-span-2" : ""
-      } ${sold ? "opacity-90" : ""}`}
+      className={[
+        "group relative flex h-full flex-col overflow-hidden rounded-[1.35rem] bg-white",
+        "ring-1 ring-black/[0.04]",
+        "shadow-[0_8px_28px_-18px_rgba(0,0,0,0.14)]",
+        "transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
+        "hover:-translate-y-1.5 hover:shadow-[0_28px_56px_-24px_rgba(0,0,0,0.22)] hover:ring-black/[0.07]",
+        large ? "sm:col-span-2" : "",
+        sold ? "opacity-90" : "",
+      ].join(" ")}
     >
-      <Link href={href} prefetch={prefetch && !demo} className="block">
+      {/* Gold hairline on hover */}
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 z-20 h-px opacity-0 transition duration-500 group-hover:opacity-100"
+        style={{
+          background:
+            "linear-gradient(90deg, transparent, rgba(212,175,55,0.7), transparent)",
+        }}
+        aria-hidden
+      />
+
+      <Link href={href} prefetch={prefetch && !demo} className="flex min-h-0 flex-1 flex-col">
         <div
-          className={`relative overflow-hidden bg-bw-100 ${
+          className={`relative overflow-hidden bg-gradient-to-br from-[#f4f4f5] via-[#f0eeea] to-[#e8e6e1] ${
             large ? "aspect-[16/10]" : "aspect-[4/3]"
           }`}
         >
-        <ProductImage
-          src={img}
-          alt={product.title}
-          fill
-          className={`object-cover ${sold ? "grayscale" : ""}`}
-          sizes={large ? "66vw" : "(max-width: 640px) 50vw, 25vw"}
-          priority={prefetch}
-        />
-        <div className="absolute top-2.5 left-2.5 flex flex-wrap gap-1.5 sm:top-4 sm:left-4 sm:gap-2">
-          {demo ? (
-            <span className="rounded-lg border border-bw-200 bg-white/90 px-2 py-0.5 text-[9px] font-bold tracking-[0.14em] text-bw-600 uppercase sm:px-2.5 sm:py-1 sm:text-[10px]">
-              Örnek
-            </span>
-          ) : null}
-          {product.is_premium ? (
-            <span
-              className={`rounded-lg px-2 py-0.5 text-[9px] font-bold tracking-[0.14em] uppercase sm:px-2.5 sm:py-1 sm:text-[10px] ${
-                neutralBadges
-                  ? "border border-bw-300 bg-bw-950 text-white"
-                  : "bg-bw-950 text-white"
-              }`}
-            >
-              Premium
-            </span>
-          ) : null}
-          {product.is_featured && !product.is_premium ? (
-            <span
-              className={`rounded-lg px-2 py-0.5 text-[9px] font-bold tracking-[0.14em] uppercase sm:px-2.5 sm:py-1 sm:text-[10px] ${
-                neutralBadges
-                  ? "border border-bw-300 bg-white text-bw-950"
-                  : "border border-bw-200 bg-white text-bw-950"
-              }`}
-            >
-              Öne çıkan
-            </span>
-          ) : null}
-          {discount ? (
-            <span
-              className={`rounded-lg px-2 py-0.5 text-[9px] font-bold tracking-[0.14em] uppercase sm:px-2.5 sm:py-1 sm:text-[10px] ${
-                neutralBadges
-                  ? "border border-bw-300 bg-bw-100 text-bw-800"
-                  : "bg-white text-bw-950"
-              }`}
-            >
-              İndirim
-            </span>
-          ) : null}
-        </div>
-        {sold ? (
-          <div className="absolute inset-0 flex items-center justify-center bg-bw-950/45">
-            <span className="rounded-xl bg-white px-4 py-2 text-xs font-bold tracking-[0.2em] text-bw-950">
-              SATILDI
-            </span>
+          <ProductImage
+            src={img}
+            alt={product.title}
+            fill
+            className={`object-cover transition duration-700 ease-out group-hover:scale-[1.06] ${
+              sold ? "grayscale" : ""
+            }`}
+            sizes={large ? "66vw" : "(max-width: 640px) 50vw, 25vw"}
+            priority={prefetch}
+          />
+
+          {/* Soft vignette */}
+          <div
+            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-white/5 opacity-80"
+            aria-hidden
+          />
+          {/* Shine sweep on hover */}
+          <div
+            className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent opacity-0 transition duration-700 group-hover:translate-x-full group-hover:opacity-100"
+            aria-hidden
+          />
+
+          <div className="absolute top-2.5 left-2.5 flex flex-wrap gap-1.5 sm:top-3.5 sm:left-3.5">
+            {demo ? <Pill tone="soft">Örnek</Pill> : null}
+            {product.is_premium ? (
+              <Pill tone="gold">
+                <Sparkles className="h-2.5 w-2.5" strokeWidth={2.2} />
+                Premium
+              </Pill>
+            ) : null}
+            {product.is_featured && !product.is_premium ? (
+              <Pill tone="ink">Öne çıkan</Pill>
+            ) : null}
+            {discount ? <Pill tone="glass">İndirim</Pill> : null}
           </div>
-        ) : null}
-        </div>
-        <div className={`p-2.5 sm:p-5 ${large ? "sm:p-7" : ""}`}>
-          {discount ? (
-            <p className="text-[10px] text-bw-400 line-through sm:text-sm">{formatPrice(product.original_price)}</p>
+
+          {sold ? (
+            <div className="absolute inset-0 flex items-center justify-center bg-[#1d1d1f]/50 backdrop-blur-[2px]">
+              <span className="rounded-full bg-white px-5 py-2 text-[11px] font-bold tracking-[0.18em] text-[#1d1d1f] shadow-lg">
+                SATILDI
+              </span>
+            </div>
           ) : null}
-          <p className={`font-semibold tracking-tight text-bw-950 ${large ? "text-xl sm:text-2xl" : "text-sm sm:text-xl"}`}>
+        </div>
+
+        <div className={`flex flex-1 flex-col px-3.5 pt-3.5 pb-3 sm:px-4 sm:pt-4 sm:pb-3.5 ${large ? "sm:px-6 sm:pt-5" : ""}`}>
+          {discount ? (
+            <p className="text-[11px] text-[#a1a1aa] line-through sm:text-xs">
+              {formatPrice(product.original_price)}
+            </p>
+          ) : null}
+
+          <p
+            className={`font-semibold tracking-tight text-[#1d1d1f] tabular-nums ${
+              large ? "text-xl sm:text-2xl" : "text-[15px] sm:text-lg"
+            }`}
+          >
             {formatPrice(product.price)}
           </p>
+
           <h3
-            className={`mt-1 font-medium text-bw-800 group-hover:text-bw-950 ${
-              large ? "line-clamp-2 text-base sm:text-lg" : "line-clamp-2 text-[11px] sm:text-sm"
+            className={`mt-1 font-medium leading-snug text-[#3f3f46] transition group-hover:text-[#1d1d1f] ${
+              large
+                ? "line-clamp-2 text-[15px] sm:text-lg"
+                : "line-clamp-2 text-[12px] sm:text-[13px]"
             }`}
           >
             {product.title}
           </h3>
-          <div className="mt-2 flex items-center justify-between gap-1 border-t border-bw-100 pt-2 text-[9px] text-bw-500 sm:mt-4 sm:gap-2 sm:pt-4 sm:text-xs">
-            <span className="flex min-w-0 items-center gap-1.5">
-              <MapPin className="h-3.5 w-3.5 shrink-0" />
+
+          <div className="mt-auto flex items-center justify-between gap-2 border-t border-black/[0.05] pt-2.5 text-[10px] text-[#8e8e93] sm:mt-3 sm:pt-3 sm:text-[11px]">
+            <span className="flex min-w-0 items-center gap-1">
+              <MapPin className="h-3 w-3 shrink-0 opacity-70" strokeWidth={1.75} />
               <span className="truncate">{product.city || "—"}</span>
             </span>
-            <span className="flex items-center gap-1.5">
-              <Eye className="h-3.5 w-3.5" />
+            <span className="flex items-center gap-1 tabular-nums">
+              <Eye className="h-3 w-3 opacity-70" strokeWidth={1.75} />
               {product.views ?? 0}
             </span>
           </div>
         </div>
       </Link>
+
       {showCompareLink ? (
-      <Link
-        href={compareHref}
-        className="flex items-center justify-center gap-1 border-t border-bw-100 px-2 py-1.5 text-[9px] font-semibold text-bw-600 transition hover:bg-bw-50 hover:text-bw-950 sm:gap-1.5 sm:px-4 sm:py-3 sm:text-xs"
-      >
-        <BadgeDollarSign className="h-3.5 w-3.5" />
-        Fiyat karşılaştır
-      </Link>
+        <Link
+          href={compareHref}
+          className="flex items-center justify-center gap-1.5 border-t border-black/[0.05] bg-gradient-to-b from-white to-[#faf9f7] px-3 py-2.5 text-[10px] font-semibold tracking-wide text-[#6e6e73] transition duration-300 hover:from-[#1d1d1f] hover:to-[#1d1d1f] hover:text-white sm:py-3 sm:text-[11px]"
+        >
+          <BadgeDollarSign className="h-3.5 w-3.5" strokeWidth={1.75} />
+          Fiyat karşılaştır
+        </Link>
       ) : null}
     </article>
   );
