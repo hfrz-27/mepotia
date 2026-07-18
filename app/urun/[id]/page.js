@@ -8,6 +8,7 @@ import { PremiumBreadcrumb } from "@/components/BackHomeLink";
 import ProductGallery from "@/components/ProductGallery";
 import ProductDetailsBlock from "@/components/ProductDetailsBlock";
 import ProductOfferForm from "@/components/ProductOfferForm";
+import ProductBuyingGuide from "@/components/ProductBuyingGuide";
 import { createClient } from "@/lib/supabase-server";
 import {
   formatPrice,
@@ -81,6 +82,11 @@ export default async function ProductPage({ params }) {
   const sold = isSold(product);
   const discount = hasDiscount(product);
   const supabase = await createClient();
+  const { data: settings } = await supabase
+    .from("site_settings")
+    .select("phone_guide_hero, computer_guide_hero")
+    .eq("id", 1)
+    .maybeSingle();
 
   after(() => {
     void incrementViews(id, supabase);
@@ -218,6 +224,11 @@ export default async function ProductPage({ params }) {
       <div className="mt-12 hidden lg:block">
         <ProductDetailsBlock product={product} variant="desktop" />
       </div>
+
+      <ProductBuyingGuide
+        categorySlug={product.categories?.slug}
+        heroImage={product.categories?.slug === "telefon" ? settings?.phone_guide_hero : settings?.computer_guide_hero}
+      />
 
       <ProductMarketCompare
         query={[product.brand, product.model, product.title].filter(Boolean).join(" ")}

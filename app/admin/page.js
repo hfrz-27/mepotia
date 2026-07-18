@@ -18,6 +18,7 @@ import ShareProductButtons from "@/components/ShareProductButtons";
 import TechPostsAdmin from "@/components/admin/TechPostsAdmin";
 import ProductCategoriesAdmin from "@/components/admin/ProductCategoriesAdmin";
 import HeroBackgroundAdmin from "@/components/admin/HeroBackgroundAdmin";
+import GuideBackgroundAdmin from "@/components/admin/GuideBackgroundAdmin";
 import AdminLayout from "@/components/admin/AdminLayout";
 import AdminToast from "@/components/admin/AdminToast";
 import AdminKpiBar from "@/components/admin/AdminKpiBar";
@@ -422,13 +423,13 @@ export default function AdminPage() {
       {tab === "offers" ? (
         <div className="space-y-4">
           {!offers.length ? (
-            <AdminEmptyState title="Henüz satış teklifi yok." />
+            <AdminEmptyState title="Henüz satış veya takas teklifi yok." />
           ) : (
             offers.map((o) => (
               <AdminRecordCard
                 key={o.id}
                 isNew={o.status === "new"}
-                eyebrow={`Satış teklifi${o.status === "new" ? " · Yeni" : ` · ${o.status}`}`}
+                eyebrow={`${o.description?.startsWith("TAKAS TEKLİFİ") ? "Takas teklifi" : "Satış teklifi"}${o.status === "new" ? " · Yeni" : ` · ${o.status}`}`}
                 title={o.title}
                 meta={`${o.contact_name} · ${o.phone}${o.city ? ` · ${o.city}` : ""}${
                   o.price != null ? ` · ${Number(o.price).toLocaleString("tr-TR")} ₺` : ""
@@ -773,7 +774,7 @@ export default function AdminPage() {
         <TechPostsAdmin posts={techPosts} onReload={load} sqlMissing={techSqlMissing} />
       ) : null}
 
-      {tab === "site" ? <HeroBackgroundAdmin /> : null}
+      {tab === "site" ? <><HeroBackgroundAdmin /><GuideBackgroundAdmin /></> : null}
 
       <section className="mt-12 overflow-hidden rounded-2xl border border-bw-200 bg-white shadow-sm">
         <button
