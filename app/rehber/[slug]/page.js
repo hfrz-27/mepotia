@@ -54,7 +54,7 @@ export default async function BuyingGuidePage({ params }) {
     : rawProducts || [];
 
   const otherGuides = BUYING_GUIDE_LIST.filter((g) => g.slug !== slug);
-  const categoryHref = categorySlug ? `/kategori/${categorySlug}` : `/ara?q=${encodeURIComponent(guide.search)}`;
+  const categoryHref = categorySlug ? `/kategori/${categorySlug}` : `/urunler?q=${encodeURIComponent(guide.search)}`;
   const categoryLabel = category?.name || guide.shortLabel;
 
   const guideVideo = settings?.guide_hero_video || "";

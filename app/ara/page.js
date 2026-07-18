@@ -1,178 +1,90 @@
 import Link from "next/link";
-import ProductCard from "@/components/ProductCard";
-import CategoryFilters from "@/components/CategoryFilters";
+import { redirect } from "next/navigation";
+import { Search } from "lucide-react";
 import { PremiumBreadcrumb } from "@/components/BackHomeLink";
-import { getPublishedProducts } from "@/lib/products";
+import SearchFocusInput from "@/components/SearchFocusInput";
 
 export const revalidate = 60;
 
 export const metadata = {
-  title: "Ürünler — Mepotia",
-  description: "Mepotia vitrininde ara, filtrele ve karşılaştır.",
+  title: "Ara — Mepotia",
+  description: "Ürün, marka veya şehir ara.",
 };
 
-function buildPageHref(sp, page) {
-  const q = new URLSearchParams();
-  if (sp?.q) q.set("q", sp.q);
-  if (sp?.sort && sp.sort !== "newest") q.set("sort", sp.sort);
-  if (sp?.city) q.set("city", sp.city);
-  if (sp?.condition) q.set("condition", sp.condition);
-  if (sp?.min) q.set("min", sp.min);
-  if (sp?.max) q.set("max", sp.max);
-  if (sp?.brand) q.set("brand", sp.brand);
-  if (sp?.model) q.set("model", sp.model);
-  if (sp?.category) q.set("category", sp.category);
-  if (page > 1) q.set("page", String(page));
-  const s = q.toString();
-  return s ? `/ara?${s}` : "/ara";
-}
-
-export default async function SearchPage({ searchParams }) {
+/**
+ * Saf arama sayfası — ürün listesi yok.
+ * Sonuçlar /urunler?q=… üzerinde açılır.
+ */
+export default async function SearchLandingPage({ searchParams }) {
   const sp = await searchParams;
-  const q = sp?.q || "";
-  const city = sp?.city || "";
-  const condition = sp?.condition || "";
-  const minPrice = sp?.min || "";
-  const maxPrice = sp?.max || "";
-  const categoryId = sp?.category || "";
-  const brand = sp?.brand || "";
-  const model = sp?.model || "";
-  const sort = sp?.sort || "newest";
-  const page = Math.max(1, Number(sp?.page || 1) || 1);
-  const orderBy =
-    sort === "price_asc" || sort === "price_desc"
-      ? "price"
-      : sort === "views"
-        ? "views"
-        : "created_at";
-  const ascending = sort === "price_asc" || sort === "oldest";
+  const q = (sp?.q || "").trim();
 
-  const { data: raw, count } = await getPublishedProducts({
-    search: q || null,
-    city: city || null,
-    condition: condition || null,
-    minPrice: minPrice || null,
-    maxPrice: maxPrice || null,
-    categoryId: categoryId || null,
-    brand: brand || null,
-    model: model || null,
-    orderBy,
-    ascending,
-    page,
-    limit: 12,
-  });
-
-  const data = raw || [];
-  const total = count || data.length;
-  const totalPages = Math.max(1, Math.ceil((count || 0) / 12) || 1);
+  // Eski /ara?q=… linkleri → ürün sonuçları
+  if (q) {
+    const params = new URLSearchParams();
+    params.set("q", q);
+    if (sp?.sort) params.set("sort", sp.sort);
+    if (sp?.city) params.set("city", sp.city);
+    if (sp?.condition) params.set("condition", sp.condition);
+    if (sp?.min) params.set("min", sp.min);
+    if (sp?.max) params.set("max", sp.max);
+    if (sp?.brand) params.set("brand", sp.brand);
+    if (sp?.model) params.set("model", sp.model);
+    redirect(`/urunler?${params.toString()}`);
+  }
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-white to-[#f5f5f7]">
-      <div className="mx-auto max-w-7xl px-4 pt-4 pb-8 sm:px-6 sm:pt-5 sm:pb-10 lg:px-8">
+      <div className="mx-auto flex min-h-[70vh] max-w-2xl flex-col px-4 pt-6 pb-16 sm:px-6 sm:pt-10">
         <PremiumBreadcrumb
-          className="mb-3"
-          items={[
-            { href: "/kategoriler", label: "Kategoriler" },
-            { href: "/ara", label: "Ürünler", current: true },
-          ]}
+          className="mb-8"
+          items={[{ href: "/ara", label: "Ara", current: true }]}
         />
 
-        <header className="mb-4 max-w-2xl sm:mb-5">
-          <h1 className="font-display text-2xl font-semibold leading-tight tracking-tight text-bw-950 sm:text-3xl">
-            {q ? `“${q}” sonuçları` : "Ürünler"}
+        <div className="flex flex-1 flex-col justify-center">
+          <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-black text-white">
+            <Search className="h-6 w-6" strokeWidth={1.75} />
+          </div>
+          <h1 className="text-center text-[1.75rem] font-semibold tracking-[-0.03em] text-[#1d1d1f] sm:text-[2.1rem]">
+            Ara
           </h1>
-          <p className="mt-1 max-w-xl text-sm leading-snug text-bw-500">
-            {total} sonuç · sırala ve filtrele
+          <p className="mx-auto mt-2 max-w-sm text-center text-[14px] text-[#6e6e73]">
+            Ürün, marka veya şehir yaz — sonuçlar Ürünler sayfasında açılır.
           </p>
-        </header>
 
-        {/* Mobil alt menü “Ara” buraya gelir — her zaman görünür arama */}
-        <form
-          id="arama"
-          action="/ara"
-          method="get"
-          className="mb-3 scroll-mt-24"
-        >
-          <div className="flex items-center gap-2 rounded-full border border-black/[0.06] bg-white px-3 py-2 shadow-[0_8px_24px_-18px_rgba(0,0,0,0.25)] sm:px-4">
-            <input
-              name="q"
-              defaultValue={q}
-              placeholder="Ürün, marka veya şehir ara…"
-              className="min-w-0 flex-1 bg-transparent px-1 py-2 text-[15px] text-[#1d1d1f] outline-none placeholder:text-[#86868b]"
-              aria-label="Ürün ara"
-            />
-            <button
-              type="submit"
-              className="shrink-0 rounded-full bg-black px-4 py-2 text-[13px] font-semibold text-white"
-            >
-              Ara
-            </button>
-          </div>
-          {sort && sort !== "newest" ? (
-            <input type="hidden" name="sort" value={sort} />
-          ) : null}
-        </form>
+          <form
+            id="arama"
+            action="/urunler"
+            method="get"
+            className="mt-8 scroll-mt-24"
+          >
+            <div className="flex items-center gap-2 rounded-full border border-black/[0.06] bg-white px-3 py-2.5 shadow-[0_12px_40px_-18px_rgba(0,0,0,0.28)] sm:px-4 sm:py-3">
+              <Search className="h-5 w-5 shrink-0 text-[#86868b]" strokeWidth={1.6} />
+              <SearchFocusInput defaultValue={q} />
+              <button
+                type="submit"
+                className="shrink-0 rounded-full bg-black px-5 py-2.5 text-[14px] font-semibold text-white active:scale-[0.98]"
+              >
+                Ara
+              </button>
+            </div>
+          </form>
 
-        <CategoryFilters
-          basePath="/ara"
-          showSearch
-          defaults={{
-            sort,
-            q,
-            city,
-            condition,
-            minPrice,
-            maxPrice,
-            brand,
-            model,
-          }}
-        />
-
-        {data.length ? (
-          <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-            {data.map((p) => (
-              <ProductCard key={p.id} product={p} />
-            ))}
-          </div>
-        ) : (
-          <div className="rounded-2xl border border-dashed border-bw-200 bg-white px-5 py-10 text-center">
-            <p className="text-sm font-semibold text-bw-900">Sonuç yok</p>
-            <p className="mx-auto mt-1.5 max-w-sm text-sm text-bw-500">
-              Filtreleri gevşet veya başka bir kelime dene.
-            </p>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
             <Link
-              href="/ara"
-              className="mt-4 inline-flex rounded-full bg-bw-950 px-4 py-2 text-xs font-semibold text-white transition hover:bg-bw-800"
+              href="/urunler"
+              className="rounded-full bg-black px-5 py-2.5 text-[13px] font-semibold text-white"
             >
-              Filtreleri temizle
+              Tüm ürünler
+            </Link>
+            <Link
+              href="/kategoriler"
+              className="rounded-full border border-black/[0.08] bg-white px-5 py-2.5 text-[13px] font-semibold text-[#1d1d1f]"
+            >
+              Kategoriler
             </Link>
           </div>
-        )}
-
-        {totalPages > 1 ? (
-          <nav
-            aria-label="Sayfalar"
-            className="mt-8 flex flex-wrap items-center justify-center gap-1.5"
-          >
-            {Array.from({ length: Math.min(totalPages, 12) }).map((_, i) => {
-              const n = i + 1;
-              const active = n === page;
-              return (
-                <Link
-                  key={n}
-                  href={buildPageHref(sp, n)}
-                  className={`flex h-9 min-w-9 items-center justify-center rounded-full px-3 text-sm font-semibold transition ${
-                    active
-                      ? "bg-bw-950 text-white shadow-sm"
-                      : "border border-bw-200 bg-white text-bw-600 hover:border-bw-300 hover:text-bw-950"
-                  }`}
-                >
-                  {n}
-                </Link>
-              );
-            })}
-          </nav>
-        ) : null}
+        </div>
       </div>
     </main>
   );

@@ -10,7 +10,7 @@ const TABS = [
     href: "/ara",
     label: "Ara",
     icon: Search,
-    match: (p) => p?.startsWith("/ara") || p?.startsWith("/urunler"),
+    match: (p) => p?.startsWith("/ara"),
   },
   {
     href: "/kategoriler",

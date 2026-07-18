@@ -138,16 +138,6 @@ export default function TechNewsHomeRow({ posts }) {
             })}
           </div>
         </div>
-
-        <div className="mt-5 flex justify-center sm:mt-6">
-          <Link
-            href="/teknoloji"
-            className="inline-flex min-h-[44px] w-full max-w-xs items-center justify-center gap-1.5 rounded-full bg-black px-5 py-2.5 text-[13px] font-semibold text-white sm:w-auto sm:px-6 sm:text-[14px]"
-          >
-            Tüm haberleri gör
-            <ArrowUpRight className="h-4 w-4" strokeWidth={2.25} />
-          </Link>
-        </div>
       </div>
     </div>
   );

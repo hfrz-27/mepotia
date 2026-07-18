@@ -80,7 +80,7 @@ export default function HomeTradeGate() {
               <ArrowUpRight className="h-4 w-4 shrink-0" />
             </Link>
             <Link
-              href="/ara"
+              href="/urunler"
               className="group flex items-center justify-between gap-2 rounded-[14px] border border-white/15 bg-white/5 px-3.5 py-3.5 text-white transition active:scale-[0.99] sm:gap-3 sm:rounded-[18px] sm:px-5 sm:py-4"
             >
               <span className="flex min-w-0 items-center gap-2.5 sm:gap-3">

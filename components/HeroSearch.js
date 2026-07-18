@@ -12,7 +12,8 @@ export default function HeroSearch({ variant = "light" }) {
   const onSubmit = (e) => {
     e.preventDefault();
     const q = query.trim();
-    router.push(q ? `/ara?q=${encodeURIComponent(q)}` : "/ara");
+    // Sonuçlar Ürünler sayfasında; boş arama → arama sayfası
+    router.push(q ? `/urunler?q=${encodeURIComponent(q)}` : "/ara");
   };
 
   return (

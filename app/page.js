@@ -46,7 +46,7 @@ export default async function HomePage() {
         {featured.length ? (
           <HomeFeaturedCollection
             products={featured.slice(0, PRODUCT_LIMIT)}
-            href="/ara"
+            href="/urunler"
             linkLabel="Koleksiyonu keşfet"
             eyebrow="Öne çıkan"
             title="Yeni sahibini bekleyenler."
@@ -63,7 +63,7 @@ export default async function HomePage() {
           <HomeFeaturedCollection
             id="vitrin"
             products={latest.slice(0, PRODUCT_LIMIT)}
-            href="/ara"
+            href="/urunler"
             linkLabel="Tümünü gör"
             eyebrow="Vitrin"
             title="Özenle seçilmiş ürünler."
@@ -112,7 +112,7 @@ export default async function HomePage() {
 
         <HomeValueBand />
 
-        <HomeAllProductsGrid products={allProducts} href="/ara" />
+        <HomeAllProductsGrid products={allProducts} href="/urunler" />
 
         <CustomerReviews />
       </main>

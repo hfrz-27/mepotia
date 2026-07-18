@@ -34,7 +34,7 @@ function FeaturedProductsAside({ products }) {
       <div className="grid gap-2">
         {products.slice(0, 4).map((product, index) => <ProductMiniCard key={product.id} product={product} prefetch={index === 0} className="w-full" />)}
       </div>
-      <Link href="/ara" className="mt-3 block rounded-xl bg-bw-950 px-3 py-2 text-center text-[10px] font-semibold text-white transition hover:bg-bw-800">Tüm fırsatları gör</Link>
+      <Link href="/urunler" className="mt-3 block rounded-xl bg-bw-950 px-3 py-2 text-center text-[10px] font-semibold text-white transition hover:bg-bw-800">Tüm fırsatları gör</Link>
     </aside>
   );
 }

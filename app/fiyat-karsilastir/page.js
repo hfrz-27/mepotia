@@ -74,7 +74,7 @@ export default async function PriceComparisonPage({ searchParams }) {
               </p>
             </div>
             <Link
-              href="/ara"
+              href="/urunler"
               className="inline-flex items-center gap-1.5 rounded-full border border-bw-200 bg-white px-3.5 py-2 text-xs font-semibold text-bw-700 shadow-sm transition hover:border-bw-300 hover:text-bw-950"
             >
               Tüm vitrin

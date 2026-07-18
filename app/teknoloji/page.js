@@ -69,22 +69,38 @@ function NewsDigest({ posts = [] }) {
   const digest = posts.slice(0, 5);
   if (!digest.length) return null;
   return (
-    <aside className="h-fit rounded-[1.5rem] border border-bw-200 bg-white p-5 shadow-[0_20px_44px_-36px_rgba(0,0,0,.45)] lg:sticky lg:top-24">
+    <section
+      aria-label="Gündem"
+      className="rounded-[1.5rem] border border-bw-200 bg-white p-5 shadow-[0_20px_44px_-36px_rgba(0,0,0,.45)] sm:p-6"
+    >
       <div className="flex items-center justify-between border-b border-bw-100 pb-4">
-        <p className="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.2em] text-bw-500"><Radio className="h-3.5 w-3.5" /> Gündem</p>
-        <span className="rounded-full bg-emerald-50 px-2 py-1 text-[9px] font-bold uppercase tracking-[.16em] text-emerald-700">Canlı</span>
+        <p className="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.2em] text-bw-500">
+          <Radio className="h-3.5 w-3.5" /> Gündem
+        </p>
+        <span className="rounded-full bg-emerald-50 px-2 py-1 text-[9px] font-bold uppercase tracking-[.16em] text-emerald-700">
+          Canlı
+        </span>
       </div>
-      <ol className="mt-2">
+      <ol className="mt-1 divide-y divide-bw-100">
         {digest.map((post, index) => (
-          <li key={post.id} className="border-b border-bw-100 last:border-0">
-            <Link href={`/teknoloji/${post.id}`} className="group flex gap-3 py-4">
-              <span className="font-display text-xl font-semibold text-bw-300">{String(index + 1).padStart(2, "0")}</span>
-              <span className="min-w-0"><span className="line-clamp-2 block text-sm font-semibold leading-snug text-bw-900 transition group-hover:text-bw-600">{post.title}</span><span className="mt-1 block text-[10px] font-medium uppercase tracking-[.14em] text-bw-400">{formatTechDate(post.created_at)}</span></span>
+          <li key={post.id}>
+            <Link href={`/teknoloji/${post.id}`} className="group flex gap-3 py-3.5 sm:py-4">
+              <span className="font-display text-xl font-semibold text-bw-300">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <span className="min-w-0">
+                <span className="line-clamp-2 block text-sm font-semibold leading-snug text-bw-900 transition group-hover:text-bw-600">
+                  {post.title}
+                </span>
+                <span className="mt-1 block text-[10px] font-medium uppercase tracking-[.14em] text-bw-400">
+                  {formatTechDate(post.created_at)}
+                </span>
+              </span>
             </Link>
           </li>
         ))}
       </ol>
-    </aside>
+    </section>
   );
 }
 
@@ -125,13 +141,44 @@ export default async function TeknolojiPage({ searchParams }) {
 
         {posts?.length ? (
           <>
-            {page === 1 ? <TechNewsFeaturedCarousel posts={carouselPosts} /> : null}
-            {feedPosts.length ? (
-              <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_19rem] lg:gap-10">
-                <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:gap-6">
-                  {feedPosts.map((post, index) => <NewsCard key={post.id} post={post} index={index} large={page === 1 && !carouselPosts.length && index === 0} wide={feedPosts.length > 1 && feedPosts.length % 2 === 1 && index === feedPosts.length - 1} />)}
-                </div>
+            {/* 1) Gündem üstte · 2) Öne çıkanlar gündemin altında · 3) akış */}
+            {page === 1 ? (
+              <div className="mb-8 sm:mb-10">
                 <NewsDigest posts={trendingPosts.length ? trendingPosts : feedPosts} />
+              </div>
+            ) : null}
+
+            {page === 1 && carouselPosts.length ? (
+              <div className="mb-8 sm:mb-10">
+                <div className="mb-4 flex items-end justify-between gap-3">
+                  <div>
+                    <p className="text-[10px] font-semibold tracking-[0.18em] text-bw-500 uppercase">
+                      Seçki
+                    </p>
+                    <h3 className="mt-1 text-xl font-semibold tracking-tight text-bw-950 sm:text-2xl">
+                      Öne çıkanlar
+                    </h3>
+                  </div>
+                </div>
+                <TechNewsFeaturedCarousel posts={carouselPosts} />
+              </div>
+            ) : null}
+
+            {feedPosts.length ? (
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:gap-6">
+                {feedPosts.map((post, index) => (
+                  <NewsCard
+                    key={post.id}
+                    post={post}
+                    index={index}
+                    large={page === 1 && !carouselPosts.length && index === 0}
+                    wide={
+                      feedPosts.length > 1 &&
+                      feedPosts.length % 2 === 1 &&
+                      index === feedPosts.length - 1
+                    }
+                  />
+                ))}
               </div>
             ) : null}
           </>

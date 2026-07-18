@@ -40,7 +40,7 @@ export default function SearchFiltersPanel({ categories = [], defaults = {} }) {
       >
         <div className="overflow-hidden">
           <form
-            action="/ara"
+            action="/urunler"
             method="get"
             className="rounded-2xl border border-bw-200 bg-bw-50 p-4 shadow-[0_12px_32px_-20px_rgba(0,0,0,0.1)] sm:p-5"
           >

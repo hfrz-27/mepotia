@@ -68,7 +68,7 @@ export default function HomeHowItWorks() {
             <ArrowRight className="h-4 w-4" />
           </Link>
           <Link
-            href="/ara"
+            href="/urunler"
             className="inline-flex items-center gap-2 rounded-2xl border border-bw-200 bg-white px-5 py-3 text-sm font-semibold text-bw-900 transition hover:border-bw-400"
           >
             Vitrini keşfet
