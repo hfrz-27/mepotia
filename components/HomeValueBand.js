@@ -36,10 +36,10 @@ const REASONS = [
   },
 ];
 
-export default function HomeValueBand({ embedded = false }) {
+export default function HomeValueBand({ embedded = false, coverUrl = null }) {
   const body = (
     <>
-      <header className="mx-auto max-w-2xl px-1 text-center">
+      <header className="relative mx-auto max-w-2xl px-1 text-center">
         <h2 className="text-[1.35rem] font-semibold leading-[1.15] tracking-[-0.035em] text-[#1d1d1f] sm:text-[2.1rem] md:text-[2.5rem]">
           Neden Mepotia?
         </h2>
@@ -92,10 +92,16 @@ export default function HomeValueBand({ embedded = false }) {
 
   return (
     <section
-      className="bg-[#f5f5f7] py-5 sm:py-7 md:py-9"
+      className="relative overflow-hidden bg-[#f5f5f7] py-5 sm:py-7 md:py-9"
       aria-label="Neden Mepotia"
     >
-      <div className="pv-wrap">{body}</div>
+      {coverUrl ? (
+        <div className="pointer-events-none absolute inset-0 opacity-[0.1]">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={coverUrl} alt="" className="h-full w-full object-cover" />
+        </div>
+      ) : null}
+      <div className="pv-wrap relative">{body}</div>
     </section>
   );
 }

@@ -2,7 +2,7 @@ import { Cpu } from "lucide-react";
 import TechNewsHomeRow from "@/components/TechNewsHomeRow";
 import { getTechPosts } from "@/lib/techPosts";
 
-export default async function TechNewsSection() {
+export default async function TechNewsSection({ coverUrl = null } = {}) {
   const { data: posts, error } = await getTechPosts({ limit: 8 });
 
   return (
@@ -17,7 +17,7 @@ export default async function TechNewsSection() {
           <p className="mt-2 text-sm font-medium text-bw-700">Henüz paylaşım yok</p>
         </div>
       ) : (
-        <TechNewsHomeRow posts={posts} />
+        <TechNewsHomeRow posts={posts} coverUrl={coverUrl} />
       )}
     </section>
   );

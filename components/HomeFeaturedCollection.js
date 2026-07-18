@@ -19,17 +19,19 @@ function SignatureCover({
   linkLabel,
   align = "left",
   strip = "thumbs",
+  coverUrl = null,
 }) {
   const hero = items[0];
   const row = items.slice(0, 4);
   const centered = align === "center";
+  const bgSrc = coverUrl || (hero ? getPrimaryImage(hero) : null);
 
   return (
     <div className="relative overflow-hidden rounded-[20px] bg-black shadow-xl sm:rounded-[28px]">
-      {hero ? (
+      {bgSrc ? (
         <div className="absolute inset-0">
           <ProductImage
-            src={getPrimaryImage(hero)}
+            src={bgSrc}
             alt=""
             fill
             priority={priority}
@@ -147,6 +149,7 @@ export default function HomeFeaturedCollection({
   variant = "cinema",
   ariaLabel,
   priority = false,
+  coverUrl = null,
 }) {
   const items = (products || []).filter(Boolean);
   if (!items.length) return null;
@@ -171,6 +174,7 @@ export default function HomeFeaturedCollection({
             linkLabel={linkLabel}
             align={conf.align}
             strip={conf.strip}
+            coverUrl={coverUrl}
           />
         </Link>
       </div>

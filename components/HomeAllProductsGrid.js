@@ -6,13 +6,17 @@ import ProductImage from "@/components/ProductImage";
 import { getPrimaryImage } from "@/lib/productDisplay";
 
 /**
- * Ana sayfa alt “Ürünler” — sadece premium kapak (ürün grid/şerit yok).
+ * Ana sayfa alt “Ürünler” — sadece kapak.
+ * coverUrl: admin panelden (site_settings.home_products_cover)
  */
-export default function HomeAllProductsGrid({ products = [], href = "/urunler" }) {
+export default function HomeAllProductsGrid({
+  products = [],
+  href = "/urunler",
+  coverUrl = null,
+}) {
   const items = (products || []).filter(Boolean);
-  // Kapak görseli: ilk gerçek ürün, yoksa null (soft gradient)
-  const cover = items.find((p) => getPrimaryImage(p)) || items[0] || null;
-  const coverSrc = cover ? getPrimaryImage(cover) : null;
+  const fallback = items.find((p) => getPrimaryImage(p)) || items[0] || null;
+  const coverSrc = coverUrl || (fallback ? getPrimaryImage(fallback) : null);
 
   return (
     <section className="bg-[#f5f5f7] py-5 sm:py-8" aria-label="Ürünler">
@@ -21,7 +25,6 @@ export default function HomeAllProductsGrid({ products = [], href = "/urunler" }
           href={href}
           className="group relative block overflow-hidden rounded-[24px] bg-[#0a0a0a] shadow-[0_24px_60px_-28px_rgba(0,0,0,0.55)] sm:rounded-[32px]"
         >
-          {/* Arka plan */}
           <div className="absolute inset-0">
             {coverSrc ? (
               <ProductImage
@@ -36,12 +39,10 @@ export default function HomeAllProductsGrid({ products = [], href = "/urunler" }
             )}
           </div>
 
-          {/* Soft light / vignette — Apple kapak hissi */}
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/25" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-black/30" />
           <div className="pointer-events-none absolute -top-1/4 left-1/2 h-[70%] w-[90%] -translate-x-1/2 rounded-full bg-white/[0.07] blur-3xl" />
 
-          {/* İçerik */}
           <div className="relative flex min-h-[280px] flex-col items-center justify-center px-6 py-14 text-center sm:min-h-[360px] sm:px-10 sm:py-20 lg:min-h-[420px]">
             <p className="text-[11px] font-semibold tracking-[0.22em] text-white/55 uppercase sm:text-[12px]">
               Mepotia

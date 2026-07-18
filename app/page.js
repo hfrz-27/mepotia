@@ -26,7 +26,6 @@ export default async function HomePage() {
     getPublishedProducts({ limit: GRID_LIMIT, orderBy: "created_at" }),
   ]);
 
-  // Koleksiyonlar: SADECE admin seçimi — demo ile doldurma yok
   const featured = featuredRes.data || [];
   const curated = curatedRes.data || [];
   const popular = popularRes.data || [];
@@ -40,12 +39,22 @@ export default async function HomePage() {
   const c2 = HOME_COLLECTIONS.curated;
   const c3 = HOME_COLLECTIONS.popular;
 
+  // Admin kapakları (yoksa bileşen ürün fotoğraflarına düşer)
+  const covers = {
+    products: settings?.home_products_cover || null,
+    featured: settings?.home_featured_cover || null,
+    curated: settings?.home_curated_cover || null,
+    popular: settings?.home_popular_cover || null,
+    news: settings?.home_news_cover || null,
+    value: settings?.home_value_cover || null,
+  };
+
   return (
     <HomeReviewsProvider>
       <main>
         <HomeIntroHero />
 
-        <TechNewsSection />
+        <TechNewsSection coverUrl={covers.news} />
 
         {featured.length ? (
           <HomeFeaturedCollection
@@ -57,6 +66,7 @@ export default async function HomePage() {
             description={c1.description}
             variant="mosaic"
             ariaLabel={c1.label}
+            coverUrl={covers.featured}
             priority
           />
         ) : null}
@@ -75,6 +85,7 @@ export default async function HomePage() {
             tone="mist"
             variant="split"
             ariaLabel={c2.label}
+            coverUrl={covers.curated}
           />
         ) : (
           <section id="vitrin" className="scroll-mt-16 bg-[#f5f5f7]">
@@ -112,14 +123,19 @@ export default async function HomePage() {
             description={c3.description}
             variant="cinema"
             ariaLabel={c3.label}
+            coverUrl={covers.popular}
           />
         ) : null}
 
         <HomeTradeGate />
 
-        <HomeValueBand />
+        <HomeValueBand coverUrl={covers.value} />
 
-        <HomeAllProductsGrid products={allProducts} href="/urunler" />
+        <HomeAllProductsGrid
+          products={allProducts}
+          href="/urunler"
+          coverUrl={covers.products}
+        />
 
         <CustomerReviews />
       </main>

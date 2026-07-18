@@ -72,7 +72,7 @@ export const ADMIN_TABS = [
       {
         id: "site",
         label: "Hero & medya",
-        hint: "Ana sayfa ve fiyat karşılaştır",
+        hint: "Ana sayfa kapakları + sayfa hero",
         icon: ImageIcon,
         badgeKey: null,
         totalKey: null,

@@ -9,7 +9,7 @@ import { appleTextLinkClass } from "@/lib/appleUi";
 /**
  * Apple + dergi: sol büyük manşet, sağ liste — hover ile manşet değişir.
  */
-export default function TechNewsHomeRow({ posts }) {
+export default function TechNewsHomeRow({ posts, coverUrl = null }) {
   const items = (posts || []).slice(0, 6);
   const [active, setActive] = useState(0);
 
@@ -27,9 +27,17 @@ export default function TechNewsHomeRow({ posts }) {
   // Mobilde liste kısa kalsın
   const listItems = items.slice(0, 6);
 
+  const heroCover = coverUrl || current.cover_url;
+
   return (
-    <div className="bg-[#f5f5f7] py-6 sm:py-10 lg:py-12">
-      <div className="pv-wrap">
+    <div className="relative bg-[#f5f5f7] py-6 sm:py-10 lg:py-12">
+      {coverUrl ? (
+        <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-[0.12]">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={coverUrl} alt="" className="h-full w-full object-cover" />
+        </div>
+      ) : null}
+      <div className="pv-wrap relative">
         <div className="mb-4 text-center sm:mb-6">
           <p className="text-[11px] font-semibold tracking-[-0.01em] text-[#6e6e73] sm:text-[12px]">
             Güncel
@@ -46,16 +54,16 @@ export default function TechNewsHomeRow({ posts }) {
         </div>
 
         <div className="grid gap-2.5 lg:grid-cols-12 lg:gap-3">
-          {/* Sol büyük */}
+          {/* Sol büyük — admin kapağı varsa manşette o kullanılır */}
           <Link
             href={`/teknoloji/${current.id}`}
             className="group relative min-h-[200px] overflow-hidden rounded-[18px] bg-black sm:min-h-[300px] sm:rounded-[20px] lg:col-span-7 lg:min-h-[340px]"
           >
-            {current.cover_url ? (
+            {heroCover ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                key={current.id}
-                src={current.cover_url}
+                key={`${current.id}-${heroCover}`}
+                src={heroCover}
                 alt=""
                 className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-[1.03]"
               />
