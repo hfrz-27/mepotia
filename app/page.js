@@ -50,7 +50,7 @@ export default async function HomePage() {
         {featured.length ? (
           <HomeFeaturedCollection
             products={featured.slice(0, PRODUCT_LIMIT)}
-            href="/urunler?sort=newest"
+            href={c1.href}
             linkLabel="Koleksiyonu keşfet"
             eyebrow={c1.eyebrow}
             title={c1.title}
@@ -67,8 +67,8 @@ export default async function HomePage() {
           <HomeFeaturedCollection
             id="vitrin"
             products={curated.slice(0, PRODUCT_LIMIT)}
-            href="/urunler"
-            linkLabel="Tümünü gör"
+            href={c2.href}
+            linkLabel="Koleksiyonu gör"
             eyebrow={c2.eyebrow}
             title={c2.title}
             description={c2.description}
@@ -105,8 +105,8 @@ export default async function HomePage() {
         {popular.length ? (
           <HomeFeaturedCollection
             products={popular.slice(0, PRODUCT_LIMIT)}
-            href="/en-cok-bakilanlar"
-            linkLabel="Popüler liste"
+            href={c3.href}
+            linkLabel="Koleksiyonu gör"
             eyebrow={c3.eyebrow}
             title={c3.title}
             description={c3.description}
