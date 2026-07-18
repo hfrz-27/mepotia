@@ -139,7 +139,7 @@ const VARIANT = {
 export default function HomeFeaturedCollection({
   id,
   products = [],
-  href = "/ara",
+  href = "/urunler",
   linkLabel = "Koleksiyonu keşfet",
   eyebrow,
   title = "Koleksiyon.",
