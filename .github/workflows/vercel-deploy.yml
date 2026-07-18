@@ -6,39 +6,20 @@ on:
       - main
   workflow_dispatch:
 
-env:
-  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-
-      - name: Install Vercel CLI
-        run: npm install -g vercel@latest
-
-      - name: Pull Vercel Environment
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Build Project Artifacts
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Deploy to Production
-        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Also ping Deploy Hook (fallback)
+      - name: Trigger Vercel Deploy Hook
         env:
           DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
-        continue-on-error: true
         run: |
-          if [ -n "$DEPLOY_HOOK" ]; then
-            curl -fsS -X POST "$DEPLOY_HOOK" || true
+          if [ -z "$DEPLOY_HOOK" ]; then
+            echo "HATA: VERCEL_DEPLOY_HOOK secret yok."
+            exit 1
           fi
+          RESPONSE=$(curl -fsS -X POST "$DEPLOY_HOOK")
+          echo "$RESPONSE"
+          echo "Deploy hook tetiklendi."
+          echo "Vercel Dashboard: https://vercel.com/dashboard"
+          echo "Blocked görürsen Deployments > redeploy / unblock gerekir."
