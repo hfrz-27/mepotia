@@ -7,6 +7,7 @@ import HomeCampaignCarousel from "@/components/HomeCampaignCarousel";
 import HomeTradeQuickStart from "@/components/HomeTradeQuickStart";
 import HomeGuideFinder from "@/components/HomeGuideFinder";
 import { CustomerReviews, HomeReviewsProvider } from "@/components/HomeReviews";
+import HomeFaqSection from "@/components/HomeFaqSection";
 import { formatTechDate } from "@/lib/techPostUtils";
 
 const FEATURES = [
@@ -199,6 +200,8 @@ export default function MepotiaResearchHome({ products = [], campaignImages = []
       ) : null}
 
       <HomeReviewsProvider><CustomerReviews /></HomeReviewsProvider>
+
+      <HomeFaqSection />
 
     </main>
   );
