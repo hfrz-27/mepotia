@@ -6,8 +6,9 @@ import HomeValueBand from "@/components/HomeValueBand";
 import HomeActionRail from "@/components/HomeActionRail";
 import HomeTradeGate from "@/components/HomeTradeGate";
 import HomeIntroHero from "@/components/HomeIntroHero";
+import HomeCategoryShowcase from "@/components/HomeCategoryShowcase";
 import { getPublishedProducts, HOME_COLLECTIONS } from "@/lib/products";
-import { getSiteSettings } from "@/lib/categories";
+import { getCategoryShowcase, getSiteSettings } from "@/lib/categories";
 import { fillProducts } from "@/lib/homeDemoData";
 import { CustomerReviews, HomeReviewsProvider } from "@/components/HomeReviews";
 
@@ -18,8 +19,9 @@ const GRID_LIMIT = 21;
 export const revalidate = 30;
 
 export default async function HomePage() {
-  const [settings, featuredRes, curatedRes, popularRes, allRes] = await Promise.all([
+  const [settings, categoryTiles, featuredRes, curatedRes, popularRes, allRes] = await Promise.all([
     getSiteSettings(),
+    getCategoryShowcase(),
     getPublishedProducts({ limit: PRODUCT_LIMIT, homeCollection: "featured" }),
     getPublishedProducts({ limit: PRODUCT_LIMIT, homeCollection: "curated" }),
     getPublishedProducts({ limit: PRODUCT_LIMIT, homeCollection: "popular" }),
@@ -53,6 +55,8 @@ export default async function HomePage() {
     <HomeReviewsProvider>
       <main>
         <HomeIntroHero />
+
+        <HomeCategoryShowcase categories={categoryTiles} />
 
         <TechNewsSection coverUrl={covers.news} />
 
