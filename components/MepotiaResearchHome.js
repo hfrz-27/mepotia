@@ -4,6 +4,7 @@ import { ArrowUpRight, BadgeCheck, ChevronRight, CircleDollarSign, MessageCircle
 import ProductImage from "@/components/ProductImage";
 import { formatPrice, getPrimaryImage } from "@/lib/productDisplay";
 import HomeCampaignCarousel from "@/components/HomeCampaignCarousel";
+import HomeTradeQuickStart from "@/components/HomeTradeQuickStart";
 import { formatTechDate } from "@/lib/techPostUtils";
 
 const FEATURES = [
@@ -108,7 +109,7 @@ export default function MepotiaResearchHome({ products = [], campaignImages = []
                 <p className="mt-6 max-w-lg text-[16px] leading-relaxed text-white/55">{item.copy}</p>
                 <Link href={item.href} className="mt-8 inline-flex h-12 w-fit items-center gap-1 rounded-full bg-[#0071e3] px-6 text-[14px] font-semibold hover:bg-[#0077ed]">{item.action}<ChevronRight className="h-4 w-4" /></Link>
               </div>
-              <div className={`relative min-h-[420px] overflow-hidden bg-[#0b0b0d] lg:min-h-[620px] ${index % 2 ? "lg:order-1" : ""}`}><Image src={item.image} alt="" fill sizes="(max-width:1024px) 100vw, 660px" className="object-cover transition duration-[1200ms] hover:scale-[1.025]" /></div>
+              <div className={`relative min-h-[520px] overflow-hidden bg-[#0b0b0d] lg:min-h-[620px] ${index % 2 ? "lg:order-1" : ""}`}><Image src={item.image} alt="" fill sizes="(max-width:1024px) 100vw, 660px" className="object-cover transition duration-[1200ms] hover:scale-[1.025]" />{index === 0 ? <HomeTradeQuickStart /> : null}</div>
             </article>
           ))}
         </div>
