@@ -11,8 +11,6 @@ import { getTechPosts, resolveTechPostsPageSize } from "@/lib/techPosts";
 import { formatTechDate } from "@/lib/techPostUtils";
 import { displayImageUrl } from "@/lib/productImage";
 
-export const revalidate = 60;
-
 function LiveBadge({ count }) {
   return (
     <span className="inline-flex items-center gap-2 rounded-full border border-bw-200 bg-white/70 px-3 py-1.5 text-[11px] font-semibold text-bw-600 shadow-[0_1px_2px_rgba(0,0,0,.04)] backdrop-blur">
