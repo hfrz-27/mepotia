@@ -37,18 +37,18 @@ export default function HomeCategoryShowcase({ categories = [] }) {
           <Link
             key={cat.slug}
             href={cat.href}
-            className="group relative flex w-[230px] shrink-0 snap-start flex-col items-center rounded-[22px] bg-[#f5f5f7] px-5 pb-6 pt-6 text-center transition hover:bg-[#eef0f2] sm:w-[280px]"
+            className="group relative flex w-[150px] shrink-0 snap-start flex-col items-center rounded-[18px] bg-[#f5f5f7] px-3 pb-4 pt-4 text-center transition hover:bg-[#eef0f2] sm:w-[178px]"
           >
-            <p className="text-[16px] font-semibold tracking-[-0.02em] text-[#1d1d1f] sm:text-[18px]">
+            <p className="text-[13px] font-semibold tracking-[-0.02em] text-[#1d1d1f] sm:text-[14px]">
               {cat.name}
             </p>
             {cat.count > 0 ? (
-              <p className="mt-0.5 text-[12px] text-[#86868b]">{cat.count} ürün</p>
+              <p className="mt-0.5 text-[11px] text-[#86868b]">{cat.count} ürün</p>
             ) : (
-              <p className="mt-0.5 text-[12px] text-[#86868b]">Keşfet</p>
+              <p className="mt-0.5 text-[11px] text-[#86868b]">Keşfet</p>
             )}
 
-            <div className="relative my-5 aspect-square w-full overflow-hidden rounded-2xl bg-white/60">
+            <div className="relative my-3.5 aspect-square w-full overflow-hidden rounded-xl bg-white/60">
               <ProductImage
                 src={cat.cover}
                 alt={cat.name}
@@ -58,7 +58,7 @@ export default function HomeCategoryShowcase({ categories = [] }) {
               />
             </div>
 
-            <span className="inline-flex items-center gap-1 rounded-full bg-[#1d1d1f] px-5 py-2 text-[13px] font-semibold text-white transition duration-200 group-hover:scale-[1.03] group-hover:bg-black">
+            <span className="inline-flex items-center gap-1 rounded-full bg-[#1d1d1f] px-3.5 py-1.5 text-[11px] font-semibold text-white transition duration-200 group-hover:scale-[1.03] group-hover:bg-black">
               Daha fazla bilgi
             </span>
           </Link>
