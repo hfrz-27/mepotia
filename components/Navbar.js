@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   ArrowUpRight,
   ChevronDown,
+  HandCoins,
   LogOut,
   Menu,
   PenLine,
@@ -26,8 +27,8 @@ const NAV = [
 ];
 
 const UTILITY = [
-  { href: "/rehber", label: "Destek" },
-  { href: "/hakkimizda", label: "Kurumsal için", external: true },
+  { href: "/hakkimizda", label: "Mepotia hakkında" },
+  { href: "/iletisim", label: "Destek" },
 ];
 
 const MEGA_LINKS = [
@@ -123,19 +124,24 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50">
       {/* Üst yardımcı bant */}
-      <div className="hidden border-b border-black/[0.06] bg-[#f5f5f7] md:block">
+      <div className="hidden border-b border-white/10 bg-[#09090c] text-white md:block">
         <div className="mx-auto max-w-[1240px] px-6">
-          <div className="flex h-8 items-center justify-end gap-5">
+          <div className="flex h-8 items-center justify-between gap-5">
+            <p className="text-[10px] font-medium tracking-[0.08em] text-white/55">
+              Seçilmiş ikinci el teknoloji · Doğrudan iletişim
+            </p>
+            <div className="flex items-center gap-5">
             {UTILITY.map((item) => (
               <Link
                 key={item.label}
                 href={item.href}
-                className="inline-flex items-center gap-0.5 text-[11px] font-medium text-[#6e6e73] transition hover:text-[#1d1d1f]"
+                className="inline-flex items-center gap-0.5 text-[10px] font-medium text-white/55 transition hover:text-white"
               >
                 {item.label}
                 {item.external ? <ArrowUpRight className="h-3 w-3" strokeWidth={2} /> : null}
               </Link>
             ))}
+            </div>
           </div>
         </div>
       </div>
@@ -144,7 +150,7 @@ export default function Navbar() {
       <div
         onMouseLeave={() => setMegaOpen(false)}
         className={[
-          "relative border-b bg-[rgba(245,245,247,0.9)] backdrop-blur-[20px] backdrop-saturate-150 transition",
+          "relative border-b bg-white/90 backdrop-blur-[22px] backdrop-saturate-150 transition",
           scrolled || megaOpen ? "border-black/[0.06]" : "border-black/[0.04]",
         ].join(" ")}
       >
@@ -213,6 +219,13 @@ export default function Navbar() {
 
           {/* Sağ aksiyonlar */}
           <div className="relative z-20 ml-auto flex w-[4.5rem] items-center justify-end gap-0.5 sm:gap-1 md:w-auto" ref={menuRef}>
+            <Link
+              href="/bana-sat"
+              className="mr-1 hidden h-9 items-center gap-1.5 rounded-full bg-[#1d1d1f] px-4 text-[12px] font-semibold text-white transition hover:bg-black md:inline-flex"
+            >
+              <HandCoins className="h-3.5 w-3.5" strokeWidth={1.8} />
+              Cihazını sat
+            </Link>
             <Link
               href="/ara"
               className="flex h-9 w-9 items-center justify-center rounded-full text-[#1d1d1f] transition hover:bg-black/[0.05]"

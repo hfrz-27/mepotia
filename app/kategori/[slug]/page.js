@@ -2,6 +2,7 @@ import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import CategoryFilters from "@/components/CategoryFilters";
 import CategoryGuideFab from "@/components/CategoryGuideFab";
+import CatalogHero from "@/components/CatalogHero";
 import { PremiumBreadcrumb } from "@/components/BackHomeLink";
 import { getCategoryBySlug } from "@/lib/categories";
 import { getPublishedProducts } from "@/lib/products";
@@ -73,16 +74,12 @@ export default async function CategoryPage({ params, searchParams }) {
           ]}
         />
 
-        <header className="mb-4 max-w-2xl sm:mb-5">
-          <h1 className="font-display text-2xl font-semibold leading-tight tracking-tight text-bw-950 sm:text-3xl">
-            {category.name}
-          </h1>
-          {category.description ? (
-            <p className="mt-1 max-w-xl text-sm leading-snug text-bw-500">
-              {category.description}
-            </p>
-          ) : null}
-        </header>
+        <CatalogHero
+          eyebrow="Kategori vitrini"
+          title={`${category.name}. Sana uygun olanı bul.`}
+          description={category.description || "Seçilmiş ürünleri filtrele, fiyatlarını karşılaştır ve doğru seçeneğe ulaş."}
+          count={count}
+        />
 
         <CategoryFilters
           slug={slug}
@@ -150,4 +147,3 @@ export default async function CategoryPage({ params, searchParams }) {
     </main>
   );
 }
-

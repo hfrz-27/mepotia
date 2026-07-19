@@ -1,6 +1,7 @@
 import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import CategoryFilters from "@/components/CategoryFilters";
+import CatalogHero from "@/components/CatalogHero";
 import { PremiumBreadcrumb } from "@/components/BackHomeLink";
 import { getPublishedProducts } from "@/lib/products";
 
@@ -77,14 +78,12 @@ export default async function UrunlerPage({ searchParams }) {
           ]}
         />
 
-        <header className="mb-4 max-w-2xl sm:mb-5">
-          <h1 className="font-display text-2xl font-semibold leading-tight tracking-tight text-bw-950 sm:text-3xl">
-            {q ? `“${q}” sonuçları` : "Ürünler"}
-          </h1>
-          <p className="mt-1 max-w-xl text-sm leading-snug text-bw-500">
-            {total} sonuç · sırala ve filtrele
-          </p>
-        </header>
+        <CatalogHero
+          eyebrow={q ? "Arama sonuçları" : "Tüm ürünler"}
+          title={q ? `“${q}” için seçtiklerimiz.` : "Teknoloji vitrini."}
+          description="Telefon, bilgisayar, tablet ve aksesuarları net ürün bilgileriyle incele; filtrele, karşılaştır ve doğrudan iletişime geç."
+          count={total}
+        />
 
         <form id="arama" action="/urunler" method="get" className="mb-3 scroll-mt-24">
           <div className="flex items-center gap-2 rounded-full border border-black/[0.06] bg-white px-3 py-2 shadow-[0_8px_24px_-18px_rgba(0,0,0,0.25)] sm:px-4">

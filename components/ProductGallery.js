@@ -33,11 +33,11 @@ export default function ProductGallery({ images = [], title = "" }) {
 
   return (
     <>
-      <div>
+      <div className="rounded-[24px] bg-white p-2.5 ring-1 ring-black/[0.05] shadow-[0_24px_70px_-48px_rgba(0,0,0,0.55)] sm:rounded-[30px] sm:p-4">
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="relative aspect-[4/3] w-full overflow-hidden rounded-[2rem] border border-bw-200 bg-bw-100 shadow-sm"
+          className="relative aspect-[4/3] w-full overflow-hidden rounded-[19px] bg-gradient-to-br from-[#fafafa] to-[#ececf0] sm:rounded-[24px]"
         >
           <ProductImage
             src={main}
@@ -47,12 +47,12 @@ export default function ProductGallery({ images = [], title = "" }) {
             sizes="(max-width: 1024px) 100vw, 640px"
             priority
           />
-          <span className="absolute bottom-3 right-3 rounded-xl bg-bw-950/75 px-3 py-1.5 text-[10px] font-semibold tracking-wide text-white uppercase">
-            Büyüt
+          <span className="absolute bottom-3 right-3 rounded-full bg-black/70 px-3 py-1.5 text-[9px] font-semibold tracking-wide text-white uppercase backdrop-blur-md">
+            Tam ekran
           </span>
         </button>
         {urls.length > 1 ? (
-          <div className="mt-3 flex gap-2 overflow-x-auto">
+          <div className="mt-2.5 flex gap-2 overflow-x-auto hide-scrollbar">
             {urls.map((url, i) => (
               <button
                 key={url + i}
@@ -61,8 +61,8 @@ export default function ProductGallery({ images = [], title = "" }) {
                   setActive(i);
                   setOpen(true);
                 }}
-                className={`relative h-24 w-24 shrink-0 overflow-hidden rounded-2xl border bg-bw-50 ${
-                  i === active ? "border-bw-950" : "border-bw-200"
+                className={`relative h-20 w-20 shrink-0 overflow-hidden rounded-[14px] border bg-[#f5f5f7] transition sm:h-24 sm:w-24 sm:rounded-[17px] ${
+                  i === active ? "border-black ring-1 ring-black" : "border-black/[0.06] hover:border-black/20"
                 }`}
               >
                 <ProductImage
