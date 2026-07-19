@@ -36,24 +36,40 @@ export default function Footer({ whatsapp, phone, email }) {
           </Link>
         </div>
 
-        <nav className="grid border-b border-black/15 py-5 lg:grid-cols-4 lg:gap-12 lg:py-7" aria-label="Alt menü">
+        <nav className="border-b border-black/15 py-4 lg:hidden" aria-label="Mobil alt menü">
           {COLUMNS.map((column) => (
-            <details key={column.title} className="group border-t border-black/10 first:border-t-0 lg:border-0">
-              <summary className="flex h-10 cursor-pointer list-none items-center justify-between text-[12px] font-semibold text-[#1d1d1f] lg:h-auto lg:cursor-default">{column.title}<ChevronDown className="h-3.5 w-3.5 text-[#6e6e73] transition group-open:rotate-180 lg:hidden" /></summary>
-              <ul className="space-y-2.5 pb-4 lg:mt-3 lg:!block lg:pb-0">
+            <details key={column.title} className="group border-t border-black/10 first:border-t-0">
+              <summary className="flex h-12 cursor-pointer list-none items-center justify-between text-[12px] font-semibold text-[#1d1d1f]">{column.title}<ChevronDown className="h-3.5 w-3.5 text-[#6e6e73] transition group-open:rotate-180" /></summary>
+              <ul className="grid grid-cols-2 gap-x-4 gap-y-3 pb-5">
                 {column.links.map(([href, label]) => <li key={href}><Link href={href} className="text-[12px] leading-relaxed text-[#424245] transition hover:text-black hover:underline">{label}</Link></li>)}
               </ul>
             </details>
           ))}
         </nav>
 
-        <div className="border-b border-black/15 py-4 text-[11px] leading-relaxed text-[#6e6e73]">
-          Teknoloji seçimin için desteğe mi ihtiyacın var? <a href={wa} target="_blank" rel="noreferrer" className="text-[#0066cc] underline">WhatsApp’tan yaz</a>, <a href={tel} className="text-[#0066cc] underline">telefonla ara</a> veya <a href={mail} className="text-[#0066cc] underline">e-posta gönder</a>.
+        <nav className="hidden grid-cols-4 gap-12 border-b border-black/15 py-8 lg:grid" aria-label="Alt menü">
+          {COLUMNS.map((column) => (
+            <section key={column.title}>
+              <h2 className="text-[12px] font-semibold text-[#1d1d1f]">{column.title}</h2>
+              <ul className="mt-4 space-y-2.5">
+                {column.links.map(([href, label]) => <li key={href}><Link href={href} className="text-[12px] leading-relaxed text-[#424245] transition hover:text-black hover:underline">{label}</Link></li>)}
+              </ul>
+            </section>
+          ))}
+        </nav>
+
+        <div className="my-5 flex flex-col gap-4 rounded-[18px] bg-white/70 p-4 text-[11px] leading-relaxed text-[#6e6e73] ring-1 ring-black/[.04] sm:flex-row sm:items-center sm:justify-between sm:px-5">
+          <p><span className="font-semibold text-[#1d1d1f]">Teknoloji seçimin için yanındayız.</span><br />Sorunu doğrudan Mepotia’ya iletebilirsin.</p>
+          <div className="grid grid-cols-3 gap-2 sm:flex">
+            <a href={wa} target="_blank" rel="noreferrer" className="rounded-full bg-[#0071e3] px-3 py-2 text-center font-semibold text-white transition hover:bg-[#0077ed]">WhatsApp</a>
+            <a href={tel} className="rounded-full bg-white px-3 py-2 text-center font-semibold text-[#1d1d1f] ring-1 ring-black/[.06]">Telefon</a>
+            <a href={mail} className="rounded-full bg-white px-3 py-2 text-center font-semibold text-[#1d1d1f] ring-1 ring-black/[.06]">E-posta</a>
+          </div>
         </div>
 
-        <div className="flex flex-col gap-3 py-5 text-[11px] text-[#6e6e73] lg:flex-row lg:items-center">
+        <div className="flex flex-col gap-4 border-t border-black/15 py-5 text-[11px] text-[#6e6e73] lg:flex-row lg:items-center lg:gap-3">
           <p className="lg:mr-5">Telif Hakkı © {new Date().getFullYear()} Mepotia. Tüm hakları saklıdır.</p>
-          <div className="flex flex-wrap gap-x-4 gap-y-2">
+          <div className="grid grid-cols-2 gap-x-5 gap-y-2 sm:flex sm:flex-wrap sm:gap-x-4">
             <Link href="/gizlilik" className="hover:text-black hover:underline">Gizlilik Politikası</Link>
             <Link href="/kvkk" className="hover:text-black hover:underline">KVKK</Link>
             <Link href="/kullanim-sartlari" className="hover:text-black hover:underline">Kullanım Şartları</Link>

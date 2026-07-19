@@ -47,9 +47,9 @@ function initials(name) {
   );
 }
 
-function ReviewCard({ review }) {
+function ReviewCard({ review, index = 0 }) {
   return (
-    <article className="group flex min-h-[230px] h-full flex-col rounded-[24px] bg-white p-5 shadow-[0_24px_65px_-48px_rgba(0,0,0,.5)] ring-1 ring-black/[0.045] transition duration-500 hover:-translate-y-1 hover:shadow-[0_34px_75px_-45px_rgba(0,0,0,.5)] sm:rounded-[28px] sm:p-7">
+    <article style={{ zIndex: index + 1 }} className="group sticky top-[76px] flex min-h-[270px] h-full flex-col rounded-[24px] bg-white p-5 shadow-[0_24px_65px_-38px_rgba(0,0,0,.46)] ring-1 ring-black/[0.055] transition duration-500 hover:-translate-y-1 hover:shadow-[0_34px_75px_-45px_rgba(0,0,0,.5)] sm:static sm:min-h-[230px] sm:rounded-[28px] sm:p-7">
       <div className="flex items-center gap-2.5">
         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#1d1d1f] text-[10px] font-bold text-white">
           {initials(review.author_name)}
@@ -133,7 +133,7 @@ export default function CustomerReviews() {
 
   return (
     <section className="mx-auto max-w-[1368px] px-4 py-14 sm:px-6 sm:py-20" aria-label="Yorumlar">
-      <div className="relative overflow-hidden rounded-[32px] bg-[linear-gradient(135deg,#eef4fb_0%,#f7f7f8_48%,#f2effb_100%)] p-6 ring-1 ring-black/[.04] sm:p-10 lg:rounded-[40px] lg:p-14">
+      <div className="relative rounded-[32px] bg-[linear-gradient(135deg,#eef4fb_0%,#f7f7f8_48%,#f2effb_100%)] p-6 ring-1 ring-black/[.04] sm:p-10 lg:rounded-[40px] lg:p-14">
         <div className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-[#64d2ff]/20 blur-[80px]" />
         <div className="pointer-events-none absolute -bottom-24 left-1/4 h-64 w-64 rounded-full bg-[#bf5af2]/10 blur-[80px]" />
         {/* Marka başlık */}
@@ -230,9 +230,9 @@ export default function CustomerReviews() {
 
         {/* Yorum kartları — sabit grid, marquee yok */}
         {preview.length ? (
-          <div className="relative mt-8 grid gap-3 sm:mt-10 sm:grid-cols-3 sm:gap-4">
-            {preview.map((review) => (
-              <ReviewCard key={review.id} review={review} />
+          <div className="relative mt-8 grid gap-5 pb-2 sm:mt-10 sm:grid-cols-3 sm:gap-4 sm:pb-0">
+            {preview.map((review, index) => (
+              <ReviewCard key={review.id} review={review} index={index} />
             ))}
           </div>
         ) : null}
