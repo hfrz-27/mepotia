@@ -9,29 +9,25 @@ import HomeIntroHero from "@/components/HomeIntroHero";
 import HomeHowItWorks from "@/components/HomeHowItWorks";
 import { getPublishedProducts, HOME_COLLECTIONS } from "@/lib/products";
 import { getCategoryShowcase, getSiteSettings } from "@/lib/categories";
-import { fillProducts } from "@/lib/homeDemoData";
 import { CustomerReviews, HomeReviewsProvider } from "@/components/HomeReviews";
 
 const WA = "https://wa.me/905059574122";
 const PRODUCT_LIMIT = 12;
-const GRID_LIMIT = 21;
 
 export const revalidate = 30;
 
 export default async function HomePage() {
-  const [settings, categoryTiles, featuredRes, curatedRes, popularRes, allRes] = await Promise.all([
+  const [settings, categoryTiles, featuredRes, curatedRes, popularRes] = await Promise.all([
     getSiteSettings(),
     getCategoryShowcase(),
     getPublishedProducts({ limit: PRODUCT_LIMIT, homeCollection: "featured" }),
     getPublishedProducts({ limit: PRODUCT_LIMIT, homeCollection: "curated" }),
     getPublishedProducts({ limit: PRODUCT_LIMIT, homeCollection: "popular" }),
-    getPublishedProducts({ limit: GRID_LIMIT, orderBy: "created_at" }),
   ]);
 
   const featured = featuredRes.data || [];
   const curated = curatedRes.data || [];
   const popular = popularRes.data || [];
-  const allProducts = fillProducts(allRes.data, GRID_LIMIT);
 
   const heroCategories = (categoryTiles || []).map(({ slug, name, cover, href }) => ({
     slug,
@@ -113,7 +109,6 @@ export default async function HomePage() {
         <HomeTradeGate />
 
         <HomeAllProductsGrid
-          products={allProducts}
           href="/urunler"
           coverUrl={covers.products}
         />

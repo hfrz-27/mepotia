@@ -12,6 +12,7 @@ const actions = [
     text: "Cihazını anlat, fotoğrafla. Hızlı ve adil teklif al.",
     cta: "Hemen sat",
     dark: true,
+    image: "/brand/mepotia-sell-tech.webp",
     steps: ["Anlat", "Fotoğrafla", "Teklif al"],
     surface:
       "bg-gradient-to-br from-[#0b0b14] via-[#1a0b2e] to-[#03030a] text-white shadow-xl",
@@ -65,6 +66,14 @@ export default function HomeActionRail() {
               >
                 {/* Renkli ışıltı orb'ları */}
                 <div className="pointer-events-none absolute inset-0 overflow-hidden">
+                  {item.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={item.image}
+                      alt=""
+                      className="absolute inset-0 h-full w-full scale-x-[-1] object-cover opacity-60 transition duration-700 group-hover:scale-x-[-1.03] group-hover:scale-y-[1.03]"
+                    />
+                  ) : null}
                   {item.orbs.map((orb, i) => (
                     <span
                       key={i}

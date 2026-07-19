@@ -3,20 +3,16 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import ProductImage from "@/components/ProductImage";
-import { getPrimaryImage } from "@/lib/productDisplay";
 
 /**
  * Ana sayfa alt “Ürünler” — sadece kapak.
  * coverUrl: admin panelden (site_settings.home_products_cover)
  */
 export default function HomeAllProductsGrid({
-  products = [],
   href = "/urunler",
   coverUrl = null,
 }) {
-  const items = (products || []).filter(Boolean);
-  const fallback = items.find((p) => getPrimaryImage(p)) || items[0] || null;
-  const coverSrc = coverUrl || (fallback ? getPrimaryImage(fallback) : null);
+  const coverSrc = coverUrl || "/brand/mepotia-accessories-tech.webp";
 
   return (
     <section className="bg-[#f5f5f7] py-5 sm:py-8" aria-label="Ürünler">
