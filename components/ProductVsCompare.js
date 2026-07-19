@@ -81,11 +81,7 @@ export default function ProductVsCompare({ variant = "embed" }) {
   if (isPage) {
     return (
       <div className="mx-auto max-w-2xl lg:max-w-3xl">
-        <div className="overflow-hidden rounded-[1.5rem] border border-white/12 bg-white shadow-[0_32px_80px_-36px_rgba(0,0,0,0.7)] ring-1 ring-black/5">
-          <div
-            className="h-[2px] w-full bg-gradient-to-r from-violet-400 via-fuchsia-300 to-pink-400"
-            aria-hidden
-          />
+        <div className="overflow-hidden rounded-[28px] bg-white shadow-[0_32px_80px_-52px_rgba(0,0,0,0.5)] ring-1 ring-black/[0.05]">
           <div className="p-3.5 sm:p-4">
             <div
               className={`grid gap-2.5 ${slots.length === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2"}`}
@@ -134,7 +130,7 @@ export default function ProductVsCompare({ variant = "embed" }) {
                 type="button"
                 disabled={loading}
                 onClick={() => run()}
-                className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl bg-bw-950 px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-bw-800 disabled:opacity-60"
+                className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-[#0071e3] px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-[#0077ed] disabled:opacity-60"
               >
                 {loading ? (
                   <Loader2 className="h-4 w-4 animate-spin" />

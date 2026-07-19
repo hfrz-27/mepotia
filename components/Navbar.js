@@ -19,10 +19,10 @@ import { TECH_CATEGORY_CATALOG } from "@/lib/techCategories";
 
 const NAV = [
   { key: "magaza", label: "Mağaza", mega: true },
+  { href: "/teknoloji", label: "Haberler" },
   { href: "/urunler", label: "Ürünler" },
-  { href: "/rehber", label: "Rehber" },
-  { href: "/teknoloji", label: "Teknoloji" },
   { href: "/fiyat-karsilastir", label: "Fiyat karşılaştır" },
+  { href: "/rehber", label: "Rehber" },
 ];
 
 const MEGA_LINKS = [
