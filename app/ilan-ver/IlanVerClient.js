@@ -42,26 +42,23 @@ const INITIAL = {
   negotiable: true,
 };
 
-const HOME_COLLECTION_OPTIONS = [
-  {
-    value: "",
-    label: "Yok — sadece ürünler sayfasında",
-    hint: "Ana sayfa 3 koleksiyonda çıkmaz",
-  },
+/** Ana sayfa 3 vitrin kategorisi — ürün kategorisinden ayrı, özel sayfaları var */
+const VITRIN_KATEGORI_OPTIONS = [
+  { value: "", label: "Yok (sadece /urunler listesinde)" },
   {
     value: "featured",
-    label: "Yeni sahibini bekleyenler",
-    hint: "Ana sayfa 1. koleksiyon",
+    label: "1 · Yeni sahibini bekleyenler",
+    page: "/koleksiyon/yeni-sahibi",
   },
   {
     value: "curated",
-    label: "Özenle seçilmiş ürünler",
-    hint: "Ana sayfa 2. koleksiyon",
+    label: "2 · Özenle seçilmiş ürünler",
+    page: "/koleksiyon/ozenle-secilmis",
   },
   {
     value: "popular",
-    label: "En çok bakılanlar",
-    hint: "Ana sayfa 3. koleksiyon",
+    label: "3 · En çok bakılanlar",
+    page: "/koleksiyon/en-cok-bakilanlar",
   },
 ];
 
@@ -631,7 +628,7 @@ export default function IlanVerClient() {
               />
             </div>
             <div>
-              <label className={label} htmlFor="category_id">Kategori</label>
+              <label className={label} htmlFor="category_id">Ürün kategorisi</label>
               <select
                 id="category_id"
                 name="category_id"
@@ -639,7 +636,7 @@ export default function IlanVerClient() {
                 onChange={onChange}
                 className={field}
               >
-                <option value="">Seç</option>
+                <option value="">Seç (Telefon, Bilgisayar…)</option>
                 {categories.map((c) => (
                   <option key={c.id} value={c.id}>{c.name}</option>
                 ))}
@@ -647,6 +644,28 @@ export default function IlanVerClient() {
               {!categories.length ? (
                 <p className="mt-2 text-xs text-amber-700">Teknoloji kategorilerini açmak için yönetim panelindeki Kategoriler bölümünden SQL kurulumunu tamamla.</p>
               ) : null}
+            </div>
+            <div>
+              <label className={label} htmlFor="home_collection">
+                Ana sayfa vitrin kategorisi
+              </label>
+              <select
+                id="home_collection"
+                name="home_collection"
+                value={form.home_collection || ""}
+                onChange={onChange}
+                className={field}
+              >
+                {VITRIN_KATEGORI_OPTIONS.map((opt) => (
+                  <option key={opt.value || "none"} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+              <p className="mt-1.5 text-[11px] leading-snug text-bw-500">
+                1 / 2 / 3 seçersen ürün o koleksiyonun{" "}
+                <strong>özel sayfasında</strong> açılır (tüm ürünler sayfası değil).
+              </p>
             </div>
             {selectedCategory?.subcategories?.length ? (
               <div>
@@ -703,42 +722,9 @@ export default function IlanVerClient() {
 
           <div className="rounded-2xl border border-bw-100 bg-bw-50/60 p-4">
             <p className="text-xs font-semibold tracking-wide text-bw-600 uppercase">
-              Ana sayfa koleksiyonu
+              Vitrin ayarları
             </p>
-            <p className="mt-1 text-[12px] leading-snug text-bw-500">
-              Ürünü paylaşırken hangi blokta çıksın? Seçmezsen sadece Ürünler sayfasında görünür —
-              o koleksiyonda bütün ürünler değil, sadece seçtiklerin çıkar.
-            </p>
-            <div className="mt-3 space-y-2">
-              {HOME_COLLECTION_OPTIONS.map((opt) => {
-                const on = (form.home_collection || "") === opt.value;
-                return (
-                  <label
-                    key={opt.value || "none"}
-                    className={[
-                      "flex cursor-pointer items-start gap-3 rounded-xl border px-3 py-2.5 transition",
-                      on
-                        ? "border-bw-950 bg-white shadow-sm"
-                        : "border-bw-200 bg-white/70 hover:border-bw-300",
-                    ].join(" ")}
-                  >
-                    <input
-                      type="radio"
-                      name="home_collection"
-                      value={opt.value}
-                      checked={on}
-                      onChange={onChange}
-                      className="mt-1"
-                    />
-                    <span className="min-w-0">
-                      <span className="block text-sm font-semibold text-bw-900">{opt.label}</span>
-                      <span className="mt-0.5 block text-[11px] text-bw-500">{opt.hint}</span>
-                    </span>
-                  </label>
-                );
-              })}
-            </div>
-            <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 border-t border-bw-100 pt-3 text-sm text-bw-700">
+            <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm text-bw-700">
               <label className="flex items-center gap-2">
                 <input type="checkbox" name="is_premium" checked={form.is_premium} onChange={onChange} />
                 Premium

@@ -735,9 +735,9 @@ export default function AdminPage() {
                   >
                     {p.is_discount ? "İndirim ✓" : "İndirim işaretle"}
                   </button>
-                  <label className="flex min-w-[11rem] flex-col gap-1 rounded-xl border border-bw-200 bg-white px-3 py-2">
+                  <label className="flex min-w-[14rem] flex-col gap-1 rounded-xl border border-bw-200 bg-white px-3 py-2">
                     <span className="text-[10px] font-semibold tracking-wide text-bw-500 uppercase">
-                      Ana sayfa koleksiyonu
+                      Vitrin kategorisi (1·2·3)
                     </span>
                     <select
                       value={
@@ -751,9 +751,9 @@ export default function AdminPage() {
                       }}
                       className="rounded-lg border border-bw-200 bg-bw-50 px-2 py-1.5 text-xs font-semibold text-bw-900 outline-none"
                     >
-                      <option value="">Yok (sadece ürünler)</option>
-                      <option value="featured">1 · Yeni sahibi</option>
-                      <option value="curated">2 · Özenle seçilmiş</option>
+                      <option value="">Yok → sadece /urunler</option>
+                      <option value="featured">1 · Yeni sahibini bekleyenler</option>
+                      <option value="curated">2 · Özenle seçilmiş ürünler</option>
                       <option value="popular">3 · En çok bakılanlar</option>
                     </select>
                   </label>

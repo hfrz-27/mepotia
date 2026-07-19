@@ -147,8 +147,8 @@ const VARIANT = {
 export default function HomeFeaturedCollection({
   id,
   products = [],
-  href = "/urunler",
-  linkLabel = "Koleksiyonu keşfet",
+  href = "/koleksiyon/yeni-sahibi",
+  linkLabel = "Koleksiyonu aç",
   eyebrow,
   title = "Koleksiyon.",
   description = "",
