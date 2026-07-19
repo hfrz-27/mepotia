@@ -68,6 +68,33 @@ const TRUST = [
   { icon: CircleDollarSign, title: "Karşılaştırılabilir fiyat", text: "Fiyatı ve özellikleri görerek bilinçli karar ver." },
 ];
 
+const ACTIONS = [
+  {
+    eyebrow: "Mepotia Takas",
+    title: "Eski cihazınla yenisine yaklaş.",
+    copy: "Elindeki cihazı ve istediğin modeli paylaş. Değer farkını açıkça birlikte hesaplayalım.",
+    href: "/takas",
+    action: "Takas teklifi al",
+    image: "/brand/actions/mepotia-action-studio-v2.png",
+  },
+  {
+    eyebrow: "Mepotia Karşılaştır",
+    title: "Farkları gör. Kararını net ver.",
+    copy: "Fiyatları ve teknik özellikleri tek ekranda karşılaştır; sana uygun olanı daha kolay seç.",
+    href: "/fiyat-karsilastir",
+    action: "Karşılaştırmaya başla",
+    image: "/brand/categories/mepotia-computer-v2.webp",
+  },
+  {
+    eyebrow: "Mepotia Ürün İste",
+    title: "Aradığın yoksa, birlikte bulalım.",
+    copy: "Modeli ve bütçeni yaz. Uygun ürün Mepotia vitriniyle eşleştiğinde sana haber verelim.",
+    href: "/urun-iste",
+    action: "Ürün isteği oluştur",
+    image: "/brand/categories/mepotia-phone-v2.webp",
+  },
+];
+
 function BlueLink({ href, children }) {
   return (
     <Link href={href} className="inline-flex items-center gap-1 text-[14px] font-medium text-[#0066cc] transition hover:underline">
@@ -156,6 +183,36 @@ export default function MepotiaResearchHome({ categories = [], products = [] }) 
                   <span className={["mt-5 inline-flex items-center gap-1 text-[14px] font-medium", card.dark ? "text-[#2997ff]" : "text-[#0066cc]"].join(" ")}>İncele<ChevronRight className="h-4 w-4" /></span>
                 </div>
               </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-12 sm:py-16">
+        <div className="mx-auto max-w-[1200px] px-4 sm:px-6">
+          <h2 className="text-[2rem] font-semibold tracking-[-0.045em] sm:text-[3rem]">
+            Mepotia servisleri. <span className="text-black/38">Her işlem için daha kısa yol.</span>
+          </h2>
+          <div className="mt-8 space-y-5">
+            {ACTIONS.map((item, index) => (
+              <article
+                key={item.title}
+                className="grid min-h-[520px] overflow-hidden rounded-[30px] bg-black text-white shadow-[0_24px_75px_-52px_rgba(0,0,0,.65)] lg:grid-cols-2 lg:rounded-[36px]"
+              >
+                <div className={`flex flex-col justify-center px-7 py-12 sm:px-12 lg:min-h-[600px] lg:px-16 ${index % 2 ? "lg:order-2" : ""}`}>
+                  <p className="text-[11px] font-semibold tracking-[0.16em] text-white/42 uppercase">{item.eyebrow}</p>
+                  <h3 className="mt-5 max-w-xl text-[2.8rem] font-semibold leading-[0.95] tracking-[-0.06em] sm:text-[4.3rem]">
+                    {item.title}
+                  </h3>
+                  <p className="mt-6 max-w-lg text-[15px] leading-relaxed text-white/52 sm:text-[17px]">{item.copy}</p>
+                  <Link href={item.href} className="mt-8 inline-flex h-12 w-fit items-center gap-2 rounded-full bg-[#0071e3] px-6 text-[14px] font-semibold text-white transition hover:bg-[#0077ed]">
+                    {item.action}<ChevronRight className="h-4 w-4" />
+                  </Link>
+                </div>
+                <div className={`relative min-h-[360px] bg-[#ececef] lg:min-h-[600px] ${index % 2 ? "lg:order-1" : ""}`}>
+                  <Image src={item.image} alt="" fill sizes="(max-width: 1024px) 100vw, 600px" className="object-cover" />
+                </div>
+              </article>
             ))}
           </div>
         </div>
