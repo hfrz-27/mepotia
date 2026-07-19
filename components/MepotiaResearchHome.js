@@ -32,7 +32,7 @@ export default function MepotiaResearchHome({ products = [], campaignImages = []
   return (
     <main className="min-h-screen bg-[#f5f5f7] text-[#1d1d1f]">
       <section className="border-b border-black/[0.035] bg-[#f5f5f7]">
-        <div className="mx-auto max-w-[1548px] px-4 pt-16 pb-12 sm:px-6 sm:pt-24 sm:pb-16">
+        <div className="mx-auto max-w-[1368px] px-4 pt-16 pb-12 sm:px-6 sm:pt-24 sm:pb-16">
           <div className="grid gap-10 lg:grid-cols-[1.25fr_.75fr] lg:items-center">
             <h1 className="text-[4.5rem] font-semibold leading-[0.9] tracking-[-0.07em] sm:text-[6.2rem]">
               Mepotia<br />Store.
@@ -50,7 +50,7 @@ export default function MepotiaResearchHome({ products = [], campaignImages = []
 
       <HomeCampaignCarousel images={campaignImages} />
 
-      <section className="mx-auto max-w-[1548px] px-4 pb-14 sm:px-6 sm:pb-20">
+      <section className="mx-auto max-w-[1368px] px-4 pb-14 sm:px-6 sm:pb-20">
         <Link href="/teknoloji" className="group relative block min-h-[620px] overflow-hidden rounded-[30px] bg-black text-white shadow-[0_35px_90px_-60px_rgba(0,0,0,.8)] sm:rounded-[36px]">
           <Image src="/brand/editorial/mepotia-podcast-studio-v2.png" alt="Mepotia teknoloji ve podcast stüdyosu" fill priority sizes="(max-width:1200px) 100vw, 1200px" className="object-cover transition duration-[1200ms] group-hover:scale-[1.02]" />
           <div className="absolute inset-0 bg-gradient-to-r from-black via-black/68 to-transparent" />
@@ -63,7 +63,7 @@ export default function MepotiaResearchHome({ products = [], campaignImages = []
         </Link>
       </section>
 
-      <section className="mx-auto max-w-[1548px] px-4 py-14 sm:px-6 sm:py-20">
+      <section className="mx-auto max-w-[1368px] px-4 py-14 sm:px-6 sm:py-20">
         <SectionTitle muted="Doğru ürüne kısa yol.">Öne çıkanlar.</SectionTitle>
         <div className="mt-8 grid gap-5 lg:grid-cols-3">
           {FEATURES.map(([eyebrow, title, copy, image, href], i) => (
@@ -76,7 +76,7 @@ export default function MepotiaResearchHome({ products = [], campaignImages = []
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1548px] px-4 py-14 sm:px-6 sm:py-20">
+      <section className="mx-auto max-w-[1368px] px-4 py-14 sm:px-6 sm:py-20">
         <SectionTitle muted="Her işlem için daha kısa yol.">Mepotia servisleri.</SectionTitle>
         <div className="mt-9 space-y-8">
           {SERVICES.map((item, index) => (
@@ -94,7 +94,7 @@ export default function MepotiaResearchHome({ products = [], campaignImages = []
       </section>
 
       {products.length ? (
-        <section className="mx-auto max-w-[1548px] px-4 py-14 sm:px-6 sm:py-20">
+        <section className="mx-auto max-w-[1368px] px-4 py-14 sm:px-6 sm:py-20">
           <div className="flex items-end justify-between gap-5"><SectionTitle muted="Vitrine yeni geldi.">Son eklenenler.</SectionTitle><Link href="/urunler" className="hidden text-[14px] font-semibold text-[#0071e3] sm:inline-flex">Tüm ürünler <ChevronRight className="h-4 w-4" /></Link></div>
           <div className="mt-9 grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-5">
             {products.slice(0, 8).map((product) => <Link key={product.id} href={`/urun/${product.id}`} className="group overflow-hidden rounded-[24px] bg-white p-3 ring-1 ring-black/[.04] transition duration-500 hover:-translate-y-1 hover:shadow-[0_30px_70px_-50px_rgba(0,0,0,.55)] sm:p-5"><div className="relative aspect-square overflow-hidden rounded-[18px] bg-[#f5f5f7]"><ProductImage src={getPrimaryImage(product)} alt={product.title} fill className="object-cover transition duration-700 group-hover:scale-[1.035]" /></div><p className="mt-4 text-[10px] font-semibold tracking-[.14em] text-[#b15d00] uppercase">Yeni</p><h3 className="mt-1 line-clamp-2 text-[15px] font-semibold leading-tight tracking-[-.025em] sm:text-[18px]">{product.title}</h3><p className="mt-2 text-[12px] text-[#6e6e73] sm:text-[13px]">{product.price != null ? formatPrice(product.price) : "Fiyat için iletişime geç"}</p></Link>)}
@@ -102,21 +102,21 @@ export default function MepotiaResearchHome({ products = [], campaignImages = []
         </section>
       ) : null}
 
-      <section className="mx-auto max-w-[1548px] px-4 py-14 sm:px-6 sm:py-20">
+      <section className="mx-auto max-w-[1368px] px-4 py-14 sm:px-6 sm:py-20">
         <SectionTitle muted="Kararını kolaylaştıran bütün detaylar.">Neden Mepotia?</SectionTitle>
         <div className="mt-9 grid overflow-hidden rounded-[32px] bg-white ring-1 ring-black/[.05] sm:grid-cols-2 lg:rounded-[40px]">
           {TRUST.map(([Icon, title, text], i) => <article key={title} className={`min-h-[250px] p-7 sm:p-10 ${i % 2 ? "sm:border-l" : ""} ${i > 1 ? "border-t" : ""} border-black/[.06]`}><Icon className="h-8 w-8 text-[#0071e3]" strokeWidth={1.55}/><h3 className="mt-8 text-[1.7rem] font-semibold leading-none tracking-[-.045em]">{title}</h3><p className="mt-4 max-w-md text-[14px] leading-relaxed text-[#6e6e73]">{text}</p></article>)}
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1548px] px-4 py-14 sm:px-6 sm:py-20">
+      <section className="mx-auto max-w-[1368px] px-4 py-14 sm:px-6 sm:py-20">
         <div className="grid overflow-hidden rounded-[32px] bg-white lg:min-h-[600px] lg:grid-cols-2 lg:rounded-[40px]">
           <div className="flex flex-col justify-center p-7 sm:p-12 lg:p-16"><p className="text-[11px] font-semibold tracking-[.17em] text-[#0071e3] uppercase">Mepotia Rehber</p><h2 className="mt-5 text-[3rem] font-semibold leading-[.95] tracking-[-.06em] sm:text-[4.5rem]">Doğru ürünü, neye bakacağını bilerek seç.</h2><p className="mt-6 text-[16px] leading-relaxed text-[#6e6e73]">Telefon, bilgisayar, tablet ve aksesuar seçiminde teknik terimleri sadeleştiren adım adım rehberler.</p><Link href="/rehber" className="mt-8 inline-flex h-12 w-fit items-center gap-1 rounded-full bg-[#0071e3] px-6 text-[14px] font-semibold text-white">Rehberleri keşfet <ChevronRight className="h-4 w-4" /></Link></div>
           <div className="relative min-h-[420px]"><Image src="/brand/actions/mepotia-guide-premium-v3.png" alt="Mepotia teknoloji satın alma rehberi" fill sizes="(max-width:1024px) 100vw, 600px" className="object-cover" /></div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1548px] px-4 pt-14 pb-20 sm:px-6 sm:pt-20 sm:pb-28">
+      <section className="mx-auto max-w-[1368px] px-4 pt-14 pb-20 sm:px-6 sm:pt-20 sm:pb-28">
         <div className="relative min-h-[560px] overflow-hidden rounded-[32px] bg-black text-white lg:rounded-[40px]"><Image src="/brand/mepotia-sell-tech.webp" alt="Mepotia'ya cihaz sat" fill sizes="(max-width:1200px) 100vw, 1200px" className="object-cover object-right"/><div className="absolute inset-0 bg-gradient-to-r from-black via-black/76 to-transparent"/><div className="relative flex min-h-[560px] max-w-2xl flex-col justify-center p-7 sm:p-12 lg:p-16"><p className="text-[11px] font-semibold tracking-[.17em] text-[#2997ff] uppercase">Mepotia’ya sat</p><h2 className="mt-5 text-[3rem] font-semibold leading-[.94] tracking-[-.065em] sm:text-[4.8rem]">Eski cihazın. Yeni bir değere dönüşsün.</h2><p className="mt-6 text-[16px] leading-relaxed text-white/55">Modelini, kondisyonunu ve fotoğraflarını paylaş. Teklif sürecini açık adımlarla tamamla.</p><Link href="/bana-sat" className="mt-8 inline-flex h-12 w-fit items-center gap-1 rounded-full bg-[#0071e3] px-6 text-[14px] font-semibold">Teklif al <ChevronRight className="h-4 w-4" /></Link></div></div>
       </section>
     </main>
