@@ -2,6 +2,7 @@ import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import CategoryFilters from "@/components/CategoryFilters";
 import CategoryGuideFab from "@/components/CategoryGuideFab";
+import CatalogHero from "@/components/CatalogHero";
 import { PremiumBreadcrumb } from "@/components/BackHomeLink";
 import { getCategoryBySlug } from "@/lib/categories";
 import { getPublishedProducts } from "@/lib/products";
@@ -63,7 +64,7 @@ export default async function CategoryPage({ params, searchParams }) {
   const totalPages = Math.max(1, Math.ceil((count || 0) / 12));
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-white to-bw-50/80">
+    <main className="min-h-screen bg-[#f5f5f7]">
       <div className="mx-auto max-w-7xl px-4 pt-4 pb-8 sm:px-6 sm:pt-5 sm:pb-10 lg:px-8">
         <PremiumBreadcrumb
           className="mb-3"
@@ -73,16 +74,13 @@ export default async function CategoryPage({ params, searchParams }) {
           ]}
         />
 
-        <header className="mb-4 max-w-2xl sm:mb-5">
-          <h1 className="font-display text-2xl font-semibold leading-tight tracking-tight text-bw-950 sm:text-3xl">
-            {category.name}
-          </h1>
-          {category.description ? (
-            <p className="mt-1 max-w-xl text-sm leading-snug text-bw-500">
-              {category.description}
-            </p>
-          ) : null}
-        </header>
+        <CatalogHero
+          eyebrow="Kategori vitrini"
+          title={`${category.name}. Sana uygun olanı bul.`}
+          description={category.description || "Seçilmiş ürünleri filtrele, fiyatlarını karşılaştır ve doğru seçeneğe ulaş."}
+          count={count}
+          imageSrc={category.photo}
+        />
 
         <CategoryFilters
           slug={slug}
@@ -150,4 +148,3 @@ export default async function CategoryPage({ params, searchParams }) {
     </main>
   );
 }
-

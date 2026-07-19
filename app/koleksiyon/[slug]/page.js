@@ -42,7 +42,7 @@ export default async function KoleksiyonPage({ params }) {
   const siblings = Object.values(HOME_COLLECTIONS);
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-white to-[#f5f5f7]">
+    <main className="min-h-screen bg-[#f5f5f7]">
       <div className="mx-auto max-w-7xl px-4 pt-4 pb-10 sm:px-6 sm:pt-5 sm:pb-12 lg:px-8">
         <PremiumBreadcrumb
           className="mb-3"
