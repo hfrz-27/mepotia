@@ -16,7 +16,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
 
       - name: Install Vercel CLI
         run: npm install -g vercel@latest
@@ -24,8 +24,6 @@ jobs:
       - name: Resolve project + production deploy
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          SECRET_ORG: ${{ secrets.VERCEL_ORG_ID }}
-          SECRET_PROJECT: ${{ secrets.VERCEL_PROJECT_ID }}
           DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
         run: |
           set -euo pipefail
@@ -34,7 +32,6 @@ jobs:
             exit 1
           fi
 
-          # Tam JSON (kesme yok)
           curl -sS -H "Authorization: Bearer $VERCEL_TOKEN" \
             "https://api.vercel.com/v9/projects?limit=50" \
             -o /tmp/projects.json
@@ -44,47 +41,38 @@ jobs:
           const j = JSON.parse(fs.readFileSync("/tmp/projects.json", "utf8"));
           const arr = j.projects || [];
           if (!arr.length) {
-            console.error("Token ile proje listesi boş:", JSON.stringify(j).slice(0, 500));
+            console.error("Proje yok:", JSON.stringify(j).slice(0, 400));
             process.exit(2);
           }
           const p =
             arr.find((x) => /^mepotia$/i.test(x.name || "")) ||
             arr.find((x) => /mepotia/i.test(x.name || "")) ||
             arr[0];
-          const out = {
-            projectId: p.id,
-            orgId: p.accountId,
-            name: p.name,
-            framework: p.framework,
-          };
-          fs.writeFileSync("/tmp/resolved.json", JSON.stringify(out, null, 2));
+          const out = { projectId: p.id, orgId: p.accountId, name: p.name };
+          fs.writeFileSync("/tmp/resolved.json", JSON.stringify(out));
           console.log("Resolved:", JSON.stringify(out));
           NODE
 
           export VERCEL_PROJECT_ID=$(node -e "console.log(require('/tmp/resolved.json').projectId)")
           export VERCEL_ORG_ID=$(node -e "console.log(require('/tmp/resolved.json').orgId)")
-          echo "Using PROJECT=$VERCEL_PROJECT_ID ORG=$VERCEL_ORG_ID"
-          echo "Secret PROJECT was set: $([ -n "${SECRET_PROJECT:-}" ] && echo yes || echo no) (ignored if wrong)"
+          echo "PROJECT=$VERCEL_PROJECT_ID ORG=$VERCEL_ORG_ID"
 
-          # .vercel/project.json yaz
           mkdir -p .vercel
-          cat > .vercel/project.json <<EOF
-          {"projectId":"$VERCEL_PROJECT_ID","orgId":"$VERCEL_ORG_ID"}
-          EOF
+          printf '%s\n' "{\"projectId\":\"$VERCEL_PROJECT_ID\",\"orgId\":\"$VERCEL_ORG_ID\"}" > .vercel/project.json
 
-          echo "== pull production env =="
-          vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
-
-          echo "== build =="
-          vercel build --prod --token="$VERCEL_TOKEN"
-
-          echo "== deploy production =="
-          URL=$(vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN" 2>&1 | tee /tmp/deploy.out | tail -n 1)
-          cat /tmp/deploy.out
-          echo "URL=$URL"
-
-          # Deploy hook yedek
-          if [ -n "${DEPLOY_HOOK:-}" ]; then
-            echo "== also ping deploy hook =="
-            curl -fsS -X POST "$DEPLOY_HOOK" || true
+          # Kaynak kodu Vercel'de build et (env orada dolu — prebuilt CLI env bozuluyor)
+          echo "== vercel deploy --prod (remote build) =="
+          set +e
+          OUT=$(vercel deploy --prod --yes --token="$VERCEL_TOKEN" 2>&1)
+          CODE=$?
+          set -e
+          echo "$OUT"
+          if [ $CODE -ne 0 ]; then
+            echo "CLI deploy failed code=$CODE"
+            if [ -n "${DEPLOY_HOOK:-}" ]; then
+              echo "Fallback deploy hook..."
+              curl -fsS -X POST "$DEPLOY_HOOK" || true
+            fi
+            exit $CODE
           fi
+          echo "Deploy OK"
