@@ -47,6 +47,23 @@ function SellDeviceSection() {
   );
 }
 
+function WhyMepotiaCards() {
+  return (
+    <section className="py-8 sm:py-12">
+      <SectionTitle muted="Bizden seçim yapmak için daha fazla sebebin var.">Neden Mepotia?</SectionTitle>
+      <div className="mt-8 grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-5">
+        {TRUST.map(([Icon, title, text], index) => (
+          <article key={title} className="group min-h-[260px] rounded-[24px] bg-white p-5 shadow-[0_18px_45px_-32px_rgba(0,0,0,.38)] ring-1 ring-black/[.035] transition duration-500 hover:-translate-y-1 hover:shadow-[0_28px_65px_-36px_rgba(0,0,0,.42)] sm:min-h-[290px] sm:p-7">
+            <span className={`flex h-11 w-11 items-center justify-center rounded-[14px] ${index === 0 ? "bg-[#eaf4ff] text-[#0071e3]" : index === 1 ? "bg-[#ecf8f0] text-[#16833b]" : index === 2 ? "bg-[#fff4e5] text-[#b15d00]" : "bg-[#f1ecff] text-[#7255d9]"}`}><Icon className="h-6 w-6" strokeWidth={1.65} /></span>
+            <h3 className="mt-7 text-[1.35rem] font-semibold leading-[1.08] tracking-[-.04em] sm:text-[1.65rem]">{title}</h3>
+            <p className="mt-3 text-[12px] leading-relaxed text-[#6e6e73] sm:text-[13px]">{text}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 export default function MepotiaResearchHome({ products = [], campaignImages = [], news = [] }) {
   const newsItems = news.slice(0, 3);
   const leadNews = newsItems[0];
@@ -144,7 +161,8 @@ export default function MepotiaResearchHome({ products = [], campaignImages = []
               </div>
             </article>
           ) : (
-            <article key={item.title} className={`grid overflow-hidden rounded-[32px] shadow-[0_36px_100px_-65px_rgba(0,0,0,.9)] lg:min-h-[620px] lg:grid-cols-[.9fr_1.1fr] lg:rounded-[40px] ${index === 1 ? "bg-white text-[#1d1d1f] ring-1 ring-black/[.05]" : "bg-black text-white"}`}>
+            <div key={item.title} className={index === 1 ? "space-y-8" : ""}>
+            <article className={`grid overflow-hidden rounded-[32px] shadow-[0_36px_100px_-65px_rgba(0,0,0,.9)] lg:min-h-[620px] lg:grid-cols-[.9fr_1.1fr] lg:rounded-[40px] ${index === 1 ? "bg-white text-[#1d1d1f] ring-1 ring-black/[.05]" : "bg-black text-white"}`}>
               <div className={`flex flex-col justify-center px-7 py-14 sm:px-12 lg:px-16 ${index % 2 ? "lg:order-2" : ""}`}>
                 <p className="text-[11px] font-semibold tracking-[.17em] text-[#0071e3] uppercase">{item.eyebrow}</p>
                 <h3 className="mt-5 text-[3rem] font-semibold leading-[.94] tracking-[-.065em] sm:text-[4.6rem]">{item.title}</h3>
@@ -162,6 +180,8 @@ export default function MepotiaResearchHome({ products = [], campaignImages = []
                 {index === 0 ? <HomeTradeQuickStart /> : null}
               </div>
             </article>
+            {index === 1 ? <WhyMepotiaCards /> : null}
+            </div>
           ))}
         </div>
       </section>
@@ -176,13 +196,6 @@ export default function MepotiaResearchHome({ products = [], campaignImages = []
           </div>
         </section>
       ) : null}
-
-      <section className="mx-auto max-w-[1368px] px-4 py-14 sm:px-6 sm:py-20">
-        <SectionTitle muted="Kararını kolaylaştıran bütün detaylar.">Neden Mepotia?</SectionTitle>
-        <div className="mt-9 grid overflow-hidden rounded-[32px] bg-white ring-1 ring-black/[.05] sm:grid-cols-2 lg:rounded-[40px]">
-          {TRUST.map(([Icon, title, text], i) => <article key={title} className={`min-h-[250px] p-7 sm:p-10 ${i % 2 ? "sm:border-l" : ""} ${i > 1 ? "border-t" : ""} border-black/[.06]`}><Icon className="h-8 w-8 text-[#0071e3]" strokeWidth={1.55}/><h3 className="mt-8 text-[1.7rem] font-semibold leading-none tracking-[-.045em]">{title}</h3><p className="mt-4 max-w-md text-[14px] leading-relaxed text-[#6e6e73]">{text}</p></article>)}
-        </div>
-      </section>
 
     </main>
   );
