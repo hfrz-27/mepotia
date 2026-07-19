@@ -9,7 +9,7 @@ import { formatTechDate } from "@/lib/techPostUtils";
 const FEATURES = [
   ["Telefon", "Günlük hayatına hazır.", "Kondisyonu açıkça anlatılmış akıllı telefonlar.", "/brand/categories/mepotia-phone-v2.webp", "/kategori/telefon"],
   ["Bilgisayar", "İşine güç kat.", "Okul, iş ve üretkenlik için dengeli seçenekler.", "/brand/categories/mepotia-computer-v2.webp", "/kategori/bilgisayar"],
-  ["Oyun", "Oyuna hazır ol.", "Konsol ve oyuncu ekipmanlarını tek vitrinde keşfet.", "/brand/categories/mepotia-gaming-v2.webp", "/kategori/oyun-konsol"],
+  ["Tablet", "Her fikrine hazır.", "Çalışmak, üretmek ve eğlenmek için güçlü tabletleri keşfet.", "/brand/categories/mepotia-tablet-v3.png", "/kategori/tablet"],
 ];
 
 const SERVICES = [
