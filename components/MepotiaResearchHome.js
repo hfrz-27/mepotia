@@ -30,6 +30,22 @@ function SectionTitle({ children, muted }) {
   return <h2 className="text-[2rem] font-semibold leading-[1.02] tracking-[-0.05em] sm:text-[3.25rem]">{children} <span className="text-black/38">{muted}</span></h2>;
 }
 
+function SellDeviceSection() {
+  return (
+    <section className="mx-auto max-w-[1368px] px-4 py-14 sm:px-6 sm:py-20">
+      <div className="relative overflow-hidden rounded-[32px] bg-[#ebe9e4] px-6 py-16 text-[#1d1d1f] ring-1 ring-black/[.045] sm:px-10 sm:py-20 lg:rounded-[40px] lg:px-16">
+        <div className="pointer-events-none absolute -right-24 -top-32 h-[420px] w-[420px] rounded-full bg-white/80 blur-[80px]" />
+        <div className="pointer-events-none absolute -bottom-40 -left-20 h-[360px] w-[360px] rounded-full bg-[#0071e3]/10 blur-[90px]" />
+        <div className="relative mx-auto max-w-4xl text-center"><p className="text-[11px] font-semibold uppercase tracking-[.2em] text-[#0071e3]">Mepotia’ya Sat</p><h2 className="mt-5 text-[3rem] font-semibold leading-[.94] tracking-[-.065em] sm:text-[5rem]">Cihazın sende beklemesin.<br /><span className="text-black/35">Değeri sana dönsün.</span></h2><p className="mx-auto mt-6 max-w-xl text-[15px] leading-relaxed text-[#6e6e73] sm:text-[16px]">Birkaç ayrıntı ve fotoğraf paylaş. Cihazını açık, anlaşılır ve takip edilebilir bir süreçle değerlendirelim.</p></div>
+        <div className="relative mx-auto mt-12 grid max-w-5xl gap-3 md:grid-cols-3">
+          {[[ScanLine, "01", "Cihazını tanımla", "Modeli ve temel özellikleri seç."], [Camera, "02", "Durumunu göster", "Kondisyonu ve fotoğrafları ekle."], [WalletCards, "03", "Teklifini değerlendir", "Sana iletilen değeri net biçimde gör."]].map(([Icon, number, title, copy]) => <article key={number} className="group rounded-[24px] border border-white/80 bg-white/58 p-6 text-left shadow-[0_22px_60px_-48px_rgba(0,0,0,.34)] backdrop-blur-xl transition duration-500 hover:-translate-y-1 hover:bg-white/85 sm:p-7"><div className="flex items-center justify-between"><span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#1d1d1f] text-white"><Icon className="h-5 w-5" strokeWidth={1.5} /></span><span className="text-[11px] font-semibold tracking-[.15em] text-[#86868b]">{number}</span></div><h3 className="mt-8 text-[1.35rem] font-semibold tracking-[-.04em]">{title}</h3><p className="mt-2 text-[13px] leading-relaxed text-[#6e6e73]">{copy}</p></article>)}
+        </div>
+        <div className="relative mx-auto mt-5 flex max-w-5xl flex-col items-center justify-between gap-5 rounded-[24px] bg-[#1d1d1f] p-6 text-white shadow-[0_30px_80px_-50px_rgba(0,0,0,.7)] sm:flex-row sm:px-8"><div className="text-center sm:text-left"><p className="text-[10px] font-semibold uppercase tracking-[.16em] text-white/45">Hazırsan başlayalım</p><p className="mt-1 text-[1.25rem] font-semibold tracking-[-.035em]">Cihazının teklif sürecini şimdi başlat.</p></div><Link href="/bana-sat" className="inline-flex h-12 shrink-0 items-center gap-1 rounded-full bg-[#0071e3] px-6 text-[14px] font-semibold transition hover:bg-[#0077ed]">Teklif al <ChevronRight className="h-4 w-4" /></Link></div>
+      </div>
+    </section>
+  );
+}
+
 export default function MepotiaResearchHome({ products = [], campaignImages = [], news = [] }) {
   const newsItems = news.slice(0, 3);
   const leadNews = newsItems[0];
@@ -147,6 +163,8 @@ export default function MepotiaResearchHome({ products = [], campaignImages = []
         </div>
       </section>
 
+      <SellDeviceSection />
+
       {products.length ? (
         <section className="mx-auto max-w-[1368px] px-4 py-14 sm:px-6 sm:py-20">
           <div className="flex items-end justify-between gap-5"><SectionTitle muted="Vitrine yeni geldi.">Son eklenenler.</SectionTitle><Link href="/urunler" className="hidden text-[14px] font-semibold text-[#0071e3] sm:inline-flex">Tüm ürünler <ChevronRight className="h-4 w-4" /></Link></div>
@@ -170,37 +188,6 @@ export default function MepotiaResearchHome({ products = [], campaignImages = []
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1368px] px-4 pt-14 pb-20 sm:px-6 sm:pt-20 sm:pb-28">
-        <div className="relative overflow-hidden rounded-[32px] bg-[#ebe9e4] px-6 py-16 text-[#1d1d1f] ring-1 ring-black/[.045] sm:px-10 sm:py-20 lg:rounded-[40px] lg:px-16">
-          <div className="pointer-events-none absolute -right-24 -top-32 h-[420px] w-[420px] rounded-full bg-white/80 blur-[80px]" />
-          <div className="pointer-events-none absolute -bottom-40 -left-20 h-[360px] w-[360px] rounded-full bg-[#0071e3]/10 blur-[90px]" />
-
-          <div className="relative mx-auto max-w-4xl text-center">
-            <p className="text-[11px] font-semibold uppercase tracking-[.2em] text-[#0071e3]">Mepotia’ya Sat</p>
-            <h2 className="mt-5 text-[3rem] font-semibold leading-[.94] tracking-[-.065em] sm:text-[5rem]">Cihazın sende beklemesin.<br /><span className="text-black/35">Değeri sana dönsün.</span></h2>
-            <p className="mx-auto mt-6 max-w-xl text-[15px] leading-relaxed text-[#6e6e73] sm:text-[16px]">Birkaç ayrıntı ve fotoğraf paylaş. Cihazını açık, anlaşılır ve takip edilebilir bir süreçle değerlendirelim.</p>
-          </div>
-
-          <div className="relative mx-auto mt-12 grid max-w-5xl gap-3 md:grid-cols-3">
-            {[
-              [ScanLine, "01", "Cihazını tanımla", "Modeli ve temel özellikleri seç."],
-              [Camera, "02", "Durumunu göster", "Kondisyonu ve fotoğrafları ekle."],
-              [WalletCards, "03", "Teklifini değerlendir", "Sana iletilen değeri net biçimde gör."],
-            ].map(([Icon, number, title, copy]) => (
-              <article key={number} className="group rounded-[24px] border border-white/80 bg-white/58 p-6 text-left shadow-[0_22px_60px_-48px_rgba(0,0,0,.34)] backdrop-blur-xl transition duration-500 hover:-translate-y-1 hover:bg-white/85 sm:p-7">
-                <div className="flex items-center justify-between"><span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#1d1d1f] text-white"><Icon className="h-5 w-5" strokeWidth={1.5} /></span><span className="text-[11px] font-semibold tracking-[.15em] text-[#86868b]">{number}</span></div>
-                <h3 className="mt-8 text-[1.35rem] font-semibold tracking-[-.04em]">{title}</h3>
-                <p className="mt-2 text-[13px] leading-relaxed text-[#6e6e73]">{copy}</p>
-              </article>
-            ))}
-          </div>
-
-          <div className="relative mx-auto mt-5 flex max-w-5xl flex-col items-center justify-between gap-5 rounded-[24px] bg-[#1d1d1f] p-6 text-white shadow-[0_30px_80px_-50px_rgba(0,0,0,.7)] sm:flex-row sm:px-8">
-            <div className="text-center sm:text-left"><p className="text-[10px] font-semibold uppercase tracking-[.16em] text-white/45">Hazırsan başlayalım</p><p className="mt-1 text-[1.25rem] font-semibold tracking-[-.035em]">Cihazının teklif sürecini şimdi başlat.</p></div>
-            <Link href="/bana-sat" className="inline-flex h-12 shrink-0 items-center gap-1 rounded-full bg-[#0071e3] px-6 text-[14px] font-semibold transition hover:bg-[#0077ed]">Teklif al <ChevronRight className="h-4 w-4" /></Link>
-          </div>
-        </div>
-      </section>
     </main>
   );
 }
