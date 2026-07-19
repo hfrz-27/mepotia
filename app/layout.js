@@ -1,18 +1,12 @@
 import AppShell from "@/components/AppShell";
 import SiteFooter from "@/components/SiteFooter";
-import { Outfit, Cinzel } from "next/font/google";
+import { Outfit } from "next/font/google";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_OG_DESCRIPTION, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const outfit = Outfit({
   subsets: ["latin"],
   variable: "--font-outfit",
-  display: "swap",
-});
-
-const cinzel = Cinzel({
-  subsets: ["latin"],
-  variable: "--font-cinzel",
   display: "swap",
 });
 
@@ -84,7 +78,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="tr">
       <body
-        className={`${outfit.variable} ${cinzel.variable} flex min-h-screen flex-col bg-[#f5f5f7] text-[#1d1d1f] antialiased`}
+        className={`${outfit.variable} flex min-h-screen flex-col bg-[#f4f4f2] text-[#101010] antialiased`}
       >
         <AppShell footer={<SiteFooter />}>{children}</AppShell>
       </body>
