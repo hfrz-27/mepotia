@@ -11,19 +11,22 @@ export default function CatalogHero({
   title,
   description,
   count,
+  imageSrc,
 }) {
   return (
     <header className="relative mb-5 overflow-hidden rounded-[26px] bg-[#09090c] px-5 py-7 text-white shadow-[0_28px_80px_-46px_rgba(0,0,0,0.9)] sm:mb-7 sm:rounded-[34px] sm:px-9 sm:py-10 lg:px-12">
-      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
-        <span className="absolute -right-20 -top-28 h-72 w-72 rounded-full bg-blue-500/30 blur-[90px]" />
-        <span className="absolute -bottom-32 left-1/4 h-72 w-72 rounded-full bg-violet-600/25 blur-[100px]" />
-        <span className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:52px_52px] [mask-image:linear-gradient(to_right,black,transparent)]" />
-      </div>
+      {imageSrc ? (
+        <div className="pointer-events-none absolute inset-0" aria-hidden>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={imageSrc} alt="" className="h-full w-full object-cover object-center opacity-75" />
+          <span className="absolute inset-0 bg-gradient-to-r from-[#09090c] via-[#09090c]/95 to-[#09090c]/10" />
+        </div>
+      ) : null}
 
       <div className="relative flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
         <div className="max-w-2xl">
           <p className="inline-flex items-center gap-2 text-[10px] font-semibold tracking-[0.17em] text-white/50 uppercase sm:text-[11px]">
-            <Sparkles className="h-3.5 w-3.5 text-blue-300" strokeWidth={1.8} />
+            <Sparkles className="h-3.5 w-3.5 text-white/70" strokeWidth={1.8} />
             {eyebrow}
           </p>
           <h1 className="mt-3 text-[2rem] font-semibold leading-[1.02] tracking-[-0.045em] sm:text-[3rem]">

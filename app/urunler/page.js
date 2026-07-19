@@ -68,7 +68,7 @@ export default async function UrunlerPage({ searchParams }) {
   const totalPages = Math.max(1, Math.ceil((count || 0) / 12) || 1);
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-white to-[#f5f5f7]">
+    <main className="min-h-screen bg-[#f5f5f7]">
       <div className="mx-auto max-w-7xl px-4 pt-4 pb-8 sm:px-6 sm:pt-5 sm:pb-10 lg:px-8">
         <PremiumBreadcrumb
           className="mb-3"

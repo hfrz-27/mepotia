@@ -64,7 +64,7 @@ export default async function CategoryPage({ params, searchParams }) {
   const totalPages = Math.max(1, Math.ceil((count || 0) / 12));
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-white to-bw-50/80">
+    <main className="min-h-screen bg-[#f5f5f7]">
       <div className="mx-auto max-w-7xl px-4 pt-4 pb-8 sm:px-6 sm:pt-5 sm:pb-10 lg:px-8">
         <PremiumBreadcrumb
           className="mb-3"
@@ -79,6 +79,7 @@ export default async function CategoryPage({ params, searchParams }) {
           title={`${category.name}. Sana uygun olanı bul.`}
           description={category.description || "Seçilmiş ürünleri filtrele, fiyatlarını karşılaştır ve doğru seçeneğe ulaş."}
           count={count}
+          imageSrc={category.photo}
         />
 
         <CategoryFilters

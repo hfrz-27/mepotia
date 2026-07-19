@@ -4,8 +4,6 @@ export default function StaticPage({ title, children }) {
   return (
     <main className="min-h-screen bg-[#f5f5f7] pb-12 sm:pb-20">
       <section className="relative overflow-hidden bg-[#09090c] text-white">
-        <span className="pointer-events-none absolute -right-24 -top-28 h-80 w-80 rounded-full bg-blue-500/25 blur-[100px]" />
-        <span className="pointer-events-none absolute -bottom-32 left-1/4 h-72 w-72 rounded-full bg-violet-600/20 blur-[100px]" />
         <div className="relative mx-auto max-w-4xl px-4 py-10 sm:px-6 sm:py-16 lg:px-8">
           <BackHomeLink
             label="Ana sayfaya dön"

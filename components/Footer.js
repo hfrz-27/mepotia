@@ -8,6 +8,8 @@ import {
   Mail,
   MessageCircleMore,
   Phone,
+  ShieldCheck,
+  BadgeCheck,
 } from "lucide-react";
 import FooterSurvey from "@/components/FooterSurvey";
 import FooterWidgets from "@/components/FooterWidgets";
@@ -88,8 +90,6 @@ export default function Footer({ whatsapp, phone, email }) {
   return (
     <footer className="mt-auto bg-[#09090c] text-white">
       <div className="relative overflow-hidden border-t border-white/10">
-        <span className="pointer-events-none absolute -right-24 -top-32 h-80 w-80 rounded-full bg-blue-500/20 blur-[110px]" />
-        <span className="pointer-events-none absolute -bottom-40 left-1/4 h-80 w-80 rounded-full bg-violet-600/15 blur-[120px]" />
 
         <div className="relative mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
           <div className="grid gap-8 border-b border-white/10 pb-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-end lg:pb-14">
@@ -99,7 +99,7 @@ export default function Footer({ whatsapp, phone, email }) {
               </p>
               <h2 className="mt-3 max-w-3xl text-[2.1rem] font-semibold leading-[1.02] tracking-[-0.05em] sm:text-[3.5rem]">
                 Teknolojiye daha açık,
-                <span className="block bg-gradient-to-r from-white via-blue-200 to-violet-200 bg-clip-text text-transparent">
+                <span className="block text-white">
                   daha güvenli bir yol.
                 </span>
               </h2>
@@ -119,6 +119,20 @@ export default function Footer({ whatsapp, phone, email }) {
                 Cihazını sat
               </Link>
             </div>
+          </div>
+
+          <div className="grid gap-2 border-b border-white/10 py-5 sm:grid-cols-3 sm:gap-3">
+            {[
+              [BadgeCheck, "Açık ürün bilgisi", "Kondisyon ve detaylar net biçimde sunulur."],
+              [ShieldCheck, "Güvenli karar", "Karşılaştır, sorunu sor ve bilinçli seçim yap."],
+              [MessageCircleMore, "Doğrudan iletişim", "Mepotia ile hızlıca iletişime geç."],
+            ].map(([Icon, title, text]) => (
+              <div key={title} className="rounded-[18px] bg-white/[0.055] p-4 ring-1 ring-white/10">
+                <Icon className="h-5 w-5 text-white" strokeWidth={1.6} />
+                <p className="mt-3 text-[13px] font-semibold text-white">{title}</p>
+                <p className="mt-1 text-[11px] leading-relaxed text-white/45">{text}</p>
+              </div>
+            ))}
           </div>
 
           <div className="grid gap-7 py-9 sm:grid-cols-2 sm:gap-x-10 lg:grid-cols-[1.1fr_0.8fr_0.8fr_0.8fr] lg:gap-x-12 lg:py-12">

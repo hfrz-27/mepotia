@@ -31,7 +31,7 @@ export default async function KategorilerPage() {
   });
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-white to-[#f5f5f7]">
+    <main className="min-h-screen bg-[#f5f5f7]">
       <div className="mx-auto max-w-7xl px-4 pt-4 pb-10 sm:px-6 sm:pt-5 sm:pb-12 lg:px-8">
         <BackHomeLink label="Vitrine dön" className="mb-4" />
 
@@ -39,6 +39,7 @@ export default async function KategorilerPage() {
           eyebrow="Kategoriler"
           title="Aradığın teknolojiye daha kısa yol."
           description="İhtiyacın olan ürün grubunu seç; düzenli, filtrelenebilir ve anlaşılır vitrine geç."
+          imageSrc="/brand/categories/mepotia-accessories-v2.webp"
         />
 
         <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4">
