@@ -27,7 +27,7 @@ function SignatureCover({
   const bgSrc = coverUrl || (hero ? getPrimaryImage(hero) : null);
 
   return (
-    <div className="relative overflow-hidden rounded-[20px] bg-black shadow-xl sm:rounded-[28px]">
+    <div className="relative overflow-hidden bg-black">
       {bgSrc ? (
         <div className="absolute inset-0">
           <ProductImage
@@ -47,7 +47,7 @@ function SignatureCover({
         <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/25 to-transparent" />
       ) : null}
 
-      <div className="relative flex min-h-[280px] flex-col justify-between p-4 sm:min-h-[380px] sm:p-8 lg:min-h-[420px] lg:p-10">
+      <div className="relative mx-auto flex min-h-[520px] max-w-[1440px] flex-col justify-between p-6 sm:min-h-[650px] sm:p-12 lg:min-h-[720px] lg:p-20">
         <div className={`flex items-center gap-2 ${centered ? "justify-between" : "justify-between"}`}>
           <span className="rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-[10px] font-semibold tracking-wide text-white uppercase sm:px-3 sm:text-[11px]">
             {label}
@@ -61,7 +61,7 @@ function SignatureCover({
           <h2
             className={[
               "font-semibold leading-[1.05] tracking-[-0.035em] text-white",
-              "text-[1.5rem] sm:text-[2.4rem] md:text-[2.85rem]",
+              "text-[2.35rem] sm:text-[3.8rem] md:text-[4.8rem]",
             ].join(" ")}
           >
             {title}
@@ -166,10 +166,9 @@ export default function HomeFeaturedCollection({
   return (
     <section
       id={id}
-      className="scroll-mt-16 bg-[#f5f5f7] py-6 sm:py-9"
+      className="scroll-mt-16 border-t-8 border-white bg-black sm:border-t-[12px]"
       aria-label={ariaLabel || title}
     >
-      <div className="pv-wrap">
         <Link href={href} className="group block outline-none">
           <SignatureCover
             items={items}
@@ -183,7 +182,6 @@ export default function HomeFeaturedCollection({
             coverUrl={coverUrl}
           />
         </Link>
-      </div>
     </section>
   );
 }

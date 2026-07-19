@@ -27,9 +27,8 @@ export default function HomeIntroHero({ categories = [] }) {
   const chips = CHIP_SLUGS.map((slug) => bySlug.get(slug)).filter(Boolean);
 
   return (
-    <section className="bg-[#f5f5f7] pt-3 pb-5 sm:pt-5 sm:pb-8" aria-label="Mepotia giriş">
-      <div className="pv-wrap">
-        <div className="relative overflow-hidden rounded-[26px] bg-[#07070a] text-white shadow-[0_32px_90px_-42px_rgba(0,0,0,0.9)] sm:rounded-[34px]">
+    <section className="bg-white" aria-label="Mepotia giriş">
+        <div className="relative overflow-hidden bg-[#07070a] text-white">
           <div className="absolute inset-0" aria-hidden>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -47,22 +46,22 @@ export default function HomeIntroHero({ categories = [] }) {
             <span className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:48px_48px] [mask-image:linear-gradient(to_bottom,black,transparent_78%)]" />
           </div>
 
-          <div className="relative min-h-[560px] lg:min-h-[610px]">
-            <div className="flex min-h-[560px] max-w-3xl flex-col justify-center px-5 py-9 sm:px-9 sm:py-12 lg:min-h-[610px] lg:max-w-[62%] lg:px-14 lg:py-16">
+          <div className="relative min-h-[640px] lg:min-h-[720px]">
+            <div className="mx-auto flex min-h-[640px] w-full max-w-[1440px] flex-col justify-center px-6 py-16 sm:px-12 lg:min-h-[720px] lg:px-20 xl:px-28">
+              <div className="max-w-[620px]">
               <p className="inline-flex w-fit items-center gap-2 rounded-full border border-white/15 bg-white/[0.07] px-3 py-1.5 text-[10px] font-semibold tracking-[0.13em] text-white/75 uppercase backdrop-blur-md sm:text-[11px]">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.9)]" />
                 Kişisel ikinci el teknoloji vitrini
               </p>
 
-              <h1 className="mt-5 max-w-2xl text-[2.45rem] font-semibold leading-[0.98] tracking-[-0.055em] text-white sm:text-[3.7rem] lg:text-[4.25rem]">
-                Teknolojiyi
+              <h1 className="mt-6 max-w-2xl text-[2.8rem] font-semibold leading-[0.95] tracking-[-0.06em] text-white sm:text-[4.5rem] lg:text-[5.4rem]">
+                Yeni nesil
                 <span className="block bg-gradient-to-r from-white via-violet-200 to-blue-200 bg-clip-text text-transparent">
-                  güvenle keşfet.
+                  teknoloji vitrini.
                 </span>
               </h1>
               <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-white/64 sm:mt-5 sm:text-[18px]">
-                Telefon, bilgisayar ve aksesuarlar tek elden seçilir; ürünün durumu net
-                anlatılır, iletişim doğrudan kurulur.
+                Telefon, bilgisayar, oyun ve aksesuar dünyasını tek bir premium vitrinde keşfet.
               </p>
 
               <div className="mt-6 flex flex-col gap-2.5 sm:flex-row sm:items-center">
@@ -94,17 +93,18 @@ export default function HomeIntroHero({ categories = [] }) {
                   </span>
                 ))}
               </div>
+              </div>
             </div>
 
           </div>
         </div>
 
-        <div className="mt-3 grid grid-cols-5 gap-1.5 sm:mt-4 sm:gap-2.5">
+        <div className="mx-auto grid max-w-[1180px] grid-cols-5 gap-1.5 bg-white px-3 py-4 sm:gap-3 sm:px-6 sm:py-6">
           {chips.map((cat) => (
             <Link
               key={cat.slug}
               href={cat.href}
-              className="group flex min-w-0 flex-col items-center gap-1.5 rounded-[14px] bg-white px-1 py-2.5 text-center ring-1 ring-black/[0.05] transition hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98] sm:rounded-[18px] sm:py-3.5"
+              className="group flex min-w-0 flex-col items-center gap-2 px-1 py-2 text-center transition active:scale-[0.98]"
             >
               <span className="relative h-10 w-10 overflow-hidden rounded-full bg-[#f5f5f7] ring-1 ring-black/[0.05] sm:h-12 sm:w-12">
                 <ProductImage
@@ -122,7 +122,7 @@ export default function HomeIntroHero({ categories = [] }) {
 
           <Link
             href="/kategoriler"
-            className="group flex min-w-0 flex-col items-center gap-1.5 rounded-[14px] bg-white px-1 py-2.5 text-center ring-1 ring-black/[0.05] transition hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98] sm:rounded-[18px] sm:py-3.5"
+              className="group flex min-w-0 flex-col items-center gap-2 px-1 py-2 text-center transition active:scale-[0.98]"
           >
             <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f5f5f7] text-[#1d1d1f] transition group-hover:bg-black group-hover:text-white sm:h-12 sm:w-12">
               <LayoutGrid className="h-4 w-4 sm:h-[18px] sm:w-[18px]" strokeWidth={1.65} />
@@ -132,7 +132,6 @@ export default function HomeIntroHero({ categories = [] }) {
             </span>
           </Link>
         </div>
-      </div>
     </section>
   );
 }
