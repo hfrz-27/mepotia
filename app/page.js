@@ -7,7 +7,7 @@ import HomeActionRail from "@/components/HomeActionRail";
 import HomeTradeGate from "@/components/HomeTradeGate";
 import HomeIntroHero from "@/components/HomeIntroHero";
 import { getPublishedProducts, HOME_COLLECTIONS } from "@/lib/products";
-import { getSiteSettings } from "@/lib/categories";
+import { getCategoryShowcase, getSiteSettings } from "@/lib/categories";
 import { fillProducts } from "@/lib/homeDemoData";
 import { CustomerReviews, HomeReviewsProvider } from "@/components/HomeReviews";
 
@@ -18,8 +18,9 @@ const GRID_LIMIT = 21;
 export const revalidate = 30;
 
 export default async function HomePage() {
-  const [settings, featuredRes, curatedRes, popularRes, allRes] = await Promise.all([
+  const [settings, categoryTiles, featuredRes, curatedRes, popularRes, allRes] = await Promise.all([
     getSiteSettings(),
+    getCategoryShowcase(),
     getPublishedProducts({ limit: PRODUCT_LIMIT, homeCollection: "featured" }),
     getPublishedProducts({ limit: PRODUCT_LIMIT, homeCollection: "curated" }),
     getPublishedProducts({ limit: PRODUCT_LIMIT, homeCollection: "popular" }),
@@ -30,6 +31,13 @@ export default async function HomePage() {
   const curated = curatedRes.data || [];
   const popular = popularRes.data || [];
   const allProducts = fillProducts(allRes.data, GRID_LIMIT);
+
+  const heroCategories = (categoryTiles || []).map(({ slug, name, cover, href }) => ({
+    slug,
+    name,
+    cover,
+    href,
+  }));
 
   const wa = settings?.whatsapp
     ? `https://wa.me/${String(settings.whatsapp).replace(/\D/g, "")}`
@@ -52,7 +60,7 @@ export default async function HomePage() {
   return (
     <HomeReviewsProvider>
       <main>
-        <HomeIntroHero />
+        <HomeIntroHero categories={heroCategories} />
 
         <TechNewsSection coverUrl={covers.news} />
 
