@@ -13,7 +13,7 @@ const GROUPS = [
   ["Ürün iste", ["request_title", "request_accent", "request_copy", "request_action"]],
   ["Rehber", ["guide_title", "guide_copy"]],
   ["Cihazını sat", ["sell_title", "sell_accent", "sell_copy"]],
-  ["Soru cevap", ["faq_eyebrow", "faq_title", "faq_accent", "faq_copy", "faq_support_title", "faq_support_copy"]],
+  ["Soru cevap", ["faq_eyebrow", "faq_title", "faq_accent", "faq_copy", "faq_support_title", "faq_support_copy", ...Array.from({ length: 8 }, (_, i) => [`faq_${i + 1}_q`, `faq_${i + 1}_a`]).flat()]],
 ];
 
 const LABELS = Object.fromEntries(Object.keys(HOME_CONTENT_DEFAULTS).map((key) => [key, key.replaceAll("_", " ")]));

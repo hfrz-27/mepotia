@@ -26,7 +26,7 @@ export default function Footer({ whatsapp, phone, email }) {
   const mail = email ? `mailto:${email}` : "mailto:info@mepotia.com";
 
   return (
-    <footer className="mt-auto bg-[#f5f5f7] text-[#1d1d1f]">
+    <footer className="mt-auto overflow-x-clip bg-[#f5f5f7] text-[#1d1d1f]">
       <div className="mx-auto max-w-[1200px] px-5 pt-10 sm:px-6 sm:pt-12">
         <div className="border-t border-black/15 pt-5">
           <Link href="/" className="inline-flex items-center gap-2 text-[12px] font-semibold text-[#424245] transition hover:text-black">

@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -36,7 +35,7 @@ export default function HomeCampaignCarousel({ images = [], content = {} }) {
       >
         {slides.map((slide, index) => (
           <div key={`${slide.image}-${index}`} className={`absolute inset-0 transition-opacity duration-700 ${index === active ? "z-10 opacity-100" : "opacity-0"}`} aria-hidden={index !== active}>
-            <Image src={slide.image} alt="" fill priority={index === 0} sizes="100vw" className="object-cover" />
+            <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: `url("${slide.image}")` }} role="img" aria-label="Mepotia lansman görseli" />
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-white/78" />
             <div className="relative ml-auto flex min-h-[430px] max-w-[610px] flex-col items-center justify-center px-8 py-14 text-center sm:min-h-[520px] sm:px-16 lg:mr-8">
               <p className="text-[11px] font-semibold tracking-[0.18em] text-[#0071e3] uppercase">{content.hero_eyebrow}</p>
