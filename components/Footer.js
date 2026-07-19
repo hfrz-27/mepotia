@@ -67,15 +67,8 @@ export default function Footer({ whatsapp, phone, email }) {
           </div>
         </div>
 
-        <div className="flex flex-col gap-4 border-t border-black/15 py-5 text-[11px] text-[#6e6e73] lg:flex-row lg:items-center lg:gap-3">
-          <p className="lg:mr-5">Telif Hakkı © {new Date().getFullYear()} Mepotia. Tüm hakları saklıdır.</p>
-          <div className="grid grid-cols-2 gap-x-5 gap-y-2 sm:flex sm:flex-wrap sm:gap-x-4">
-            <Link href="/gizlilik" className="hover:text-black hover:underline">Gizlilik Politikası</Link>
-            <Link href="/kvkk" className="hover:text-black hover:underline">KVKK</Link>
-            <Link href="/kullanim-sartlari" className="hover:text-black hover:underline">Kullanım Şartları</Link>
-            <Link href="/sss" className="hover:text-black hover:underline">Yardım</Link>
-          </div>
-          <p className="lg:ml-auto">Türkiye</p>
+        <div className="border-t border-black/15 py-6 text-center text-[11px] text-[#6e6e73]">
+          <p>Telif Hakkı © {new Date().getFullYear()} Mepotia. Tüm hakları saklıdır.</p>
         </div>
       </div>
     </footer>
