@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, BadgeCheck, ChevronRight, CircleDollarSign, MessageCircleMore, Newspaper, ShieldCheck } from "lucide-react";
+import { ArrowUpRight, BadgeCheck, Bell, ChevronRight, CircleDollarSign, MessageCircleMore, Newspaper, Search, ShieldCheck, Sparkles } from "lucide-react";
 import ProductImage from "@/components/ProductImage";
 import { formatPrice, getPrimaryImage } from "@/lib/productDisplay";
 import HomeCampaignCarousel from "@/components/HomeCampaignCarousel";
@@ -101,7 +101,30 @@ export default function MepotiaResearchHome({ products = [], campaignImages = []
       <section className="mx-auto max-w-[1368px] px-4 py-14 sm:px-6 sm:py-20">
         <SectionTitle muted="Her işlem için daha kısa yol.">Mepotia servisleri.</SectionTitle>
         <div className="mt-9 space-y-8">
-          {SERVICES.map((item, index) => (
+          {SERVICES.map((item, index) => index === 2 ? (
+            <article key={item.title} className="relative overflow-hidden rounded-[32px] bg-[linear-gradient(135deg,#eef6ff_0%,#f7f4ff_48%,#edf9ff_100%)] px-6 py-16 text-center shadow-[0_35px_100px_-72px_rgba(0,71,227,.65)] ring-1 ring-[#0071e3]/10 sm:px-10 sm:py-20 lg:min-h-[650px] lg:rounded-[40px]">
+              <div className="pointer-events-none absolute -left-24 top-12 h-72 w-72 rounded-full bg-[#64d2ff]/25 blur-[80px]" />
+              <div className="pointer-events-none absolute -right-20 bottom-0 h-80 w-80 rounded-full bg-[#bf5af2]/15 blur-[90px]" />
+              <div className="relative mx-auto max-w-4xl">
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/80 bg-white/65 px-4 py-2 text-[10px] font-semibold uppercase tracking-[.17em] text-[#0071e3] shadow-sm backdrop-blur-xl"><Sparkles className="h-3.5 w-3.5" /> Mepotia Ürün İste</span>
+                <h3 className="mx-auto mt-7 max-w-4xl text-[3rem] font-semibold leading-[.94] tracking-[-.065em] text-[#1d1d1f] sm:text-[5rem]">Aklındaki ürünü söyle.<br /><span className="bg-gradient-to-r from-[#0071e3] to-[#7d5cff] bg-clip-text text-transparent">Bulunca haber verelim.</span></h3>
+                <p className="mx-auto mt-6 max-w-2xl text-[15px] leading-relaxed text-[#6e6e73] sm:text-[16px]">Modeli ve bütçeni paylaş. Sana uygun ürün vitrinde yerini aldığında ilk bilen sen ol.</p>
+
+                <div className="relative mx-auto mt-10 max-w-3xl rounded-[26px] border border-white bg-white/78 p-3 shadow-[0_30px_90px_-46px_rgba(64,80,140,.38)] backdrop-blur-2xl sm:p-4">
+                  <div className="flex min-h-14 items-center gap-3 rounded-[18px] bg-[#f5f5f7] px-4 text-left ring-1 ring-black/[.04] sm:min-h-16 sm:px-5">
+                    <Search className="h-5 w-5 shrink-0 text-[#86868b]" />
+                    <span className="min-w-0 flex-1 truncate text-[13px] text-[#6e6e73] sm:text-[15px]">Örn. 256 GB, iyi durumda bir telefon...</span>
+                    <Bell className="hidden h-5 w-5 text-[#0071e3] sm:block" />
+                  </div>
+                  <div className="mt-3 flex flex-wrap justify-center gap-2 px-1">
+                    {["Telefon", "Tablet", "Bilgisayar", "Akıllı saat", "Kulaklık"].map((label) => <span key={label} className="rounded-full border border-black/[.06] bg-white px-3 py-1.5 text-[10px] font-medium text-[#6e6e73] sm:text-[11px]">{label}</span>)}
+                  </div>
+                  <Link href={item.href} className="mt-4 flex h-12 items-center justify-center gap-1 rounded-full bg-[#0071e3] px-6 text-[13px] font-semibold text-white transition hover:bg-[#0077ed]">Ürün isteği oluştur <ChevronRight className="h-4 w-4" /></Link>
+                </div>
+                <p className="mt-5 inline-flex items-center gap-2 text-[11px] text-[#86868b]"><Bell className="h-3.5 w-3.5" /> Eşleşme olduğunda doğrudan bilgilendirilirsin.</p>
+              </div>
+            </article>
+          ) : (
             <article key={item.title} className={`grid overflow-hidden rounded-[32px] shadow-[0_36px_100px_-65px_rgba(0,0,0,.9)] lg:min-h-[620px] lg:grid-cols-[.9fr_1.1fr] lg:rounded-[40px] ${index === 1 ? "bg-white text-[#1d1d1f] ring-1 ring-black/[.05]" : "bg-black text-white"}`}>
               <div className={`flex flex-col justify-center px-7 py-14 sm:px-12 lg:px-16 ${index % 2 ? "lg:order-2" : ""}`}>
                 <p className="text-[11px] font-semibold tracking-[.17em] text-[#0071e3] uppercase">{item.eyebrow}</p>
