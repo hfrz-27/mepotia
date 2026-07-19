@@ -29,7 +29,7 @@ export default function HomeCampaignCarousel({ images = [], content = {} }) {
   return (
     <section className="bg-[#f5f5f7] px-4 pt-4 sm:px-6 sm:pt-6" aria-label="Mepotia kampanyaları">
       <div
-        className="relative mx-auto min-h-[430px] max-w-[1320px] overflow-hidden rounded-[26px] bg-[#dfe3f3] text-[#1d1d1f] shadow-[0_28px_80px_-58px_rgba(0,0,0,.7)] sm:min-h-[520px] sm:rounded-[32px]"
+        className="relative mx-auto min-h-[430px] w-full max-w-[1320px] overflow-hidden rounded-[26px] bg-[#dfe3f3] text-[#1d1d1f] shadow-[0_28px_80px_-58px_rgba(0,0,0,.7)] sm:min-h-[520px] sm:rounded-[32px]"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
       >
