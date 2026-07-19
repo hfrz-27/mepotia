@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import ActionFeatureHero from "@/components/ActionFeatureHero";
 
 /**
  * Premium split layout for action forms (sell / request).
@@ -17,14 +18,18 @@ export default function PremiumActionPage({
   children,
 }) {
   const isSell = accent === "sell";
-  const badge = isSell
-    ? "border-amber-300 bg-amber-50 text-amber-700"
-    : "border-violet-300 bg-violet-50 text-violet-700";
 
   return (
     <main className="min-h-screen bg-[#f5f5f7] text-bw-950">
+      <ActionFeatureHero
+        eyebrow={eyebrow}
+        title={title}
+        description={description}
+        href="#mepotia-form"
+        actionLabel={isSell ? "Teklif al" : "Talep oluştur"}
+      />
       <div className="relative isolate">
-        <div className="relative mx-auto max-w-6xl px-4 pt-5 pb-10 sm:px-6 sm:pt-7 sm:pb-14 lg:px-8">
+        <div id="mepotia-form" className="relative mx-auto max-w-[1200px] scroll-mt-20 px-4 pt-12 pb-14 sm:px-6 sm:pt-16 sm:pb-20">
           <Link
             href="/"
             className="group mb-7 inline-flex items-center gap-1.5 rounded-full border border-bw-200 bg-white px-3 py-1.5 text-xs font-semibold text-bw-700 shadow-sm transition hover:border-bw-300 hover:text-bw-950"
@@ -33,18 +38,18 @@ export default function PremiumActionPage({
             Vitrine dön
           </Link>
 
-          <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.15fr)] lg:gap-10 xl:gap-12">
+          <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-12">
             <aside className="lg:sticky lg:top-8 lg:self-start">
-              <p className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] ${badge}`}>
+              <p className="inline-flex items-center gap-2 text-[10px] font-semibold tracking-[0.18em] text-[#86868b] uppercase">
                 {Icon ? <Icon className="h-3.5 w-3.5" strokeWidth={1.75} /> : null}
-                {eyebrow}
+                3 kolay adım
               </p>
-              <h1 className="mt-4 font-display text-[2rem] font-semibold leading-[1.08] tracking-tight sm:text-4xl lg:text-[2.6rem]">
-                {title}
-              </h1>
+              <h2 className="mt-4 text-[2rem] font-semibold leading-[1.03] tracking-[-0.05em] sm:text-[2.8rem]">
+                Bilgileri paylaş.<br />Gerisini birlikte çözelim.
+              </h2>
               {description ? (
                 <p className="mt-3 max-w-md text-sm leading-relaxed text-bw-500 sm:text-[15px]">
-                  {description}
+                  Form doğrudan mevcut Mepotia ve Supabase akışına kaydedilir.
                 </p>
               ) : null}
 
@@ -55,7 +60,7 @@ export default function PremiumActionPage({
                     return (
                       <div
                         key={item.title}
-                        className="flex items-start gap-3 rounded-2xl border border-bw-200 bg-white p-3.5 shadow-sm"
+                        className="flex items-start gap-3 rounded-[20px] bg-white p-4 ring-1 ring-black/[0.05]"
                       >
                         {HIcon ? (
                           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-bw-950 text-white">
@@ -108,15 +113,7 @@ export default function PremiumActionPage({
             </aside>
 
             <div className="relative">
-              <div className="relative overflow-hidden rounded-[1.55rem] border border-bw-200 bg-white text-bw-950 shadow-[0_24px_60px_-36px_rgba(0,0,0,0.35)]">
-                <div
-                  className={`h-1 w-full ${
-                    isSell
-                      ? "bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500"
-                      : "bg-gradient-to-r from-violet-500 via-fuchsia-400 to-sky-400"
-                  }`}
-                  aria-hidden
-                />
+              <div className="relative overflow-hidden rounded-[28px] bg-white text-bw-950 shadow-[0_28px_80px_-52px_rgba(0,0,0,0.5)] ring-1 ring-black/[0.05]">
                 <div className="p-5 sm:p-7 lg:p-8">{children}</div>
               </div>
 

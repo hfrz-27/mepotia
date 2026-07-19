@@ -166,10 +166,32 @@ export default async function TeknolojiPage({ searchParams }) {
   if (page > totalPages) redirect(`/teknoloji?page=${totalPages}`);
 
   return (
-    <main className="min-h-screen bg-bw-50">
+    <main className="min-h-screen bg-[#f5f5f7]">
       <Suspense fallback={null}><TechNewsViewSync /></Suspense>
 
-      <section className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 sm:pt-12 lg:px-8">
+      {page === 1 ? (
+        <section className="mx-auto max-w-[1200px] px-4 pt-5 sm:px-6 sm:pt-8">
+          <div className="relative min-h-[620px] overflow-hidden rounded-[30px] bg-black text-white lg:rounded-[36px]">
+            <Image
+              src="/brand/editorial/mepotia-podcast-studio-v2.png"
+              alt="Mepotia podcast ve teknoloji stüdyosu"
+              fill
+              priority
+              sizes="(max-width: 1200px) 100vw, 1200px"
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-black via-black/72 to-black/10" />
+            <div className="relative flex min-h-[620px] max-w-2xl flex-col justify-center px-7 py-14 sm:px-12 lg:px-16">
+              <p className="text-[11px] font-semibold tracking-[0.18em] text-white/48 uppercase">Mepotia Haber · Podcast</p>
+              <h1 className="mt-5 text-[3.2rem] font-semibold leading-[0.94] tracking-[-0.065em] sm:text-[5rem]">Teknolojinin gündemi. Daha net bir sesle.</h1>
+              <p className="mt-6 max-w-lg text-[16px] leading-relaxed text-white/58">Seçili haberler, anlaşılır analizler ve Mepotia stüdyosundan profesyonel teknoloji içerikleri.</p>
+              <a href="#haber-akisi" className="mt-8 inline-flex h-12 w-fit items-center rounded-full bg-[#0071e3] px-6 text-[14px] font-semibold text-white hover:bg-[#0077ed]">Gündemi keşfet</a>
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      <section id="haber-akisi" className="mx-auto max-w-[1200px] scroll-mt-20 px-4 pt-12 sm:px-6 sm:pt-16">
         <div className="animate-fade-up flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
             <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-bw-950 text-white shadow-[0_8px_20px_-10px_rgba(0,0,0,.6)]">

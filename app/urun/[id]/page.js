@@ -1,7 +1,7 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { after } from "next/server";
-import { MapPin, MessageCircle, Phone } from "lucide-react";
+import { BadgeCheck, MapPin, MessageCircle, Phone, RefreshCcw } from "lucide-react";
 import { notFound } from "next/navigation";
 import ProductCard from "@/components/ProductCard";
 import { PremiumBreadcrumb } from "@/components/BackHomeLink";
@@ -106,7 +106,8 @@ export default async function ProductPage({ params }) {
   const tel = phoneLink(contactPhone);
 
   return (
-    <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-10 lg:px-8">
+    <main className="min-h-screen bg-[#f5f5f7]">
+      <div className="mx-auto max-w-7xl px-4 py-5 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
       <PremiumBreadcrumb
         items={
           product.categories
@@ -123,10 +124,10 @@ export default async function ProductPage({ params }) {
       />
 
       {/* Sol galeri · sağ bilgi — premium vitrin layout */}
-      <div className="mt-5 grid grid-cols-1 gap-8 lg:mt-8 lg:grid-cols-2 lg:gap-12">
+      <div className="mt-4 grid grid-cols-1 gap-5 lg:mt-7 lg:grid-cols-[1.08fr_0.92fr] lg:gap-8">
         <ProductGallery images={galleryImages} title={product.title} />
 
-        <div className="lg:pt-1">
+        <div className="rounded-[24px] bg-white p-5 ring-1 ring-black/[0.05] shadow-[0_24px_70px_-48px_rgba(0,0,0,0.55)] sm:rounded-[30px] sm:p-7 lg:sticky lg:top-24 lg:self-start lg:p-8">
           <div className="flex flex-wrap gap-1.5">
             {product.is_premium ? (
               <span className="rounded-full bg-[#0b0b0b] px-2.5 py-1 text-[10px] font-bold tracking-wide text-white uppercase">
@@ -201,6 +202,21 @@ export default async function ProductPage({ params }) {
             ) : null}
           </div>
 
+          <div className="mt-5 grid grid-cols-3 gap-1.5 border-y border-black/[0.06] py-4 sm:gap-2">
+            {[
+              { icon: BadgeCheck, label: "Net bilgi" },
+              { icon: RefreshCcw, label: "Karşılaştır" },
+              { icon: MessageCircle, label: "Doğrudan yaz" },
+            ].map(({ icon: Icon, label }) => (
+              <span key={label} className="flex flex-col items-center gap-1.5 text-center text-[9px] font-semibold text-[#6e6e73] sm:text-[10px]">
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#f5f5f7] text-[#1d1d1f]">
+                  <Icon className="h-3.5 w-3.5" strokeWidth={1.7} />
+                </span>
+                {label}
+              </span>
+            ))}
+          </div>
+
 
           <div className="mt-5 sm:mt-6">
             <p className="mb-2 text-xs font-semibold tracking-[0.2em] text-bw-500 uppercase">
@@ -262,6 +278,7 @@ export default async function ProductPage({ params }) {
         wa={wa}
         tel={tel}
       />
+      </div>
     </main>
   );
 }

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import ProductVsCompare from "@/components/ProductVsCompare";
 import { ArrowLeft, ArrowRight, BadgeDollarSign, Sparkles } from "lucide-react";
+import ActionFeatureHero from "@/components/ActionFeatureHero";
 
 export const metadata = {
   title: "Ürün Özellik Karşılaştır | Mepotia",
@@ -11,8 +12,15 @@ export const metadata = {
 export default function UrunKarsilastirPage() {
   return (
     <main className="min-h-screen bg-[#f5f5f7]">
+      <ActionFeatureHero
+        eyebrow="Özellik karşılaştırma"
+        title={<>Farkları gör.<br />Kararını ver.</>}
+        description="İki veya üç modeli ekran, RAM, batarya, kamera ve bağlantı özellikleriyle yan yana getir."
+        href="#model-karsilastir"
+        actionLabel="Modelleri karşılaştır"
+      />
       <section className="relative">
-        <div className="relative mx-auto max-w-7xl px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12 lg:px-8">
+        <div id="model-karsilastir" className="relative mx-auto max-w-[1200px] scroll-mt-20 px-4 pt-12 pb-14 sm:px-6 sm:pt-16 sm:pb-20">
           <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
             <Link
               href="/"
@@ -36,11 +44,7 @@ export default function UrunKarsilastirPage() {
               <Sparkles className="h-3.5 w-3.5" />
               Özellik karşılaştırma · 2026
             </p>
-            <h1 className="mt-5 font-display text-4xl font-semibold leading-[1.05] tracking-tight text-bw-950 sm:text-5xl lg:text-6xl">
-              Spekleri net gör.
-              <br />
-              <span className="text-bw-400">Kararı net ver.</span>
-            </h1>
+            <h2 className="mt-5 text-3xl font-semibold leading-[1.02] tracking-[-0.05em] text-bw-950 sm:text-5xl">Karşılaştırmanı oluştur.</h2>
             <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-bw-500 sm:text-base">
               2–3 model yaz. Ekran, RAM, batarya, kamera ve daha fazlası yan yana gelsin.
             </p>

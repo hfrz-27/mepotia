@@ -1,6 +1,7 @@
 import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import CategoryFilters from "@/components/CategoryFilters";
+import CatalogHero from "@/components/CatalogHero";
 import { PremiumBreadcrumb } from "@/components/BackHomeLink";
 import { getPublishedProducts } from "@/lib/products";
 
@@ -67,7 +68,7 @@ export default async function UrunlerPage({ searchParams }) {
   const totalPages = Math.max(1, Math.ceil((count || 0) / 12) || 1);
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-white to-[#f5f5f7]">
+    <main className="min-h-screen bg-[#f5f5f7]">
       <div className="mx-auto max-w-7xl px-4 pt-4 pb-8 sm:px-6 sm:pt-5 sm:pb-10 lg:px-8">
         <PremiumBreadcrumb
           className="mb-3"
@@ -77,14 +78,12 @@ export default async function UrunlerPage({ searchParams }) {
           ]}
         />
 
-        <header className="mb-4 max-w-2xl sm:mb-5">
-          <h1 className="font-display text-2xl font-semibold leading-tight tracking-tight text-bw-950 sm:text-3xl">
-            {q ? `“${q}” sonuçları` : "Ürünler"}
-          </h1>
-          <p className="mt-1 max-w-xl text-sm leading-snug text-bw-500">
-            {total} sonuç · sırala ve filtrele
-          </p>
-        </header>
+        <CatalogHero
+          eyebrow={q ? "Arama sonuçları" : "Tüm ürünler"}
+          title={q ? `“${q}” için seçtiklerimiz.` : "Teknoloji vitrini."}
+          description="Telefon, bilgisayar, tablet ve aksesuarları net ürün bilgileriyle incele; filtrele, karşılaştır ve doğrudan iletişime geç."
+          count={total}
+        />
 
         <form id="arama" action="/urunler" method="get" className="mb-3 scroll-mt-24">
           <div className="flex items-center gap-2 rounded-full border border-black/[0.06] bg-white px-3 py-2 shadow-[0_8px_24px_-18px_rgba(0,0,0,0.25)] sm:px-4">

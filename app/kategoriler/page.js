@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import BackHomeLink from "@/components/BackHomeLink";
+import CatalogHero from "@/components/CatalogHero";
+import ProductImage from "@/components/ProductImage";
 import { getCategoriesWithSubs } from "@/lib/categories";
 import { TECH_CATEGORY_CATALOG } from "@/lib/techCategories";
 
@@ -29,21 +31,16 @@ export default async function KategorilerPage() {
   });
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-white to-[#f5f5f7]">
+    <main className="min-h-screen bg-[#f5f5f7]">
       <div className="mx-auto max-w-7xl px-4 pt-4 pb-10 sm:px-6 sm:pt-5 sm:pb-12 lg:px-8">
         <BackHomeLink label="Vitrine dön" className="mb-4" />
 
-        <header className="mb-6 max-w-2xl sm:mb-8">
-          <p className="text-[11px] font-semibold tracking-[0.16em] text-[#86868b] uppercase">
-            Vitrin
-          </p>
-          <h1 className="mt-1 text-[1.75rem] font-semibold tracking-[-0.03em] text-[#1d1d1f] sm:text-[2.25rem]">
-            Kategoriler
-          </h1>
-          <p className="mt-2 text-[14px] leading-relaxed text-[#6e6e73] sm:text-[15px]">
-            İhtiyacın olan ürün grubunu seç — filtreli vitrine geç.
-          </p>
-        </header>
+        <CatalogHero
+          eyebrow="Kategoriler"
+          title="Aradığın teknolojiye daha kısa yol."
+          description="İhtiyacın olan ürün grubunu seç; düzenli, filtrelenebilir ve anlaşılır vitrine geç."
+          imageSrc="/brand/categories/mepotia-accessories-v2.webp"
+        />
 
         <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4">
           {tiles.map((cat) => {
@@ -53,20 +50,31 @@ export default async function KategorilerPage() {
               <Link
                 key={cat.slug}
                 href={href}
-                className="group flex flex-col rounded-[18px] bg-white p-3.5 ring-1 ring-black/[0.05] transition active:scale-[0.99] sm:rounded-[20px] sm:p-5"
+                className="group overflow-hidden rounded-[18px] bg-white ring-1 ring-black/[0.055] shadow-[0_18px_45px_-38px_rgba(0,0,0,0.5)] transition duration-500 hover:-translate-y-1 hover:shadow-[0_28px_65px_-38px_rgba(0,0,0,0.45)] active:scale-[0.99] sm:rounded-[24px]"
               >
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1d1d1f] text-white sm:h-11 sm:w-11">
-                  <Icon className="h-4 w-4 sm:h-[18px] sm:w-[18px]" strokeWidth={1.7} />
+                <span className="relative block aspect-[16/10] overflow-hidden bg-[#ececf0]">
+                  <ProductImage
+                    src={cat.photo}
+                    alt={cat.name}
+                    fill
+                    className="object-cover transition duration-[900ms] group-hover:scale-105"
+                  />
+                  <span className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
+                  <span className="absolute bottom-2.5 left-2.5 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-black shadow-sm backdrop-blur-md sm:bottom-3 sm:left-3 sm:h-10 sm:w-10">
+                    <Icon className="h-4 w-4" strokeWidth={1.7} />
+                  </span>
                 </span>
-                <p className="mt-3 text-[14px] font-semibold tracking-[-0.02em] text-[#1d1d1f] sm:text-[16px]">
-                  {cat.name}
-                </p>
-                <p className="mt-1 line-clamp-2 text-[11px] leading-snug text-[#6e6e73] sm:text-[12px]">
-                  {cat.description}
-                </p>
-                <span className="mt-3 inline-flex items-center gap-0.5 text-[12px] font-semibold text-[#1d1d1f] opacity-70 transition group-hover:opacity-100">
-                  Gör
-                  <ArrowUpRight className="h-3.5 w-3.5" />
+                <span className="block p-3.5 sm:p-5">
+                  <span className="block text-[14px] font-semibold tracking-[-0.025em] text-[#1d1d1f] sm:text-[17px]">
+                    {cat.name}
+                  </span>
+                  <span className="mt-1 block line-clamp-2 text-[11px] leading-relaxed text-[#6e6e73] sm:text-[12px]">
+                    {cat.description}
+                  </span>
+                  <span className="mt-3 inline-flex items-center gap-1 text-[11px] font-semibold text-[#1d1d1f] sm:text-[12px]">
+                    Ürünleri gör
+                    <ArrowUpRight className="h-3.5 w-3.5 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  </span>
                 </span>
               </Link>
             );

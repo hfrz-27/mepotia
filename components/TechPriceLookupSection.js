@@ -17,7 +17,7 @@ import PriceComparePanel from "@/components/PriceComparePanel";
 
 const HINTS = ["iPhone 15", "Samsung S24", "MacBook Air M2", "AirPods Pro"];
 
-export default function TechPriceLookupSection({ initialQuery = "" }) {
+export default function TechPriceLookupSection({ initialQuery = "", compact = false }) {
   const [query, setQuery] = useState(initialQuery || "");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -63,7 +63,9 @@ export default function TechPriceLookupSection({ initialQuery = "" }) {
 
   return (
     <section id="fiyat-sorgula" className="relative scroll-mt-28 bg-[#f5f5f7]">
-      <div className="relative mx-auto max-w-7xl px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12 lg:px-8">
+      <div className="relative mx-auto max-w-[1200px] px-4 pt-10 pb-12 sm:px-6 sm:pt-14 sm:pb-16">
+        {!compact ? (
+          <>
         <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
           <Link
             href="/"
@@ -113,11 +115,12 @@ export default function TechPriceLookupSection({ initialQuery = "" }) {
             ))}
           </div>
         </div>
+          </>
+        ) : null}
 
         {/* Search card */}
-        <div className="mx-auto mt-9 max-w-2xl">
-          <div className="overflow-hidden rounded-[1.5rem] border border-bw-200 bg-white shadow-[0_24px_60px_-36px_rgba(0,0,0,0.35)] ring-1 ring-black/5">
-            <div className="h-[2px] w-full bg-gradient-to-r from-emerald-400 via-teal-300 to-sky-400" aria-hidden />
+        <div className={`mx-auto max-w-2xl ${compact ? "mt-0" : "mt-9"}`}>
+          <div className="overflow-hidden rounded-[28px] bg-white shadow-[0_28px_80px_-52px_rgba(0,0,0,0.5)] ring-1 ring-black/[0.05]">
             <div className="p-3.5 sm:p-4">
               <form onSubmit={onSearch} className="flex flex-col gap-2.5 sm:flex-row">
                 <div className="relative min-w-0 flex-1">

@@ -1,161 +1,62 @@
-"use client";
-
-import { useState } from "react";
 import Link from "next/link";
-import { ChevronDown, Mail, MessageCircle, Phone } from "lucide-react";
-import FooterSurvey from "@/components/FooterSurvey";
-import FooterWidgets from "@/components/FooterWidgets";
+import { ChevronRight, Mail, MessageCircleMore, Phone } from "lucide-react";
 
-const EXPLORE_LINKS = [
-  { href: "/teknoloji", label: "Teknoloji" },
-  { href: "/", label: "Vitrin" },
-  { href: "/ara", label: "Keşfet" },
-  { href: "/bana-sat", label: "Ürünümü sat" },
-  { href: "/fiyat-karsilastir", label: "Fiyat karşılaştır" },
+const COLUMNS = [
+  {
+    title: "Keşfet",
+    links: [["/teknoloji", "Haberler"], ["/urunler", "Tüm ürünler"], ["/kategoriler", "Kategoriler"], ["/rehber", "Satın alma rehberi"]],
+  },
+  {
+    title: "Karşılaştır",
+    links: [["/fiyat-karsilastir", "Fiyat karşılaştır"], ["/urun-karsilastir", "Özellik karşılaştır"], ["/ara", "Ürün ara"]],
+  },
+  {
+    title: "Mepotia işlemleri",
+    links: [["/bana-sat", "Cihazını sat"], ["/takas", "Takas teklifi"], ["/urun-iste", "Ürün iste"]],
+  },
+  {
+    title: "Mepotia",
+    links: [["/hakkimizda", "Hakkımızda"], ["/iletisim", "İletişim"], ["/sss", "Sık sorulan sorular"], ["/gizlilik", "Gizlilik"], ["/kvkk", "KVKK"]],
+  },
 ];
-
-const LEGAL_LINKS = [
-  { href: "/gizlilik", label: "Gizlilik" },
-  { href: "/kvkk", label: "KVKK" },
-  { href: "/kullanim-sartlari", label: "Kullanım Şartları" },
-  { href: "/sikayet", label: "Şikayet" },
-];
-
-function FooterColumn({ title, children, defaultOpen = false }) {
-  const [open, setOpen] = useState(defaultOpen);
-
-  return (
-    <div
-      className={`border-b border-bw-200/60 py-3 last:border-0 sm:border-0 sm:py-0 ${
-        open ? "rounded-2xl bg-white px-3 sm:rounded-none sm:bg-transparent sm:px-0" : ""
-      }`}
-    >
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-expanded={open}
-        className="flex w-full items-center justify-between py-1 text-left sm:pointer-events-none"
-      >
-        <span className="text-[11px] font-bold tracking-[0.22em] text-bw-900 uppercase">{title}</span>
-        <ChevronDown
-          className={`h-4 w-4 text-bw-400 transition sm:hidden ${open ? "rotate-180" : ""}`}
-        />
-      </button>
-      <div className={`${open ? "mt-2 block pb-1" : "hidden"} sm:mt-4 sm:block sm:pb-0`}>{children}</div>
-    </div>
-  );
-}
-
-function FooterLinkList({ items }) {
-  return (
-    <ul className="space-y-2.5">
-      {items.map((item) => (
-        <li key={item.href + item.label}>
-          {item.external ? (
-            <a
-              href={item.href}
-              target="_blank"
-              rel="noreferrer"
-              className="text-sm text-bw-600 transition hover:text-bw-950"
-            >
-              {item.label}
-            </a>
-          ) : (
-            <Link href={item.href} className="text-sm text-bw-600 transition hover:text-bw-950">
-              {item.label}
-            </Link>
-          )}
-        </li>
-      ))}
-    </ul>
-  );
-}
 
 export default function Footer({ whatsapp, phone, email }) {
-  const wa = whatsapp
-    ? `https://wa.me/${String(whatsapp).replace(/\D/g, "")}`
-    : "https://wa.me/905059574122";
+  const wa = whatsapp ? `https://wa.me/${String(whatsapp).replace(/\D/g, "")}` : "https://wa.me/905059574122";
   const tel = phone ? `tel:${phone}` : "tel:05300000000";
   const mail = email ? `mailto:${email}` : "mailto:info@mepotia.com";
 
   return (
-    <footer className="mt-auto border-t border-bw-200 bg-[#f5f5f7]">
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mb-6 border-b border-bw-200/70 sm:mb-10" aria-hidden />
-
-        <div className="grid gap-0 sm:grid-cols-2 sm:gap-x-10 lg:grid-cols-3 lg:gap-x-12">
-          <FooterColumn title="Destek" defaultOpen>
-            <ul className="space-y-2.5">
-              <li>
-                <Link href="/hakkimizda" className="text-sm text-bw-600 transition hover:text-bw-950">
-                  Hakkımızda
-                </Link>
-              </li>
-              <li>
-                <Link href="/urun-iste" className="text-sm text-bw-600 transition hover:text-bw-950">
-                  Ürün iste
-                </Link>
-              </li>
-              <li>
-                <Link href="/takas" className="text-sm text-bw-600 transition hover:text-bw-950">
-                  Takas
-                </Link>
-              </li>
-              <li>
-                <Link href="/en-cok-bakilanlar" className="text-sm text-bw-600 transition hover:text-bw-950">
-                  En çok bakılanlar
-                </Link>
-              </li>
-            </ul>
-            <div className="mt-4 flex flex-wrap gap-2">
-              <a
-                href={wa}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-full bg-bw-950 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-bw-800"
-              >
-                <MessageCircle className="h-3.5 w-3.5" />
-                WhatsApp
-              </a>
-              <a
-                href={tel}
-                className="inline-flex items-center gap-1.5 rounded-full border border-bw-200 bg-white px-3 py-1.5 text-xs font-semibold text-bw-800 transition hover:border-bw-300"
-              >
-                <Phone className="h-3.5 w-3.5" />
-                Ara
-              </a>
-              <a
-                href={mail}
-                className="inline-flex items-center gap-1.5 rounded-full border border-bw-200 bg-white px-3 py-1.5 text-xs font-semibold text-bw-800 transition hover:border-bw-300"
-              >
-                <Mail className="h-3.5 w-3.5" />
-                Mail
-              </a>
-            </div>
-          </FooterColumn>
-
-          <FooterColumn title="Keşfet">
-            <FooterLinkList items={EXPLORE_LINKS} />
-          </FooterColumn>
-
-          <FooterColumn title="Yasal">
-            <FooterLinkList items={LEGAL_LINKS} />
-          </FooterColumn>
-        </div>
-
-        <div className="mt-6 sm:mt-8">
-          <FooterSurvey />
-        </div>
-      </div>
-
-      <div className="border-t border-bw-200 bg-[#f5f5f7]">
-        <FooterWidgets />
-        <div className="border-t border-bw-100">
-          <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 lg:px-8">
-            <p className="text-center text-xs text-bw-400">
-              © {new Date().getFullYear()} Mepotia. Tüm hakları saklıdır.
-            </p>
+    <footer className="mt-auto bg-[#f5f5f7] text-[#1d1d1f]">
+      <div className="mx-auto max-w-[1200px] px-4 pt-12 sm:px-6 sm:pt-16">
+        <section className="grid overflow-hidden rounded-[30px] bg-black text-white lg:grid-cols-[1.2fr_.8fr] lg:rounded-[36px]">
+          <div className="px-7 py-12 sm:px-12 sm:py-16">
+            <p className="text-[11px] font-semibold tracking-[0.17em] text-white/42 uppercase">Mepotia destek</p>
+            <h2 className="mt-4 max-w-2xl text-[2.7rem] font-semibold leading-[0.96] tracking-[-0.06em] sm:text-[4.5rem]">Teknoloji kararlarında yalnız değilsin.</h2>
+            <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-white/52">Ürün, fiyat, takas veya satış süreci hakkında Mepotia ile doğrudan iletişime geç.</p>
           </div>
+          <div className="flex flex-col justify-center gap-3 border-t border-white/10 p-7 sm:p-10 lg:border-t-0 lg:border-l">
+            <a href={wa} target="_blank" rel="noreferrer" className="flex h-12 items-center justify-between rounded-full bg-[#0071e3] px-5 text-[14px] font-semibold text-white hover:bg-[#0077ed]">
+              <span className="inline-flex items-center gap-2"><MessageCircleMore className="h-4 w-4" /> WhatsApp</span><ChevronRight className="h-4 w-4" />
+            </a>
+            <a href={tel} className="flex h-12 items-center justify-between rounded-full bg-white/10 px-5 text-[14px] font-semibold text-white hover:bg-white/15"><span className="inline-flex items-center gap-2"><Phone className="h-4 w-4" /> Telefon</span><ChevronRight className="h-4 w-4" /></a>
+            <a href={mail} className="flex h-12 items-center justify-between rounded-full bg-white/10 px-5 text-[14px] font-semibold text-white hover:bg-white/15"><span className="inline-flex items-center gap-2"><Mail className="h-4 w-4" /> E-posta</span><ChevronRight className="h-4 w-4" /></a>
+          </div>
+        </section>
+
+        <nav className="grid gap-8 border-b border-black/10 py-12 sm:grid-cols-2 lg:grid-cols-4" aria-label="Alt menü">
+          {COLUMNS.map((column) => (
+            <div key={column.title}>
+              <h3 className="text-[12px] font-semibold text-[#1d1d1f]">{column.title}</h3>
+              <ul className="mt-4 space-y-2.5">
+                {column.links.map(([href, label]) => <li key={href}><Link href={href} className="text-[12px] text-[#6e6e73] transition hover:text-[#1d1d1f] hover:underline">{label}</Link></li>)}
+              </ul>
+            </div>
+          ))}
+        </nav>
+
+        <div className="flex flex-col gap-2 py-5 text-[11px] text-[#86868b] sm:flex-row sm:items-center sm:justify-between">
+          <p>© {new Date().getFullYear()} Mepotia. Tüm hakları saklıdır.</p>
+          <p>Güven · Şeffaflık · Doğrudan iletişim</p>
         </div>
       </div>
     </footer>

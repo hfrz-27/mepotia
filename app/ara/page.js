@@ -68,7 +68,7 @@ export default async function SearchLandingPage({ searchParams }) {
               Ne arıyorsun?
             </h1>
             <p className="mx-auto mt-3 max-w-md text-[14px] leading-relaxed text-[#6e6e73] sm:text-[15px]">
-              Ürün, marka veya şehir yaz — binlerce ilan arasından saniyeler içinde bul.
+              Ürün, marka veya şehir yaz — vitrindeki seçeneklere hızlıca ulaş.
             </p>
 
             <form

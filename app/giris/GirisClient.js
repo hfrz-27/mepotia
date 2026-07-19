@@ -79,16 +79,17 @@ export default function GirisClient() {
   };
 
   const field =
-    "w-full rounded-2xl border border-bw-200 bg-white px-4 py-3 text-sm outline-none focus:border-bw-500";
+    "h-12 w-full rounded-xl border border-black/15 bg-white px-4 text-[15px] text-[#1d1d1f] outline-none transition placeholder:text-[#86868b] focus:border-[#0071e3] focus:ring-4 focus:ring-[#0071e3]/12";
 
   return (
-    <main className="mx-auto flex min-h-[70vh] max-w-md flex-col justify-center px-4 py-12 sm:px-6">
-      <div className="rounded-[2rem] border border-bw-200 bg-white p-8 shadow-[0_20px_60px_-40px_rgba(0,0,0,0.3)]">
-        <h1 className="text-center font-display text-2xl font-semibold tracking-wide text-bw-950">
-          Giriş
+    <main className="flex min-h-[78vh] items-center justify-center bg-[#f5f5f7] px-4 py-14 sm:px-6">
+      <div className="w-full max-w-[460px] rounded-[28px] bg-white p-6 shadow-[0_30px_80px_-55px_rgba(0,0,0,.5)] ring-1 ring-black/[0.05] sm:p-10">
+        <p className="text-center text-[11px] font-semibold tracking-[0.16em] text-[#86868b] uppercase">Mepotia hesabı</p>
+        <h1 className="mt-3 text-center text-[2.5rem] font-semibold leading-none tracking-[-0.055em] text-[#1d1d1f]">
+          Giriş yap.
         </h1>
-        <p className="mt-2 text-center text-sm text-bw-500">
-          Site yönetimi için giriş
+        <p className="mx-auto mt-3 max-w-xs text-center text-[14px] leading-relaxed text-[#6e6e73]">
+          Mepotia yönetimi ve kayıtlı işlemler için güvenli oturum.
         </p>
 
         <form onSubmit={onSubmit} className="mt-8 space-y-4">
@@ -123,7 +124,7 @@ export default function GirisClient() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-2xl bg-bw-950 py-3.5 text-sm font-semibold text-white hover:bg-bw-800 disabled:opacity-70"
+            className="h-12 w-full rounded-full bg-[#0071e3] text-[14px] font-semibold text-white transition hover:bg-[#0077ed] disabled:opacity-70"
           >
             {loading ? "Giriş yapılıyor..." : "Giriş Yap"}
           </button>
