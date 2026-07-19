@@ -78,7 +78,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="tr">
       <body
-        className={`${outfit.variable} flex min-h-screen flex-col bg-[#f4f4f2] text-[#101010] antialiased`}
+        className={`${outfit.variable} flex min-h-screen flex-col bg-[#f5f5f7] text-[#101010] antialiased`}
       >
         <AppShell footer={<SiteFooter />}>{children}</AppShell>
       </body>

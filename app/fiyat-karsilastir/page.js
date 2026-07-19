@@ -3,6 +3,7 @@ import TechPriceLookupSection from "@/components/TechPriceLookupSection";
 import PriceCompareFeatured from "@/components/PriceCompareFeatured";
 import { ArrowRight, ArrowLeftRight, BookOpenCheck, GitCompareArrows, Sparkles } from "lucide-react";
 import { getPublishedProducts } from "@/lib/products";
+import ActionFeatureHero from "@/components/ActionFeatureHero";
 
 export const metadata = {
   title: "Fiyat Karşılaştır | Mepotia",
@@ -21,7 +22,14 @@ export default async function PriceComparisonPage({ searchParams }) {
 
   return (
     <main className="min-h-screen bg-[#f5f5f7]">
-      <TechPriceLookupSection initialQuery={initialQuery} />
+      <ActionFeatureHero
+        eyebrow="Fiyat karşılaştırma"
+        title={<>Piyasayı gör.<br />Farkı bil.</>}
+        description="Modeli yaz. Piyasa fiyatını ve Mepotia vitrinindeki seçenekleri tek yerde, açıkça karşılaştır."
+        href="#fiyat-sorgula"
+        actionLabel="Fiyatı karşılaştır"
+      />
+      <TechPriceLookupSection initialQuery={initialQuery} compact />
 
       <section className="relative -mt-2 border-t border-bw-200/50 bg-white">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
