@@ -28,7 +28,7 @@ export default function HomeCampaignCarousel({ images = [] }) {
   const go = (direction) => setActive((value) => (value + direction + slides.length) % slides.length);
 
   return (
-    <section className="bg-[#f5f5f7] px-3 pt-3 sm:px-5 sm:pt-5" aria-label="Mepotia kampanyaları">
+    <section className="bg-[#f5f5f7] px-4 pt-4 sm:px-6 sm:pt-6" aria-label="Mepotia kampanyaları">
       <div
         className="relative mx-auto min-h-[430px] max-w-[1500px] overflow-hidden rounded-[26px] bg-[#111] text-white shadow-[0_28px_80px_-58px_rgba(0,0,0,.7)] sm:min-h-[520px] sm:rounded-[32px]"
         onMouseEnter={() => setPaused(true)}
