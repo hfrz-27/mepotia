@@ -51,13 +51,9 @@ export default async function SearchLandingPage({ searchParams }) {
   const featured = fillFeatured(rawFeatured, 8);
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-white via-[#f7f7f9] to-[#f5f5f7]">
+    <main className="min-h-screen bg-[#f5f5f7]">
       {/* Arama alanı */}
       <section className="relative overflow-hidden">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[420px] bg-[radial-gradient(120%_100%_at_50%_-10%,rgba(0,0,0,0.06),transparent_60%)]"
-        />
         <div className="mx-auto max-w-3xl px-4 pt-6 pb-4 sm:px-6 sm:pt-10">
           <PremiumBreadcrumb
             className="mb-10"
@@ -65,8 +61,7 @@ export default async function SearchLandingPage({ searchParams }) {
           />
 
           <div className="flex flex-col items-center text-center">
-            <span className="inline-flex items-center gap-2 rounded-full border border-black/[0.07] bg-white/70 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#6e6e73] shadow-[0_1px_2px_rgba(0,0,0,.04)] backdrop-blur">
-              <span className="h-6 w-[3px] rounded-full bg-gradient-to-b from-amber-300 via-amber-500 to-amber-700" />
+            <span className="inline-flex items-center gap-2 rounded-full border border-black/[0.07] bg-white/70 px-3.5 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#6e6e73] shadow-[0_1px_2px_rgba(0,0,0,.04)] backdrop-blur">
               Mepotia · Arama
             </span>
             <h1 className="mt-5 font-display text-[2rem] font-semibold leading-[1.05] tracking-[-0.03em] text-[#1d1d1f] sm:text-[2.75rem]">
@@ -141,20 +136,21 @@ export default async function SearchLandingPage({ searchParams }) {
               <Link
                 key={cat.slug}
                 href={`/kategori/${cat.slug}`}
-                className="group flex flex-col rounded-[18px] bg-white p-3.5 ring-1 ring-black/[0.05] transition hover:-translate-y-0.5 hover:ring-black/10 active:scale-[0.99] sm:rounded-[20px] sm:p-5"
+                className="group flex items-center gap-3 rounded-2xl bg-white p-3 ring-1 ring-black/[0.05] transition hover:-translate-y-0.5 hover:ring-black/10 active:scale-[0.99] sm:flex-col sm:items-start sm:gap-0 sm:rounded-[20px] sm:p-5"
               >
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1d1d1f] text-white transition group-hover:scale-105 sm:h-11 sm:w-11">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#1d1d1f] text-white transition group-hover:scale-105 sm:h-11 sm:w-11">
                   <Icon className="h-4 w-4 sm:h-[18px] sm:w-[18px]" strokeWidth={1.7} />
                 </span>
-                <p className="mt-3 text-[14px] font-semibold tracking-[-0.02em] text-[#1d1d1f] sm:text-[16px]">
+                <p className="text-[13px] font-semibold tracking-[-0.02em] text-[#1d1d1f] sm:mt-3 sm:text-[16px]">
                   {cat.name}
                 </p>
-                <p className="mt-1 line-clamp-2 text-[11px] leading-snug text-[#6e6e73] sm:text-[12px]">
+                <p className="mt-1 hidden line-clamp-2 text-[11px] leading-snug text-[#6e6e73] sm:block sm:text-[12px]">
                   {cat.description}
                 </p>
-                <span className="mt-3 inline-flex items-center gap-0.5 text-[12px] font-semibold text-[#1d1d1f] opacity-60 transition group-hover:opacity-100">
+                <span className="mt-3 hidden items-center gap-0.5 text-[12px] font-semibold text-[#1d1d1f] opacity-60 transition group-hover:opacity-100 sm:inline-flex">
                   Gör <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                 </span>
+                <ArrowUpRight className="ml-auto h-4 w-4 shrink-0 text-[#c7c7cc] sm:hidden" />
               </Link>
             );
           })}

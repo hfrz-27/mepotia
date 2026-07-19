@@ -166,7 +166,7 @@ export default async function TeknolojiPage({ searchParams }) {
   if (page > totalPages) redirect(`/teknoloji?page=${totalPages}`);
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-white via-bw-50 to-bw-50">
+    <main className="min-h-screen bg-bw-50">
       <Suspense fallback={null}><TechNewsViewSync /></Suspense>
 
       <section className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 sm:pt-12 lg:px-8">
