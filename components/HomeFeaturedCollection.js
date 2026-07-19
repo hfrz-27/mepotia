@@ -27,7 +27,7 @@ function SignatureCover({
   const bgSrc = coverUrl || (hero ? getPrimaryImage(hero) : null);
 
   return (
-    <div className="relative overflow-hidden bg-black">
+    <div className="relative overflow-hidden rounded-[24px] bg-black sm:rounded-[32px]">
       {bgSrc ? (
         <div className="absolute inset-0">
           <ProductImage
@@ -47,7 +47,7 @@ function SignatureCover({
         <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/25 to-transparent" />
       ) : null}
 
-      <div className="relative mx-auto flex min-h-[520px] max-w-[1440px] flex-col justify-between p-6 sm:min-h-[650px] sm:p-12 lg:min-h-[720px] lg:p-20">
+      <div className="relative flex min-h-[380px] flex-col justify-between p-5 sm:min-h-[500px] sm:p-10 lg:min-h-[560px] lg:p-14">
         <div className={`flex items-center gap-2 ${centered ? "justify-between" : "justify-between"}`}>
           <span className="rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-[10px] font-semibold tracking-wide text-white uppercase sm:px-3 sm:text-[11px]">
             {label}
@@ -61,7 +61,7 @@ function SignatureCover({
           <h2
             className={[
               "font-semibold leading-[1.05] tracking-[-0.035em] text-white",
-              "text-[2.35rem] sm:text-[3.8rem] md:text-[4.8rem]",
+              "text-[2rem] sm:text-[3rem] md:text-[3.6rem]",
             ].join(" ")}
           >
             {title}
@@ -166,9 +166,10 @@ export default function HomeFeaturedCollection({
   return (
     <section
       id={id}
-      className="scroll-mt-16 border-t-8 border-white bg-black sm:border-t-[12px]"
+      className="scroll-mt-16 bg-[#f5f5f7] py-4 sm:py-7"
       aria-label={ariaLabel || title}
     >
+      <div className="pv-wrap">
         <Link href={href} className="group block outline-none">
           <SignatureCover
             items={items}
@@ -182,6 +183,7 @@ export default function HomeFeaturedCollection({
             coverUrl={coverUrl}
           />
         </Link>
+      </div>
     </section>
   );
 }

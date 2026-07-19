@@ -27,36 +27,29 @@ export default function HomeIntroHero({ categories = [] }) {
   const chips = CHIP_SLUGS.map((slug) => bySlug.get(slug)).filter(Boolean);
 
   return (
-    <section className="bg-white" aria-label="Mepotia giriş">
-        <div className="relative overflow-hidden bg-[#07070a] text-white">
+    <section className="bg-[#f5f5f7] px-3 py-4 sm:px-6 sm:py-7" aria-label="Mepotia giriş">
+        <div className="relative mx-auto max-w-[1240px] overflow-hidden rounded-[24px] bg-[#0b0b0c] text-white sm:rounded-[32px]">
           <div className="absolute inset-0" aria-hidden>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/brand/mepotia-hero-tech.webp"
               alt=""
-              className="h-full w-full object-cover object-center"
+              className="h-full w-full object-cover object-[68%_center] opacity-70"
             />
-            <span className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-black/10" />
-            <span className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
-          </div>
-          <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
-            <span className="absolute -left-24 -top-28 h-80 w-80 rounded-full bg-violet-600/30 blur-[90px]" />
-            <span className="absolute -right-24 top-1/4 h-96 w-96 rounded-full bg-blue-500/25 blur-[110px]" />
-            <span className="absolute bottom-[-10rem] left-1/3 h-80 w-80 rounded-full bg-fuchsia-500/20 blur-[100px]" />
-            <span className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:48px_48px] [mask-image:linear-gradient(to_bottom,black,transparent_78%)]" />
+            <span className="absolute inset-0 bg-gradient-to-r from-[#0b0b0c] via-[#0b0b0c]/95 to-[#0b0b0c]/10" />
           </div>
 
-          <div className="relative min-h-[640px] lg:min-h-[720px]">
-            <div className="mx-auto flex min-h-[640px] w-full max-w-[1440px] flex-col justify-center px-6 py-16 sm:px-12 lg:min-h-[720px] lg:px-20 xl:px-28">
-              <div className="max-w-[620px]">
+          <div className="relative min-h-[560px] lg:min-h-[620px]">
+            <div className="flex min-h-[560px] w-full flex-col justify-center px-6 py-12 sm:px-10 lg:min-h-[620px] lg:px-16">
+              <div className="max-w-[560px]">
               <p className="inline-flex w-fit items-center gap-2 rounded-full border border-white/15 bg-white/[0.07] px-3 py-1.5 text-[10px] font-semibold tracking-[0.13em] text-white/75 uppercase backdrop-blur-md sm:text-[11px]">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.9)]" />
                 Kişisel ikinci el teknoloji vitrini
               </p>
 
-              <h1 className="mt-6 max-w-2xl text-[2.8rem] font-semibold leading-[0.95] tracking-[-0.06em] text-white sm:text-[4.5rem] lg:text-[5.4rem]">
+              <h1 className="mt-6 max-w-2xl text-[2.65rem] font-semibold leading-[0.98] tracking-[-0.055em] text-white sm:text-[4rem] lg:text-[4.6rem]">
                 Yeni nesil
-                <span className="block bg-gradient-to-r from-white via-violet-200 to-blue-200 bg-clip-text text-transparent">
+                <span className="block text-white">
                   teknoloji vitrini.
                 </span>
               </h1>
@@ -99,7 +92,7 @@ export default function HomeIntroHero({ categories = [] }) {
           </div>
         </div>
 
-        <div className="mx-auto grid max-w-[1180px] grid-cols-5 gap-1.5 bg-white px-3 py-4 sm:gap-3 sm:px-6 sm:py-6">
+        <div className="mx-auto mt-3 grid max-w-[1180px] grid-cols-5 gap-1.5 rounded-[20px] bg-white px-3 py-4 ring-1 ring-black/[0.04] sm:mt-4 sm:gap-3 sm:px-6 sm:py-5">
           {chips.map((cat) => (
             <Link
               key={cat.slug}
