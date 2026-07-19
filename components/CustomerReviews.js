@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { ArrowUpRight, PenLine, Send, Star, X } from "lucide-react";
+import { ArrowUpRight, BadgeCheck, PenLine, Quote, Send, Star, X } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import { useReviews } from "@/components/ReviewsContext";
 import ReviewsAllPanel from "@/components/ReviewsAllPanel";
@@ -26,7 +26,7 @@ function StarPicker({ value, onChange }) {
           >
             <Star
               className={`h-4 w-4 sm:h-5 sm:w-5 ${
-                active ? "fill-[#1d1d1f] text-[#1d1d1f]" : "text-[#d2d2d7]"
+                active ? "fill-amber-400 text-amber-400" : "text-[#d2d2d7]"
               }`}
             />
           </button>
@@ -47,30 +47,46 @@ function initials(name) {
   );
 }
 
-function ReviewCard({ review }) {
+const AVATAR_GRADIENTS = [
+  "from-violet-500 to-indigo-600",
+  "from-amber-400 to-rose-500",
+  "from-emerald-500 to-teal-500",
+  "from-sky-500 to-indigo-500",
+  "from-fuchsia-500 to-pink-500",
+];
+
+function ReviewCard({ review, index = 0 }) {
+  const gradient = AVATAR_GRADIENTS[index % AVATAR_GRADIENTS.length];
   return (
-    <article className="flex h-full flex-col rounded-[18px] bg-white p-4 ring-1 ring-black/[0.05] sm:rounded-[20px] sm:p-5">
-      <div className="flex items-center gap-2.5">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#1d1d1f] text-[10px] font-bold text-white">
+    <article className="group relative flex h-full flex-col overflow-hidden rounded-[18px] bg-white p-4 ring-1 ring-black/[0.05] shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl sm:rounded-[22px] sm:p-6">
+      <Quote
+        className="pointer-events-none absolute -right-2 -top-2 h-16 w-16 text-[#f0f0f2] transition group-hover:text-[#e8e8ed]"
+        strokeWidth={1}
+      />
+      <div className="relative flex items-center gap-3">
+        <span
+          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${gradient} text-[11px] font-bold text-white shadow-md ring-2 ring-white sm:h-11 sm:w-11`}
+        >
           {initials(review.author_name)}
         </span>
         <div className="min-w-0">
-          <p className="truncate text-[13px] font-semibold text-[#1d1d1f]">
+          <p className="flex items-center gap-1 truncate text-[13px] font-semibold text-[#1d1d1f] sm:text-[14px]">
             {review.author_name}
+            <BadgeCheck className="h-3.5 w-3.5 shrink-0 text-sky-500" strokeWidth={2.25} />
           </p>
           <div className="mt-0.5 flex gap-0.5">
             {Array.from({ length: 5 }).map((_, i) => (
               <Star
                 key={i}
-                className={`h-3 w-3 ${
-                  i < review.stars ? "fill-[#1d1d1f] text-[#1d1d1f]" : "text-[#e8e8ed]"
+                className={`h-3.5 w-3.5 ${
+                  i < review.stars ? "fill-amber-400 text-amber-400" : "text-[#e8e8ed]"
                 }`}
               />
             ))}
           </div>
         </div>
       </div>
-      <p className="mt-3 line-clamp-4 flex-1 text-[13px] leading-relaxed text-[#6e6e73]">
+      <p className="relative mt-3.5 line-clamp-4 flex-1 text-[13.5px] leading-relaxed text-[#424245] sm:text-[14px]">
         “{review.body}”
       </p>
     </article>
@@ -89,6 +105,10 @@ export default function CustomerReviews() {
   const [form, setForm] = useState({ name: "", stars: 0, text: "" });
 
   const preview = (reviews || []).slice(0, 3);
+  const total = (reviews || []).length;
+  const avg = total
+    ? (reviews.reduce((sum, r) => sum + (r.stars || 0), 0) / total).toFixed(1)
+    : null;
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -144,6 +164,24 @@ export default function CustomerReviews() {
           <p className="mx-auto mt-2 max-w-md text-[13px] leading-relaxed text-[#6e6e73] sm:text-[15px]">
             Mezopotamya&apos;dan ilham alan dürüst vitrin. Şeffaf fiyat, özenli seçim, net süreç.
           </p>
+          {avg ? (
+            <div className="mt-3.5 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 shadow-sm ring-1 ring-black/[0.05]">
+              <span className="flex gap-0.5">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star
+                    key={i}
+                    className={`h-3.5 w-3.5 ${
+                      i < Math.round(Number(avg))
+                        ? "fill-amber-400 text-amber-400"
+                        : "text-[#e8e8ed]"
+                    }`}
+                  />
+                ))}
+              </span>
+              <span className="text-[13px] font-semibold text-[#1d1d1f] tabular-nums">{avg}</span>
+              <span className="text-[12px] text-[#86868b]">· {total} yorum</span>
+            </div>
+          ) : null}
           <div className="mt-4 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
             <Link
               href="/hakkimizda"
@@ -155,7 +193,7 @@ export default function CustomerReviews() {
             <button
               type="button"
               onClick={() => setFormOpen((o) => !o)}
-              className="inline-flex min-h-[44px] items-center gap-1.5 rounded-full bg-white px-5 py-2.5 text-[13px] font-semibold text-[#1d1d1f] ring-1 ring-black/[0.06] transition active:scale-[0.98] sm:text-[14px]"
+              className="inline-flex min-h-[44px] items-center gap-1.5 rounded-full bg-[#1d1d1f] px-5 py-2.5 text-[13px] font-semibold text-white shadow-md transition hover:bg-black active:scale-[0.98] sm:text-[14px]"
             >
               {formOpen ? <X className="h-3.5 w-3.5" /> : <PenLine className="h-3.5 w-3.5" />}
               {formOpen ? "Kapat" : "Yorum yaz"}
@@ -222,8 +260,8 @@ export default function CustomerReviews() {
         {/* Yorum kartları — sabit grid, marquee yok */}
         {preview.length ? (
           <div className="mt-6 grid gap-2.5 sm:mt-8 sm:grid-cols-3 sm:gap-3">
-            {preview.map((review) => (
-              <ReviewCard key={review.id} review={review} />
+            {preview.map((review, index) => (
+              <ReviewCard key={review.id} review={review} index={index} />
             ))}
           </div>
         ) : null}
