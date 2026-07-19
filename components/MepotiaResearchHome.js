@@ -23,6 +23,18 @@ const TRUST = [
   [MessageCircleMore, "Doğrudan destek", "Satıştan takasa kadar sorunu doğrudan Mepotia’ya sor."],
 ];
 
+const STORE_CATEGORIES = [
+  ["Bilgisayar", "/brand/categories/mepotia-computer-v2.webp", "/kategori/bilgisayar"],
+  ["Telefon", "/brand/categories/mepotia-phone-v2.webp", "/kategori/telefon"],
+  ["Tablet", "/brand/categories/mepotia-accessories-v2.webp", "/kategori/tablet"],
+  ["Saat", "/brand/categories/mepotia-accessories-v2.webp", "/kategori/saat"],
+  ["Kulaklık", "/brand/categories/mepotia-gaming-v2.webp", "/kategori/kulaklik"],
+  ["Oyun", "/brand/categories/mepotia-gaming-v2.webp", "/kategori/oyun"],
+  ["Şarj", "/brand/categories/mepotia-accessories-v2.webp", "/kategori/sarj"],
+  ["Kılıf", "/brand/categories/mepotia-phone-v2.webp", "/kategori/kilif"],
+  ["Aksesuar", "/brand/categories/mepotia-accessories-v2.webp", "/kategori/aksesuar"],
+];
+
 function SectionTitle({ children, muted }) {
   return <h2 className="text-[2rem] font-semibold leading-[1.02] tracking-[-0.05em] sm:text-[3.25rem]">{children} <span className="text-black/38">{muted}</span></h2>;
 }
@@ -30,10 +42,33 @@ function SectionTitle({ children, muted }) {
 export default function MepotiaResearchHome({ products = [] }) {
   return (
     <main className="min-h-screen bg-[#f5f5f7] text-[#1d1d1f]">
-      <section className="mx-auto max-w-[1200px] px-4 py-16 sm:px-6 sm:py-24">
-        <h1 className="max-w-[1050px] text-[3.25rem] font-semibold leading-[0.95] tracking-[-0.065em] sm:text-[6rem]">
-          Mepotia Store. <span className="text-black/38">Teknoloji seçiminin daha net yolu.</span>
-        </h1>
+      <section className="border-b border-black/[0.035] bg-[#f5f5f7]">
+        <div className="mx-auto max-w-[1200px] px-4 pt-16 pb-10 sm:px-6 sm:pt-24 sm:pb-14">
+          <div className="grid gap-10 lg:grid-cols-[1.25fr_.75fr] lg:items-center">
+            <h1 className="text-[4.5rem] font-semibold leading-[0.9] tracking-[-0.07em] sm:text-[6.2rem]">
+              Mepotia<br />Store.
+            </h1>
+            <div className="lg:justify-self-end">
+              <h2 className="max-w-sm text-[1.8rem] font-semibold leading-[1.08] tracking-[-0.045em] sm:text-[2.3rem]">Sevdiğin teknolojiyi seçmenin daha net yolu.</h2>
+              <div className="mt-6 space-y-3 text-[14px]">
+                <Link href="/iletisim" className="block font-medium text-[#0071e3] hover:underline">Bir uzmanla görüş ↗</Link>
+                <Link href="/rehber" className="block font-medium text-[#0071e3] hover:underline">Satın alma rehberini aç ↗</Link>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-16 flex snap-x gap-4 overflow-x-auto pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mt-24 sm:gap-6">
+            {STORE_CATEGORIES.map(([name, image, href]) => (
+              <Link key={name} href={href} className="group w-[112px] shrink-0 snap-start text-center sm:w-[120px]">
+                <span className="relative block h-[96px] overflow-hidden sm:h-[108px]">
+                  <Image src={image} alt="" fill sizes="120px" className="object-contain transition duration-500 group-hover:scale-105" />
+                </span>
+                <span className="mt-3 block text-[14px] font-semibold tracking-[-0.02em]">{name}</span>
+              </Link>
+            ))}
+            <Link href="/kategoriler" className="flex h-[108px] w-[58px] shrink-0 items-center justify-center self-start rounded-full bg-black/[0.07] text-[2rem] text-black/55 transition hover:bg-black/10">›</Link>
+          </div>
+        </div>
       </section>
 
       <section className="mx-auto max-w-[1200px] px-4 pb-14 sm:px-6 sm:pb-20">

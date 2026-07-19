@@ -5,11 +5,11 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   ChevronDown,
-  HandCoins,
   LogOut,
   Menu,
   PenLine,
   Search,
+  ShoppingBag,
   X,
 } from "lucide-react";
 import Logo from "@/components/Logo";
@@ -19,10 +19,14 @@ import { TECH_CATEGORY_CATALOG } from "@/lib/techCategories";
 
 const NAV = [
   { key: "magaza", label: "Mağaza", mega: true },
-  { href: "/teknoloji", label: "Haberler" },
-  { href: "/urunler", label: "Ürünler" },
-  { href: "/fiyat-karsilastir", label: "Fiyat karşılaştır" },
-  { href: "/rehber", label: "Rehber" },
+  { href: "/kategori/bilgisayar", label: "Bilgisayar" },
+  { href: "/kategori/tablet", label: "Tablet" },
+  { href: "/kategori/telefon", label: "Telefon" },
+  { href: "/kategori/saat", label: "Saat" },
+  { href: "/kategori/kulaklik", label: "Kulaklık" },
+  { href: "/kategori/oyun", label: "Oyun" },
+  { href: "/kategori/aksesuar", label: "Aksesuar" },
+  { href: "/iletisim", label: "Destek" },
 ];
 
 const MEGA_LINKS = [
@@ -145,7 +149,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop nav */}
-          <nav className="hidden items-center gap-1 md:flex" aria-label="Ana menü">
+          <nav className="hidden flex-1 items-center justify-center gap-0.5 md:flex" aria-label="Ana menü">
             {NAV.map((item) => {
               if (item.mega) {
                 return (
@@ -155,7 +159,7 @@ export default function Navbar() {
                     onMouseEnter={() => setMegaOpen(true)}
                     onClick={() => setMegaOpen((v) => !v)}
                     className={[
-                      "inline-flex items-center gap-0.5 rounded-full px-3 py-1.5 text-[13px] font-medium tracking-[-0.01em] transition",
+                      "inline-flex items-center gap-0.5 rounded-full px-2.5 py-1.5 text-[12px] font-medium tracking-[-0.01em] transition lg:px-3 lg:text-[13px]",
                       megaOpen ? "text-[#1d1d1f]" : "text-[#1d1d1f]/80 hover:text-[#1d1d1f]",
                     ].join(" ")}
                     aria-expanded={megaOpen}
@@ -178,7 +182,7 @@ export default function Navbar() {
                   href={item.href}
                   onMouseEnter={() => setMegaOpen(false)}
                   className={[
-                    "rounded-full px-3 py-1.5 text-[13px] font-medium tracking-[-0.01em] transition",
+                    "rounded-full px-2.5 py-1.5 text-[12px] font-medium tracking-[-0.01em] transition lg:px-3 lg:text-[13px]",
                     on ? "text-[#1d1d1f]" : "text-[#1d1d1f]/80 hover:text-[#1d1d1f]",
                   ].join(" ")}
                 >
@@ -192,10 +196,10 @@ export default function Navbar() {
           <div className="relative z-20 ml-auto flex w-[4.5rem] items-center justify-end gap-0.5 sm:gap-1 md:w-auto" ref={menuRef}>
             <Link
               href="/bana-sat"
-              className="mr-1 hidden h-8 items-center gap-1.5 rounded-full bg-[#1d1d1f] px-4 text-[12px] font-semibold text-white transition hover:bg-black md:inline-flex"
+              className="flex h-9 w-9 items-center justify-center rounded-full text-[#1d1d1f] transition hover:bg-black/[0.05]"
+              aria-label="Cihazını sat"
             >
-              <HandCoins className="h-3.5 w-3.5" strokeWidth={1.8} />
-              Cihazını sat
+              <ShoppingBag className="h-[18px] w-[18px]" strokeWidth={1.65} />
             </Link>
             <Link
               href="/ara"
@@ -343,6 +347,12 @@ export default function Navbar() {
             </div>
           </div>
         ) : null}
+      </div>
+      <div className={`overflow-hidden bg-white transition-all duration-300 ${scrolled ? "max-h-0 border-0" : "max-h-16 border-b border-black/[0.04]"}`}>
+        <div className="mx-auto flex min-h-14 max-w-[1200px] items-center justify-center px-4 text-center text-[13px] text-[#1d1d1f] sm:text-[14px]">
+          Cihazını Mepotia’ya sat, yeni teknoloji bütçene katkı sağlasın.
+          <Link href="/bana-sat" className="ml-1.5 inline-flex items-center font-medium text-[#0071e3] hover:underline">Teklif al ›</Link>
+        </div>
       </div>
     </header>
   );
