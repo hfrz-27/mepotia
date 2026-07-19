@@ -6,6 +6,7 @@ import HomeValueBand from "@/components/HomeValueBand";
 import HomeActionRail from "@/components/HomeActionRail";
 import HomeTradeGate from "@/components/HomeTradeGate";
 import HomeIntroHero from "@/components/HomeIntroHero";
+import HomeHowItWorks from "@/components/HomeHowItWorks";
 import { getPublishedProducts, HOME_COLLECTIONS } from "@/lib/products";
 import { getCategoryShowcase, getSiteSettings } from "@/lib/categories";
 import { fillProducts } from "@/lib/homeDemoData";
@@ -62,7 +63,7 @@ export default async function HomePage() {
       <main>
         <HomeIntroHero categories={heroCategories} />
 
-        <TechNewsSection coverUrl={covers.news} />
+        <HomeValueBand coverUrl={covers.value} />
 
         {/* 3 koleksiyon — her zaman açık (ürün admin’den seçilir) */}
         <HomeFeaturedCollection
@@ -79,6 +80,8 @@ export default async function HomePage() {
         />
 
         <HomeActionRail />
+
+        <HomeHowItWorks />
 
         <HomeFeaturedCollection
           id="vitrin"
@@ -109,13 +112,13 @@ export default async function HomePage() {
 
         <HomeTradeGate />
 
-        <HomeValueBand coverUrl={covers.value} />
-
         <HomeAllProductsGrid
           products={allProducts}
           href="/urunler"
           coverUrl={covers.products}
         />
+
+        <TechNewsSection coverUrl={covers.news} />
 
         <CustomerReviews />
       </main>

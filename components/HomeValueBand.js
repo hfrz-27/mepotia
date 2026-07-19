@@ -3,10 +3,10 @@
 import Link from "next/link";
 import {
   ArrowUpRight,
-  BadgeCheck,
   BadgeDollarSign,
-  Handshake,
-  ShieldCheck,
+  FileCheck2,
+  MessageCircleMore,
+  UserRoundCheck,
 } from "lucide-react";
 import { appleTextLinkClassSm } from "@/lib/appleUi";
 
@@ -15,24 +15,24 @@ import { appleTextLinkClassSm } from "@/lib/appleUi";
  */
 const REASONS = [
   {
-    icon: ShieldCheck,
-    title: "Güvenle al · sat",
-    text: "Şeffaf süreç, net iletişim. Her adım açık.",
+    icon: UserRoundCheck,
+    title: "Tek elden seçim",
+    text: "İlan kalabalığı değil; aynı vitrin standardıyla sunulan teknoloji.",
   },
   {
-    icon: Handshake,
-    title: "Dürüst ticaret",
-    text: "Net açıklama. Ne görüyorsan o.",
+    icon: FileCheck2,
+    title: "Net ürün bilgisi",
+    text: "Kondisyon, özellik ve bilinen detaylar açık bir dille anlatılır.",
   },
   {
     icon: BadgeDollarSign,
-    title: "Adil fiyat",
-    text: "Piyasa uyumlu, değerini bilen fiyat.",
+    title: "Karşılaştırılabilir fiyat",
+    text: "Piyasa araçlarıyla fiyatı gör, kararını bilgiyle ver.",
   },
   {
-    icon: BadgeCheck,
-    title: "Özenli seçim",
-    text: "Temiz vitrin — özenle seçilmiş teknoloji.",
+    icon: MessageCircleMore,
+    title: "Doğrudan iletişim",
+    text: "Aracı kalabalığı olmadan sorunu sor, cevabını doğrudan al.",
   },
 ];
 
@@ -41,10 +41,10 @@ export default function HomeValueBand({ embedded = false, coverUrl = null }) {
     <>
       <header className="relative mx-auto max-w-2xl px-1 text-center">
         <h2 className="text-[1.35rem] font-semibold leading-[1.15] tracking-[-0.035em] text-[#1d1d1f] sm:text-[2.1rem] md:text-[2.5rem]">
-          Neden Mepotia?
+          Güven, tasarımın bir parçası.
         </h2>
         <p className="mx-auto mt-1.5 max-w-md text-[13px] leading-snug tracking-[-0.01em] text-[#6e6e73] sm:mt-2.5 sm:max-w-xl sm:text-[16px] md:text-[18px]">
-          Bizden alışveriş yapmak için şimdi daha da fazla sebebiniz var.
+          Büyük vaatlerden önce açık bilgi, tutarlı süreç ve doğrudan iletişim.
         </p>
       </header>
 
@@ -76,7 +76,7 @@ export default function HomeValueBand({ embedded = false, coverUrl = null }) {
           href="/hakkimizda"
           className="inline-flex min-h-[44px] w-full max-w-xs items-center justify-center rounded-full bg-black px-6 py-2.5 text-[13px] font-semibold text-white active:scale-[0.98] sm:w-auto sm:text-[14px]"
         >
-          Hakkında
+          Mepotia&apos;yı tanı
         </Link>
         <Link href="/urunler" className={appleTextLinkClassSm}>
           Vitrine göz at
