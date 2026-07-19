@@ -15,7 +15,7 @@ const FEATURES = [
 
 const SERVICES = [
   { eyebrow: "Mepotia Takas", title: "Eski cihazınla yenisine yaklaş.", copy: "Cihazını anlat, istediğin modeli seç. Değer farkını açık ve anlaşılır bir süreçle birlikte hesaplayalım.", href: "/takas", action: "Takas teklifi al", image: "/brand/actions/mepotia-trade-premium-v3.png" },
-  { eyebrow: "Mepotia Karşılaştır", title: "Farkları gör. Kararını net ver.", copy: "Fiyatı, ekranı, performansı ve bataryayı aynı yerde karşılaştır. İhtiyacına uyan modeli güvenle seç.", href: "/urun-karsilastir", action: "Karşılaştırmaya başla", image: "/brand/actions/mepotia-compare-premium-v3.png" },
+  { eyebrow: "Mepotia Karşılaştır", title: "Farkları gör. Kararını net ver.", copy: "Fiyatı, ekranı, performansı ve bataryayı aynı yerde karşılaştır. İhtiyacına uyan modeli güvenle seç.", href: "/urun-karsilastir", action: "Karşılaştırmaya başla", image: "/brand/actions/mepotia-compare-light-v4.png" },
   { eyebrow: "Mepotia Ürün İste", title: "Aradığın yoksa, birlikte bulalım.", copy: "Modeli ve bütçeni paylaş. Uygun seçenek vitrinde belirdiğinde seni doğrudan bilgilendirelim.", href: "/urun-iste", action: "Ürün isteği oluştur", image: "/brand/actions/mepotia-guide-premium-v3.png" },
 ];
 
@@ -102,14 +102,15 @@ export default function MepotiaResearchHome({ products = [], campaignImages = []
         <SectionTitle muted="Her işlem için daha kısa yol.">Mepotia servisleri.</SectionTitle>
         <div className="mt-9 space-y-8">
           {SERVICES.map((item, index) => (
-            <article key={item.title} className="grid overflow-hidden rounded-[32px] bg-black text-white shadow-[0_36px_100px_-65px_rgba(0,0,0,.9)] lg:min-h-[620px] lg:grid-cols-[.9fr_1.1fr] lg:rounded-[40px]">
+            <article key={item.title} className={`grid overflow-hidden rounded-[32px] shadow-[0_36px_100px_-65px_rgba(0,0,0,.9)] lg:min-h-[620px] lg:grid-cols-[.9fr_1.1fr] lg:rounded-[40px] ${index === 1 ? "bg-white text-[#1d1d1f] ring-1 ring-black/[.05]" : "bg-black text-white"}`}>
               <div className={`flex flex-col justify-center px-7 py-14 sm:px-12 lg:px-16 ${index % 2 ? "lg:order-2" : ""}`}>
-                <p className="text-[11px] font-semibold tracking-[.17em] text-[#2997ff] uppercase">{item.eyebrow}</p>
+                <p className="text-[11px] font-semibold tracking-[.17em] text-[#0071e3] uppercase">{item.eyebrow}</p>
                 <h3 className="mt-5 text-[3rem] font-semibold leading-[.94] tracking-[-.065em] sm:text-[4.6rem]">{item.title}</h3>
-                <p className="mt-6 max-w-lg text-[16px] leading-relaxed text-white/55">{item.copy}</p>
-                <Link href={item.href} className="mt-8 inline-flex h-12 w-fit items-center gap-1 rounded-full bg-[#0071e3] px-6 text-[14px] font-semibold hover:bg-[#0077ed]">{item.action}<ChevronRight className="h-4 w-4" /></Link>
+                <p className={`mt-6 max-w-lg text-[16px] leading-relaxed ${index === 1 ? "text-[#6e6e73]" : "text-white/55"}`}>{item.copy}</p>
+                {index === 1 ? <div className="mt-6 flex flex-wrap gap-2">{["Fiyat", "Ekran", "Performans", "Batarya"].map((detail) => <span key={detail} className="rounded-full bg-[#f5f5f7] px-3 py-1.5 text-[11px] font-medium text-[#6e6e73] ring-1 ring-black/[.05]">{detail}</span>)}</div> : null}
+                <Link href={item.href} className="mt-8 inline-flex h-12 w-fit items-center gap-1 rounded-full bg-[#0071e3] px-6 text-[14px] font-semibold text-white hover:bg-[#0077ed]">{item.action}<ChevronRight className="h-4 w-4" /></Link>
               </div>
-              <div className={`group relative min-h-[520px] overflow-hidden bg-[#0b0b0d] lg:min-h-[620px] ${index % 2 ? "lg:order-1" : ""}`}>
+              <div className={`group relative min-h-[520px] overflow-hidden lg:min-h-[620px] ${index === 1 ? "bg-[#f5f7fa]" : "bg-[#0b0b0d]"} ${index % 2 ? "lg:order-1" : ""}`}>
                 <div
                   role="img"
                   aria-label={`${item.eyebrow} görseli`}
