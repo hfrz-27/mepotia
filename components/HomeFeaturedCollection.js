@@ -53,7 +53,7 @@ function SignatureCover({
             {label}
           </span>
           <span className="rounded-full bg-white px-2.5 py-1 text-[10px] font-semibold text-black sm:px-3 sm:text-[11px]">
-            {items.length} ürün
+            {items.length ? `${items.length} ürün` : "Koleksiyon"}
           </span>
         </div>
 
@@ -87,45 +87,51 @@ function SignatureCover({
           </span>
         </div>
 
-        {/* Alt ürün şeridi — tam beyaz çerçeve (kesilmez) */}
-        <div
-          className={[
-            "flex gap-2 sm:gap-2.5",
-            centered ? "justify-center" : "justify-start sm:justify-start",
-            "overflow-x-auto news-touch-scroll hide-scrollbar pb-0.5",
-          ].join(" ")}
-        >
-          {row.map((p) =>
-            strip === "chips" ? (
-              <div
-                key={p.id}
-                className="flex min-w-[8.5rem] shrink-0 items-center gap-2 rounded-2xl border border-white/15 bg-black/45 p-1.5 sm:min-w-0 sm:flex-1 sm:max-w-[12rem]"
-              >
-                <div className="shrink-0 rounded-[9px] bg-white p-[2px]">
-                  <div className="relative h-9 w-9 overflow-hidden rounded-[7px] bg-[#e8e8ed] sm:h-10 sm:w-10">
+        {/* Alt ürün şeridi — ürün yoksa gizle */}
+        {row.length ? (
+          <div
+            className={[
+              "flex gap-2 sm:gap-2.5",
+              centered ? "justify-center" : "justify-start sm:justify-start",
+              "overflow-x-auto news-touch-scroll hide-scrollbar pb-0.5",
+            ].join(" ")}
+          >
+            {row.map((p) =>
+              strip === "chips" ? (
+                <div
+                  key={p.id}
+                  className="flex min-w-[8.5rem] shrink-0 items-center gap-2 rounded-2xl border border-white/15 bg-black/45 p-1.5 sm:min-w-0 sm:flex-1 sm:max-w-[12rem]"
+                >
+                  <div className="shrink-0 rounded-[9px] bg-white p-[2px]">
+                    <div className="relative h-9 w-9 overflow-hidden rounded-[7px] bg-[#e8e8ed] sm:h-10 sm:w-10">
+                      <ProductImage src={getPrimaryImage(p)} alt="" fill className="object-cover" />
+                    </div>
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="line-clamp-1 text-[10px] font-semibold text-white sm:text-[11px]">
+                      {p.title}
+                    </p>
+                    {p.price != null ? (
+                      <p className="text-[10px] font-semibold text-white/85 tabular-nums sm:text-[11px]">
+                        {formatPrice(p.price)}
+                      </p>
+                    ) : null}
+                  </div>
+                </div>
+              ) : (
+                <div key={p.id} className="shrink-0 rounded-[11px] bg-white p-[3px] shadow-md sm:p-1">
+                  <div className="relative h-11 w-11 overflow-hidden rounded-[8px] bg-[#e8e8ed] sm:h-14 sm:w-14 sm:rounded-[10px]">
                     <ProductImage src={getPrimaryImage(p)} alt="" fill className="object-cover" />
                   </div>
                 </div>
-                <div className="min-w-0 flex-1">
-                  <p className="line-clamp-1 text-[10px] font-semibold text-white sm:text-[11px]">
-                    {p.title}
-                  </p>
-                  {p.price != null ? (
-                    <p className="text-[10px] font-semibold text-white/85 tabular-nums sm:text-[11px]">
-                      {formatPrice(p.price)}
-                    </p>
-                  ) : null}
-                </div>
-              </div>
-            ) : (
-              <div key={p.id} className="shrink-0 rounded-[11px] bg-white p-[3px] shadow-md sm:p-1">
-                <div className="relative h-11 w-11 overflow-hidden rounded-[8px] bg-[#e8e8ed] sm:h-14 sm:w-14 sm:rounded-[10px]">
-                  <ProductImage src={getPrimaryImage(p)} alt="" fill className="object-cover" />
-                </div>
-              </div>
-            ),
-          )}
-        </div>
+              ),
+            )}
+          </div>
+        ) : (
+          <div className={centered ? "text-center" : ""}>
+            <p className="text-[12px] text-white/45">Yakında ürün eklenecek</p>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -151,8 +157,8 @@ export default function HomeFeaturedCollection({
   priority = false,
   coverUrl = null,
 }) {
+  // Ürün olmasa da kapak her zaman gösterilir (3 koleksiyon hep açık)
   const items = (products || []).filter(Boolean);
-  if (!items.length) return null;
 
   const label = eyebrow || "Koleksiyon";
   const conf = VARIANT[variant] || VARIANT.cinema;

@@ -56,76 +56,48 @@ export default async function HomePage() {
 
         <TechNewsSection coverUrl={covers.news} />
 
-        {featured.length ? (
-          <HomeFeaturedCollection
-            products={featured.slice(0, PRODUCT_LIMIT)}
-            href={c1.href}
-            linkLabel="Koleksiyonu keşfet"
-            eyebrow={c1.eyebrow}
-            title={c1.title}
-            description={c1.description}
-            variant="mosaic"
-            ariaLabel={c1.label}
-            coverUrl={covers.featured}
-            priority
-          />
-        ) : null}
+        {/* 3 koleksiyon — her zaman açık (ürün admin’den seçilir) */}
+        <HomeFeaturedCollection
+          products={featured.slice(0, PRODUCT_LIMIT)}
+          href={c1.href}
+          linkLabel="Koleksiyonu aç"
+          eyebrow={c1.eyebrow}
+          title={c1.title}
+          description={c1.description}
+          variant="mosaic"
+          ariaLabel={c1.label}
+          coverUrl={covers.featured}
+          priority
+        />
 
         <HomeActionRail />
 
-        {curated.length ? (
-          <HomeFeaturedCollection
-            id="vitrin"
-            products={curated.slice(0, PRODUCT_LIMIT)}
-            href={c2.href}
-            linkLabel="Koleksiyonu gör"
-            eyebrow={c2.eyebrow}
-            title={c2.title}
-            description={c2.description}
-            tone="mist"
-            variant="split"
-            ariaLabel={c2.label}
-            coverUrl={covers.curated}
-          />
-        ) : (
-          <section id="vitrin" className="scroll-mt-16 bg-[#f5f5f7]">
-            <div className="mx-auto max-w-3xl px-5 py-16 text-center sm:px-8 sm:py-20">
-              <p className="text-[11px] font-semibold tracking-[0.16em] text-[#86868b] uppercase">
-                Vitrin
-              </p>
-              <p className="mt-2 text-[1.5rem] font-semibold tracking-[-0.03em] text-[#1d1d1f] sm:text-[2rem]">
-                Özenle seçilmiş ürünler.
-              </p>
-              <p className="mt-2 text-[15px] text-[#6e6e73]">
-                Admin panilden bu koleksiyona ürün ekle.
-              </p>
-              <a
-                href={wa}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-6 inline-flex rounded-full bg-[#1d1d1f] px-5 py-2.5 text-[15px] font-normal text-white transition hover:bg-[#000000]"
-              >
-                WhatsApp
-              </a>
-            </div>
-          </section>
-        )}
+        <HomeFeaturedCollection
+          id="vitrin"
+          products={curated.slice(0, PRODUCT_LIMIT)}
+          href={c2.href}
+          linkLabel="Koleksiyonu aç"
+          eyebrow={c2.eyebrow}
+          title={c2.title}
+          description={c2.description}
+          variant="split"
+          ariaLabel={c2.label}
+          coverUrl={covers.curated}
+        />
 
         <HomeCompareGate />
 
-        {popular.length ? (
-          <HomeFeaturedCollection
-            products={popular.slice(0, PRODUCT_LIMIT)}
-            href={c3.href}
-            linkLabel="Koleksiyonu gör"
-            eyebrow={c3.eyebrow}
-            title={c3.title}
-            description={c3.description}
-            variant="cinema"
-            ariaLabel={c3.label}
-            coverUrl={covers.popular}
-          />
-        ) : null}
+        <HomeFeaturedCollection
+          products={popular.slice(0, PRODUCT_LIMIT)}
+          href={c3.href}
+          linkLabel="Koleksiyonu aç"
+          eyebrow={c3.eyebrow}
+          title={c3.title}
+          description={c3.description}
+          variant="cinema"
+          ariaLabel={c3.label}
+          coverUrl={covers.popular}
+        />
 
         <HomeTradeGate />
 
