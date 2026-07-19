@@ -191,6 +191,7 @@ export default function TakasClient() {
     title: "Cihazını takas et",
     description: "Verdiğin cihaz + istediğin model. Fark varsa nakit ile kapanır — adil ve net.",
     icon: Repeat2,
+    imageSrc: "/brand/actions/mepotia-trade-premium-v3.png",
     highlights: [
       { icon: ArrowLeftRight, title: "Cihaz ↔ cihaz", text: "İki taraf da değerlenir." },
       { icon: Clock3, title: "Hızlı dönüş", text: "Uygun tekliflerde aynı gün yanıt." },

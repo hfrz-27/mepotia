@@ -18,6 +18,7 @@ export default function UrunKarsilastirPage() {
         description="İki veya üç modeli ekran, RAM, batarya, kamera ve bağlantı özellikleriyle yan yana getir."
         href="#model-karsilastir"
         actionLabel="Modelleri karşılaştır"
+        imageSrc="/brand/actions/mepotia-compare-premium-v3.png"
       />
       <section className="relative">
         <div id="model-karsilastir" className="relative mx-auto max-w-[1200px] scroll-mt-20 px-4 pt-12 pb-14 sm:px-6 sm:pt-16 sm:pb-20">

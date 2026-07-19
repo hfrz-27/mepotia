@@ -217,6 +217,7 @@ export default function BanaSatClient({ heroVideo = "", heroImages = [] }) {
     title: "Ürününü bana sat",
     description: "Net fotoğraf + dürüst açıklama = hızlı ve adil teklif.",
     icon: HandCoins,
+    imageSrc: "/brand/actions/mepotia-trade-premium-v3.png",
     heroVideo,
     heroImages,
     highlights: [

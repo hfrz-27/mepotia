@@ -116,6 +116,7 @@ export default function UrunIsteClient({ heroVideo = "", heroImages = [] }) {
     title: "Aradığın ürünü iste",
     description: "Modeli ve bütçeni yaz — uygun ilan çıkınca haber veririm.",
     icon: Search,
+    imageSrc: "/brand/actions/mepotia-guide-premium-v3.png",
     heroVideo,
     heroImages,
     highlights: [

@@ -28,6 +28,7 @@ export default async function PriceComparisonPage({ searchParams }) {
         description="Modeli yaz. Piyasa fiyatını ve Mepotia vitrinindeki seçenekleri tek yerde, açıkça karşılaştır."
         href="#fiyat-sorgula"
         actionLabel="Fiyatı karşılaştır"
+        imageSrc="/brand/actions/mepotia-compare-premium-v3.png"
       />
       <TechPriceLookupSection initialQuery={initialQuery} compact />
 

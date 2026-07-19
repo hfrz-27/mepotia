@@ -15,6 +15,7 @@ export default function PremiumActionPage({
   highlights = [],
   steps = [],
   sideLinks = [],
+  imageSrc,
   children,
 }) {
   const isSell = accent === "sell";
@@ -27,6 +28,7 @@ export default function PremiumActionPage({
         description={description}
         href="#mepotia-form"
         actionLabel={isSell ? "Teklif al" : "Talep oluştur"}
+        imageSrc={imageSrc}
       />
       <div className="relative isolate">
         <div id="mepotia-form" className="relative mx-auto max-w-[1200px] scroll-mt-20 px-4 pt-12 pb-14 sm:px-6 sm:pt-16 sm:pb-20">

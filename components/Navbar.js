@@ -121,8 +121,8 @@ export default function Navbar() {
       <div
         onMouseLeave={() => setMegaOpen(false)}
         className={[
-          "relative border-b bg-white/90 backdrop-blur-[22px] backdrop-saturate-150 transition",
-          scrolled || megaOpen ? "border-black/[0.06]" : "border-black/[0.04]",
+          "relative border-b backdrop-blur-[22px] backdrop-saturate-150 transition duration-300",
+          scrolled || megaOpen ? "border-black/[0.06] bg-white/92 shadow-[0_8px_30px_-25px_rgba(0,0,0,.35)]" : "border-black/[0.04] bg-[#f5f5f7]/92",
         ].join(" ")}
       >
         <div className="relative mx-auto flex h-12 max-w-[1200px] items-center justify-between gap-3 px-4 sm:px-6">
@@ -291,21 +291,21 @@ export default function Navbar() {
         {/* Mega menü */}
         {megaOpen ? (
           <div className="absolute inset-x-0 top-full hidden border-b border-black/[0.06] bg-white shadow-[0_24px_50px_-24px_rgba(0,0,0,0.25)] md:block">
-            <div className="mx-auto max-w-[1240px] px-6 py-7">
-              <div className="grid grid-cols-[1fr_auto] gap-8">
+            <div className="mx-auto max-w-[1200px] px-6 py-8">
+              <div className="grid grid-cols-[1fr_220px] gap-10">
                 <div>
                   <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#86868b]">
                     Kategoriler
                   </p>
-                  <div className="grid grid-cols-4 gap-x-4 gap-y-5 lg:grid-cols-5">
+                  <div className="grid grid-cols-3 gap-3">
                     {TECH_CATEGORY_CATALOG.map((cat) => (
                       <Link
                         key={cat.slug}
                         href={`/kategori/${cat.slug}`}
                         onClick={() => setMegaOpen(false)}
-                        className="group flex flex-col items-center gap-2 text-center"
+                        className="group flex items-center gap-3 rounded-[18px] bg-[#f5f5f7] p-2.5 text-left ring-1 ring-black/[.04] transition hover:bg-white hover:shadow-[0_18px_40px_-32px_rgba(0,0,0,.45)]"
                       >
-                        <span className="relative h-16 w-16 overflow-hidden rounded-full bg-[#f5f5f7] ring-1 ring-black/[0.05] transition group-hover:ring-black/15">
+                        <span className="relative h-12 w-12 shrink-0 overflow-hidden rounded-[13px] bg-white ring-1 ring-black/[0.05] transition group-hover:ring-black/15">
                           <ProductImage
                             src={cat.photo}
                             alt={cat.name}
