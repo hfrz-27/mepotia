@@ -115,6 +115,8 @@ export default function MepotiaResearchHome({ products = [], campaignImages = []
         </div>
       </section>
 
+      <HomeGuideFinder />
+
       <section className="mx-auto max-w-[1368px] px-4 py-14 sm:px-6 sm:py-20">
         <SectionTitle muted="Her işlem için daha kısa yol.">Mepotia servisleri.</SectionTitle>
         <div className="mt-9 space-y-8">
@@ -181,8 +183,6 @@ export default function MepotiaResearchHome({ products = [], campaignImages = []
           {TRUST.map(([Icon, title, text], i) => <article key={title} className={`min-h-[250px] p-7 sm:p-10 ${i % 2 ? "sm:border-l" : ""} ${i > 1 ? "border-t" : ""} border-black/[.06]`}><Icon className="h-8 w-8 text-[#0071e3]" strokeWidth={1.55}/><h3 className="mt-8 text-[1.7rem] font-semibold leading-none tracking-[-.045em]">{title}</h3><p className="mt-4 max-w-md text-[14px] leading-relaxed text-[#6e6e73]">{text}</p></article>)}
         </div>
       </section>
-
-      <HomeGuideFinder />
 
     </main>
   );
