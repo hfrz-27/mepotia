@@ -24,24 +24,22 @@ const PANELS = {
       "Ana sayfadaki her blok için kapak. Yüklemezsen ürün fotoğrafı / varsayılan kullanılır. Sadece fotoğraf (video yok).",
     videoKey: null,
     slots: [
-      { key: "home_products_cover", label: "Ürünler kapağı" },
-      { key: "home_featured_cover", label: "Yeni sahibi koleksiyon" },
-      { key: "home_curated_cover", label: "Özenle seçilmiş" },
-      { key: "home_popular_cover", label: "En çok bakılanlar" },
-      { key: "home_news_cover", label: "Haberler arka plan" },
-      { key: "home_value_cover", label: "Neden Mepotia arka plan" },
+      { key: "home_products_cover", label: "Telefon kartı" },
+      { key: "home_featured_cover", label: "Bilgisayar kartı" },
+      { key: "home_curated_cover", label: "Tablet kartı" },
+      { key: "home_popular_cover", label: "Takas bölümü" },
+      { key: "home_news_cover", label: "Rehber bölümü" },
+      { key: "home_value_cover", label: "Karşılaştırma bölümü" },
     ],
     storagePrefix: "home-covers",
     savedMsg: "Ana sayfa kapakları kaydedildi. Ana sayfayı yenile.",
   },
   home: {
     title: "Ana sayfa hero",
-    description: "Video öncelikli. Video yoksa 1–3 fotoğraf yavaşça kayar.",
+    description: "Store yazısının üstündeki tek büyük lansman görseli.",
     videoKey: "hero_video",
     slots: [
       { key: "hero_bg_1", label: "Fotoğraf 1" },
-      { key: "hero_bg_2", label: "Fotoğraf 2" },
-      { key: "hero_bg_3", label: "Fotoğraf 3" },
     ],
     storagePrefix: "hero",
     savedMsg: "Ana sayfa hero kaydedildi. Sayfayı yenile.",
@@ -117,10 +115,10 @@ const PANELS = {
   },
 };
 
-const ALL_KEYS = Object.values(PANELS).flatMap((p) => [
+const ALL_KEYS = [...new Set(Object.values(PANELS).flatMap((p) => [
   ...(p.videoKey ? [p.videoKey] : []),
   ...p.slots.map((s) => s.key),
-]);
+]))];
 
 const VIDEO_KEYS = Object.values(PANELS)
   .map((p) => p.videoKey)
