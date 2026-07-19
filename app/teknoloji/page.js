@@ -4,14 +4,11 @@ import { redirect } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Clock3, Newspaper, Radio, Sparkles } from "lucide-react";
-import TechNewsPageHero from "@/components/TechNewsPageHero";
 import TechNewsFeaturedCarousel from "@/components/TechNewsFeaturedCarousel";
 import TechNewsViewSync from "@/components/TechNewsViewSync";
 import PremiumPagination from "@/components/PremiumPagination";
 import { getTechPosts, resolveTechPostsPageSize } from "@/lib/techPosts";
-import { getSiteSettings } from "@/lib/categories";
 import { formatTechDate } from "@/lib/techPostUtils";
-import { getPublishedProducts } from "@/lib/products";
 import { displayImageUrl } from "@/lib/productImage";
 
 export const revalidate = 60;
@@ -111,12 +108,10 @@ export default async function TeknolojiPage({ searchParams }) {
   const headerList = await headers();
   const pageSize = resolveTechPostsPageSize(headerList.get("user-agent") || "", headerList.get("sec-ch-ua-mobile") || "", view);
 
-  const [{ data: posts, count }, { data: carouselItems }, { data: trendingItems }, { data: featuredProducts }, settings] = await Promise.all([
+  const [{ data: posts, count }, { data: carouselItems }, { data: trendingItems }] = await Promise.all([
     getTechPosts({ limit: pageSize, page, featuredFilter: "none" }),
     getTechPosts({ limit: 5, featuredFilter: "only" }),
     getTechPosts({ limit: 5, trendingOnly: true }),
-    getPublishedProducts({ limit: 6, featured: true }),
-    getSiteSettings(),
   ]);
   const totalPages = Math.max(1, Math.ceil((count || 0) / pageSize));
   const carouselPosts = (carouselItems || []).sort((a, b) => a.featured_order - b.featured_order).slice(0, 5);
@@ -128,7 +123,22 @@ export default async function TeknolojiPage({ searchParams }) {
   return (
     <main className="min-h-screen bg-bw-50">
       <Suspense fallback={null}><TechNewsViewSync /></Suspense>
-      <TechNewsPageHero count={count || 0} products={featuredProducts || []} heroImage={settings?.news_hero_bg_1 || ""} heroVideo={settings?.news_hero_video || ""} />
+
+      {page === 1 && carouselPosts.length ? (
+        <section className="mx-auto max-w-7xl px-4 pt-10 sm:px-6 sm:pt-14 lg:px-8">
+          <div className="mb-4 flex items-end justify-between gap-3">
+            <div>
+              <p className="text-[10px] font-semibold tracking-[0.18em] text-bw-500 uppercase">
+                Seçki
+              </p>
+              <h2 className="mt-1 text-2xl font-semibold tracking-tight text-bw-950 sm:text-3xl">
+                Öne çıkanlar
+              </h2>
+            </div>
+          </div>
+          <TechNewsFeaturedCarousel posts={carouselPosts} />
+        </section>
+      ) : null}
 
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
         <div className="mb-8 flex flex-col gap-4 border-b border-bw-200 pb-6 sm:mb-10 sm:flex-row sm:items-end sm:justify-between">
@@ -141,26 +151,9 @@ export default async function TeknolojiPage({ searchParams }) {
 
         {posts?.length ? (
           <>
-            {/* 1) Gündem üstte · 2) Öne çıkanlar gündemin altında · 3) akış */}
             {page === 1 ? (
               <div className="mb-8 sm:mb-10">
                 <NewsDigest posts={trendingPosts.length ? trendingPosts : feedPosts} />
-              </div>
-            ) : null}
-
-            {page === 1 && carouselPosts.length ? (
-              <div className="mb-8 sm:mb-10">
-                <div className="mb-4 flex items-end justify-between gap-3">
-                  <div>
-                    <p className="text-[10px] font-semibold tracking-[0.18em] text-bw-500 uppercase">
-                      Seçki
-                    </p>
-                    <h3 className="mt-1 text-xl font-semibold tracking-tight text-bw-950 sm:text-2xl">
-                      Öne çıkanlar
-                    </h3>
-                  </div>
-                </div>
-                <TechNewsFeaturedCarousel posts={carouselPosts} />
               </div>
             ) : null}
 
