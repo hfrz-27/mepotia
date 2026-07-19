@@ -3,7 +3,6 @@ import TechPriceLookupSection from "@/components/TechPriceLookupSection";
 import PriceCompareFeatured from "@/components/PriceCompareFeatured";
 import { ArrowRight, ArrowLeftRight, BookOpenCheck, GitCompareArrows, Sparkles } from "lucide-react";
 import { getPublishedProducts } from "@/lib/products";
-import { getSiteSettings } from "@/lib/categories";
 
 export const metadata = {
   title: "Fiyat Karşılaştır | Mepotia",
@@ -14,26 +13,15 @@ export default async function PriceComparisonPage({ searchParams }) {
   const sp = await searchParams;
   const initialQuery = typeof sp?.q === "string" ? sp.q : "";
 
-  const [settings, { data: featuredProducts }] = await Promise.all([
-    getSiteSettings(),
-    getPublishedProducts({
-      limit: 8,
-      featured: true,
-      orderBy: "created_at",
-    }),
-  ]);
+  const { data: featuredProducts } = await getPublishedProducts({
+    limit: 8,
+    featured: true,
+    orderBy: "created_at",
+  });
 
   return (
-    <main className="min-h-screen bg-[#f4f4f5]">
-      <TechPriceLookupSection
-        initialQuery={initialQuery}
-        heroVideo={settings?.price_compare_video || ""}
-        heroImages={[
-          settings?.price_compare_bg_1,
-          settings?.price_compare_bg_2,
-          settings?.price_compare_bg_3,
-        ].filter(Boolean)}
-      />
+    <main className="min-h-screen bg-[#f5f5f7]">
+      <TechPriceLookupSection initialQuery={initialQuery} />
 
       <section className="relative -mt-2 border-t border-bw-200/50 bg-white">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">

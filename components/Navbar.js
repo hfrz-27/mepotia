@@ -161,14 +161,7 @@ export default function Navbar() {
               <LogOut className="h-3.5 w-3.5" />
               Çıkış
             </button>
-          ) : (
-            <Link
-              href="/giris"
-              className="hidden h-8 items-center rounded-full bg-[#1d1d1f] px-3.5 text-[12px] font-normal text-white transition hover:bg-[#000000] sm:inline-flex"
-            >
-              Giriş
-            </Link>
-          )}
+          ) : null}
 
           {user && isAdmin ? (
             <>
@@ -222,8 +215,8 @@ export default function Navbar() {
                   {item.label}
                 </Link>
               ))}
-              <div className="border-t border-black/[0.06] p-2">
-                {user ? (
+              {user ? (
+                <div className="border-t border-black/[0.06] p-2">
                   <button
                     type="button"
                     onClick={logout}
@@ -232,15 +225,8 @@ export default function Navbar() {
                     <LogOut className="h-4 w-4" />
                     Çıkış
                   </button>
-                ) : (
-                  <Link
-                    href="/giris"
-                    className="flex w-full items-center justify-center rounded-xl bg-[#0b0b0b] px-3 py-2.5 text-sm font-semibold text-white"
-                  >
-                    Giriş
-                  </Link>
-                )}
-              </div>
+                </div>
+              ) : null}
             </div>
           ) : null}
         </div>

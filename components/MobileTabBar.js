@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, LayoutGrid, Search, Newspaper, User } from "lucide-react";
+import { Home, LayoutGrid, Search, Newspaper, BookOpen } from "lucide-react";
 
 const TABS = [
   { href: "/", label: "Ana", icon: Home, match: (p) => p === "/" },
@@ -24,7 +24,12 @@ const TABS = [
     icon: Newspaper,
     match: (p) => p?.startsWith("/teknoloji"),
   },
-  { href: "/giris", label: "Hesap", icon: User, match: (p) => p?.startsWith("/giris") },
+  {
+    href: "/rehber",
+    label: "Rehber",
+    icon: BookOpen,
+    match: (p) => p?.startsWith("/rehber"),
+  },
 ];
 
 /**
