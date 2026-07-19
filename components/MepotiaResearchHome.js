@@ -3,6 +3,7 @@ import Link from "next/link";
 import { BadgeCheck, ChevronRight, CircleDollarSign, MessageCircleMore, ShieldCheck } from "lucide-react";
 import ProductImage from "@/components/ProductImage";
 import { formatPrice, getPrimaryImage } from "@/lib/productDisplay";
+import HomeCampaignCarousel from "@/components/HomeCampaignCarousel";
 
 const FEATURES = [
   ["Telefon", "Günlük hayatına hazır.", "Kondisyonu açıkça anlatılmış akıllı telefonlar.", "/brand/categories/mepotia-phone-v2.webp", "/kategori/telefon"],
@@ -39,9 +40,10 @@ function SectionTitle({ children, muted }) {
   return <h2 className="text-[2rem] font-semibold leading-[1.02] tracking-[-0.05em] sm:text-[3.25rem]">{children} <span className="text-black/38">{muted}</span></h2>;
 }
 
-export default function MepotiaResearchHome({ products = [] }) {
+export default function MepotiaResearchHome({ products = [], campaignImages = [] }) {
   return (
     <main className="min-h-screen bg-[#f5f5f7] text-[#1d1d1f]">
+      <HomeCampaignCarousel images={campaignImages} />
       <section className="border-b border-black/[0.035] bg-[#f5f5f7]">
         <div className="mx-auto max-w-[1200px] px-4 pt-16 pb-10 sm:px-6 sm:pt-24 sm:pb-14">
           <div className="grid gap-10 lg:grid-cols-[1.25fr_.75fr] lg:items-center">
