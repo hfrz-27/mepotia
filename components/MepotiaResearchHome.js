@@ -5,6 +5,7 @@ import ProductImage from "@/components/ProductImage";
 import { formatPrice, getPrimaryImage } from "@/lib/productDisplay";
 import HomeCampaignCarousel from "@/components/HomeCampaignCarousel";
 import HomeTradeQuickStart from "@/components/HomeTradeQuickStart";
+import HomeGuideFinder from "@/components/HomeGuideFinder";
 import { formatTechDate } from "@/lib/techPostUtils";
 
 const FEATURES = [
@@ -181,12 +182,7 @@ export default function MepotiaResearchHome({ products = [], campaignImages = []
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1368px] px-4 py-14 sm:px-6 sm:py-20">
-        <div className="grid overflow-hidden rounded-[32px] bg-white lg:min-h-[600px] lg:grid-cols-2 lg:rounded-[40px]">
-          <div className="flex flex-col justify-center p-7 sm:p-12 lg:p-16"><p className="text-[11px] font-semibold tracking-[.17em] text-[#0071e3] uppercase">Mepotia Rehber</p><h2 className="mt-5 text-[3rem] font-semibold leading-[.95] tracking-[-.06em] sm:text-[4.5rem]">Doğru ürünü, neye bakacağını bilerek seç.</h2><p className="mt-6 text-[16px] leading-relaxed text-[#6e6e73]">Telefon, bilgisayar, tablet ve aksesuar seçiminde teknik terimleri sadeleştiren adım adım rehberler.</p><Link href="/rehber" className="mt-8 inline-flex h-12 w-fit items-center gap-1 rounded-full bg-[#0071e3] px-6 text-[14px] font-semibold text-white">Rehberleri keşfet <ChevronRight className="h-4 w-4" /></Link></div>
-          <div className="relative min-h-[420px]"><Image src="/brand/actions/mepotia-guide-premium-v3.png" alt="Mepotia teknoloji satın alma rehberi" fill sizes="(max-width:1024px) 100vw, 600px" className="object-cover" /></div>
-        </div>
-      </section>
+      <HomeGuideFinder />
 
     </main>
   );
