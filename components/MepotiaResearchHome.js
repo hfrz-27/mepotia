@@ -31,13 +31,13 @@ const TRUST = [
 ];
 
 function SectionTitle({ children, muted }) {
-  return <h2 className="text-[2rem] font-semibold leading-[1.02] tracking-[-0.05em] sm:text-[3.25rem]">{children} <span className="text-black/38">{muted}</span></h2>;
+  return <h2 className="text-[1.8rem] font-semibold leading-[1.02] tracking-[-0.05em] sm:text-[3.1rem]">{children} <span className="text-black/38">{muted}</span></h2>;
 }
 
 function SellDeviceSection({ content }) {
   return (
-    <section className="mx-auto max-w-[1368px] px-4 py-14 sm:px-6 sm:py-20">
-      <div className="relative overflow-hidden rounded-[32px] bg-[#ebe9e4] px-6 py-16 text-[#1d1d1f] ring-1 ring-black/[.045] sm:px-10 sm:py-20 lg:rounded-[40px] lg:px-16">
+    <section className="home-shell py-8 sm:py-12">
+      <div className="relative overflow-hidden rounded-[28px] bg-[#ebe9e4] px-5 py-10 text-[#1d1d1f] ring-1 ring-black/[.045] sm:px-10 sm:py-14 lg:rounded-[36px] lg:px-16">
         <div className="pointer-events-none absolute -right-24 -top-32 h-[420px] w-[420px] rounded-full bg-white/80 blur-[80px]" />
         <div className="pointer-events-none absolute -bottom-40 -left-20 h-[360px] w-[360px] rounded-full bg-[#0071e3]/10 blur-[90px]" />
         <div className="relative mx-auto max-w-4xl text-center"><p className="text-[11px] font-semibold uppercase tracking-[.2em] text-[#0071e3]">Mepotia’ya Sat</p><h2 className="mt-5 text-[3rem] font-semibold leading-[.94] tracking-[-.065em] sm:text-[5rem]">{content.sell_title}<br /><span className="text-black/35">{content.sell_accent}</span></h2><p className="mx-auto mt-6 max-w-xl text-[15px] leading-relaxed text-[#6e6e73] sm:text-[16px]">{content.sell_copy}</p></div>
@@ -74,9 +74,9 @@ export default function MepotiaResearchHome({ products = [], campaignImages = []
   return (
     <main className="min-h-screen overflow-x-clip bg-[#f5f5f7] text-[#1d1d1f]">
       <HomeCampaignCarousel images={campaignImages} content={content} />
-      <section className="relative overflow-hidden py-14 sm:py-20">
+      <section className="relative overflow-hidden py-8 sm:py-12">
         <div className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[780px] -translate-x-1/2 rounded-full bg-[#0071e3]/[.09] blur-[120px]" />
-        <div className="relative mx-auto max-w-[1368px] px-4 sm:px-6">
+        <div className="home-shell relative">
           <div className="mb-8 flex flex-col gap-5 sm:mb-10 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-[.2em] text-[#0071e3]">Mepotia Haber</p>
@@ -87,7 +87,7 @@ export default function MepotiaResearchHome({ products = [], campaignImages = []
 
           {leadNews ? (
             <div className="grid gap-5 lg:grid-cols-[1.45fr_.75fr]">
-              <Link href={`/teknoloji/${leadNews.id}`} className="group relative min-h-[520px] overflow-hidden rounded-[30px] bg-black text-white shadow-[0_35px_85px_-55px_rgba(0,0,0,.85)] sm:min-h-[650px] sm:rounded-[38px]">
+              <Link href={`/teknoloji/${leadNews.id}`} className="group relative min-h-[400px] overflow-hidden rounded-[26px] bg-black text-white ring-1 ring-black/[.05] sm:min-h-[560px] sm:rounded-[34px] lg:min-h-[610px]">
                 {leadNews.cover_url ? <Image src={leadNews.cover_url} alt={leadNews.title} fill sizes="(max-width:1024px) 100vw, 850px" className="object-cover transition duration-[1100ms] ease-out group-hover:scale-[1.045]" /> : null}
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-transparent" />
                 <div className="absolute inset-0 opacity-0 ring-1 ring-inset ring-white/30 transition duration-500 group-hover:opacity-100" />
@@ -101,7 +101,7 @@ export default function MepotiaResearchHome({ products = [], campaignImages = []
 
               <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-1">
                 {newsItems.slice(1).map((post) => (
-                  <Link key={post.id} href={`/teknoloji/${post.id}`} className="group relative min-h-[310px] overflow-hidden rounded-[28px] bg-[#111114] text-white shadow-[0_28px_65px_-52px_rgba(0,0,0,.9)] sm:rounded-[32px]">
+                  <Link key={post.id} href={`/teknoloji/${post.id}`} className="group relative min-h-[220px] overflow-hidden rounded-[24px] bg-[#111114] text-white ring-1 ring-black/[.05] sm:min-h-[270px] sm:rounded-[30px]">
                     {post.cover_url ? <Image src={post.cover_url} alt={post.title} fill sizes="(max-width:1024px) 50vw, 430px" className="object-cover transition duration-[900ms] group-hover:scale-[1.06]" /> : null}
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
                     <div className="absolute inset-x-0 bottom-0 p-6 sm:p-7">
@@ -123,7 +123,7 @@ export default function MepotiaResearchHome({ products = [], campaignImages = []
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1368px] px-4 py-14 sm:px-6 sm:py-20">
+      <section className="home-shell py-8 sm:py-12">
         <SectionTitle muted="Doğru ürüne kısa yol.">Öne çıkanlar.</SectionTitle>
         <div className="mt-8 grid gap-5 lg:grid-cols-3">
           {FEATURES.map(([eyebrow, title, copy, image, href], i) => {
@@ -131,7 +131,7 @@ export default function MepotiaResearchHome({ products = [], campaignImages = []
             const name = names[i];
             title = content[`${name}_title`] || title; copy = content[`${name}_copy`] || copy; image = media[name] || image;
             return (
-            <Link key={title} href={href} className="group relative min-h-[540px] min-w-0 overflow-hidden rounded-[30px] bg-white text-[#1d1d1f]">
+            <Link key={title} href={href} className="group relative min-h-[390px] min-w-0 overflow-hidden rounded-[26px] bg-white text-[#1d1d1f] ring-1 ring-black/[.035] sm:min-h-[470px] lg:min-h-[520px] lg:rounded-[30px]">
               <div className="absolute inset-0 bg-cover bg-center bg-no-repeat transition duration-[1000ms] group-hover:scale-[1.035]" style={{ backgroundImage: `url("${image}")` }} />
               <div className="absolute inset-0 bg-gradient-to-b from-white via-white/70 to-transparent" />
               <div className="relative p-7 sm:p-9"><p className="text-[11px] font-semibold tracking-[.15em] opacity-45 uppercase">{eyebrow}</p><h3 className="mt-3 text-[2.35rem] font-semibold leading-none tracking-[-.05em]">{title}</h3><p className="mt-4 max-w-xs text-[14px] leading-relaxed opacity-55">{copy}</p><span className="mt-5 inline-flex items-center text-[14px] font-semibold text-[#0071e3]">İncele <ChevronRight className="h-4 w-4" /></span></div>
@@ -142,11 +142,11 @@ export default function MepotiaResearchHome({ products = [], campaignImages = []
 
       <HomeGuideFinder content={content} image={media.guide} />
 
-      <section className="mx-auto max-w-[1368px] px-4 py-14 sm:px-6 sm:py-20">
+      <section className="home-shell py-8 sm:py-12">
         <SectionTitle muted="Her işlem için daha kısa yol.">Mepotia servisleri.</SectionTitle>
         <div className="mt-9 space-y-8">
           {SERVICES.map((baseItem, index) => { const item = { ...baseItem, ...(index === 0 ? { title: content.trade_title, copy: content.trade_copy, action: content.trade_action, image: media.trade || baseItem.image } : index === 1 ? { title: content.compare_title, copy: content.compare_copy, action: content.compare_action, image: media.compare || baseItem.image } : { title: content.request_title, copy: content.request_copy, action: content.request_action }) }; return index === 2 ? (
-            <article key={item.title} className="relative overflow-hidden rounded-[32px] bg-[linear-gradient(135deg,#eef6ff_0%,#f7f4ff_48%,#edf9ff_100%)] px-6 py-16 text-center shadow-[0_35px_100px_-72px_rgba(0,71,227,.65)] ring-1 ring-[#0071e3]/10 sm:px-10 sm:py-20 lg:min-h-[650px] lg:rounded-[40px]">
+            <article key={item.title} className="relative overflow-hidden rounded-[28px] bg-[linear-gradient(135deg,#eef6ff_0%,#f7f4ff_48%,#edf9ff_100%)] px-5 py-11 text-center ring-1 ring-[#0071e3]/10 sm:px-10 sm:py-14 lg:min-h-[580px] lg:rounded-[36px]">
               <div className="pointer-events-none absolute -left-24 top-12 h-72 w-72 rounded-full bg-[#64d2ff]/25 blur-[80px]" />
               <div className="pointer-events-none absolute -right-20 bottom-0 h-80 w-80 rounded-full bg-[#bf5af2]/15 blur-[90px]" />
               <div className="relative mx-auto max-w-4xl">
@@ -170,15 +170,15 @@ export default function MepotiaResearchHome({ products = [], campaignImages = []
             </article>
           ) : (
             <div key={item.title} className={index === 1 ? "space-y-8" : ""}>
-            <article className={`grid overflow-hidden rounded-[32px] shadow-[0_36px_100px_-65px_rgba(0,0,0,.9)] lg:min-h-[620px] lg:grid-cols-[.9fr_1.1fr] lg:rounded-[40px] ${index === 1 ? "bg-white text-[#1d1d1f] ring-1 ring-black/[.05]" : "bg-black text-white"}`}>
-              <div className={`flex flex-col justify-center px-7 py-14 sm:px-12 lg:px-16 ${index % 2 ? "lg:order-2" : ""}`}>
+            <article className={`grid overflow-hidden rounded-[28px] ring-1 ring-black/[.05] lg:min-h-[560px] lg:grid-cols-[.9fr_1.1fr] lg:rounded-[36px] ${index === 1 ? "bg-white text-[#1d1d1f]" : "bg-black text-white"}`}>
+              <div className={`flex flex-col justify-center px-6 py-10 sm:px-10 sm:py-12 lg:px-14 ${index % 2 ? "lg:order-2" : ""}`}>
                 <p className="text-[11px] font-semibold tracking-[.17em] text-[#0071e3] uppercase">{item.eyebrow}</p>
-                <h3 className="mt-5 text-[3rem] font-semibold leading-[.94] tracking-[-.065em] sm:text-[4.6rem]">{item.title}</h3>
+                <h3 className="mt-4 text-[2.5rem] font-semibold leading-[.94] tracking-[-.065em] sm:mt-5 sm:text-[4.3rem]">{item.title}</h3>
                 <p className={`mt-6 max-w-lg text-[16px] leading-relaxed ${index === 1 ? "text-[#6e6e73]" : "text-white/55"}`}>{item.copy}</p>
                 {index === 1 ? <div className="mt-6 flex flex-wrap gap-2">{["Fiyat", "Ekran", "Performans", "Batarya"].map((detail) => <span key={detail} className="rounded-full bg-[#f5f5f7] px-3 py-1.5 text-[11px] font-medium text-[#6e6e73] ring-1 ring-black/[.05]">{detail}</span>)}</div> : null}
                 <Link href={item.href} className="mt-8 inline-flex h-12 w-fit items-center gap-1 rounded-full bg-[#0071e3] px-6 text-[14px] font-semibold text-white hover:bg-[#0077ed]">{item.action}<ChevronRight className="h-4 w-4" /></Link>
               </div>
-              <div className={`group relative min-h-[520px] overflow-hidden lg:min-h-[620px] ${index === 1 ? "bg-[#f5f7fa]" : "bg-[#0b0b0d]"} ${index % 2 ? "lg:order-1" : ""}`}>
+              <div className={`group relative min-h-[350px] overflow-hidden sm:min-h-[430px] lg:min-h-[560px] ${index === 1 ? "bg-[#f5f7fa]" : "bg-[#0b0b0d]"} ${index % 2 ? "lg:order-1" : ""}`}>
                 <div
                   role="img"
                   aria-label={`${item.eyebrow} görseli`}
@@ -197,7 +197,7 @@ export default function MepotiaResearchHome({ products = [], campaignImages = []
       <SellDeviceSection content={content} />
 
       {products.length ? (
-        <section className="mx-auto max-w-[1368px] px-4 py-14 sm:px-6 sm:py-20">
+        <section className="home-shell py-8 sm:py-12">
           <div className="flex items-end justify-between gap-5"><SectionTitle muted="Vitrine yeni geldi.">Son eklenenler.</SectionTitle><Link href="/urunler" className="hidden text-[14px] font-semibold text-[#0071e3] sm:inline-flex">Tüm ürünler <ChevronRight className="h-4 w-4" /></Link></div>
           <div className="mt-9 grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-5">
             {products.slice(0, 8).map((product) => <Link key={product.id} href={`/urun/${product.id}`} className="group overflow-hidden rounded-[24px] bg-white p-3 ring-1 ring-black/[.04] transition duration-500 hover:-translate-y-1 hover:shadow-[0_30px_70px_-50px_rgba(0,0,0,.55)] sm:p-5"><div className="relative aspect-square overflow-hidden rounded-[18px] bg-[#f5f5f7]"><ProductImage src={getPrimaryImage(product)} alt={product.title} fill className="object-cover transition duration-700 group-hover:scale-[1.035]" /></div><p className="mt-4 text-[10px] font-semibold tracking-[.14em] text-[#b15d00] uppercase">Yeni</p><h3 className="mt-1 line-clamp-2 text-[15px] font-semibold leading-tight tracking-[-.025em] sm:text-[18px]">{product.title}</h3><p className="mt-2 text-[12px] text-[#6e6e73] sm:text-[13px]">{product.price != null ? formatPrice(product.price) : "Fiyat için iletişime geç"}</p></Link>)}

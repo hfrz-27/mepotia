@@ -49,7 +49,7 @@ function initials(name) {
 
 function ReviewCard({ review, index = 0 }) {
   return (
-    <article style={{ zIndex: index + 1 }} className="group sticky top-[76px] flex min-h-[270px] h-full flex-col rounded-[24px] bg-white p-5 shadow-[0_24px_65px_-38px_rgba(0,0,0,.46)] ring-1 ring-black/[0.055] transition duration-500 hover:-translate-y-1 hover:shadow-[0_34px_75px_-45px_rgba(0,0,0,.5)] sm:static sm:min-h-[230px] sm:rounded-[28px] sm:p-7">
+    <article style={{ zIndex: index + 1 }} className="group sticky top-[70px] flex min-h-[210px] h-full flex-col rounded-[22px] bg-white p-5 shadow-[0_14px_38px_-30px_rgba(0,0,0,.4)] ring-1 ring-black/[0.055] transition duration-500 hover:-translate-y-1 sm:static sm:min-h-[220px] sm:rounded-[26px] sm:p-7">
       <div className="flex items-center gap-2.5">
         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#1d1d1f] text-[10px] font-bold text-white">
           {initials(review.author_name)}
@@ -132,7 +132,7 @@ export default function CustomerReviews() {
   };
 
   return (
-    <section className="mx-auto max-w-[1368px] px-4 py-14 sm:px-6 sm:py-20" aria-label="Yorumlar">
+    <section className="home-shell py-8 sm:py-12" aria-label="Yorumlar">
       <div className="relative rounded-[32px] bg-[linear-gradient(135deg,#eef4fb_0%,#f7f7f8_48%,#f2effb_100%)] p-6 ring-1 ring-black/[.04] sm:p-10 lg:rounded-[40px] lg:p-14">
         <div className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-[#64d2ff]/20 blur-[80px]" />
         <div className="pointer-events-none absolute -bottom-24 left-1/4 h-64 w-64 rounded-full bg-[#bf5af2]/10 blur-[80px]" />

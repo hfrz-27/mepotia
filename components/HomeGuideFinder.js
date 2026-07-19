@@ -17,12 +17,12 @@ export default function HomeGuideFinder({ content, image }) {
   const [selected, setSelected] = useState("telefon");
 
   return (
-    <section className="mx-auto max-w-[1368px] px-4 py-14 sm:px-6 sm:py-20">
-      <div className="overflow-hidden rounded-[32px] bg-[#eeedea] ring-1 ring-black/[.045] lg:grid lg:min-h-[650px] lg:grid-cols-[.78fr_1.22fr] lg:rounded-[40px]">
-        <div className="relative min-h-[420px] overflow-hidden lg:min-h-full">
+    <section className="home-shell py-8 sm:py-12">
+      <div className="overflow-hidden rounded-[28px] bg-[#eeedea] ring-1 ring-black/[.045] lg:grid lg:min-h-[600px] lg:grid-cols-[.78fr_1.22fr] lg:rounded-[36px]">
+        <div className="relative min-h-[320px] overflow-hidden sm:min-h-[380px] lg:min-h-full">
           <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url("${image || "/brand/actions/mepotia-guide-premium-v3.png"}")` }} />
           <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/5 to-black/35 lg:bg-gradient-to-r lg:from-black/72 lg:via-black/20 lg:to-transparent" />
-          <div className="relative flex min-h-[420px] flex-col p-7 text-white sm:p-10 lg:min-h-[650px] lg:p-12">
+          <div className="relative flex min-h-[320px] flex-col p-6 text-white sm:min-h-[380px] sm:p-9 lg:min-h-[600px] lg:p-12">
             <span className="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-black/20 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[.17em] backdrop-blur-xl"><Sparkles className="h-3.5 w-3.5 text-[#64d2ff]" /> Mepotia Rehber</span>
             <div className="mt-auto max-w-md">
               <h2 className="text-[2.8rem] font-semibold leading-[.95] tracking-[-.06em] sm:text-[4rem]">{content.guide_title}</h2>
@@ -41,7 +41,7 @@ export default function HomeGuideFinder({ content, image }) {
               {OPTIONS.map(({ id, label, copy, Icon }) => {
                 const active = selected === id;
                 return (
-                  <button key={id} type="button" onClick={() => setSelected(id)} aria-pressed={active} className={`group flex min-h-[112px] flex-col items-center justify-center rounded-[18px] border p-3 text-center transition duration-300 ${active ? "border-[#0071e3] bg-[#eef6ff] text-[#0071e3] shadow-[0_12px_35px_-24px_rgba(0,113,227,.65)]" : "border-black/[.055] bg-[#fafafa] text-[#424245] hover:border-black/15 hover:bg-white"}`}>
+                  <button key={id} type="button" onClick={() => setSelected(id)} aria-pressed={active} className={`group flex min-h-[88px] flex-col items-center justify-center rounded-[16px] border p-2.5 text-center transition duration-300 sm:min-h-[104px] ${active ? "border-[#0071e3] bg-[#eef6ff] text-[#0071e3]" : "border-black/[.055] bg-[#fafafa] text-[#424245] hover:border-black/15 hover:bg-white"}`}>
                     <span className={`flex h-9 w-9 items-center justify-center rounded-full transition ${active ? "bg-[#0071e3] text-white" : "bg-[#eeeeef] text-[#6e6e73] group-hover:bg-[#e7e7e9]"}`}><Icon className="h-4.5 w-4.5" strokeWidth={1.6} /></span>
                     <span className="mt-2 text-[12px] font-semibold">{label}</span>
                     <span className="mt-0.5 text-[9px] opacity-60 sm:text-[10px]">{copy}</span>

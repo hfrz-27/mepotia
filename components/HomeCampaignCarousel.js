@@ -27,9 +27,9 @@ export default function HomeCampaignCarousel({ images = [], content = {} }) {
   const go = (direction) => setActive((value) => (value + direction + slides.length) % slides.length);
 
   return (
-    <section className="bg-[#f5f5f7] px-4 pt-4 sm:px-6 sm:pt-6" aria-label="Mepotia kampanyaları">
+    <section className="home-shell pt-3 sm:pt-5" aria-label="Mepotia kampanyaları">
       <div
-        className="relative mx-auto min-h-[430px] w-full max-w-[1320px] overflow-hidden rounded-[26px] bg-[#dfe3f3] text-[#1d1d1f] shadow-[0_28px_80px_-58px_rgba(0,0,0,.7)] sm:min-h-[520px] sm:rounded-[32px]"
+        className="relative min-h-[350px] w-full overflow-hidden rounded-[24px] bg-[#dfe3f3] text-[#1d1d1f] ring-1 ring-black/[.04] sm:min-h-[480px] sm:rounded-[30px] lg:min-h-[520px]"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
       >
@@ -37,9 +37,9 @@ export default function HomeCampaignCarousel({ images = [], content = {} }) {
           <div key={`${slide.image}-${index}`} className={`absolute inset-0 transition-opacity duration-700 ${index === active ? "z-10 opacity-100" : "opacity-0"}`} aria-hidden={index !== active}>
             <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: `url("${slide.image}")` }} role="img" aria-label="Mepotia lansman görseli" />
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-white/78" />
-            <div className="relative ml-auto flex min-h-[430px] max-w-[610px] flex-col items-center justify-center px-8 py-14 text-center sm:min-h-[520px] sm:px-16 lg:mr-8">
+            <div className="relative ml-auto flex min-h-[350px] max-w-[610px] flex-col items-center justify-center px-8 py-9 text-center sm:min-h-[480px] sm:px-16 lg:mr-8 lg:min-h-[520px]">
               <p className="text-[11px] font-semibold tracking-[0.18em] text-[#0071e3] uppercase">{content.hero_eyebrow}</p>
-              <h2 className="mt-4 text-[2.75rem] font-semibold leading-[0.94] tracking-[-0.06em] sm:text-[4.6rem]">{content.hero_title}</h2>
+              <h2 className="mt-3 text-[2.3rem] font-semibold leading-[0.94] tracking-[-0.06em] sm:mt-4 sm:text-[4.2rem]">{content.hero_title}</h2>
               <p className="mt-5 max-w-lg text-[14px] leading-relaxed text-[#515154] sm:text-[17px]">{content.hero_copy}</p>
               <div className="mt-7 flex flex-wrap items-center justify-center gap-5">
                 <Link href="/urunler" className="text-[14px] font-semibold underline underline-offset-8">{content.hero_link}</Link>

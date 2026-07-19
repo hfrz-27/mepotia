@@ -27,7 +27,7 @@ export default function Footer({ whatsapp, phone, email }) {
 
   return (
     <footer className="mt-auto overflow-x-clip bg-[#f5f5f7] text-[#1d1d1f]">
-      <div className="mx-auto w-full max-w-[1368px] px-4 pt-10 sm:px-6 sm:pt-12">
+      <div className="home-shell pt-6 sm:pt-8">
         <div className="border-t border-black/15 pt-5">
           <Link href="/" className="inline-flex items-center gap-2 text-[12px] font-semibold text-[#424245] transition hover:text-black">
             <span className="font-serif text-[16px] tracking-[-.04em]">MEPOTIA</span>
@@ -47,18 +47,18 @@ export default function Footer({ whatsapp, phone, email }) {
           ))}
         </nav>
 
-        <nav className="hidden grid-cols-4 gap-12 border-b border-black/15 py-8 lg:grid" aria-label="Alt menü">
+        <nav className="hidden grid-cols-4 gap-10 border-b border-black/15 py-6 lg:grid" aria-label="Alt menü">
           {COLUMNS.map((column) => (
             <section key={column.title}>
               <h2 className="text-[12px] font-semibold text-[#1d1d1f]">{column.title}</h2>
-              <ul className="mt-4 space-y-2.5">
+              <ul className="mt-3 space-y-2">
                 {column.links.map(([href, label]) => <li key={href}><Link href={href} className="text-[12px] leading-relaxed text-[#424245] transition hover:text-black hover:underline">{label}</Link></li>)}
               </ul>
             </section>
           ))}
         </nav>
 
-        <div className="my-5 flex flex-col gap-4 rounded-[18px] bg-white/70 p-4 text-[11px] leading-relaxed text-[#6e6e73] ring-1 ring-black/[.04] sm:flex-row sm:items-center sm:justify-between sm:px-5">
+        <div className="my-4 flex flex-col gap-3 rounded-[16px] bg-white/70 p-4 text-[11px] leading-relaxed text-[#6e6e73] ring-1 ring-black/[.04] sm:flex-row sm:items-center sm:justify-between sm:px-5">
           <p><span className="font-semibold text-[#1d1d1f]">Teknoloji seçimin için yanındayız.</span><br />Sorunu doğrudan Mepotia’ya iletebilirsin.</p>
           <div className="grid grid-cols-3 gap-2 sm:flex">
             <a href={wa} target="_blank" rel="noreferrer" className="rounded-full bg-[#0071e3] px-3 py-2 text-center font-semibold text-white transition hover:bg-[#0077ed]">WhatsApp</a>
@@ -67,7 +67,7 @@ export default function Footer({ whatsapp, phone, email }) {
           </div>
         </div>
 
-        <div className="border-t border-black/15 py-6 text-center text-[11px] text-[#6e6e73]">
+        <div className="border-t border-black/15 py-4 text-center text-[11px] text-[#6e6e73]">
           <p>Telif Hakkı © {new Date().getFullYear()} Mepotia. Tüm hakları saklıdır.</p>
         </div>
       </div>
