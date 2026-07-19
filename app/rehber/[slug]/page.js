@@ -76,11 +76,15 @@ export default async function BuyingGuidePage({ params }) {
         ) : (
           <>
             <div
-              className={`pointer-events-none absolute -top-24 -right-16 -z-20 h-72 w-72 rounded-full ${guide.glow || "bg-white/20"} blur-3xl`}
+              className={`pointer-events-none absolute -top-24 -right-16 -z-20 h-72 w-72 rounded-full ${guide.glow || "bg-violet-500/30"} blur-3xl`}
               aria-hidden
             />
             <div
-              className="pointer-events-none absolute -bottom-32 -left-20 -z-20 h-80 w-80 rounded-full bg-white/10 blur-3xl"
+              className="pointer-events-none absolute -bottom-32 -left-20 -z-20 h-80 w-80 rounded-full bg-cyan-400/20 blur-3xl"
+              aria-hidden
+            />
+            <div
+              className="pointer-events-none absolute top-1/3 left-1/2 -z-20 h-56 w-56 rounded-full bg-fuchsia-500/15 blur-3xl"
               aria-hidden
             />
           </>
@@ -116,7 +120,7 @@ export default async function BuyingGuidePage({ params }) {
                 <BookOpenCheck className="h-3.5 w-3.5" />
                 {guide.eyebrow}
               </p>
-              <h1 className="mt-4 font-display text-3xl font-semibold leading-[1.08] tracking-tight sm:text-5xl lg:text-[3.25rem]">
+              <h1 className="mt-4 bg-gradient-to-r from-white via-violet-100 to-white bg-clip-text font-display text-3xl font-semibold leading-[1.08] tracking-tight text-transparent sm:text-5xl lg:text-[3.25rem]">
                 {guide.title}
               </h1>
               <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/65 sm:text-base">
@@ -125,7 +129,7 @@ export default async function BuyingGuidePage({ params }) {
               <div className="mt-7 flex flex-wrap items-center gap-2.5">
                 <a
                   href="#adimlar"
-                  className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-bw-950 shadow-lg shadow-black/20 transition hover:bg-bw-100"
+                  className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-500 to-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/40 transition hover:from-violet-400 hover:to-indigo-500"
                 >
                   <Sparkles className="h-4 w-4" />
                   Adımları oku
@@ -148,13 +152,17 @@ export default async function BuyingGuidePage({ params }) {
             </div>
 
             <div className="grid w-full max-w-xs grid-cols-2 gap-2 sm:max-w-sm">
-              <div className="rounded-2xl border border-white/12 bg-white/8 p-4 backdrop-blur-md">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-white/45">Adım</p>
-                <p className="mt-1 text-2xl font-semibold tabular-nums">{guide.steps.length}</p>
+              <div className="rounded-2xl border border-violet-300/25 bg-gradient-to-br from-violet-500/20 to-indigo-500/10 p-4 backdrop-blur-md">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-white/55">Adım</p>
+                <p className="mt-1 bg-gradient-to-r from-violet-200 to-white bg-clip-text text-2xl font-semibold text-transparent tabular-nums">
+                  {guide.steps.length}
+                </p>
               </div>
-              <div className="rounded-2xl border border-white/12 bg-white/8 p-4 backdrop-blur-md">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-white/45">Kontrol</p>
-                <p className="mt-1 text-2xl font-semibold tabular-nums">{guide.checklist.length}</p>
+              <div className="rounded-2xl border border-emerald-300/25 bg-gradient-to-br from-emerald-500/20 to-teal-500/10 p-4 backdrop-blur-md">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-white/55">Kontrol</p>
+                <p className="mt-1 bg-gradient-to-r from-emerald-200 to-white bg-clip-text text-2xl font-semibold text-transparent tabular-nums">
+                  {guide.checklist.length}
+                </p>
               </div>
             </div>
           </div>
@@ -210,7 +218,7 @@ export default async function BuyingGuidePage({ params }) {
               {guide.steps.map(([heading, text], index) => (
                 <li key={heading}>
                   <article className="group relative flex gap-4 rounded-2xl border border-bw-200/90 bg-white p-4 shadow-[0_12px_40px_-28px_rgba(0,0,0,0.35)] transition duration-300 hover:-translate-y-0.5 hover:border-bw-300 hover:shadow-[0_24px_48px_-28px_rgba(0,0,0,0.4)] sm:gap-5 sm:p-5">
-                    <span className="relative z-[1] flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-bw-950 text-xs font-bold text-white ring-4 ring-[#f7f7f8] sm:h-11 sm:w-11 sm:text-sm">
+                    <span className="relative z-[1] flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 text-xs font-bold text-white shadow-md shadow-indigo-500/25 ring-4 ring-[#f7f7f8] sm:h-11 sm:w-11 sm:text-sm">
                       {String(index + 1).padStart(2, "0")}
                     </span>
                     <div className="min-w-0 pt-0.5">
@@ -230,7 +238,7 @@ export default async function BuyingGuidePage({ params }) {
           {/* Sticky checklist */}
           <aside id="kontrol-listesi" className="lg:sticky lg:top-16">
             <div className="overflow-hidden rounded-2xl border border-bw-200 bg-white shadow-[0_20px_50px_-36px_rgba(0,0,0,0.4)]">
-              <div className="border-b border-bw-100 bg-gradient-to-br from-bw-950 to-bw-800 px-5 py-4 text-white">
+              <div className="border-b border-bw-100 bg-gradient-to-br from-[#12071f] via-[#241040] to-[#0b0618] px-5 py-4 text-white">
                 <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/50">
                   Hızlı kontrol
                 </p>
@@ -244,7 +252,7 @@ export default async function BuyingGuidePage({ params }) {
                     key={item}
                     className="flex gap-2.5 rounded-xl px-2.5 py-2.5 text-sm text-bw-700 transition hover:bg-bw-50"
                   >
-                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-bw-950 text-white">
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 text-white shadow-sm shadow-emerald-500/30">
                       <Check className="h-3 w-3" strokeWidth={3} />
                     </span>
                     <span className="leading-snug">{item}</span>
