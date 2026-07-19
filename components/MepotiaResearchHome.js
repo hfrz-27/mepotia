@@ -1,9 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import { BadgeCheck, ChevronRight, CircleDollarSign, MessageCircleMore, ShieldCheck } from "lucide-react";
+import { ArrowUpRight, BadgeCheck, ChevronRight, CircleDollarSign, MessageCircleMore, Newspaper, ShieldCheck } from "lucide-react";
 import ProductImage from "@/components/ProductImage";
 import { formatPrice, getPrimaryImage } from "@/lib/productDisplay";
 import HomeCampaignCarousel from "@/components/HomeCampaignCarousel";
+import { formatTechDate } from "@/lib/techPostUtils";
 
 const FEATURES = [
   ["Telefon", "Günlük hayatına hazır.", "Kondisyonu açıkça anlatılmış akıllı telefonlar.", "/brand/categories/mepotia-phone-v2.webp", "/kategori/telefon"],
@@ -28,38 +29,59 @@ function SectionTitle({ children, muted }) {
   return <h2 className="text-[2rem] font-semibold leading-[1.02] tracking-[-0.05em] sm:text-[3.25rem]">{children} <span className="text-black/38">{muted}</span></h2>;
 }
 
-export default function MepotiaResearchHome({ products = [], campaignImages = [] }) {
+export default function MepotiaResearchHome({ products = [], campaignImages = [], news = [] }) {
+  const newsItems = news.slice(0, 3);
+  const leadNews = newsItems[0];
   return (
     <main className="min-h-screen bg-[#f5f5f7] text-[#1d1d1f]">
       <HomeCampaignCarousel images={campaignImages} />
-      <section className="border-b border-black/[0.035] bg-[#f5f5f7]">
-        <div className="mx-auto max-w-[1368px] px-4 pt-16 pb-12 sm:px-6 sm:pt-24 sm:pb-16">
-          <div className="grid gap-10 lg:grid-cols-[1.25fr_.75fr] lg:items-center">
-            <h1 className="text-[4.5rem] font-semibold leading-[0.9] tracking-[-0.07em] sm:text-[6.2rem]">
-              Mepotia<br />Store.
-            </h1>
-            <div className="lg:justify-self-end">
-              <h2 className="max-w-sm text-[1.8rem] font-semibold leading-[1.08] tracking-[-0.045em] sm:text-[2.3rem]">Sevdiğin teknolojiyi seçmenin daha net yolu.</h2>
-              <div className="mt-6 space-y-3 text-[14px]">
-                <Link href="/iletisim" className="block font-medium text-[#0071e3] hover:underline">Bir uzmanla görüş ↗</Link>
-                <Link href="/rehber" className="block font-medium text-[#0071e3] hover:underline">Satın alma rehberini aç ↗</Link>
+      <section className="relative overflow-hidden py-14 sm:py-20">
+        <div className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[780px] -translate-x-1/2 rounded-full bg-[#0071e3]/[.09] blur-[120px]" />
+        <div className="relative mx-auto max-w-[1368px] px-4 sm:px-6">
+          <div className="mb-8 flex flex-col gap-5 sm:mb-10 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[.2em] text-[#0071e3]">Mepotia Haber</p>
+              <h1 className="mt-3 text-[2.8rem] font-semibold leading-[.96] tracking-[-.06em] sm:text-[4.5rem]">Teknoloji gündemi.<br /><span className="text-black/35">Net, hızlı, seçilmiş.</span></h1>
+            </div>
+            <Link href="/teknoloji" className="group inline-flex items-center gap-2 text-[14px] font-semibold text-[#0071e3]">Tüm haberleri keşfet <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" /></Link>
+          </div>
+
+          {leadNews ? (
+            <div className="grid gap-5 lg:grid-cols-[1.45fr_.75fr]">
+              <Link href={`/teknoloji/${leadNews.id}`} className="group relative min-h-[520px] overflow-hidden rounded-[30px] bg-black text-white shadow-[0_35px_85px_-55px_rgba(0,0,0,.85)] sm:min-h-[650px] sm:rounded-[38px]">
+                {leadNews.cover_url ? <Image src={leadNews.cover_url} alt={leadNews.title} fill sizes="(max-width:1024px) 100vw, 850px" className="object-cover transition duration-[1100ms] ease-out group-hover:scale-[1.045]" /> : null}
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-transparent" />
+                <div className="absolute inset-0 opacity-0 ring-1 ring-inset ring-white/30 transition duration-500 group-hover:opacity-100" />
+                <div className="absolute inset-x-0 bottom-0 p-7 sm:p-11">
+                  <span className="inline-flex rounded-full border border-white/20 bg-black/25 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[.16em] backdrop-blur-xl">Öne çıkan · {formatTechDate(leadNews.created_at)}</span>
+                  <h2 className="mt-5 max-w-3xl text-[2.2rem] font-semibold leading-[1.02] tracking-[-.045em] sm:text-[3.6rem]">{leadNews.title}</h2>
+                  <p className="mt-4 line-clamp-2 max-w-2xl text-[14px] leading-relaxed text-white/65 sm:text-[16px]">{leadNews.excerpt || "Günün öne çıkan teknoloji gelişmesini Mepotia'nın sade anlatımıyla keşfet."}</p>
+                  <span className="mt-6 inline-flex items-center gap-2 text-[14px] font-semibold">Haberi oku <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" /></span>
+                </div>
+              </Link>
+
+              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-1">
+                {newsItems.slice(1).map((post) => (
+                  <Link key={post.id} href={`/teknoloji/${post.id}`} className="group relative min-h-[310px] overflow-hidden rounded-[28px] bg-[#111114] text-white shadow-[0_28px_65px_-52px_rgba(0,0,0,.9)] sm:rounded-[32px]">
+                    {post.cover_url ? <Image src={post.cover_url} alt={post.title} fill sizes="(max-width:1024px) 50vw, 430px" className="object-cover transition duration-[900ms] group-hover:scale-[1.06]" /> : null}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+                    <div className="absolute inset-x-0 bottom-0 p-6 sm:p-7">
+                      <p className="text-[10px] font-semibold uppercase tracking-[.15em] text-white/55">{formatTechDate(post.created_at)}</p>
+                      <h3 className="mt-3 line-clamp-3 text-[1.45rem] font-semibold leading-[1.08] tracking-[-.035em]">{post.title}</h3>
+                      <ArrowUpRight className="mt-5 h-5 w-5 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
+                    </div>
+                  </Link>
+                ))}
               </div>
             </div>
-          </div>
+          ) : (
+            <Link href="/teknoloji" className="group relative flex min-h-[480px] items-end overflow-hidden rounded-[30px] bg-black p-8 text-white sm:rounded-[38px] sm:p-12">
+              <Image src="/brand/editorial/mepotia-podcast-studio-v2.png" alt="Mepotia teknoloji stüdyosu" fill sizes="100vw" className="object-cover transition duration-[1100ms] group-hover:scale-[1.04]" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-transparent" />
+              <div className="relative"><Newspaper className="h-7 w-7 text-[#2997ff]" /><h2 className="mt-5 text-[2.6rem] font-semibold tracking-[-.05em] sm:text-[4rem]">Haber merkezi hazırlanıyor.</h2><p className="mt-3 text-white/60">Teknoloji gündemini çok yakında burada bulacaksın.</p></div>
+            </Link>
+          )}
         </div>
-      </section>
-
-      <section className="mx-auto max-w-[1368px] px-4 pb-14 sm:px-6 sm:pb-20">
-        <Link href="/teknoloji" className="group relative block min-h-[620px] overflow-hidden rounded-[30px] bg-black text-white shadow-[0_35px_90px_-60px_rgba(0,0,0,.8)] sm:rounded-[36px]">
-          <Image src="/brand/editorial/mepotia-podcast-studio-v2.png" alt="Mepotia teknoloji ve podcast stüdyosu" fill priority sizes="(max-width:1200px) 100vw, 1200px" className="object-cover transition duration-[1200ms] group-hover:scale-[1.02]" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/68 to-transparent" />
-          <div className="relative flex min-h-[620px] max-w-2xl flex-col justify-center px-7 py-14 sm:px-12 lg:px-16">
-            <p className="text-[11px] font-semibold tracking-[0.18em] text-white/48 uppercase">Mepotia Haber · Stüdyo</p>
-            <h2 className="mt-5 text-[3.2rem] font-semibold leading-[0.94] tracking-[-0.065em] sm:text-[5rem]">Teknolojinin gündemi. Daha net bir sesle.</h2>
-            <p className="mt-6 max-w-lg text-[16px] leading-relaxed text-white/58">Seçili gelişmeler, anlaşılır analizler, rehberler ve Mepotia stüdyosundan profesyonel içerikler.</p>
-            <span className="mt-8 inline-flex h-12 w-fit items-center gap-1 rounded-full bg-[#0071e3] px-6 text-[14px] font-semibold">Haberleri keşfet <ChevronRight className="h-4 w-4" /></span>
-          </div>
-        </Link>
       </section>
 
       <section className="mx-auto max-w-[1368px] px-4 py-14 sm:px-6 sm:py-20">
