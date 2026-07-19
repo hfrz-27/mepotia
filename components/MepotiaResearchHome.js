@@ -31,6 +31,7 @@ function SectionTitle({ children, muted }) {
 export default function MepotiaResearchHome({ products = [], campaignImages = [] }) {
   return (
     <main className="min-h-screen bg-[#f5f5f7] text-[#1d1d1f]">
+      <HomeCampaignCarousel images={campaignImages} />
       <section className="border-b border-black/[0.035] bg-[#f5f5f7]">
         <div className="mx-auto max-w-[1368px] px-4 pt-16 pb-12 sm:px-6 sm:pt-24 sm:pb-16">
           <div className="grid gap-10 lg:grid-cols-[1.25fr_.75fr] lg:items-center">
@@ -47,8 +48,6 @@ export default function MepotiaResearchHome({ products = [], campaignImages = []
           </div>
         </div>
       </section>
-
-      <HomeCampaignCarousel images={campaignImages} />
 
       <section className="mx-auto max-w-[1368px] px-4 pb-14 sm:px-6 sm:pb-20">
         <Link href="/teknoloji" className="group relative block min-h-[620px] overflow-hidden rounded-[30px] bg-black text-white shadow-[0_35px_90px_-60px_rgba(0,0,0,.8)] sm:rounded-[36px]">

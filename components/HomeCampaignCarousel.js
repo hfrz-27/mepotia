@@ -30,19 +30,22 @@ export default function HomeCampaignCarousel({ images = [] }) {
   return (
     <section className="bg-[#f5f5f7] px-4 pt-4 sm:px-6 sm:pt-6" aria-label="Mepotia kampanyaları">
       <div
-        className="relative mx-auto min-h-[430px] max-w-[1320px] overflow-hidden rounded-[26px] bg-[#111] text-white shadow-[0_28px_80px_-58px_rgba(0,0,0,.7)] sm:min-h-[520px] sm:rounded-[32px]"
+        className="relative mx-auto min-h-[430px] max-w-[1320px] overflow-hidden rounded-[26px] bg-[#dfe3f3] text-[#1d1d1f] shadow-[0_28px_80px_-58px_rgba(0,0,0,.7)] sm:min-h-[520px] sm:rounded-[32px]"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
       >
         {slides.map((slide, index) => (
           <div key={`${slide.image}-${index}`} className={`absolute inset-0 transition-opacity duration-700 ${index === active ? "z-10 opacity-100" : "opacity-0"}`} aria-hidden={index !== active}>
             <Image src={slide.image} alt="" fill priority={index === 0} sizes="100vw" className="object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-black/5" />
-            <div className="relative flex min-h-[430px] max-w-2xl flex-col justify-center px-8 py-14 sm:min-h-[520px] sm:px-16 lg:px-24">
-              <p className="text-[11px] font-semibold tracking-[0.18em] text-[#7bbcff] uppercase">{slide.eyebrow}</p>
-              <h2 className="mt-4 text-[2.75rem] font-semibold leading-[0.94] tracking-[-0.06em] sm:text-[4.6rem]">{slide.title}</h2>
-              <p className="mt-5 max-w-lg text-[14px] leading-relaxed text-white/65 sm:text-[17px]">{slide.copy}</p>
-              <Link href={slide.href} className="mt-7 inline-flex h-11 w-fit items-center rounded-full bg-white px-5 text-[13px] font-semibold text-[#1d1d1f] transition hover:bg-[#f5f5f7]">{slide.action}</Link>
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-white/78" />
+            <div className="relative ml-auto flex min-h-[430px] max-w-[610px] flex-col items-center justify-center px-8 py-14 text-center sm:min-h-[520px] sm:px-16 lg:mr-8">
+              <p className="text-[11px] font-semibold tracking-[0.18em] text-[#0071e3] uppercase">Mepotia Yeni Nesil</p>
+              <h2 className="mt-4 text-[2.75rem] font-semibold leading-[0.94] tracking-[-0.06em] sm:text-[4.6rem]">Teknolojinin yeni hali.</h2>
+              <p className="mt-5 max-w-lg text-[14px] leading-relaxed text-[#515154] sm:text-[17px]">Seçilmiş ürünleri, net bilgileri ve sana uygun seçenekleri Mepotia’da keşfet.</p>
+              <div className="mt-7 flex flex-wrap items-center justify-center gap-5">
+                <Link href="/urunler" className="text-[14px] font-semibold underline underline-offset-8">Daha fazla bilgi</Link>
+                <Link href="/urunler" className="inline-flex h-11 items-center rounded-full border border-[#1d1d1f] px-6 text-[13px] font-semibold transition hover:bg-[#1d1d1f] hover:text-white">Ürünleri incele</Link>
+              </div>
             </div>
           </div>
         ))}

@@ -15,13 +15,7 @@ export default async function HomePage() {
     <MepotiaResearchHome
       categories={categories || []}
       products={productsRes.data || []}
-      campaignImages={[
-        settings?.hero_bg_1 || "/brand/actions/mepotia-compare-premium-v3.png",
-        settings?.hero_bg_2 || "/brand/actions/mepotia-trade-premium-v3.png",
-        settings?.hero_bg_3 || "/brand/actions/mepotia-guide-premium-v3.png",
-        settings?.home_featured_cover || "/brand/editorial/mepotia-podcast-studio-v2.png",
-        settings?.home_curated_cover || "/brand/mepotia-hero-tech.webp",
-      ]}
+      campaignImages={[settings?.hero_bg_1 || "/brand/actions/mepotia-guide-premium-v3.png"]}
     />
   );
 }

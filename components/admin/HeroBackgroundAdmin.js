@@ -36,14 +36,10 @@ const PANELS = {
   },
   home: {
     title: "Ana sayfa hero",
-    description: "Ana sayfa duyurusunun altındaki kampanya slider’ı. En fazla 5 fotoğraf ekleyebilirsin.",
+    description: "Store yazısının üstündeki tek büyük lansman görseli.",
     videoKey: "hero_video",
     slots: [
       { key: "hero_bg_1", label: "Fotoğraf 1" },
-      { key: "hero_bg_2", label: "Fotoğraf 2" },
-      { key: "hero_bg_3", label: "Fotoğraf 3" },
-      { key: "home_featured_cover", label: "Fotoğraf 4" },
-      { key: "home_curated_cover", label: "Fotoğraf 5" },
     ],
     storagePrefix: "hero",
     savedMsg: "Ana sayfa hero kaydedildi. Sayfayı yenile.",
