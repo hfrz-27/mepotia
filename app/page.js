@@ -6,7 +6,6 @@ import HomeValueBand from "@/components/HomeValueBand";
 import HomeActionRail from "@/components/HomeActionRail";
 import HomeTradeGate from "@/components/HomeTradeGate";
 import HomeIntroHero from "@/components/HomeIntroHero";
-import HomeCategoryShowcase from "@/components/HomeCategoryShowcase";
 import { getPublishedProducts, HOME_COLLECTIONS } from "@/lib/products";
 import { getCategoryShowcase, getSiteSettings } from "@/lib/categories";
 import { fillProducts } from "@/lib/homeDemoData";
@@ -33,6 +32,13 @@ export default async function HomePage() {
   const popular = popularRes.data || [];
   const allProducts = fillProducts(allRes.data, GRID_LIMIT);
 
+  const heroCategories = (categoryTiles || []).map(({ slug, name, cover, href }) => ({
+    slug,
+    name,
+    cover,
+    href,
+  }));
+
   const wa = settings?.whatsapp
     ? `https://wa.me/${String(settings.whatsapp).replace(/\D/g, "")}`
     : WA;
@@ -54,9 +60,7 @@ export default async function HomePage() {
   return (
     <HomeReviewsProvider>
       <main>
-        <HomeIntroHero />
-
-        <HomeCategoryShowcase categories={categoryTiles} />
+        <HomeIntroHero categories={heroCategories} />
 
         <TechNewsSection coverUrl={covers.news} />
 
