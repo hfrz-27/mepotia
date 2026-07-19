@@ -7,7 +7,9 @@ export default function HomeFaqSection({ content }) {
   return (
     <section className="home-shell py-8 sm:py-12">
       <div className="overflow-hidden rounded-[32px] bg-white ring-1 ring-black/[.05] lg:grid lg:grid-cols-[.72fr_1.28fr] lg:rounded-[40px]">
-        <div className="relative flex flex-col bg-[#1d1d1f] p-6 text-white sm:p-9 lg:min-h-[600px] lg:p-12">
+        <div className="relative flex flex-col overflow-hidden bg-[#1d1d1f] p-6 text-white sm:p-9 lg:min-h-[600px] lg:p-12">
+          {content.faq_image_url ? <div className="absolute inset-0 bg-cover bg-center opacity-35" style={{ backgroundImage: `url("${content.faq_image_url}")` }} /> : null}
+          {content.faq_image_url ? <div className="absolute inset-0 bg-gradient-to-b from-[#1d1d1f]/65 via-[#1d1d1f]/80 to-[#1d1d1f]" /> : null}
           <div className="pointer-events-none absolute -left-16 top-1/3 h-64 w-64 rounded-full bg-[#0071e3]/20 blur-[80px]" />
           <div className="relative">
             <p className="text-[10px] font-semibold uppercase tracking-[.18em] text-[#64d2ff]">{content.faq_eyebrow}</p>

@@ -38,6 +38,8 @@ function SellDeviceSection({ content }) {
   return (
     <section className="home-shell py-8 sm:py-12">
       <div className="relative overflow-hidden rounded-[28px] bg-[#ebe9e4] px-5 py-10 text-[#1d1d1f] ring-1 ring-black/[.045] sm:px-10 sm:py-14 lg:rounded-[36px] lg:px-16">
+        {content.sell_image_url ? <div className="absolute inset-0 bg-cover bg-center opacity-18" style={{ backgroundImage: `url("${content.sell_image_url}")` }} /> : null}
+        {content.sell_image_url ? <div className="absolute inset-0 bg-gradient-to-b from-[#ebe9e4]/75 via-[#ebe9e4]/88 to-[#ebe9e4]" /> : null}
         <div className="pointer-events-none absolute -right-24 -top-32 h-[420px] w-[420px] rounded-full bg-white/80 blur-[80px]" />
         <div className="pointer-events-none absolute -bottom-40 -left-20 h-[360px] w-[360px] rounded-full bg-[#0071e3]/10 blur-[90px]" />
         <div className="relative mx-auto max-w-4xl text-center"><p className="text-[11px] font-semibold uppercase tracking-[.2em] text-[#0071e3]">Mepotia’ya Sat</p><h2 className="mt-5 text-[3rem] font-semibold leading-[.94] tracking-[-.065em] sm:text-[5rem]">{content.sell_title}<br /><span className="text-black/35">{content.sell_accent}</span></h2><p className="mx-auto mt-6 max-w-xl text-[15px] leading-relaxed text-[#6e6e73] sm:text-[16px]">{content.sell_copy}</p></div>
@@ -147,6 +149,8 @@ export default function MepotiaResearchHome({ products = [], campaignImages = []
         <div className="mt-9 space-y-8">
           {SERVICES.map((baseItem, index) => { const item = { ...baseItem, ...(index === 0 ? { title: content.trade_title, copy: content.trade_copy, action: content.trade_action, image: media.trade || baseItem.image } : index === 1 ? { title: content.compare_title, copy: content.compare_copy, action: content.compare_action, image: media.compare || baseItem.image } : { title: content.request_title, copy: content.request_copy, action: content.request_action }) }; return index === 2 ? (
             <article key={item.title} className="relative overflow-hidden rounded-[28px] bg-[linear-gradient(135deg,#eef6ff_0%,#f7f4ff_48%,#edf9ff_100%)] px-5 py-11 text-center ring-1 ring-[#0071e3]/10 sm:px-10 sm:py-14 lg:min-h-[580px] lg:rounded-[36px]">
+              {content.request_image_url ? <div className="absolute inset-0 bg-cover bg-center opacity-20" style={{ backgroundImage: `url("${content.request_image_url}")` }} /> : null}
+              {content.request_image_url ? <div className="absolute inset-0 bg-white/70 backdrop-blur-[1px]" /> : null}
               <div className="pointer-events-none absolute -left-24 top-12 h-72 w-72 rounded-full bg-[#64d2ff]/25 blur-[80px]" />
               <div className="pointer-events-none absolute -right-20 bottom-0 h-80 w-80 rounded-full bg-[#bf5af2]/15 blur-[90px]" />
               <div className="relative mx-auto max-w-4xl">
