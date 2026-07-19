@@ -12,20 +12,20 @@ const FAQS = [
   ["Mepotia’ya nasıl ulaşabilirim?", "WhatsApp, telefon ve e-posta kanallarından bize ulaşabilirsin. İletişim bilgileri sitenin alt menüsünde ve İletişim sayfasında yer alır."],
 ];
 
-export default function HomeFaqSection() {
+export default function HomeFaqSection({ content }) {
   return (
     <section className="mx-auto max-w-[1368px] px-4 py-14 sm:px-6 sm:py-20">
       <div className="overflow-hidden rounded-[32px] bg-white ring-1 ring-black/[.05] lg:grid lg:grid-cols-[.72fr_1.28fr] lg:rounded-[40px]">
         <div className="relative flex flex-col bg-[#1d1d1f] p-7 text-white sm:p-10 lg:min-h-[650px] lg:p-12">
           <div className="pointer-events-none absolute -left-16 top-1/3 h-64 w-64 rounded-full bg-[#0071e3]/20 blur-[80px]" />
           <div className="relative">
-            <p className="text-[10px] font-semibold uppercase tracking-[.18em] text-[#64d2ff]">Merak ettiklerin</p>
-            <h2 className="mt-5 text-[2.9rem] font-semibold leading-[.95] tracking-[-.06em] sm:text-[4.5rem]">Sorular kısa.<br /><span className="text-white/35">Yanıtlar net.</span></h2>
-            <p className="mt-6 max-w-sm text-[14px] leading-relaxed text-white/55">Ürün seçiminden takasa, satıştan desteğe kadar en çok merak edilenleri bir araya getirdik.</p>
+            <p className="text-[10px] font-semibold uppercase tracking-[.18em] text-[#64d2ff]">{content.faq_eyebrow}</p>
+            <h2 className="mt-5 text-[2.9rem] font-semibold leading-[.95] tracking-[-.06em] sm:text-[4.5rem]">{content.faq_title}<br /><span className="text-white/35">{content.faq_accent}</span></h2>
+            <p className="mt-6 max-w-sm text-[14px] leading-relaxed text-white/55">{content.faq_copy}</p>
           </div>
           <div className="relative mt-10 rounded-[22px] border border-white/10 bg-white/[.06] p-5 backdrop-blur-xl lg:mt-auto">
-            <p className="text-[13px] font-semibold">Yanıtını bulamadın mı?</p>
-            <p className="mt-1 text-[11px] leading-relaxed text-white/45">Mepotia’ya doğrudan sor, birlikte netleştirelim.</p>
+            <p className="text-[13px] font-semibold">{content.faq_support_title}</p>
+            <p className="mt-1 text-[11px] leading-relaxed text-white/45">{content.faq_support_copy}</p>
             <Link href="/iletisim" className="mt-4 inline-flex items-center gap-1 text-[13px] font-semibold text-[#64d2ff] hover:underline">Destek al <ArrowUpRight className="h-4 w-4" /></Link>
           </div>
         </div>

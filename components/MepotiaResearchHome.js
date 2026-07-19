@@ -8,6 +8,7 @@ import HomeTradeQuickStart from "@/components/HomeTradeQuickStart";
 import HomeGuideFinder from "@/components/HomeGuideFinder";
 import { CustomerReviews, HomeReviewsProvider } from "@/components/HomeReviews";
 import HomeFaqSection from "@/components/HomeFaqSection";
+import { getHomeContent } from "@/lib/homeContent";
 import { formatTechDate } from "@/lib/techPostUtils";
 
 const FEATURES = [
@@ -33,13 +34,13 @@ function SectionTitle({ children, muted }) {
   return <h2 className="text-[2rem] font-semibold leading-[1.02] tracking-[-0.05em] sm:text-[3.25rem]">{children} <span className="text-black/38">{muted}</span></h2>;
 }
 
-function SellDeviceSection() {
+function SellDeviceSection({ content }) {
   return (
     <section className="mx-auto max-w-[1368px] px-4 py-14 sm:px-6 sm:py-20">
       <div className="relative overflow-hidden rounded-[32px] bg-[#ebe9e4] px-6 py-16 text-[#1d1d1f] ring-1 ring-black/[.045] sm:px-10 sm:py-20 lg:rounded-[40px] lg:px-16">
         <div className="pointer-events-none absolute -right-24 -top-32 h-[420px] w-[420px] rounded-full bg-white/80 blur-[80px]" />
         <div className="pointer-events-none absolute -bottom-40 -left-20 h-[360px] w-[360px] rounded-full bg-[#0071e3]/10 blur-[90px]" />
-        <div className="relative mx-auto max-w-4xl text-center"><p className="text-[11px] font-semibold uppercase tracking-[.2em] text-[#0071e3]">Mepotia’ya Sat</p><h2 className="mt-5 text-[3rem] font-semibold leading-[.94] tracking-[-.065em] sm:text-[5rem]">Cihazın sende beklemesin.<br /><span className="text-black/35">Değeri sana dönsün.</span></h2><p className="mx-auto mt-6 max-w-xl text-[15px] leading-relaxed text-[#6e6e73] sm:text-[16px]">Birkaç ayrıntı ve fotoğraf paylaş. Cihazını açık, anlaşılır ve takip edilebilir bir süreçle değerlendirelim.</p></div>
+        <div className="relative mx-auto max-w-4xl text-center"><p className="text-[11px] font-semibold uppercase tracking-[.2em] text-[#0071e3]">Mepotia’ya Sat</p><h2 className="mt-5 text-[3rem] font-semibold leading-[.94] tracking-[-.065em] sm:text-[5rem]">{content.sell_title}<br /><span className="text-black/35">{content.sell_accent}</span></h2><p className="mx-auto mt-6 max-w-xl text-[15px] leading-relaxed text-[#6e6e73] sm:text-[16px]">{content.sell_copy}</p></div>
         <div className="relative mx-auto mt-12 grid max-w-5xl gap-3 md:grid-cols-3">
           {[[ScanLine, "01", "Cihazını tanımla", "Modeli ve temel özellikleri seç."], [Camera, "02", "Durumunu göster", "Kondisyonu ve fotoğrafları ekle."], [WalletCards, "03", "Teklifini değerlendir", "Sana iletilen değeri net biçimde gör."]].map(([Icon, number, title, copy]) => <article key={number} className="group rounded-[24px] border border-white/80 bg-white/58 p-6 text-left shadow-[0_22px_60px_-48px_rgba(0,0,0,.34)] backdrop-blur-xl transition duration-500 hover:-translate-y-1 hover:bg-white/85 sm:p-7"><div className="flex items-center justify-between"><span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#1d1d1f] text-white"><Icon className="h-5 w-5" strokeWidth={1.5} /></span><span className="text-[11px] font-semibold tracking-[.15em] text-[#86868b]">{number}</span></div><h3 className="mt-8 text-[1.35rem] font-semibold tracking-[-.04em]">{title}</h3><p className="mt-2 text-[13px] leading-relaxed text-[#6e6e73]">{copy}</p></article>)}
         </div>
@@ -66,12 +67,13 @@ function WhyMepotiaCards() {
   );
 }
 
-export default function MepotiaResearchHome({ products = [], campaignImages = [], news = [] }) {
+export default function MepotiaResearchHome({ products = [], campaignImages = [], news = [], content: rawContent = {}, media = {} }) {
+  const content = getHomeContent(rawContent);
   const newsItems = news.slice(0, 3);
   const leadNews = newsItems[0];
   return (
     <main className="min-h-screen bg-[#f5f5f7] text-[#1d1d1f]">
-      <HomeCampaignCarousel images={campaignImages} />
+      <HomeCampaignCarousel images={campaignImages} content={content} />
       <section className="relative overflow-hidden py-14 sm:py-20">
         <div className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[780px] -translate-x-1/2 rounded-full bg-[#0071e3]/[.09] blur-[120px]" />
         <div className="relative mx-auto max-w-[1368px] px-4 sm:px-6">
@@ -124,28 +126,32 @@ export default function MepotiaResearchHome({ products = [], campaignImages = []
       <section className="mx-auto max-w-[1368px] px-4 py-14 sm:px-6 sm:py-20">
         <SectionTitle muted="Doğru ürüne kısa yol.">Öne çıkanlar.</SectionTitle>
         <div className="mt-8 grid gap-5 lg:grid-cols-3">
-          {FEATURES.map(([eyebrow, title, copy, image, href], i) => (
+          {FEATURES.map(([eyebrow, title, copy, image, href], i) => {
+            const names = ["phone", "computer", "tablet"];
+            const name = names[i];
+            title = content[`${name}_title`] || title; copy = content[`${name}_copy`] || copy; image = media[name] || image;
+            return (
             <Link key={title} href={href} className={`group relative min-h-[540px] overflow-hidden rounded-[30px] ${i === 2 ? "bg-black text-white" : "bg-white"}`}>
               <Image src={image} alt="" fill sizes="(max-width:1024px) 100vw, 400px" className="object-cover transition duration-[1000ms] group-hover:scale-[1.035]" />
               <div className={`absolute inset-0 ${i === 2 ? "bg-gradient-to-b from-black/85 via-black/20 to-transparent" : "bg-gradient-to-b from-white via-white/70 to-transparent"}`} />
               <div className="relative p-7 sm:p-9"><p className="text-[11px] font-semibold tracking-[.15em] opacity-45 uppercase">{eyebrow}</p><h3 className="mt-3 text-[2.35rem] font-semibold leading-none tracking-[-.05em]">{title}</h3><p className="mt-4 max-w-xs text-[14px] leading-relaxed opacity-55">{copy}</p><span className="mt-5 inline-flex items-center text-[14px] font-semibold text-[#0071e3]">İncele <ChevronRight className="h-4 w-4" /></span></div>
             </Link>
-          ))}
+          )})}
         </div>
       </section>
 
-      <HomeGuideFinder />
+      <HomeGuideFinder content={content} image={media.guide} />
 
       <section className="mx-auto max-w-[1368px] px-4 py-14 sm:px-6 sm:py-20">
         <SectionTitle muted="Her işlem için daha kısa yol.">Mepotia servisleri.</SectionTitle>
         <div className="mt-9 space-y-8">
-          {SERVICES.map((item, index) => index === 2 ? (
+          {SERVICES.map((baseItem, index) => { const item = { ...baseItem, ...(index === 0 ? { title: content.trade_title, copy: content.trade_copy, action: content.trade_action, image: media.trade || baseItem.image } : index === 1 ? { title: content.compare_title, copy: content.compare_copy, action: content.compare_action, image: media.compare || baseItem.image } : { title: content.request_title, copy: content.request_copy, action: content.request_action }) }; return index === 2 ? (
             <article key={item.title} className="relative overflow-hidden rounded-[32px] bg-[linear-gradient(135deg,#eef6ff_0%,#f7f4ff_48%,#edf9ff_100%)] px-6 py-16 text-center shadow-[0_35px_100px_-72px_rgba(0,71,227,.65)] ring-1 ring-[#0071e3]/10 sm:px-10 sm:py-20 lg:min-h-[650px] lg:rounded-[40px]">
               <div className="pointer-events-none absolute -left-24 top-12 h-72 w-72 rounded-full bg-[#64d2ff]/25 blur-[80px]" />
               <div className="pointer-events-none absolute -right-20 bottom-0 h-80 w-80 rounded-full bg-[#bf5af2]/15 blur-[90px]" />
               <div className="relative mx-auto max-w-4xl">
                 <span className="inline-flex items-center gap-2 rounded-full border border-white/80 bg-white/65 px-4 py-2 text-[10px] font-semibold uppercase tracking-[.17em] text-[#0071e3] shadow-sm backdrop-blur-xl"><Sparkles className="h-3.5 w-3.5" /> Mepotia Ürün İste</span>
-                <h3 className="mx-auto mt-7 max-w-4xl text-[3rem] font-semibold leading-[.94] tracking-[-.065em] text-[#1d1d1f] sm:text-[5rem]">Aklındaki ürünü söyle.<br /><span className="bg-gradient-to-r from-[#0071e3] to-[#7d5cff] bg-clip-text text-transparent">Bulunca haber verelim.</span></h3>
+                <h3 className="mx-auto mt-7 max-w-4xl text-[3rem] font-semibold leading-[.94] tracking-[-0.065em] text-[#1d1d1f] sm:text-[5rem]">{content.request_title}<br /><span className="bg-gradient-to-r from-[#0071e3] to-[#7d5cff] bg-clip-text text-transparent">{content.request_accent}</span></h3>
                 <p className="mx-auto mt-6 max-w-2xl text-[15px] leading-relaxed text-[#6e6e73] sm:text-[16px]">Modeli ve bütçeni paylaş. Sana uygun ürün vitrinde yerini aldığında ilk bilen sen ol.</p>
 
                 <div className="relative mx-auto mt-10 max-w-3xl rounded-[26px] border border-white bg-white/78 p-3 shadow-[0_30px_90px_-46px_rgba(64,80,140,.38)] backdrop-blur-2xl sm:p-4">
@@ -184,11 +190,11 @@ export default function MepotiaResearchHome({ products = [], campaignImages = []
             </article>
             {index === 1 ? <WhyMepotiaCards /> : null}
             </div>
-          ))}
+          )})}
         </div>
       </section>
 
-      <SellDeviceSection />
+      <SellDeviceSection content={content} />
 
       {products.length ? (
         <section className="mx-auto max-w-[1368px] px-4 py-14 sm:px-6 sm:py-20">
@@ -201,7 +207,7 @@ export default function MepotiaResearchHome({ products = [], campaignImages = []
 
       <HomeReviewsProvider><CustomerReviews /></HomeReviewsProvider>
 
-      <HomeFaqSection />
+      <HomeFaqSection content={content} />
 
     </main>
   );

@@ -19,6 +19,8 @@ export default async function HomePage() {
       products={productsRes.data || []}
       news={newsRes.data || []}
       campaignImages={[settings?.hero_bg_1 || "/brand/actions/mepotia-guide-premium-v3.png"]}
+      content={settings?.content || {}}
+      media={{ phone: settings?.home_products_cover, computer: settings?.home_featured_cover, tablet: settings?.home_curated_cover, trade: settings?.home_popular_cover, guide: settings?.home_news_cover, compare: settings?.home_value_cover }}
     />
   );
 }

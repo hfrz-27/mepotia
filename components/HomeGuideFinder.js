@@ -13,20 +13,20 @@ const OPTIONS = [
   { id: "saat", label: "Akıllı saat", copy: "Sağlık ve hareket", Icon: Watch },
 ];
 
-export default function HomeGuideFinder() {
+export default function HomeGuideFinder({ content, image }) {
   const [selected, setSelected] = useState("telefon");
 
   return (
     <section className="mx-auto max-w-[1368px] px-4 py-14 sm:px-6 sm:py-20">
       <div className="overflow-hidden rounded-[32px] bg-[#eeedea] ring-1 ring-black/[.045] lg:grid lg:min-h-[650px] lg:grid-cols-[.78fr_1.22fr] lg:rounded-[40px]">
         <div className="relative min-h-[420px] overflow-hidden lg:min-h-full">
-          <div className="absolute inset-0 bg-[url('/brand/actions/mepotia-guide-premium-v3.png')] bg-cover bg-center" />
+          <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url("${image || "/brand/actions/mepotia-guide-premium-v3.png"}")` }} />
           <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/5 to-black/35 lg:bg-gradient-to-r lg:from-black/72 lg:via-black/20 lg:to-transparent" />
           <div className="relative flex min-h-[420px] flex-col p-7 text-white sm:p-10 lg:min-h-[650px] lg:p-12">
             <span className="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-black/20 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[.17em] backdrop-blur-xl"><Sparkles className="h-3.5 w-3.5 text-[#64d2ff]" /> Mepotia Rehber</span>
             <div className="mt-auto max-w-md">
-              <h2 className="text-[2.8rem] font-semibold leading-[.95] tracking-[-.06em] sm:text-[4rem]">Doğru teknolojiye kısa yol.</h2>
-              <p className="mt-4 text-[14px] leading-relaxed text-white/68">Teknik terimlere boğulmadan, kullanımına ve bütçene uygun seçeneği adım adım bul.</p>
+              <h2 className="text-[2.8rem] font-semibold leading-[.95] tracking-[-.06em] sm:text-[4rem]">{content.guide_title}</h2>
+              <p className="mt-4 text-[14px] leading-relaxed text-white/68">{content.guide_copy}</p>
             </div>
           </div>
         </div>
