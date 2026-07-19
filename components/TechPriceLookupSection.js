@@ -14,16 +14,10 @@ import {
   TrendingDown,
 } from "lucide-react";
 import PriceComparePanel from "@/components/PriceComparePanel";
-import HeroBackgroundCarousel from "@/components/HeroBackgroundCarousel";
-import HeroBackgroundVideo from "@/components/HeroBackgroundVideo";
 
 const HINTS = ["iPhone 15", "Samsung S24", "MacBook Air M2", "AirPods Pro"];
 
-export default function TechPriceLookupSection({
-  heroImages = [],
-  heroVideo = "",
-  initialQuery = "",
-}) {
+export default function TechPriceLookupSection({ initialQuery = "" }) {
   const [query, setQuery] = useState(initialQuery || "");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -67,54 +61,20 @@ export default function TechPriceLookupSection({
     await runSearch(query);
   };
 
-  const hasVideo = Boolean(heroVideo);
-  const hasPhotos = !hasVideo && heroImages.filter(Boolean).length > 0;
-
   return (
-    <section id="fiyat-sorgula" className="relative scroll-mt-28 overflow-hidden bg-[#070709]">
-      {hasVideo ? (
-        <div className="absolute inset-0 opacity-70">
-          <HeroBackgroundVideo src={heroVideo} lightOverlay />
-        </div>
-      ) : hasPhotos ? (
-        <div className="absolute inset-0 opacity-50">
-          <HeroBackgroundCarousel images={heroImages} />
-        </div>
-      ) : null}
-
-      <div
-        className={`absolute inset-0 ${
-          hasVideo || hasPhotos
-            ? "bg-gradient-to-b from-[#070709]/40 via-[#070709]/55 to-[#070709]"
-            : "bg-gradient-to-b from-[#070709]/70 via-[#070709]/90 to-[#070709]"
-        }`}
-        aria-hidden
-      />
-      <div className="pointer-events-none absolute -top-24 right-0 h-96 w-96 rounded-full bg-emerald-400/20 blur-3xl" aria-hidden />
-      <div className="pointer-events-none absolute top-32 -left-24 h-80 w-80 rounded-full bg-teal-500/15 blur-3xl" aria-hidden />
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.055]"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,.12) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.12) 1px, transparent 1px)",
-          backgroundSize: "52px 52px",
-        }}
-        aria-hidden
-      />
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-300/40 to-transparent" aria-hidden />
-
-      <div className="relative mx-auto max-w-7xl px-4 pt-6 pb-12 sm:px-6 sm:pt-8 sm:pb-14 lg:px-8">
+    <section id="fiyat-sorgula" className="relative scroll-mt-28 bg-[#f5f5f7]">
+      <div className="relative mx-auto max-w-7xl px-4 pt-6 pb-10 sm:px-6 sm:pt-8 sm:pb-12 lg:px-8">
         <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
           <Link
             href="/"
-            className="group inline-flex items-center gap-1.5 rounded-full border border-white/12 bg-white/[0.06] px-3 py-1.5 text-xs font-semibold text-white/80 backdrop-blur-md transition hover:bg-white/10"
+            className="group inline-flex items-center gap-1.5 rounded-full border border-bw-200 bg-white px-3 py-1.5 text-xs font-semibold text-bw-700 shadow-sm transition hover:border-bw-300 hover:text-bw-950"
           >
             <ArrowLeft className="h-3.5 w-3.5 transition group-hover:-translate-x-0.5" />
             Vitrine dön
           </Link>
           <Link
             href="/urun-karsilastir"
-            className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.06] px-3.5 py-1.5 text-xs font-semibold text-white/80 backdrop-blur-md transition hover:bg-white/10 hover:text-white"
+            className="inline-flex items-center gap-2 rounded-full border border-bw-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-bw-700 shadow-sm transition hover:border-bw-300 hover:text-bw-950"
           >
             <GitCompareArrows className="h-3.5 w-3.5" />
             Özellik aracı
@@ -123,18 +83,16 @@ export default function TechPriceLookupSection({
         </div>
 
         <div className="mx-auto max-w-3xl text-center">
-          <p className="inline-flex items-center gap-2 rounded-full border border-emerald-300/25 bg-emerald-400/10 px-3.5 py-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-emerald-100 backdrop-blur-md">
+          <p className="inline-flex items-center gap-2 rounded-full border border-bw-200 bg-white px-3.5 py-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-bw-500">
             <Sparkles className="h-3.5 w-3.5" />
             Fiyat karşılaştırma · 2026
           </p>
-          <h1 className="mt-5 font-display text-4xl font-semibold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
+          <h1 className="mt-5 font-display text-4xl font-semibold leading-[1.05] tracking-tight text-bw-950 sm:text-5xl lg:text-6xl">
             Piyasayı gör.
             <br />
-            <span className="bg-gradient-to-r from-emerald-200 via-white to-teal-200 bg-clip-text text-transparent">
-              Farkı bil.
-            </span>
+            <span className="text-bw-400">Farkı bil.</span>
           </h1>
-          <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-white/50 sm:text-base">
+          <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-bw-500 sm:text-base">
             Model yaz. Vitrinde olmasa bile piyasa mağaza fiyatları gelir; sitede ilan varsa yan yana
             karşılaştırırsın.
           </p>
@@ -147,18 +105,18 @@ export default function TechPriceLookupSection({
             ].map(({ icon: Icon, label }) => (
               <span
                 key={label}
-                className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.05] px-3 py-1.5 text-[11px] font-medium text-white/65 backdrop-blur-sm"
+                className="inline-flex items-center gap-1.5 rounded-full border border-bw-200 bg-white px-3 py-1.5 text-[11px] font-medium text-bw-600"
               >
-                <Icon className="h-3.5 w-3.5 text-emerald-300/90" strokeWidth={1.75} />
+                <Icon className="h-3.5 w-3.5 text-bw-500" strokeWidth={1.75} />
                 {label}
               </span>
             ))}
           </div>
         </div>
 
-        {/* Search card floating on dark hero */}
+        {/* Search card */}
         <div className="mx-auto mt-9 max-w-2xl">
-          <div className="overflow-hidden rounded-[1.5rem] border border-white/12 bg-white shadow-[0_32px_80px_-36px_rgba(0,0,0,0.7)] ring-1 ring-black/5">
+          <div className="overflow-hidden rounded-[1.5rem] border border-bw-200 bg-white shadow-[0_24px_60px_-36px_rgba(0,0,0,0.35)] ring-1 ring-black/5">
             <div className="h-[2px] w-full bg-gradient-to-r from-emerald-400 via-teal-300 to-sky-400" aria-hidden />
             <div className="p-3.5 sm:p-4">
               <form onSubmit={onSearch} className="flex flex-col gap-2.5 sm:flex-row">
