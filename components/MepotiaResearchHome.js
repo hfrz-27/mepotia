@@ -133,10 +133,19 @@ export default function MepotiaResearchHome({ products = [], campaignImages = []
             const name = names[i];
             title = content[`${name}_title`] || title; copy = content[`${name}_copy`] || copy; image = media[name] || image;
             return (
-            <Link key={title} href={href} className="group relative min-h-[390px] min-w-0 overflow-hidden rounded-[26px] bg-white text-[#1d1d1f] ring-1 ring-black/[.035] sm:min-h-[470px] lg:min-h-[520px] lg:rounded-[30px]">
-              <div className="absolute inset-0 bg-cover bg-center bg-no-repeat transition duration-[1000ms] group-hover:scale-[1.035]" style={{ backgroundImage: `url("${image}")` }} />
-              <div className="absolute inset-0 bg-gradient-to-b from-white via-white/70 to-transparent" />
-              <div className="relative p-7 sm:p-9"><p className="text-[11px] font-semibold tracking-[.15em] opacity-45 uppercase">{eyebrow}</p><h3 className="mt-3 text-[2.35rem] font-semibold leading-none tracking-[-.05em]">{title}</h3><p className="mt-4 max-w-xs text-[14px] leading-relaxed opacity-55">{copy}</p><span className="mt-5 inline-flex items-center text-[14px] font-semibold text-[#0071e3]">İncele <ChevronRight className="h-4 w-4" /></span></div>
+            <Link
+              key={title}
+              href={href}
+              aria-label={`${title} kategorisini aç`}
+              className="group relative block h-[420px] min-w-0 overflow-hidden rounded-[26px] bg-white ring-1 ring-black/[.05] transition duration-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0071e3] sm:h-[470px] lg:h-[520px] lg:rounded-[30px]"
+            >
+              <div
+                className="absolute inset-0 bg-contain bg-center bg-no-repeat transition duration-[900ms] ease-out group-hover:scale-[1.018]"
+                style={{ backgroundImage: `url("${image}")` }}
+                role="img"
+                aria-label={`${title} kategori görseli`}
+              />
+              <span className="sr-only">{eyebrow}: {title}. {copy}</span>
             </Link>
           )})}
         </div>
