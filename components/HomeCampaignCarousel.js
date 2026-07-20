@@ -30,15 +30,15 @@ export default function HomeCampaignCarousel({ images = [], content = {} }) {
   return (
     <section className="home-shell pt-3 sm:pt-5" aria-label="Mepotia kampanyaları">
       <div
-        className="relative min-h-[350px] w-full overflow-hidden rounded-[24px] bg-[#dfe3f3] text-[#1d1d1f] ring-1 ring-black/[.04] sm:min-h-[480px] sm:rounded-[30px] lg:min-h-[520px]"
+        className="relative aspect-[16/9] w-full overflow-hidden rounded-[24px] bg-[#dfe3f3] text-[#1d1d1f] ring-1 ring-black/[.04] sm:aspect-auto sm:min-h-[480px] sm:rounded-[30px] lg:min-h-[520px]"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
       >
         {slides.map((slide, index) => (
           <div key={`${slide.image}-${index}`} className={`absolute inset-0 transition-opacity duration-700 ${index === active ? "z-10 opacity-100" : "opacity-0"}`} aria-hidden={index !== active}>
-            <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: `url("${slide.image}")` }} role="img" aria-label="Mepotia lansman görseli" />
+            <div className="absolute inset-0 bg-contain bg-center bg-no-repeat sm:bg-cover" style={{ backgroundImage: `url("${slide.image}")` }} role="img" aria-label="Mepotia lansman görseli" />
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-white/78" />
-            <div className="relative ml-auto flex min-h-[350px] max-w-[610px] flex-col items-center justify-center px-8 py-9 text-center sm:min-h-[480px] sm:px-16 lg:mr-8 lg:min-h-[520px]">
+            <div className="relative ml-auto flex h-full min-h-0 max-w-[610px] flex-col items-center justify-center px-5 py-4 text-center sm:h-auto sm:min-h-[480px] sm:px-16 sm:py-9 lg:mr-8 lg:min-h-[520px]">
               <p className="text-[11px] font-semibold tracking-[0.18em] text-[#0071e3] uppercase">{content.hero_eyebrow}</p>
               <h2 className="mt-3 text-[2.3rem] font-semibold leading-[0.94] tracking-[-0.06em] sm:mt-4 sm:text-[4.2rem]">{content.hero_title}</h2>
               <p className="mt-5 max-w-lg text-[14px] leading-relaxed text-[#515154] sm:text-[17px]">{content.hero_copy}</p>
