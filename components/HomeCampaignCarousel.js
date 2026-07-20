@@ -25,6 +25,7 @@ export default function HomeCampaignCarousel({ images = [], content = {} }) {
 
   if (!slides.length) return null;
   const go = (direction) => setActive((value) => (value + direction + slides.length) % slides.length);
+  const usesImageButtons = !String(content.hero_title || "").trim() && !String(content.hero_copy || "").trim();
 
   return (
     <section className="home-shell pt-3 sm:pt-5" aria-label="Mepotia kampanyaları">
@@ -46,6 +47,18 @@ export default function HomeCampaignCarousel({ images = [], content = {} }) {
                 <Link href="/urunler" className="inline-flex h-11 items-center rounded-full border border-[#1d1d1f] px-6 text-[13px] font-semibold transition hover:bg-[#1d1d1f] hover:text-white">{content.hero_action}</Link>
               </div>
             </div>
+            {usesImageButtons ? (
+              <>
+                <div className="absolute inset-0 z-20 hidden sm:block">
+                  <Link href="/urunler" aria-label="Ürünleri keşfet" title="Ürünleri keşfet" className="absolute left-[7%] top-[75%] h-[11%] w-[13.5%] rounded-[12px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0071e3]" />
+                  <Link href="#neden-mepotia" aria-label="Neden Mepotia?" title="Neden Mepotia?" className="absolute left-[21%] top-[75%] h-[11%] w-[13.5%] rounded-[12px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0071e3]" />
+                </div>
+                <div className="absolute inset-x-4 bottom-4 z-20 flex items-center justify-center gap-2 sm:hidden">
+                  <Link href="/urunler" className="inline-flex h-10 items-center rounded-full bg-[#1d1d1f] px-4 text-[12px] font-semibold text-white">Ürünleri keşfet</Link>
+                  <Link href="#neden-mepotia" className="inline-flex h-10 items-center rounded-full bg-white/90 px-4 text-[12px] font-semibold text-[#1d1d1f] ring-1 ring-black/10 backdrop-blur">Neden Mepotia?</Link>
+                </div>
+              </>
+            ) : null}
           </div>
         ))}
 

@@ -54,7 +54,7 @@ function SellDeviceSection({ content }) {
 
 function WhyMepotiaCards() {
   return (
-    <section className="py-8 sm:py-12">
+    <section id="neden-mepotia" className="scroll-mt-24 py-8 sm:py-12">
       <SectionTitle muted="Bizden seçim yapmak için daha fazla sebebin var.">Neden Mepotia?</SectionTitle>
       <div className="mt-8 grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-5">
         {TRUST.map(([Icon, title, text], index) => (
