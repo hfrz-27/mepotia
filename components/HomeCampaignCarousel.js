@@ -30,15 +30,24 @@ export default function HomeCampaignCarousel({ images = [], content = {} }) {
   return (
     <section className="home-shell pt-3 sm:pt-5" aria-label="Mepotia kampanyaları">
       <div
-        className="relative aspect-[16/9] w-full overflow-hidden rounded-[24px] bg-[#dfe3f3] text-[#1d1d1f] ring-1 ring-black/[.04] sm:aspect-auto sm:min-h-[480px] sm:rounded-[30px] lg:min-h-[520px]"
+        className="relative min-h-[460px] w-full overflow-hidden rounded-[24px] bg-[#dfe3f3] text-[#1d1d1f] ring-1 ring-black/[.04] sm:min-h-[480px] sm:rounded-[30px] lg:min-h-[520px]"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
       >
         {slides.map((slide, index) => (
           <div key={`${slide.image}-${index}`} className={`absolute inset-0 transition-opacity duration-700 ${index === active ? "z-10 opacity-100" : "opacity-0"}`} aria-hidden={index !== active}>
-            <div className="absolute inset-0 bg-contain bg-center bg-no-repeat sm:bg-cover" style={{ backgroundImage: `url("${slide.image}")` }} role="img" aria-label="Mepotia lansman görseli" />
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-white/78" />
-            <div className="relative ml-auto flex h-full min-h-0 max-w-[610px] flex-col items-center justify-center px-5 py-4 text-center sm:h-auto sm:min-h-[480px] sm:px-16 sm:py-9 lg:mr-8 lg:min-h-[520px]">
+            <div className="absolute inset-0 bg-cover bg-[68%_center] bg-no-repeat sm:bg-center" style={{ backgroundImage: `url("${slide.image}")` }} role="img" aria-label="Mepotia lansman görseli" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/5 to-transparent sm:bg-gradient-to-r sm:from-transparent sm:via-white/10 sm:to-white/78" />
+            <div className="absolute inset-0 z-10 flex flex-col justify-end p-5 text-white sm:hidden">
+              <p className="text-[9px] font-semibold uppercase tracking-[.18em] text-white/75">Mepotia’ya hoş geldin</p>
+              <h2 className="mt-2 max-w-[300px] text-[2.35rem] font-semibold leading-[.94] tracking-[-.06em]">Sana ait olanı keşfet.</h2>
+              <p className="mt-3 max-w-[310px] text-[12px] leading-relaxed text-white/72">Titizlikle seçilmiş ikinci el teknolojiyi keşfet, ihtiyacına uygun olanı güvenle seç.</p>
+              <div className="mt-5 flex items-center gap-2">
+                <Link href="/urunler" className="inline-flex h-11 items-center rounded-full bg-white px-5 text-[12px] font-semibold text-[#1d1d1f]">Ürünleri keşfet</Link>
+                <Link href="#neden-mepotia" className="inline-flex h-11 items-center rounded-full border border-white/35 bg-black/20 px-5 text-[12px] font-semibold text-white backdrop-blur-md">Neden Mepotia?</Link>
+              </div>
+            </div>
+            <div className="relative ml-auto hidden max-w-[610px] flex-col items-center justify-center text-center sm:flex sm:min-h-[480px] sm:px-16 sm:py-9 lg:mr-8 lg:min-h-[520px]">
               <p className="text-[11px] font-semibold tracking-[0.18em] text-[#0071e3] uppercase">{content.hero_eyebrow}</p>
               <h2 className="mt-3 text-[2.3rem] font-semibold leading-[0.94] tracking-[-0.06em] sm:mt-4 sm:text-[4.2rem]">{content.hero_title}</h2>
               <p className="mt-5 max-w-lg text-[14px] leading-relaxed text-[#515154] sm:text-[17px]">{content.hero_copy}</p>
@@ -52,10 +61,6 @@ export default function HomeCampaignCarousel({ images = [], content = {} }) {
                 <div className="absolute inset-0 z-20 hidden sm:block">
                   <Link href="/urunler" aria-label="Ürünleri keşfet" title="Ürünleri keşfet" className="absolute left-[7%] top-[75%] h-[11%] w-[13.5%] rounded-[12px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0071e3]" />
                   <Link href="#neden-mepotia" aria-label="Neden Mepotia?" title="Neden Mepotia?" className="absolute left-[21%] top-[75%] h-[11%] w-[13.5%] rounded-[12px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0071e3]" />
-                </div>
-                <div className="absolute inset-x-4 bottom-4 z-20 flex items-center justify-center gap-2 sm:hidden">
-                  <Link href="/urunler" className="inline-flex h-10 items-center rounded-full bg-[#1d1d1f] px-4 text-[12px] font-semibold text-white">Ürünleri keşfet</Link>
-                  <Link href="#neden-mepotia" className="inline-flex h-10 items-center rounded-full bg-white/90 px-4 text-[12px] font-semibold text-[#1d1d1f] ring-1 ring-black/10 backdrop-blur">Neden Mepotia?</Link>
                 </div>
               </>
             ) : null}
