@@ -37,7 +37,7 @@ export default function HomeCampaignCarousel({ images = [], content = {} }) {
         {slides.map((slide, index) => (
           <div key={`${slide.image}-${index}`} className={`absolute inset-0 transition-opacity duration-700 ${index === active ? "z-10 opacity-100" : "opacity-0"}`} aria-hidden={index !== active}>
             <div className="absolute inset-0 bg-cover bg-[68%_center] bg-no-repeat sm:bg-center" style={{ backgroundImage: `url("${slide.image}")` }} role="img" aria-label="Mepotia lansman görseli" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/5 to-transparent sm:bg-gradient-to-r sm:from-transparent sm:via-white/10 sm:to-white/78" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/5 to-transparent sm:bg-gradient-to-r sm:from-transparent sm:via-transparent sm:to-white/20" />
             <div className="absolute inset-0 z-10 flex flex-col justify-end p-5 text-white sm:hidden">
               <p className="text-[9px] font-semibold uppercase tracking-[.18em] text-white/75">Mepotia’ya hoş geldin</p>
               <h2 className="mt-2 max-w-[300px] text-[2.35rem] font-semibold leading-[.94] tracking-[-.06em]">Sana ait olanı keşfet.</h2>
@@ -69,8 +69,8 @@ export default function HomeCampaignCarousel({ images = [], content = {} }) {
 
         {slides.length > 1 ? (
           <>
-            <button type="button" onClick={() => go(-1)} className="absolute left-3 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/88 text-[#1d1d1f] shadow-md backdrop-blur transition hover:bg-white sm:left-5" aria-label="Önceki kampanya"><ChevronLeft className="h-5 w-5" /></button>
-            <button type="button" onClick={() => go(1)} className="absolute right-3 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/88 text-[#1d1d1f] shadow-md backdrop-blur transition hover:bg-white sm:right-5" aria-label="Sonraki kampanya"><ChevronRight className="h-5 w-5" /></button>
+            <button type="button" onClick={() => go(-1)} className="hidden" aria-label="Önceki kampanya"><ChevronLeft className="h-5 w-5" /></button>
+            <button type="button" onClick={() => go(1)} className="hidden" aria-label="Sonraki kampanya"><ChevronRight className="h-5 w-5" /></button>
             <div className="absolute right-5 bottom-5 z-20 flex items-center gap-3 rounded-full bg-black/45 px-3 py-2 backdrop-blur-md">
               <div className="flex gap-1.5">{slides.map((_, index) => <button key={index} type="button" onClick={() => setActive(index)} className={`h-1.5 rounded-full transition-all ${index === active ? "w-6 bg-white" : "w-1.5 bg-white/40"}`} aria-label={`${index + 1}. kampanya`} />)}</div>
               <span className="text-[11px] font-semibold tabular-nums text-white/75">{active + 1}/{slides.length}</span>
