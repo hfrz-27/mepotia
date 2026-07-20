@@ -13,12 +13,17 @@ export default async function HomePage() {
     getTechPosts({ limit: 4, featuredFilter: "all" }),
   ]);
 
+  const cleanHero = "/brand/actions/mepotia-home-hero-clean-v2.svg";
+  const adminHeroMatch = String(settings?.hero_bg_1 || "").match(/hero_bg_1-(\\d+)/);
+  const adminHeroTimestamp = Number(adminHeroMatch?.[1] || 0);
+  const heroImage = adminHeroTimestamp > 1784516990945 ? settings.hero_bg_1 : cleanHero;
+
   return (
     <MepotiaResearchHome
       categories={categories || []}
       products={productsRes.data || []}
       news={newsRes.data || []}
-      campaignImages={[settings?.content?.home?.hero_image_url || settings?.hero_bg_1 || "/brand/actions/mepotia-guide-premium-v3.png"]}
+      campaignImages={[heroImage]}
       content={settings?.content || {}}
       media={{ phone: settings?.home_products_cover, computer: settings?.home_featured_cover, tablet: settings?.home_curated_cover, trade: settings?.home_popular_cover, guide: settings?.home_news_cover, compare: settings?.home_value_cover }}
     />
