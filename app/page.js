@@ -14,7 +14,7 @@ export default async function HomePage() {
   ]);
 
   const cleanHero = "/brand/actions/mepotia-home-hero-clean-v2.svg";
-  const adminHeroMatch = String(settings?.hero_bg_1 || "").match(/hero_bg_1-(\\d+)/);
+  const adminHeroMatch = String(settings?.hero_bg_1 || "").match(/hero_bg_1-(\d+)/);
   const adminHeroTimestamp = Number(adminHeroMatch?.[1] || 0);
   const heroImage = adminHeroTimestamp > 1784516990945 ? settings.hero_bg_1 : cleanHero;
 
