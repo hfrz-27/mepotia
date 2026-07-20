@@ -49,7 +49,7 @@ function initials(name) {
 
 function ReviewCard({ review, index = 0 }) {
   return (
-    <article style={{ zIndex: index + 1 }} className="group sticky top-[70px] flex min-h-[210px] h-full flex-col rounded-[22px] bg-white p-5 shadow-[0_14px_38px_-30px_rgba(0,0,0,.4)] ring-1 ring-black/[0.055] transition duration-500 hover:-translate-y-1 sm:static sm:min-h-[220px] sm:rounded-[26px] sm:p-7">
+    <article style={{ zIndex: index + 1 }} className="group flex min-h-[165px] h-full min-w-[82%] snap-center flex-col rounded-[20px] bg-white p-4 shadow-[0_14px_38px_-30px_rgba(0,0,0,.4)] ring-1 ring-black/[0.055] transition duration-500 hover:-translate-y-1 sm:min-w-0 sm:min-h-[220px] sm:rounded-[26px] sm:p-7">
       <div className="flex items-center gap-2.5">
         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#1d1d1f] text-[10px] font-bold text-white">
           {initials(review.author_name)}
@@ -70,7 +70,7 @@ function ReviewCard({ review, index = 0 }) {
           </div>
         </div>
       </div>
-      <p className="mt-6 line-clamp-5 flex-1 text-[14px] leading-relaxed text-[#424245]">
+      <p className="mt-4 line-clamp-3 flex-1 text-[13px] leading-relaxed text-[#424245] sm:mt-6 sm:line-clamp-5 sm:text-[14px]">
         “{review.body}”
       </p>
     </article>
@@ -133,26 +133,25 @@ export default function CustomerReviews() {
 
   return (
     <section className="home-shell py-8 sm:py-12" aria-label="Yorumlar">
-      <div className="relative rounded-[32px] bg-[linear-gradient(135deg,#eef4fb_0%,#f7f7f8_48%,#f2effb_100%)] p-6 ring-1 ring-black/[.04] sm:p-10 lg:rounded-[40px] lg:p-14">
+      <div className="relative rounded-[26px] bg-[linear-gradient(135deg,#eef4fb_0%,#f7f7f8_48%,#f2effb_100%)] p-4 ring-1 ring-black/[.04] sm:p-10 lg:rounded-[40px] lg:p-14">
         <div className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-[#64d2ff]/20 blur-[80px]" />
         <div className="pointer-events-none absolute -bottom-24 left-1/4 h-64 w-64 rounded-full bg-[#bf5af2]/10 blur-[80px]" />
         {/* Marka başlık */}
-        <div className="relative flex flex-col gap-7 lg:flex-row lg:items-end lg:justify-between">
+        <div className="relative flex flex-col gap-4 sm:gap-7 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
           <p className="text-[10px] font-semibold tracking-[0.16em] text-[#86868b] uppercase sm:text-[11px]">
             Mepotia deneyimi
           </p>
-          <h2 className="mt-3 text-[2.7rem] font-semibold leading-[.98] tracking-[-0.055em] text-[#1d1d1f] sm:text-[4.2rem]">
+          <h2 className="mt-2 text-[2rem] font-semibold leading-[.98] tracking-[-0.055em] text-[#1d1d1f] sm:mt-3 sm:text-[4.2rem]">
             Deneyimleyenler anlatıyor.<br /><span className="text-black/35">Kararın daha da netleşiyor.</span>
           </h2>
-          <p className="mt-5 max-w-xl text-[13px] leading-relaxed text-[#6e6e73] sm:text-[15px]">
+          <p className="mt-3 max-w-xl text-[12px] leading-relaxed text-[#6e6e73] sm:mt-5 sm:text-[15px]">
             Ürün seçiminden desteğe kadar Mepotia&apos;yı kullananların gerçek yorumları.
           </p>
           </div>
-          <div className="min-w-[220px] rounded-[22px] border border-white/80 bg-white/65 p-5 shadow-sm backdrop-blur-xl">
-            <div className="flex items-end gap-2"><span className="text-[3rem] font-semibold leading-none tracking-[-.06em]">{average}</span><span className="pb-1 text-[12px] text-[#86868b]">/ 5</span></div>
-            <div className="mt-2 flex gap-1">{Array.from({ length: 5 }).map((_, i) => <Star key={i} className="h-4 w-4 fill-[#ffb400] text-[#ffb400]" />)}</div>
-            <p className="mt-2 text-[11px] text-[#86868b]">{reviews?.length || 0} değerlendirme</p>
+          <div className="flex items-center justify-between gap-4 rounded-[18px] border border-white/80 bg-white/65 p-4 shadow-sm backdrop-blur-xl sm:block sm:min-w-[220px] sm:rounded-[22px] sm:p-5">
+            <div className="flex items-end gap-2"><span className="text-[2.2rem] font-semibold leading-none tracking-[-.06em] sm:text-[3rem]">{average}</span><span className="pb-1 text-[12px] text-[#86868b]">/ 5</span></div>
+            <div><div className="flex gap-1">{Array.from({ length: 5 }).map((_, i) => <Star key={i} className="h-3.5 w-3.5 fill-[#ffb400] text-[#ffb400] sm:h-4 sm:w-4" />)}</div><p className="mt-1 text-[10px] text-[#86868b] sm:mt-2 sm:text-[11px]">{reviews?.length || 0} değerlendirme</p></div>
           </div>
         </div>
           <div className="relative mt-5 flex flex-wrap items-center gap-2 sm:gap-3">
@@ -230,7 +229,7 @@ export default function CustomerReviews() {
 
         {/* Yorum kartları — sabit grid, marquee yok */}
         {preview.length ? (
-          <div className="relative mt-8 grid gap-5 pb-2 sm:mt-10 sm:grid-cols-3 sm:gap-4 sm:pb-0">
+          <div className="relative -mr-4 mt-5 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-3 pr-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mr-0 sm:mt-10 sm:grid sm:grid-cols-3 sm:gap-4 sm:overflow-visible sm:pb-0 sm:pr-0">
             {preview.map((review, index) => (
               <ReviewCard key={review.id} review={review} index={index} />
             ))}

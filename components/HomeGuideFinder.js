@@ -31,26 +31,26 @@ export default function HomeGuideFinder({ content, image }) {
           </div>
         </div>
 
-        <div className="flex items-center bg-[#f7f7f8] p-5 sm:p-8 lg:p-10">
-          <div className="w-full rounded-[26px] border border-black/[.05] bg-white p-5 shadow-[0_28px_80px_-58px_rgba(0,0,0,.42)] sm:p-7">
+        <div className="flex items-center bg-[#f7f7f8] p-3 sm:p-8 lg:p-10">
+          <div className="w-full rounded-[22px] border border-black/[.05] bg-white p-4 sm:rounded-[26px] sm:p-7">
             <p className="text-[11px] font-semibold uppercase tracking-[.17em] text-[#0071e3]">Akıllı seçim</p>
-            <h3 className="mt-3 text-[1.7rem] font-semibold leading-tight tracking-[-.045em] sm:text-[2.2rem]">Bugün ne seçmek istiyorsun?</h3>
-            <p className="mt-2 text-[13px] leading-relaxed text-[#86868b]">Bir kategori seç; ihtiyacına göre nelere bakman gerektiğini birlikte netleştirelim.</p>
+            <h3 className="mt-2 text-[1.4rem] font-semibold leading-tight tracking-[-.045em] sm:mt-3 sm:text-[2.2rem]">Bugün ne seçmek istiyorsun?</h3>
+            <p className="mt-1.5 text-[11px] leading-relaxed text-[#86868b] sm:mt-2 sm:text-[13px]">Bir kategori seç; ihtiyacına göre nelere bakman gerektiğini birlikte netleştirelim.</p>
 
-            <div className="mt-6 grid grid-cols-2 gap-2.5 sm:grid-cols-3">
+            <div className="mt-4 grid grid-cols-3 gap-2 sm:mt-6 sm:gap-2.5">
               {OPTIONS.map(({ id, label, copy, Icon }) => {
                 const active = selected === id;
                 return (
-                  <button key={id} type="button" onClick={() => setSelected(id)} aria-pressed={active} className={`group flex min-h-[88px] flex-col items-center justify-center rounded-[16px] border p-2.5 text-center transition duration-300 sm:min-h-[104px] ${active ? "border-[#0071e3] bg-[#eef6ff] text-[#0071e3]" : "border-black/[.055] bg-[#fafafa] text-[#424245] hover:border-black/15 hover:bg-white"}`}>
-                    <span className={`flex h-9 w-9 items-center justify-center rounded-full transition ${active ? "bg-[#0071e3] text-white" : "bg-[#eeeeef] text-[#6e6e73] group-hover:bg-[#e7e7e9]"}`}><Icon className="h-4.5 w-4.5" strokeWidth={1.6} /></span>
-                    <span className="mt-2 text-[12px] font-semibold">{label}</span>
-                    <span className="mt-0.5 text-[9px] opacity-60 sm:text-[10px]">{copy}</span>
+                  <button key={id} type="button" onClick={() => setSelected(id)} aria-pressed={active} className={`group flex min-h-[72px] flex-col items-center justify-center rounded-[14px] border p-2 text-center transition duration-300 sm:min-h-[104px] sm:rounded-[16px] sm:p-2.5 ${active ? "border-[#0071e3] bg-[#eef6ff] text-[#0071e3]" : "border-black/[.055] bg-[#fafafa] text-[#424245] hover:border-black/15 hover:bg-white"}`}>
+                    <span className={`flex h-8 w-8 items-center justify-center rounded-full transition sm:h-9 sm:w-9 ${active ? "bg-[#0071e3] text-white" : "bg-[#eeeeef] text-[#6e6e73] group-hover:bg-[#e7e7e9]"}`}><Icon className="h-4 w-4 sm:h-4.5 sm:w-4.5" strokeWidth={1.6} /></span>
+                    <span className="mt-1.5 text-[10px] font-semibold sm:mt-2 sm:text-[12px]">{label}</span>
+                    <span className="mt-0.5 hidden text-[10px] opacity-60 sm:block">{copy}</span>
                   </button>
                 );
               })}
             </div>
 
-            <Link href={`/rehber?kategori=${selected}`} className="mt-5 flex h-12 items-center justify-center gap-1 rounded-full bg-[#0071e3] px-6 text-[13px] font-semibold text-white transition hover:bg-[#0077ed]">Rehberi başlat <ChevronRight className="h-4 w-4" /></Link>
+            <Link href={`/rehber?kategori=${selected}`} className="mt-4 flex h-11 items-center justify-center gap-1 rounded-full bg-[#0071e3] px-5 text-[12px] font-semibold text-white transition hover:bg-[#0077ed] sm:mt-5 sm:h-12 sm:px-6 sm:text-[13px]">Rehberi başlat <ChevronRight className="h-4 w-4" /></Link>
           </div>
         </div>
       </div>
