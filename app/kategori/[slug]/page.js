@@ -2,7 +2,7 @@ import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import CategoryFilters from "@/components/CategoryFilters";
 import CategoryGuideFab from "@/components/CategoryGuideFab";
-import CatalogHero from "@/components/CatalogHero";
+import CatalogPageHeader from "@/components/CatalogPageHeader";
 import { PremiumBreadcrumb } from "@/components/BackHomeLink";
 import { getCategoryBySlug } from "@/lib/categories";
 import { getPublishedProducts } from "@/lib/products";
@@ -74,12 +74,11 @@ export default async function CategoryPage({ params, searchParams }) {
           ]}
         />
 
-        <CatalogHero
+        <CatalogPageHeader
           eyebrow="Kategori vitrini"
           title={`${category.name}. Sana uygun olanı bul.`}
           description={category.description || "Seçilmiş ürünleri filtrele, fiyatlarını karşılaştır ve doğru seçeneğe ulaş."}
           count={count}
-          imageSrc={category.photo}
         />
 
         <CategoryFilters
