@@ -29,10 +29,10 @@ export default function Footer({ whatsapp, phone, email }) {
     <footer className="mt-auto overflow-x-clip bg-[#f5f5f7] text-[#1d1d1f]">
       <div className="home-shell pt-6 sm:pt-8">
         <div className="border-t border-black/15 pt-5">
-          <Link href="/" className="inline-flex items-center gap-2 text-[12px] font-semibold text-[#424245] transition hover:text-black">
+          <Link href="/admin" className="inline-flex items-center gap-2 text-[12px] font-semibold text-[#424245] transition hover:text-black">
             <span className="font-serif text-[16px] tracking-[-.04em]">MEPOTIA</span>
             <ChevronRight className="h-3.5 w-3.5 text-[#86868b]" />
-            <span className="font-normal">Online Store</span>
+            <span className="font-normal">Güvenin ve Kalitenin Merkezi</span>
           </Link>
         </div>
 
