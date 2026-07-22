@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import BackHomeLink from "@/components/BackHomeLink";
-import CatalogHero from "@/components/CatalogHero";
+import CatalogPageHeader from "@/components/CatalogPageHeader";
 import ProductImage from "@/components/ProductImage";
 import { getCategoriesWithSubs } from "@/lib/categories";
 import { TECH_CATEGORY_CATALOG } from "@/lib/techCategories";
@@ -35,11 +35,10 @@ export default async function KategorilerPage() {
       <div className="mx-auto max-w-7xl px-4 pt-4 pb-10 sm:px-6 sm:pt-5 sm:pb-12 lg:px-8">
         <BackHomeLink label="Vitrine dön" className="mb-4" />
 
-        <CatalogHero
+        <CatalogPageHeader
           eyebrow="Kategoriler"
           title="Aradığın teknolojiye daha kısa yol."
           description="İhtiyacın olan ürün grubunu seç; düzenli, filtrelenebilir ve anlaşılır vitrine geç."
-          imageSrc="/brand/categories/mepotia-accessories-v2.webp"
         />
 
         <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4">
@@ -93,3 +92,4 @@ export default async function KategorilerPage() {
     </main>
   );
 }
+
