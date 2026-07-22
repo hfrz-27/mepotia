@@ -1,7 +1,7 @@
 import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import CategoryFilters from "@/components/CategoryFilters";
-import CatalogHero from "@/components/CatalogHero";
+import CatalogPageHeader from "@/components/CatalogPageHeader";
 import { PremiumBreadcrumb } from "@/components/BackHomeLink";
 import { getPublishedProducts } from "@/lib/products";
 
@@ -78,7 +78,7 @@ export default async function UrunlerPage({ searchParams }) {
           ]}
         />
 
-        <CatalogHero
+        <CatalogPageHeader
           eyebrow={q ? "Arama sonuçları" : "Tüm ürünler"}
           title={q ? `“${q}” için seçtiklerimiz.` : "Teknoloji vitrini."}
           description="Telefon, bilgisayar, tablet ve aksesuarları net ürün bilgileriyle incele; filtrele, karşılaştır ve doğrudan iletişime geç."
