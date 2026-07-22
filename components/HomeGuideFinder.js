@@ -5,16 +5,17 @@ import { ChevronRight, Gamepad2, Headphones, Laptop, Smartphone, Sparkles, Table
 import { useState } from "react";
 
 const OPTIONS = [
-  { id: "telefon", label: "Telefon", copy: "Günlük kullanım", Icon: Smartphone },
-  { id: "bilgisayar", label: "Bilgisayar", copy: "İş ve eğitim", Icon: Laptop },
-  { id: "tablet", label: "Tablet", copy: "Üretim ve eğlence", Icon: Tablet },
-  { id: "kulaklik", label: "Kulaklık", copy: "Müzik ve görüşme", Icon: Headphones },
-  { id: "oyun", label: "Oyun", copy: "Performans", Icon: Gamepad2 },
-  { id: "saat", label: "Akıllı saat", copy: "Sağlık ve hareket", Icon: Watch },
+  { id: "telefon", label: "Telefon", copy: "Günlük kullanım", Icon: Smartphone, guideSlug: "telefon-alma-rehberi" },
+  { id: "bilgisayar", label: "Bilgisayar", copy: "İş ve eğitim", Icon: Laptop, guideSlug: "bilgisayar-alma-rehberi" },
+  { id: "tablet", label: "Tablet", copy: "Üretim ve eğlence", Icon: Tablet, guideSlug: "tablet-alma-rehberi" },
+  { id: "kulaklik", label: "Kulaklık", copy: "Müzik ve görüşme", Icon: Headphones, guideSlug: "kulaklik-alma-rehberi" },
+  { id: "oyun", label: "Oyun", copy: "Performans", Icon: Gamepad2, guideSlug: "oyun-alma-rehberi" },
+  { id: "saat", label: "Akıllı saat", copy: "Sağlık ve hareket", Icon: Watch, guideSlug: "akilli-saat-alma-rehberi" },
 ];
 
 export default function HomeGuideFinder({ content, image }) {
   const [selected, setSelected] = useState("telefon");
+  const selectedGuideSlug = OPTIONS.find((o) => o.id === selected)?.guideSlug || "telefon-alma-rehberi";
 
   return (
     <section className="home-shell py-8 sm:py-12">
@@ -50,7 +51,7 @@ export default function HomeGuideFinder({ content, image }) {
               })}
             </div>
 
-            <Link href={`/rehber?kategori=${selected}`} className="mt-4 flex h-11 items-center justify-center gap-1 rounded-full bg-[#0071e3] px-5 text-[12px] font-semibold text-white transition hover:bg-[#0077ed] sm:mt-5 sm:h-12 sm:px-6 sm:text-[13px]">Rehberi başlat <ChevronRight className="h-4 w-4" /></Link>
+            <Link href={`/rehber/${selectedGuideSlug}`} className="mt-4 flex h-11 items-center justify-center gap-1 rounded-full bg-[#0071e3] px-5 text-[12px] font-semibold text-white transition hover:bg-[#0077ed] sm:mt-5 sm:h-12 sm:px-6 sm:text-[13px]">Rehberi başlat <ChevronRight className="h-4 w-4" /></Link>
           </div>
         </div>
       </div>
